@@ -6,7 +6,7 @@ ChatGPT is the lead engineer and content lead for Ethan Study Hub. Claude is the
 Your job is to turn the content and learning architecture in this repository into an exceptionally polished, clear, interactive experience. Use judgment. Do not wait for detailed pixel-by-pixel instructions.
 
 ## Product goal
-This should NOT feel like an online AP syllabus, LMS, or another textbook Ethan has to finish.
+This should not feel like an online AP syllabus, LMS, or another textbook Ethan has to finish.
 
 It should feel like an interactive history documentary / museum / discovery experience for an intelligent 14-year-old who is curious about how American government came to exist and how it works.
 
@@ -61,9 +61,7 @@ Use large visual moments and image-led sections. Support:
 - expandable details
 - strong captions and source attribution
 
-Prefer authentic public-domain/official historical imagery (National Archives, Library of Congress, Smithsonian or similarly authoritative sources). Never add random stock imagery simply to fill space. Keep source/credit metadata with assets/content.
-
-If remote images are unreliable, design graceful fallbacks. Do not make the page dependent on fragile third-party embeds.
+Prefer authentic public-domain/official historical imagery. Keep source metadata with assets/content. If remote images are unreliable, design graceful fallbacks.
 
 ## Constitution explorer
 The Constitution needs a first-class interactive explorer.
@@ -133,7 +131,6 @@ Do not invent substantive political/history content merely to fill UI placeholde
 - Fast loading.
 - No backend/authentication for this phase.
 - Preserve working GitHub Pages deployment.
-- Do not overengineer.
 - Avoid giant monolithic app.js as the content grows.
 - Keep the design system coherent rather than adding unrelated visual tricks.
 
@@ -143,7 +140,36 @@ Do not materially rewrite factual/history/AP content without a clear reason. Cha
 ## Current priority
 Transform the existing prototype away from "course outline cards" and toward the discovery model above. Build the reusable UI/content architecture first, then polish the initial Founding Journey and Constitution Explorer so they can become the demonstration Ethan sees.
 
-You have latitude on exact visual design. Aim for something we would be proud to show a teenager tonight.
+## Landing page requirements
+This is a single-page AP U.S. Government study hub designed for Ethan and Dad. The landing screen should feel calm, academic, and premium without feeling heavy or cluttered.
+
+### Design direction
+- Background: warm cream paper tone
+- Primary accent: deep green header and dark-olive content blocks
+- Secondary accent: warm rust/orange for emphasis and typography highlights
+- Typography: serif headline, clean sans body text
+- Layout: concentrated hero card, then a tight two-column unit grid
+- Goal: one-screen desktop presentation with no vertical scrollbar and no overwhelming content density
+
+### Layout requirements
+1. Fixed dark-green header with compact nav labels.
+2. Centered hero card with serif headline and warm accent emphasis.
+3. Stat pills beneath the hero.
+4. Tight course overview section with one highlighted top unit card and four secondary cards beneath it.
+5. Keep the landing screen on a single viewport at standard desktop size.
+6. Preserve static-site functionality: no backend, local progress via browser storage, all sections still navigate correctly.
+
+### Engineering notes
+- Prefer CSS-driven layout over JavaScript manipulation for the landing page.
+- Maintain semantic HTML and accessible contrast.
+- Keep the page responsive, but prioritize desktop single-screen composition.
+- Preserve the existing story, Constitution, and practice sections as the product’s deeper learning screens.
+
+### Acceptance criteria
+- No vertical scrollbar on a typical desktop viewport.
+- The landing page visually matches the provided reference with a clean, editorial presentation.
+- Cards and spacing remain balanced with the dark-green header and cream page background.
+- Navigation and interactive behaviors continue to work without regressions.
 
 ## Before handing back
 - Test all navigation/interactions.
