@@ -185,3 +185,77 @@ This is a single-page AP U.S. Government study hub designed for Ethan and Dad. T
 - Tightened the landing page into a compact editorial single-screen desktop composition while preserving responsive behavior and local progress tracking.
 - Kept the AP content layer quiet but available through the unit explorer and practice modules.
 - Next content work for ChatGPT: expand the founding story into the required foundational documents, add the constitutional amendment detail drawers, and continue the federalism / rights / participation branches with more primary-source moments.
+
+
+# APPROVED VISUAL REFERENCE — LOCKED (2026-09-19)
+
+The two approved Declaration of Independence page mockups shared by the product owner are now the **visual contract**, not loose inspiration. The current generic course-dashboard/card treatment is not an acceptable substitute.
+
+## Fidelity requirement
+Reproduce the approved chapter-page composition as closely as practical in HTML/CSS/JS:
+- full-width dark-green navigation bar
+- cinematic, edge-to-edge historical hero image immediately beneath it
+- dark readable image overlay
+- left hero copy: chapter marker, large date/title, short documentary-style setup, actions
+- historical quotation integrated into hero
+- optional right-side “In this chapter” navigator on wide screens
+- visual horizontal story timeline immediately below hero, with authentic image thumbnails and active chapter treatment
+- editorial three-column/layered body rather than a generic grid of identical cards
+- “The Big Picture” narrative panel
+- **large image slideshow/gallery as a central visual feature**, including arrows, caption, slide count and clickable thumbnails
+- “Key Takeaways” numbered panel
+- “Interesting Fact” panel with relevant portrait/artifact
+- “Explore the Document” section with document facsimile and section-by-section navigation
+- “Why It Matters” visual explanation
+- “Quick Check” interactive question
+- “What’s Next?” narrative bridge with image and next-chapter CTA
+- bottom previous/next chapter navigation and progress indication
+
+Use generous imagery and editorial hierarchy. The approved reference feels like a premium interactive history documentary/museum exhibit. It does NOT look like an LMS, syllabus, flash-card app, or dashboard.
+
+## Chapter system
+Build this as a reusable **Story Chapter template**, not a one-off Declaration page. The same visual language and component system must support:
+1. Why Government?
+2. Colonial America / British rule
+3. Road to Independence
+4. Declaration of Independence
+5. Articles of Confederation
+6. Why the Articles struggled
+7. Constitutional Convention
+8. Ratification debate
+9. Constitution
+10. Bill of Rights
+11. continuing constitutional story
+
+Each chapter may vary its content blocks, but the experience must remain visually coherent.
+
+## Constitution fidelity
+The Constitution must receive the same rich presentation quality. Its document explorer should begin with a visual architecture:
+Preamble → Articles I–VII → Amendments.
+A click zooms into the selected Article; a second level reveals sections, plain-English meaning, historical context, connections/checks, and primary-source text. Do not reduce the Constitution to a row of generic cards.
+
+## Imagery
+Historical imagery is mandatory for the story experience, not optional decoration.
+- Prefer public-domain/official historical images.
+- Store source/credit/alt metadata.
+- Use real images in hero, timeline and gallery.
+- Avoid emoji as the principal visual representation of historical events.
+- Use graceful fallback when an image cannot load.
+- Do not fabricate historical scenes.
+
+## Homepage
+The AP course map can remain available, but **Home should introduce discovery**, not primarily present exam percentages. AP alignment is the quiet scaffolding underneath. A visitor should immediately feel invited into the story.
+
+## Acceptance test
+Before committing, open the site at desktop width and compare it side-by-side with the approved Declaration mockups. Ask:
+1. Is a large historical image the dominant first impression?
+2. Is there a real image slideshow/gallery?
+3. Does the timeline visually connect chapters?
+4. Can Ethan zoom into the actual document?
+5. Are takeaways, context, quick check, and next-story transition visible without feeling like a syllabus?
+6. Does this look substantially like the approved reference?
+
+If any answer is no, continue implementation. Do not declare the UI complete merely because navigation works.
+
+## Ownership
+ChatGPT remains content/product lead. Claude owns faithful implementation, responsive behavior and polish. Do not replace this locked reference with a new design direction without explicit product-owner approval.
