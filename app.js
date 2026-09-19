@@ -1,6 +1,174 @@
-const units={1:["Foundations of American Democracy","15–22%",["Ideals of Democracy","Types of Democracy","Government Power & Individual Rights","Challenges of the Articles of Confederation","Ratification of the Constitution","Principles of American Government","States & National Government","Constitutional Interpretations of Federalism","Federalism in Action"]],2:["Interactions Among Branches of Government","25–36%",["Congress: House & Senate","Structures, Powers & Functions of Congress","Congressional Behavior","Roles & Powers of the President","Checks on the Presidency","Expansion of Presidential Power","Presidential Communication","The Judicial Branch","Role of the Judicial Branch","The Court in Action","Checks on the Judicial Branch","The Bureaucracy","Discretionary & Rulemaking Authority","Holding Bureaucracy Accountable","Policy & the Branches"]],3:["Civil Liberties & Civil Rights","13–18%",["Bill of Rights","First Amendment freedoms","Second Amendment","Due Process","Selective Incorporation","Equal Protection","Civil Rights movement","Voting rights"]],4:["American Political Ideologies & Beliefs","10–15%",["American attitudes about government","Political socialization","Public opinion","Ideology","Economic policy","Social policy"]],5:["Political Participation","20–27%",["Voting","Voter behavior","Political parties","Elections","Campaigns","Interest groups","Media"]]};
-function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');mark(id)}
-function mark(x){let a=JSON.parse(localStorage.getItem('ethanProgress')||'[]');if(!a.includes(x)){a.push(x);localStorage.setItem('ethanProgress',JSON.stringify(a))}document.getElementById('progress').textContent=Math.min(100,a.length*12)+'% explored'}
-function openUnit(n){let u=units[n];document.getElementById('unitContent').innerHTML='<p class="eyebrow">UNIT 0'+n+' · '+u[1]+' OF MCQ</p><h1>'+u[0]+'</h1><p class="lead">'+(n==1?'The founding puzzle: create enough power to govern while protecting individual liberty.':'Build the big picture first. Each topic will grow into a visual lesson as Ethan reaches it.')+'</p><h2>Zoom map</h2><div class="topiclist">'+u[2].map((x,i)=>'<div><b>'+n+'.'+(i+1)+'</b><br>'+x+'</div>').join('')+'</div>'+(n==1?'<div class="callout"><h3>Start here tonight</h3><p>We already began this story together. Continue from the British colonies through the Articles and Constitution.</p><button onclick="show(\'story\')">Open the visual founding story →</button></div>':'');show('unit')}
-function detail(x){let d={leg:'<b>Legislative — Article I</b><br>Congress is bicameral: House + Senate. It writes federal laws, controls appropriations, and has enumerated constitutional powers.',exec:'<b>Executive — Article II</b><br>The president leads the executive branch and carries out federal law, with constitutional roles including commander in chief and appointments.',jud:'<b>Judicial — Article III</b><br>The federal judiciary resolves cases under federal law and the Constitution. Judicial review became a central principle through Marbury v. Madison.'};document.getElementById('detail').innerHTML=d[x]}
-const qs=[['Why did the Articles of Confederation create a weak national government?','The founders had just fought a powerful British government and feared concentrated national power.'],['What problem was the Constitution trying to solve?','Create a national government strong enough to govern effectively while dividing and limiting its power to protect liberty.'],['What is popular sovereignty?','The principle that governmental authority comes from the people.'],['Separation of powers vs. checks and balances — what is the difference?','Separation assigns powers to different branches; checks and balances gives those branches tools to restrain one another.'],['What is federalism?','The constitutional division of power between the national government and state governments.']];let qi=0;function nextQ(){let q=qs[qi++%qs.length];document.getElementById('quiz').innerHTML='<div class="q"><h2>'+q[0]+'</h2><button onclick="this.nextElementSibling.style.display=\'block\'">Reveal answer</button><div class="answer">'+q[1]+'</div></div>'}nextQ();mark('map');
+const content = window.EthanStudyHubContent;
+const state = { questionIndex: 0, selectedConstitution: 'preamble' };
+
+function getProgress() {
+  try {
+    return JSON.parse(localStorage.getItem('ethanProgress') || '[]');
+  } catch (error) {
+    return [];
+  }
+}
+
+function updateProgress() {
+  const progress = getProgress();
+  const percent = Math.min(100, Math.round((progress.length / 5) * 100));
+  const label = document.getElementById('progress');
+  if (label) label.textContent = `${percent}% explored`;
+}
+
+function mark(x) {
+  const entries = getProgress();
+  if (!entries.includes(x)) {
+    entries.push(x);
+    localStorage.setItem('ethanProgress', JSON.stringify(entries));
+  }
+  updateProgress();
+}
+
+function show(id) {
+  document.querySelectorAll('.page').forEach((page) => page.classList.remove('active'));
+  const target = document.getElementById(id);
+  if (target) target.classList.add('active');
+  document.body.classList.toggle('no-scroll', id === 'map');
+  mark(id);
+}
+
+function renderMap() {
+  const unitGrid = document.getElementById('unitGrid');
+  if (!unitGrid) return;
+
+  const cards = content.units.map((unit) => {
+    const isFeatured = unit.id === 1 ? ' feature' : '';
+    return `
+      <button class="unit${isFeatured}" type="button" onclick="openUnit(${unit.id})">
+        <small>${unit.label}</small>
+        <strong>${unit.title}</strong>
+        <span>${unit.summary}</span>
+      </button>
+    `;
+  }).join('');
+
+  unitGrid.innerHTML = cards;
+}
+
+function renderStory() {
+  const timeline = document.getElementById('storyTimeline');
+  if (!timeline) return;
+
+  timeline.innerHTML = content.storyScenes.map((scene) => `
+    <article class="story-card ${scene.frame}">
+      <time>${scene.era}</time>
+      <div class="scene-icon" aria-hidden="true">${scene.frame === 'colony' ? '⚓' : scene.frame === 'declaration' ? '📜' : scene.frame === 'articles' ? '🤝' : scene.frame === 'convention' ? '🏛️' : '⚖️'}</div>
+      <h3>${scene.title}</h3>
+      <p>${scene.summary}</p>
+      <div class="mini-label">Question</div>
+      <p class="scene-question">${scene.question}</p>
+      <div class="mini-label">Key ideas</div>
+      <ul>${scene.keyIdeas.map((idea) => `<li>${idea}</li>`).join('')}</ul>
+    </article>
+  `).join('');
+}
+
+function renderConstitution() {
+  const grid = document.getElementById('constitutionGrid');
+  const detail = document.getElementById('constitutionDetail');
+
+  if (!grid) return;
+
+  grid.innerHTML = content.constitutionSections.map((section) => `
+    <button type="button" class="constitution-card ${state.selectedConstitution === section.id ? 'selected' : ''}" onclick="showConstitutionSection('${section.id}')">
+      <span>${section.label}</span>
+      <strong>${section.title}</strong>
+      <small>${section.purpose}</small>
+    </button>
+  `).join('');
+
+  if (detail) {
+    showConstitutionSection(state.selectedConstitution, false);
+  }
+}
+
+function showConstitutionSection(id, updateSelection = true) {
+  const section = content.constitutionSections.find((item) => item.id === id);
+  if (!section) return;
+
+  if (updateSelection) {
+    state.selectedConstitution = id;
+    renderConstitution();
+    return;
+  }
+
+  const detail = document.getElementById('constitutionDetail');
+  if (!detail) return;
+
+  detail.innerHTML = `
+    <p class="eyebrow">${section.label}</p>
+    <h3>${section.title}</h3>
+    <p class="lead small">${section.mentalModel}</p>
+    <p>${section.description}</p>
+    <div class="detail-notes">
+      <span>Purpose</span>
+      <strong>${section.purpose}</strong>
+    </div>
+  `;
+}
+
+function renderUnitDetail(n) {
+  const unit = content.units.find((item) => item.id === n);
+  const target = document.getElementById('unitContent');
+  if (!unit || !target) return;
+
+  target.innerHTML = `
+    <div class="unit-detail">
+      <p class="eyebrow">UNIT 0${n} · ${unit.label.replace(/^UNIT 0\d+ · /, '')}</p>
+      <h1>${unit.title}</h1>
+      <p class="lead">${unit.focus}</p>
+      <h2>Zoom map</h2>
+      <div class="topiclist">
+        ${unit.topics.map((topic, index) => `<div><b>${n}.${index + 1}</b><span>${topic}</span></div>`).join('')}
+      </div>
+      <div class="callout">
+        <h3>Start here tonight</h3>
+        <p>Move from the big historical story into the constitutional structure and then return to the document-driven practice questions.</p>
+        <button type="button" class="primary" onclick="show('story')">Open the visual founding story →</button>
+      </div>
+    </div>
+  `;
+}
+
+function openUnit(n) {
+  renderUnitDetail(n);
+  show('unit');
+}
+
+function renderQuiz() {
+  const quiz = document.getElementById('quiz');
+  if (!quiz) return;
+
+  const question = content.practiceQuestions[state.questionIndex % content.practiceQuestions.length];
+  const answerHidden = 'style="display:none"';
+
+  quiz.innerHTML = `
+    <div class="question-card">
+      <h2>${question[0]}</h2>
+      <button type="button" class="ghost" onclick="this.nextElementSibling.style.display='block'">Reveal answer</button>
+      <div class="answer" ${answerHidden}>${question[1]}</div>
+    </div>
+  `;
+}
+
+function nextQ() {
+  state.questionIndex += 1;
+  renderQuiz();
+}
+
+function bootstrap() {
+  renderMap();
+  renderStory();
+  renderConstitution();
+  renderQuiz();
+  updateProgress();
+  show('map');
+}
+
+document.addEventListener('DOMContentLoaded', bootstrap);

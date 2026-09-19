@@ -178,3 +178,10 @@ This is a single-page AP U.S. Government study hub designed for Ethan and Dad. T
 - Ensure GitHub Pages paths work under /ethan-study-hub/.
 - Keep a short CHANGELOG/HANDOFF note describing what changed and where ChatGPT should add content next.
 - Commit the work to the repository. The parent will decide when to publish/deploy if the workflow separates implementation from publication.
+
+## Implementation log
+- Replaced the generic AP outline with a discovery-first narrative experience built around Founding Story and Constitution Explorer interactions.
+- Separated content into the reusable data layer at [content/contentData.js](content/contentData.js) so future curriculum work sits outside the UI logic.
+- Tightened the landing page into a compact editorial single-screen desktop composition while preserving responsive behavior and local progress tracking.
+- Kept the AP content layer quiet but available through the unit explorer and practice modules.
+- Next content work for ChatGPT: expand the founding story into the required foundational documents, add the constitutional amendment detail drawers, and continue the federalism / rights / participation branches with more primary-source moments.
