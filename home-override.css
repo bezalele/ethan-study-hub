@@ -566,3 +566,40 @@ body:has(#map.active) #map{
   #map .gov-branches article{padding:6px!important}
   #map .cm-topic-preview button{min-height:30px!important;padding:5px 7px!important}
 }
+
+/* Wider chapter canvas — use the desktop screen like the approved reference */
+@media(min-width:1100px){
+  #foundingDetail .decl-hero{
+    padding-left:max(2.4vw,calc((100vw - 1640px)/2))!important;
+    padding-right:max(2.4vw,calc((100vw - 1640px)/2))!important;
+  }
+  #foundingDetail .decl-timeline{
+    max-width:1640px!important;
+    padding-left:2.2vw!important;
+    padding-right:2.2vw!important;
+    gap:12px!important;
+  }
+  #foundingDetail .decl-body{
+    max-width:1640px!important;
+    padding-left:2.2vw!important;
+    padding-right:2.2vw!important;
+    grid-template-columns:.95fr 1.55fr .88fr!important;
+    gap:18px!important;
+  }
+  #foundingDetail .decl-big{padding:22px 10px!important}
+  #foundingDetail .founding-stage{min-height:340px!important}
+  #foundingDetail .founding-stage h2{font-size:33px!important}
+  #foundingDetail .founding-photo-thumbs button{height:96px!important}
+  #foundingDetail .decl-side section{padding:20px!important}
+  #foundingDetail .founding-ideas{margin-top:2px!important}
+}
+
+/* Give the full course-area study pages the same wider reading canvas */
+@media(min-width:1100px){
+  #unitStudy .decl-hero{
+    padding-left:max(2.4vw,calc((100vw - 1640px)/2))!important;
+    padding-right:max(2.4vw,calc((100vw - 1640px)/2))!important;
+  }
+  #unitStudy .unit-tabs{max-width:1640px!important;padding-left:2.2vw!important;padding-right:2.2vw!important}
+  #unitStudy .decl-body{max-width:1640px!important;padding-left:2.2vw!important;padding-right:2.2vw!important}
+}
