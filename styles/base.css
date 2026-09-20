@@ -118,7 +118,11 @@ button { font: inherit; cursor: pointer; }
 }
 .prose > * + * { margin-top: var(--s-4); }
 
+/* width:100% matters. Without it a .shell used as a grid or flex item takes
+   its fit-content width instead of stretching, because margin-inline:auto
+   centres it — which made every chapter page a different width. */
 .shell {
+  width: 100%;
   max-width: var(--measure);
   margin-inline: auto;
   padding-inline: var(--gutter);

@@ -128,14 +128,14 @@ const PROBE = `(async () => {
   document.querySelectorAll('.page--home section, .page--home nav, .page--course-map .cm-head, .page--course-map .cm-rail').forEach(b => {
     if (b.scrollHeight > b.clientHeight + 2) clipped.push(b.className.split(/\s+/)[0] + ' by ' + (b.scrollHeight - b.clientHeight) + 'px');
   });
-  // Anything under 12px in the main content is unreadable for a student.
+  // Anything under 13px in the main content is too small for a student.
   const tiny = new Map();
   document.querySelectorAll('#app-main *').forEach(el => {
     if (!el.childNodes.length) return;
     const hasText = [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());
     if (!hasText) return;
     const px = parseFloat(getComputedStyle(el).fontSize);
-    if (px && px < 12) {
+    if (px && px < 13) {
       const key = (el.className || el.tagName).toString().trim().split(/\s+/)[0] + ' @' + px + 'px';
       tiny.set(key, (tiny.get(key) || 0) + 1);
     }

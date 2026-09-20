@@ -488,16 +488,13 @@ export default {
             </div>` : ''}
           ${gallery(ch)}
         </div>
-        ${quiz(ch)}
+        <aside class="ch-focus__rail">
+          ${takeaways(ch)}
+          ${factCard(ch)}
+        </aside>
       </div>`));
     page.append(top);
 
-    /* Everything below the first screen. */
-    page.append(html(`
-      <div class="ch-more shell">
-        ${takeaways(ch)}
-        ${factCard(ch)}
-      </div>`));
 
     if (ch.closerLook) page.append(html(`<div class="shell">${closerLook(ch)}</div>`));
 
@@ -505,6 +502,7 @@ export default {
       <div class="ch-cards shell">
         ${whyItMatters(ch)}
         ${whatsNext(ch)}
+        ${quiz(ch)}
       </div>`));
 
     page.append(html(`

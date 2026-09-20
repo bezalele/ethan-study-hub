@@ -123,7 +123,7 @@
 .page--chapter .ch-hero__intro {
   max-width: 58ch;
   margin-top: var(--s-3);
-  font-size: clamp(13px, 1.05vw, 15px);
+  font-size: clamp(15px, 1.1vw, 17px);
   line-height: 1.6;
   color: var(--c-on-dark-soft);
 }
@@ -376,7 +376,7 @@
   font-size: 15px;
 }
 .page--chapter .ch-fact__who figcaption span {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--c-ink-faint);
 }
 
@@ -432,7 +432,7 @@
 
 .page--chapter .ch-cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.25fr);
   gap: var(--s-4);
   padding-bottom: var(--s-6);
   align-items: start;
@@ -508,7 +508,7 @@
 .page--chapter .ch-check__result--none { color: var(--c-ink-faint); font-weight: 600; }
 .page--chapter .ch-check__why {
   margin-top: var(--s-2);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.55;
   color: var(--c-ink-soft);
 }
@@ -535,7 +535,7 @@
 }
 .page--chapter .ch-next small {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -610,6 +610,8 @@
   overflow: hidden;
 }
 
+/* Slideshow on the left; key takeaways then the interesting fact on the
+   right. The quiz is a full-width row directly beneath all three. */
 .page--chapter .ch-focus {
   display: grid;
   grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
@@ -618,6 +620,26 @@
   min-height: 0;
   padding-block: clamp(var(--s-3), 2vh, var(--s-5));
 }
+
+.page--chapter .ch-focus__rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  min-height: 0;
+  /* Scrolls rather than clips: on a short screen the fact card would
+     otherwise be cut off with no way to reach it. */
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-line) transparent;
+}
+.page--chapter .ch-focus__rail::-webkit-scrollbar { width: 7px; }
+.page--chapter .ch-focus__rail::-webkit-scrollbar-thumb {
+  background: var(--c-line);
+  border-radius: var(--r-pill);
+}
+
+/* The rail holds the takeaways and the fact only. It no longer needs to
+   scroll internally now the quiz has moved out of it. */
 
 .page--chapter .ch-focus__main {
   display: flex;
@@ -631,12 +653,13 @@
   font-size: clamp(19px, min(1.6vw, 2.9vh), 27px);
   line-height: 1.15;
 }
+/* No max-width: the paragraph should use the column it has been given rather
+   than wrapping early and leaving the right-hand side empty. */
 .page--chapter .ch-lede__body {
-  max-width: 96ch;
-  margin-top: 4px;
-  font-size: clamp(12px, min(0.92vw, 1.6vh), 14px);
-  line-height: 1.5;
-  color: var(--c-ink-soft);
+  margin-top: var(--s-2);
+  font-size: clamp(15px, min(1.05vw, 1.9vh), 17px);
+  line-height: 1.55;
+  color: var(--c-ink);
 }
 .page--chapter .ch-lede__body strong { color: var(--c-ink); font-weight: 700; }
 
@@ -655,7 +678,7 @@
    thumbnail strip below it is always on screen. */
 .page--chapter .ch-top .ch-gallery__stage {
   flex: 1;
-  min-height: 210px;
+  min-height: 180px;
   aspect-ratio: auto;
   max-height: none;
 }
@@ -665,10 +688,9 @@
 }
 .page--chapter .ch-slide__point {
   display: block;
-  max-width: 78ch;
-  margin-top: 3px;
-  font-size: clamp(12px, min(0.95vw, 1.7vh), 15px);
-  line-height: 1.45;
+  margin-top: 4px;
+  font-size: clamp(15px, min(1.1vw, 1.9vh), 18px);
+  line-height: 1.5;
   color: #fff;
 }
 /* A deeper gradient than the old caption bar: the point has to be readable
@@ -689,8 +711,7 @@
 .page--chapter .ch-quiz {
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  padding: clamp(var(--s-4), 2.2vh, var(--s-5));
+  padding: var(--s-5);
   background: var(--c-paper);
   border: 1px solid var(--c-line);
   border-radius: var(--r-md);
@@ -727,9 +748,6 @@
 .page--chapter .ch-quiz__dot.is-wrong { background: var(--c-brick); }
 
 .page--chapter .ch-quiz__form {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
   margin-top: var(--s-4);
   scrollbar-width: thin;
   scrollbar-color: var(--c-line) transparent;
@@ -751,7 +769,7 @@
 .page--chapter .ch-q__text {
   padding: 0;
   font-family: var(--font-display);
-  font-size: clamp(15px, min(1.2vw, 2.1vh), 19px);
+  font-size: clamp(16px, min(1.3vw, 2.2vh), 20px);
   line-height: 1.35;
   color: var(--c-ink);
 }
@@ -768,8 +786,8 @@
   padding: var(--s-3);
   background: var(--c-sage);
   border-radius: var(--r-sm);
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.55;
   color: var(--c-ink);
 }
 
@@ -790,7 +808,6 @@
   display: grid;
   gap: var(--s-3);
   justify-items: center;
-  margin-top: auto;
   padding-top: var(--s-5);
   text-align: center;
 }
@@ -855,10 +872,9 @@
     max-height: 440px;
     flex: none;
   }
-  .page--chapter .ch-quiz__form { overflow: visible; }
 }
 
 @media (max-width: 1000px) {
-  .page--chapter .ch-focus,
-  .page--chapter .ch-more { grid-template-columns: 1fr; }
+  .page--chapter .ch-focus { grid-template-columns: 1fr; }
+  .page--chapter .ch-focus__rail { overflow: visible; }
 }

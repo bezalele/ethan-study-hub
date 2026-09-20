@@ -43,8 +43,8 @@
   --t-h2:      clamp(26px, 2.6vw, 36px);
   --t-h3:      21px;
   --t-body:    16px;
-  --t-small:   13px;
-  --t-eyebrow: 12px;   /* floor for uppercase labels; nothing goes below this */
+  --t-small:   15px;
+  --t-eyebrow: 13px;   /* floor for uppercase labels; nothing goes below this */
 
   --lh-tight: 1.05;
   --lh-snug:  1.25;

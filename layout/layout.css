@@ -48,7 +48,7 @@
 }
 
 .brand__sub {
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.06em;
   opacity: 0.72;
   white-space: nowrap;
@@ -106,7 +106,7 @@
   padding-inline: var(--gutter);
   background: var(--c-forest-deep);
   color: var(--c-on-dark-soft);
-  font-size: 12px;
+  font-size: 13px;
   overflow: hidden;
 }
 #app-footer a { color: var(--c-gold); }
