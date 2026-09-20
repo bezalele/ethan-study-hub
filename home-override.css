@@ -212,3 +212,13 @@ body:has(#map.active) main,body:has(#unitStudy.active) main{max-width:none!impor
 /* Course preview = orientation before study */
 .cm-knowledge{grid-column:1/-1;display:grid;grid-template-columns:1.35fr .65fr;gap:18px;background:#f4ead8;border-radius:10px;padding:20px 22px}.cm-knowledge h3{font:700 24px/1.22 Georgia,serif;margin:5px 0;color:#102d27}.cm-knowledge aside{border-left:2px solid #bd6a4b;padding-left:18px}.cm-knowledge aside>p:last-child{font:italic 16px/1.45 Georgia,serif;color:#405b52;margin:5px 0}.cm-summary.clean>header p{max-width:720px}.cm-summary.clean .cm-visual{grid-column:1/-1}.gov-structure{position:relative;padding-top:0}.gov-top{max-width:360px;margin:auto;background:#174c3e;padding:12px 18px}.gov-top b{font-size:19px}.gov-trunk{width:max-content;margin:0 auto;background:#d9b56d;color:#17332b;font-weight:900;font-size:13px;padding:8px 24px;border-radius:0 0 8px 8px;position:relative}.gov-trunk:after{content:"";position:absolute;left:50%;top:100%;height:14px;border-left:2px solid #b5674c}.gov-branches{margin-top:14px}.gov-branches article{box-shadow:0 4px 12px #163a2e12}.gov-checks{display:flex;justify-content:center;gap:12px;align-items:center;font-size:13px;letter-spacing:.04em}.gov-checks small{font-size:12px;font-weight:600}.cm-ready{display:flex;flex-direction:column;justify-content:center;background:#edf2e7;border-radius:8px;padding:16px}.cm-ready>p:not(.eyebrow){font-size:14px;line-height:1.45;margin:4px 0 12px}.cm-ready .cm-enter{width:100%}.cm-topic-preview,.cm-ready{margin-top:0}
 @media(max-width:850px){.cm-knowledge{grid-template-columns:1fr}.cm-knowledge aside{border-left:0;border-top:2px solid #bd6a4b;padding:12px 0 0}}
+
+/* Home footer: use a distinct American landscape, not another founding painting */
+.exact-footer{
+  background-image:
+    linear-gradient(90deg,rgba(22,25,19,.18),rgba(22,25,19,.06)),
+    url("https://www.nps.gov/common/uploads/structured_data/3C85F3D5-1DD8-B71B-0B2B3C08A7A1DD3B.jpg")!important;
+  background-size:cover!important;
+  background-position:center 58%!important;
+  min-height:125px!important;
+}
