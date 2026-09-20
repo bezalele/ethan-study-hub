@@ -41,6 +41,22 @@ function show(id) {
 }
 
 
+
+const journeyFacts={
+  1:{title:'British Colonies · 1607–1775',fact:'Thirteen British colonies developed local assemblies and traditions of self-government long before independence.',ask:'Big idea: When should people govern themselves?'},
+  2:{title:'Declaration of Independence · 1776',fact:'The Declaration explained why the colonies claimed independence and grounded that claim in natural rights and consent of the governed.',ask:'Big idea: Where does legitimate government get its power?'},
+  3:{title:'Articles of Confederation · 1781–1789',fact:'The first national framework left most power with the states and gave the central government limited authority.',ask:'Big idea: What happens when a national government is too weak to act?'},
+  4:{title:'Constitutional Convention · 1787',fact:'Delegates met to revise the Articles but instead drafted a new Constitution with stronger national institutions and divided powers.',ask:'Big idea: How can government be powerful without becoming too powerful?'},
+  5:{title:'Constitution + Bill of Rights · 1788–1791',fact:'The Constitution created the federal framework; the first ten amendments added explicit protections for individual liberties.',ask:'Big idea: How do we protect liberty while giving government enough power to work?'}
+};
+function showJourneyFact(n,el){
+ let p=document.getElementById('journeyFactPop');
+ if(!p){p=document.createElement('div');p.id='journeyFactPop';p.className='journey-fact-pop';document.body.appendChild(p);}
+ const x=journeyFacts[n]; if(!x)return;
+ p.innerHTML='<small>QUICK FACT</small><h3>'+x.title+'</h3><p>'+x.fact+'</p><b>'+x.ask+'</b>';
+ const r=el.getBoundingClientRect(); p.style.left=Math.min(window.innerWidth-340,Math.max(12,r.left+r.width/2-160))+'px';p.style.top=(r.bottom+10+window.scrollY)+'px';p.classList.add('show');
+}
+function hideJourneyFact(){const p=document.getElementById('journeyFactPop');if(p)p.classList.remove('show');}
 const learnChapters = {
 1:{kicker:'CHAPTER 1 OF 5 · FOUNDATIONS',title:'Why was American government designed this way?',intro:'Before memorizing government, follow the problem that created it.',model:'Britain felt too powerful → the Articles were too weak → the Constitution tried to find balance.',story:true,steps:[
 ['Why do people need government?','Shared rules, protection, public needs and a way to settle disputes require some form of government. The hard question is how much power it should have.'],
