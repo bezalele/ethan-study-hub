@@ -1,0 +1,74 @@
+name: Build local chapter image library
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/chapter-assets.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download public-domain chapter art
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/chapters/{colonies,declaration,articles,convention,constitution-rights}
+
+          get() {
+            local url="$1"
+            local out="$2"
+            echo "Downloading $out"
+            curl -L --fail --retry 3 --retry-delay 2 --user-agent "EthanStudyHub/1.0 educational project" "$url" -o "$out"
+            test -s "$out"
+            file "$out"
+          }
+
+          # British Colonies — Library of Congress, no known restrictions
+          get "https://tile.loc.gov/storage-services/service/pnp/pga/01700/01711v.jpg" "assets/chapters/colonies/patrick-henry.jpg"
+          get "https://tile.loc.gov/storage-services/service/pnp/ppmsca/01600/01657v.jpg" "assets/chapters/colonies/boston-massacre.jpg"
+          get "https://tile.loc.gov/storage-services/service/pnp/cph/3a30000/3a32000/3a32200/3a32287r.jpg" "assets/chapters/colonies/boston-tea-party.jpg"
+          get "https://cdn.loc.gov/service/pnp/ppmsca/39700/39753v.jpg" "assets/chapters/colonies/lexington.jpg"
+          get "https://tile.loc.gov/storage-services/service/pnp/cph/3c10000/3c19000/3c19000/3c19064r.jpg" "assets/chapters/colonies/house-of-burgesses.jpg"
+
+          # Declaration of Independence — Library of Congress + National Archives
+          get "https://tile.loc.gov/storage-services/service/pnp/cph/3a00000/3a04000/3a04700/3a04728r.jpg" "assets/chapters/declaration/committee-of-five.jpg"
+          get "https://tile.loc.gov/storage-services/service/pnp/pga/04700/04794v.jpg" "assets/chapters/declaration/presentation-to-congress.jpg"
+          get "https://tile.loc.gov/storage-services/service/pnp/pga/08500/08583v.jpg" "assets/chapters/declaration/signing.jpg"
+          get "https://www.archives.gov/files/historical-docs/doc-content/images/declaration-of-independence-m.jpg" "assets/chapters/declaration/declaration-document.jpg"
+          get "https://cdn.loc.gov/service/pnp/cph/3c10000/3c12000/3c12100/3c12159v.jpg" "assets/chapters/declaration/public-reading.jpg"
+
+          # Articles of Confederation — National Archives + Library of Congress
+          get "https://www.archives.gov/files/milestone-documents/images/doc-003-big.jpg" "assets/chapters/articles/articles-document.jpg"
+          get "https://www.archives.gov/files/milestone-documents/images/doc-006-big.jpg" "assets/chapters/articles/treaty-of-paris.jpg"
+          get "https://www.archives.gov/files/milestone-documents/images/doc-008-big.jpg" "assets/chapters/articles/northwest-ordinance.jpg"
+          get "https://tile.loc.gov/storage-services/service/pnp/cph/3b20000/3b25000/3b25100/3b25109r.jpg" "assets/chapters/articles/shays-rebellion.jpg"
+          get "https://cdn.loc.gov/service/pnp/ds/05700/05728v.jpg" "assets/chapters/articles/federal-hall.jpg"
+
+          # Constitutional Convention — Library of Congress + National Archives
+          get "https://tile.loc.gov/storage-services/service/pnp/ppmsc/00100/00181v.jpg" "assets/chapters/convention/signing-constitution.jpg"
+          get "https://www.archives.gov/files/milestone-documents/images/doc-007-big.jpg" "assets/chapters/convention/virginia-plan.jpg"
+          get "https://tile.loc.gov/storage-services/service/pnp/pga/11800/11880v.jpg" "assets/chapters/convention/james-madison.jpg"
+          get "https://cdn.loc.gov/service/pnp/ppmsca/24300/24335v.jpg" "assets/chapters/convention/independence-hall.jpg"
+          get "https://www.archives.gov/files/historical-docs/doc-content/images/constitution-m.jpg" "assets/chapters/convention/constitution-page-one.jpg"
+
+          # Constitution + Bill of Rights — National Archives + Library of Congress
+          get "https://www.archives.gov/files/historical-docs/doc-content/images/constitution-m.jpg" "assets/chapters/constitution-rights/constitution.jpg"
+          get "https://www.archives.gov/files/historical-docs/doc-content/images/bill-of-rights-xl.jpg" "assets/chapters/constitution-rights/bill-of-rights.jpg"
+          get "https://tile.loc.gov/storage-services/service/pnp/det/4a20000/4a26000/4a26300/4a26388v.jpg" "assets/chapters/constitution-rights/alexander-hamilton.jpg"
+          get "https://tile.loc.gov/storage-services/service/pnp/pga/11800/11880v.jpg" "assets/chapters/constitution-rights/james-madison.jpg"
+
+      - name: Commit local images
+        shell: bash
+        run: |
+          git config user.name "Ethan Study Hub"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/chapters
+          git commit -m "Add local public-domain art for founding chapters"
+          git push
