@@ -88,7 +88,7 @@ function openFoundingPage(key,preserveScroll=false){
  target.innerHTML=`<article class="decl founding-decl">
   <section class="decl-hero founding-decl-hero" style="background-image:linear-gradient(90deg,rgba(7,14,12,.91),rgba(7,14,12,.32)),url('${visuals.img}')">
    <div class="decl-hero-copy"><p class="eyebrow">UNIT 1 · THE STORY &nbsp;&nbsp;&nbsp; ${x.chapter}</p><h1><span class="fd-hero-year">${x.date}</span><span class="fd-hero-title">${x.title}</span></h1><h2>${x.subtitle}</h2><p>${x.intro}</p></div>
-   <div class="fd-hero-side"><blockquote>“${x.question}”<small>— The big question</small></blockquote><div class="fd-fact-slider" data-facts='${JSON.stringify(visuals.facts).replace(/'/g,"&#39;")}'><button class="fd-arrow" onclick="changeHeroFact(-1)" aria-label="Previous fact">‹</button><div class="fd-fact"><small>QUICK FACT</small><b>${visuals.facts[0][0]}</b><span>${visuals.facts[0][1]}</span></div><div class="fd-dots">${visuals.facts.map((_,i)=>'<button class="'+(i===0?'active':'')+'" onclick="setHeroFact('+i+')" aria-label="Fact '+(i+1)+'"></button>').join('')}</div><button class="fd-arrow" onclick="changeHeroFact(1)" aria-label="Next fact">›</button></div></div>
+   <div class="fd-hero-side"><blockquote>“${x.question}”<small>— The big question</small></blockquote></div>
   </section>
   <nav class="decl-timeline">${timeline}</nav>
   <div class="decl-body">
