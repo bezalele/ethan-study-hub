@@ -141,7 +141,11 @@ const DATA = [
     whyItMatters: {
       body:
         'This chapter sets up one of AP Government’s biggest ideas: legitimate power depends on more than simply having authority. Britain claimed the legal power to govern the colonies; colonists increasingly argued that government also needed representation and consent. That disagreement leads directly into the Declaration of Independence.',
-      steps: ['Local self-rule', 'British control', 'Resistance', 'Revolution'],
+      connections: [
+        { from: 'Colonial assemblies', to: 'Representation' },
+        { from: '“No taxation without representation”', to: 'Consent of the governed' },
+        { from: 'British crackdown', to: 'Limits on government power' },
+      ],
     },
     quiz: [
       {
@@ -202,7 +206,11 @@ const DATA = [
     ],
     whatsNext: {
       body:
-        'By 1776, the dispute was no longer just about taxes or Parliament. The colonies now had to explain why they believed they had the right to leave Britain and create independent states.',
+        'The fighting had started. Now the colonies had to explain why breaking away was justified.',
+      bridge: [
+        { label: '1775', title: 'War begins', note: 'Lexington and Concord turn protest into armed conflict.' },
+        { label: '1776', title: 'Independence explained', note: 'The Declaration states the principles and case for separation.' },
+      ],
     },
   },
 
@@ -300,7 +308,11 @@ const DATA = [
     whyItMatters: {
       body:
         'AP Government returns to these ideas again and again: natural rights, popular sovereignty, and limited government. Later Americans also used the Declaration’s language of equality to challenge slavery, racial discrimination, and the exclusion of women from political rights.',
-      steps: ['Natural rights', 'Consent', 'Grievances', 'Independence'],
+      connections: [
+        { from: 'Natural rights', to: 'Purpose of government' },
+        { from: 'Consent of the governed', to: 'Popular sovereignty' },
+        { from: 'List of grievances', to: 'Limited government' },
+      ],
     },
     quiz: [
       {
@@ -361,7 +373,11 @@ const DATA = [
     ],
     whatsNext: {
       body:
-        'Independence answered “Why leave Britain?” It did not answer “How should thirteen states govern together?” The first attempt was the Articles of Confederation.',
+        'Independence created a new problem: thirteen states now had to build a government together.',
+      bridge: [
+        { label: 'Problem', title: 'How to unite 13 states?', note: 'The states wanted cooperation without another powerful central ruler.' },
+        { label: 'First answer', title: 'Articles of Confederation', note: 'A deliberately weak national government begins the experiment.' },
+      ],
     },
   },
 
@@ -459,7 +475,11 @@ const DATA = [
     whyItMatters: {
       body:
         'The Constitution is easier to understand when you see it as an answer to the Articles. Federal taxing power, commerce power, an executive branch, a federal judiciary, and a more workable amendment process all respond to problems experienced during the 1780s.',
-      steps: ['Weak center', 'Shared problems', 'Pressure for reform', 'Convention'],
+      connections: [
+        { from: 'No direct federal tax', to: 'Need for national revenue' },
+        { from: 'No commerce power', to: 'Interstate Commerce Clause' },
+        { from: 'No separate executive or courts', to: 'A stronger federal structure' },
+      ],
     },
     quiz: [
       {
@@ -520,7 +540,11 @@ const DATA = [
     ],
     whatsNext: {
       body:
-        'By 1787, many leaders believed the problem was the design itself. Delegates went to Philadelphia to revise the Articles and ended up proposing an entirely new Constitution.',
+        'By 1787, the argument shifted from “Should the union have power?” to “How should that power be designed?”',
+      bridge: [
+        { label: 'Problem', title: 'Government too weak', note: 'National responsibilities existed without enough national power.' },
+        { label: '1787', title: 'Philadelphia Convention', note: 'Delegates meet to revise the Articles and instead design a new system.' },
+      ],
     },
   },
 
@@ -618,7 +642,11 @@ const DATA = [
     whyItMatters: {
       body:
         'Most of the rest of AP Government is this design operating in real life: Congress making laws, presidents executing them, courts interpreting them, states sharing power with Washington, and institutions checking one another.',
-      steps: ['Representation', 'Federalism', 'Checks & balances', 'Ratification'],
+      connections: [
+        { from: 'Great Compromise', to: 'House + Senate' },
+        { from: 'Separation of powers', to: 'Three branches' },
+        { from: 'Federalism', to: 'National + state power' },
+      ],
     },
     quiz: [
       {
@@ -679,7 +707,11 @@ const DATA = [
     ],
     whatsNext: {
       body:
-        'The delegates had written a Constitution, but it still was not law. The next fight happened in the states: should Americans ratify this stronger national system, and did it protect liberty enough?',
+        'Writing the Constitution was only step one. Americans still had to decide whether to accept it.',
+      bridge: [
+        { label: 'Debate', title: 'Federalists vs. Anti-Federalists', note: 'The fight centers on national power and protection of liberty.' },
+        { label: 'Result', title: 'Ratification + Bill of Rights', note: 'The Constitution takes effect; amendments answer demands for explicit rights.' },
+      ],
     },
   },
 
@@ -783,7 +815,11 @@ const DATA = [
     whyItMatters: {
       body:
         'Almost every later AP Government topic comes back to this framework: which level of government has power, how branches check each other, when government may restrict individual freedom, and how citizens use constitutional rights to participate.',
-      steps: ['Ratification', 'Three branches', 'Bill of Rights', 'Government today'],
+      connections: [
+        { from: 'Articles I–III', to: 'Three branches' },
+        { from: 'Checks + federalism', to: 'Power divided and limited' },
+        { from: 'Bill of Rights', to: 'Explicit liberty protections' },
+      ],
     },
     quiz: [
       {
@@ -844,7 +880,11 @@ const DATA = [
     ],
     whatsNext: {
       body:
-        'That completes the founding story. The rest of AP Government asks what happens when this constitutional design meets real institutions, political conflict, civil liberties, public opinion, elections, parties, and citizen participation.',
+        'The founding story gives Ethan the blueprint. The rest of AP Government is about watching that blueprint operate.',
+      bridge: [
+        { label: 'Next', title: 'Institutions in action', note: 'Congress, presidency, courts, agencies, and federalism.' },
+        { label: 'Then', title: 'Rights + participation', note: 'Civil liberties, elections, parties, beliefs, media, and citizen action.' },
+      ],
     },
   }
 ]
