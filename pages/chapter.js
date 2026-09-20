@@ -300,7 +300,15 @@ function closerLook(ch) {
 function whyItMatters(ch) {
   const w = ch.whyItMatters;
   if (!w) return '';
-  const steps = (w.steps || []).map((s, i, arr) => `
+
+  const connections = (w.connections || []).map((c) => `
+    <li class="ch-meaning__row">
+      <span class="ch-meaning__from">${esc(c.from)}</span>
+      <span class="ch-meaning__arrow" aria-hidden="true">→</span>
+      <span class="ch-meaning__to">${esc(c.to)}</span>
+    </li>`).join('');
+
+  const steps = !connections && (w.steps || []).map((s, i, arr) => `
     <li class="ch-flow__step">${esc(s)}</li>
     ${i < arr.length - 1 ? '<li class="ch-flow__arrow" aria-hidden="true">→</li>' : ''}`).join('');
 
@@ -308,27 +316,36 @@ function whyItMatters(ch) {
     <section class="ch-card ch-card--matters">
       <h2 class="ch-card__head"><span class="ch-card__icon" aria-hidden="true">🌎</span> Why It Matters</h2>
       <p class="ch-card__text">${prose(w.body)}</p>
+      ${connections ? `
+        <div class="ch-card__minihead">History → government idea</div>
+        <ol class="ch-meaning">${connections}</ol>` : ''}
       ${steps ? `<ol class="ch-flow">${steps}</ol>` : ''}
     </section>`;
 }
 
 function whatsNext(ch) {
   const next = nextChapter(ch.id);
-  const body = ch.whatsNext && ch.whatsNext.body;
+  const w = ch.whatsNext || {};
+  const bridge = (w.bridge || []).map((b) => `
+    <li class="ch-bridge__item">
+      <span class="ch-bridge__label">${esc(b.label)}</span>
+      <strong>${esc(b.title)}</strong>
+      <span class="ch-bridge__note">${esc(b.note)}</span>
+    </li>`).join('');
 
   return `
     <section class="ch-card ch-card--next">
       <h2 class="ch-card__head"><span class="ch-card__icon" aria-hidden="true">➡️</span> What’s Next?</h2>
-      ${body ? `<p class="ch-card__text">${prose(body)}</p>` : ''}
+      ${w.body ? `<p class="ch-card__text">${prose(w.body)}</p>` : ''}
+      ${bridge ? `<ol class="ch-bridge">${bridge}</ol>` : ''}
       ${next ? `
-        <a class="ch-next" href="#/study/${next.id}">
+        <a class="ch-next ch-next--compact" href="#/study/${next.id}">
           <img class="ch-next__thumb" src="${next.image.src}" alt="" loading="lazy">
           <span>
-            <small>Up next · ${esc(next.years)}</small>
+            <small>Next chapter · ${esc(next.years)}</small>
             <strong>${esc(next.short)}</strong>
           </span>
-        </a>
-        <a class="btn btn--ghost" href="#/study/${next.id}">Continue the story →</a>`
+        </a>`
       : '<a class="btn btn--ghost" href="#/study/practice">Practice what you read →</a>'}
     </section>`;
 }
