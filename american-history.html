@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Ethan Study Hub — an interactive walk through the American founding, with AP U.S. Government underneath.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>Ethan Study Hub · AP U.S. Government</title>
+
+  <!-- Order matters: tokens define the variables everything else consumes. -->
+  <link rel="stylesheet" href="styles/tokens.css?v=2">
+  <link rel="stylesheet" href="styles/base.css?v=2">
+  <link rel="stylesheet" href="layout/layout.css?v=2">
+
+  <!-- Shared components. Each owns a .c-NAME class namespace. -->
+  <link rel="stylesheet" href="components/timeline.css?v=2">
+
+  <!-- Page stylesheets. Each is scoped to its own .page--NAME root. -->
+  <link rel="stylesheet" href="pages/home.css?v=2">
+  <link rel="stylesheet" href="pages/course-map.css?v=2">
+  <link rel="stylesheet" href="pages/study.css?v=2">
+  <link rel="stylesheet" href="pages/chapter.css?v=2">
+  <link rel="stylesheet" href="pages/practice.css?v=2">
+</head>
+<body>
+  <a class="visually-hidden" href="#app-main">Skip to content</a>
+
+  <header id="app-header"></header>
+  <main id="app-main"></main>
+  <footer id="app-footer"></footer>
+
+  <!-- Classic script: runs before deferred modules, so the global is ready. -->
+  <script src="content/contentData.js?v=2"></script>
+
+  <!-- No ?v= on module specifiers: router.js imports './layout.js' bare, and a
+       differing query string would load a second, separate module instance. -->
+  <script type="module">
+    import { renderLayout } from './layout/layout.js';
+    import { startRouter } from './layout/router.js';
+
+    renderLayout();   // once, and only once
+    startRouter();
+  </script>
+</body>
+</html>

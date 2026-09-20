@@ -11,6 +11,7 @@
 
 /** The navigation. One array, one source of truth. */
 export const NAV = [
+  { id: 'hub', label: 'Study Hub', href: './' },
   { id: 'home',   label: 'Home',       href: '#/' },
   { id: 'course', label: 'Course Map', href: '#/course' },
   { id: 'study',  label: 'Study',      href: '#/study' },
@@ -33,7 +34,7 @@ export function renderLayout() {
   const footer = document.getElementById('app-footer');
 
   header.innerHTML = `
-    <a class="brand" href="#/">
+    <a class="brand" href="./" aria-label="Ethan Study Hub — all subjects">
       ${BOOK_MARK}
       <span>
         <span class="brand__name">Ethan Study Hub</span>
