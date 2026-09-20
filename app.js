@@ -78,7 +78,7 @@ function openFoundingPage(key,preserveScroll=false){
  const timeline=keys.map((k,i)=>'<button class="'+(i===current?'active':'')+'" onclick="'+(k==='declaration'?"show('declaration',true)":"openFoundingPage('"+k+"',true)")+'"><span>'+dates[i]+'</span><b>'+labels[i]+'</b></button>').join('');
  target.innerHTML=`<article class="decl founding-decl">
   <section class="decl-hero founding-decl-hero">
-   <div class="decl-hero-copy"><p class="eyebrow">UNIT 1 · THE STORY &nbsp;&nbsp;&nbsp; ${x.chapter}</p><h1>${x.date} — ${x.title}</h1><h2>${x.subtitle}</h2><p>${x.intro}</p><div class="decl-actions"><button onclick="document.getElementById('founding-big').scrollIntoView({behavior:'smooth'})">▶ &nbsp; Start the overview</button><button class="outline" onclick="document.getElementById('founding-learn').scrollIntoView({behavior:'smooth'})">Explore the ideas →</button></div></div>
+   <div class="decl-hero-copy"><p class="eyebrow">UNIT 1 · THE STORY &nbsp;&nbsp;&nbsp; ${x.chapter}</p><h1><span class="fd-hero-year">${x.date}</span><span class="fd-hero-title">${x.title}</span></h1><h2>${x.subtitle}</h2><p>${x.intro}</p></div>
    <blockquote>“${x.question}”<small>— The big question</small></blockquote>
   </section>
   <nav class="decl-timeline">${timeline}</nav>
