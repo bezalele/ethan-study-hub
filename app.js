@@ -42,62 +42,41 @@ function show(id) {
 
 
 const learnChapters = {
-  1:{kicker:'CHAPTER 01 · FOUNDATIONS',title:'Why was American government designed this way?',intro:'Follow one problem through the founding: government must be strong enough to work, but limited enough to protect liberty.',model:'Britain felt too powerful → the Articles were too weak → the Constitution sought balance.',steps:[
-    ['Why government?','People need common rules, security, ways to settle disputes, and institutions capable of acting.'],
-    ['Colonies & Britain','Colonists lived under British authority while developing their own political habits and expectations.'],
-    ['Declaration','Independence turned the conflict into an argument about natural rights and consent of the governed.'],
-    ['Articles of Confederation','The first national framework deliberately kept the central government weak.'],
-    ['Why it struggled','The national government lacked important tools to raise revenue and coordinate the states.'],
-    ['Constitutional Convention','Delegates redesigned the system around stronger national power, representation, and checks.'],
-    ['Constitution & Bill of Rights','Power was divided and limited; amendments added explicit protections for individual liberty.'],
-    ['Federalism','National and state governments share authority — a tension that continues throughout the course.']]},
-  2:{kicker:'CHAPTER 02 · BRANCHES & POWER',title:'Who has power — and who can stop them?',intro:'The Constitution divides national power among institutions that must cooperate but also restrain one another.',model:'Congress makes → President executes → Courts interpret → Bureaucracy implements.',steps:[
-    ['Congress','House and Senate represent differently, make laws, control spending, and oversee government.'],
-    ['The Presidency','The president executes laws and has formal and informal tools that shape national policy.'],
-    ['The Courts','Federal courts resolve disputes and interpret laws and the Constitution.'],
-    ['The Bureaucracy','Departments and agencies turn broad laws into everyday administration and policy.'],
-    ['Checks & Balances','Appointments, vetoes, impeachment, oversight and judicial review keep power contested.'],
-    ['Policymaking','Policy emerges from interaction — not from one branch acting alone.']]},
-  3:{kicker:'CHAPTER 03 · LIBERTIES & RIGHTS',title:'What can government do — and what must it not do?',intro:'This chapter separates two ideas that are easy to mix up: liberty from government interference and equal treatment under law.',model:'Civil liberties = freedom FROM government. Civil rights = equal treatment BY government.',steps:[
-    ['Bill of Rights','The first ten amendments protect specific liberties and procedural rights.'],
-    ['First Amendment','Religion, speech, press, assembly and petition create recurring constitutional conflicts.'],
-    ['Due Process & Privacy','Constitutional protections constrain how government can deprive people of liberty.'],
-    ['Selective Incorporation','The Fourteenth Amendment helped apply many Bill of Rights protections to the states.'],
-    ['Equal Protection','Civil-rights disputes ask when government classifications or unequal treatment violate the Constitution.'],
-    ['Cases & Social Change','Court decisions and political movements shape how constitutional promises work in practice.']]},
-  4:{kicker:'CHAPTER 04 · BELIEFS & IDEOLOGY',title:'Why do Americans disagree about what government should do?',intro:'Political attitudes come from people and experience before they become polls, ideology, or policy preferences.',model:'Experience → beliefs → public opinion → ideology → policy preferences.',steps:[
-    ['Political Socialization','Family, school, community, generation and events can shape political attitudes.'],
-    ['Public Opinion','Polls try to measure what populations think; samples and question wording matter.'],
-    ['Ideology','Broad beliefs help people organize views about the role of government.'],
-    ['Political Events','Major events can change priorities and attitudes over time.'],
-    ['Economic Policy','Different views of markets, taxation and government intervention produce policy disagreement.'],
-    ['Social Policy','Values and ideas about rights, order and government authority shape social-policy debates.']]},
-  5:{kicker:'CHAPTER 05 · POLITICAL PARTICIPATION',title:'How do people influence government?',intro:'Citizens connect to government through more than elections: parties, groups, campaigns and media all transmit political pressure.',model:'People → opinions → organizations → elections → government → policy → people.',steps:[
-    ['Voting & Turnout','Rules, resources, motivation and political context affect participation.'],
-    ['Political Parties','Parties organize coalitions, recruit candidates and help voters structure choices.'],
-    ['Interest Groups','Groups organize around shared interests and try to influence institutions and policy.'],
-    ['Elections','Different election systems and institutions shape campaigns and representation.'],
-    ['Campaigns & Finance','Candidates use organizations, money, messages and mobilization to compete.'],
-    ['Media','Media helps set attention, distribute information and connect political actors with the public.']]}
+1:{kicker:'CHAPTER 1 OF 5 · FOUNDATIONS',title:'Why was American government designed this way?',intro:'Before memorizing government, follow the problem that created it.',model:'Britain felt too powerful → the Articles were too weak → the Constitution tried to find balance.',story:true,steps:[
+['Why do people need government?','Shared rules, protection, public needs and a way to settle disputes require some form of government. The hard question is how much power it should have.'],
+['Colonial America','The colonies belonged to Britain but developed habits of local self-government. Conflict grew when British control and colonial expectations collided.'],
+['1776 · Declaration of Independence','The colonies explained why they were leaving Britain. The document argues from natural rights and consent of the governed.'],
+['1781 · Articles of Confederation','Fear of another powerful central government produced a national system that intentionally gave most power to the states.'],
+['Why the Articles struggled','The national government had difficulty raising revenue, regulating interstate commerce and coordinating action among states.'],
+['1787 · Constitutional Convention','Delegates met to repair the system and instead designed a new framework with stronger national power divided among institutions.'],
+['1788–1791 · Constitution + Bill of Rights','The Constitution organized power. The Bill of Rights added explicit protections for liberty.'],
+['Federalism','Power is shared between national and state governments. That relationship continues through the entire course.']]},
+2:{kicker:'CHAPTER 2 OF 5 · BRANCHES & POWER',title:'Who has power — and who can stop them?',intro:'Now that the Constitution exists, see how national power is divided.',model:'Congress makes laws → President executes → Courts interpret → Bureaucracy implements.',steps:[['Congress','The House and Senate make federal law, control spending and oversee government.'],['The President','The president executes laws and uses formal and informal powers to influence policy.'],['The Courts','Federal courts resolve disputes and interpret federal law and the Constitution.'],['The Bureaucracy','Departments and agencies administer programs and implement policy.'],['Checks & Balances','Each branch has tools that can restrain the others.'],['Policymaking','Government action usually requires interaction among institutions, not one branch acting alone.']]},
+3:{kicker:'CHAPTER 3 OF 5 · LIBERTIES & RIGHTS',title:'What can government do — and what must it not do?',intro:'Once government has power, the next question is how the Constitution protects people.',model:'Civil liberties = freedom from government interference. Civil rights = equal treatment under law.',steps:[['Bill of Rights','The first ten amendments protect specific liberties and procedural rights.'],['First Amendment','Religion, speech, press, assembly and petition create recurring constitutional questions.'],['Due Process & Privacy','Constitutional protections constrain how government can deprive people of liberty.'],['Selective Incorporation','The Fourteenth Amendment is central to applying many Bill of Rights protections to state governments.'],['Equal Protection','Civil-rights disputes ask when unequal government treatment violates the Constitution.'],['Cases & Social Change','Court decisions and political movements affect how constitutional guarantees operate in practice.']]},
+4:{kicker:'CHAPTER 4 OF 5 · BELIEFS & IDEOLOGY',title:'Why do Americans disagree about government?',intro:'Institutions respond to people who hold different values, experiences and ideas about government.',model:'Experience → beliefs → public opinion → ideology → policy preferences.',steps:[['Political Socialization','Family, school, community, generation and events can shape political attitudes.'],['Public Opinion','Polling estimates what populations think; sampling and question design affect what we can conclude.'],['Ideology','Broad beliefs help organize views about government and public policy.'],['Political Events','Events can change public priorities and attitudes over time.'],['Economic Policy','Views about markets, taxes and government intervention produce policy disagreements.'],['Social Policy','Ideas about rights, order and government authority shape social-policy disagreements.']]},
+5:{kicker:'CHAPTER 5 OF 5 · PARTICIPATION',title:'How do people influence government?',intro:'Finish the course by connecting citizens back to the institutions they influence.',model:'People → opinions → organizations → elections → government → policy → people.',steps:[['Voting & Turnout','Rules, resources, motivation and political context affect participation.'],['Political Parties','Parties organize coalitions, recruit candidates and help structure electoral choices.'],['Interest Groups','Groups organize around shared interests and seek to influence institutions and policy.'],['Elections','Election rules and institutions shape campaigns and representation.'],['Campaigns & Finance','Candidates use organizations, money, messages and mobilization to compete.'],['Media','Media distributes political information and connects citizens, campaigns and government.']]}
 };
 
 function openLearn(n=1){
-  const c=learnChapters[n] || learnChapters[1];
-  const target=document.getElementById('learnContent');
-  if(target) target.innerHTML=`
-    <p class="eyebrow">${c.kicker}</p><h1>${c.title}</h1><p class="learn-intro">${c.intro}</p>
-    <div class="mental-model"><small>MENTAL MODEL</small><strong>${c.model}</strong></div>
-    <p class="eyebrow learn-zoom-label">ZOOM IN · ONE IDEA AT A TIME</p>
-    <div class="learn-steps">${c.steps.map((x,i)=>`<details ${i===0?'open':''}><summary><b>${String(i+1).padStart(2,'0')}</b><span>${x[0]}</span><i>+</i></summary><p>${x[1]}</p></details>`).join('')}</div>
-    <div class="chapter-next"><button onclick="show('library')">Connect Documents & Cases →</button>${n<5?`<button onclick="openLearn(${n+1})">Next Chapter →</button>`:'<button onclick="show(\'practice\')">Practice →</button>'}</div>`;
-  document.querySelectorAll('.learn-rail [data-chapter]').forEach(b=>b.classList.toggle('active',Number(b.dataset.chapter)===n));
-  show('story');
+ const c=learnChapters[n]||learnChapters[1], target=document.getElementById('learnContent');
+ const history=c.story?'<div class="history-line"><span>COLONIES</span><i>→</i><span>DECLARATION</span><i>→</i><span>ARTICLES</span><i>→</i><span>CONVENTION</span><i>→</i><span>CONSTITUTION</span><i>→</i><span>FEDERALISM</span></div>':'';
+ const evidence=n===1?'<button onclick="show(\'declaration\')">Open the Declaration →</button><button onclick="show(\'constitution\')">Explore the Constitution →</button>':'<button onclick="show(\'library\')">Documents & Cases for this chapter →</button>';
+ if(target) target.innerHTML=`
+ <div class="chapter-heading"><p class="eyebrow">${c.kicker}</p><h1>${c.title}</h1><p>${c.intro}</p></div>
+ ${history}
+ <div class="mental-model"><small>REMEMBER THIS FIRST</small><strong>${c.model}</strong></div>
+ <div class="lesson-guide"><p class="eyebrow">FOLLOW THE STORY</p><p>Open each step in order. Keep the others closed so the page stays simple.</p></div>
+ <div class="guided-steps">${c.steps.map((x,i)=>`<details ${i===0?'open':''}><summary><b>${i+1}</b><span>${x[0]}</span><i>+</i></summary><div><p>${x[1]}</p>${n===1&&i===2?'<button onclick="show(\'declaration\')">See the Declaration →</button>':''}${n===1&&i===6?'<button onclick="show(\'constitution\')">See the Constitution →</button>':''}</div></details>`).join('')}</div>
+ <div class="lesson-evidence"><p class="eyebrow">WHEN YOU UNDERSTAND THE STORY</p><h2>Connect the evidence</h2><div>${evidence}</div></div>
+ <div class="lesson-next">${n>1?`<button onclick="openLearn(${n-1})">← Chapter ${n-1}</button>`:'<button onclick="show(\'map\')">← Course Map</button>'}<span>${n} / 5</span>${n<5?`<button class="primary" onclick="openLearn(${n+1})">Chapter ${n+1} →</button>`:'<button class="primary" onclick="show(\'practice\')">Practice →</button>'}</div>`;
+ const p=document.getElementById('lessonProgress'); if(p)p.textContent='Chapter '+n+' of 5';
+ show('story');
 }
 
-function openLibraryNote(title, text){
-  const d=document.getElementById('libraryDetail');
-  if(d) d.innerHTML='<p class="eyebrow">WHY IT MATTERS</p><h3>'+title+'</h3><p>'+text+'</p><p class="library-hint">Use this as evidence inside the course story — not as an isolated fact to memorize.</p>';
-  show('library');
+function openLibraryNote(title,text){
+ const d=document.getElementById('libraryDetail');
+ if(d)d.innerHTML='<p class="eyebrow">WHY IT MATTERS</p><h3>'+title+'</h3><p>'+text+'</p><button onclick="history.back()">← Go back</button>';
+ show('library');
 }
 
 function renderJourney() {
