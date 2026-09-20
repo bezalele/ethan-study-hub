@@ -53,183 +53,92 @@ function renderJourney() {
 function renderDeclaration() {
   const target = document.getElementById('declarationContent');
   if (!target) return;
-
   const chapter = content.declarationChapter;
-  const timelineItems = content.storyScenes;
-  const slideIndex = storyState.declaration.slide;
+  const slideIndex = storyState.declaration.slide || 0;
   const activeSlide = chapter.miniGallery[slideIndex] || chapter.miniGallery[0];
+  const heroImage = 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20independence.jpg?width=1800';
 
   target.innerHTML = `
-    <article class="story-chapter-shell">
-      <header class="story-hero" style="background-image: linear-gradient(90deg, rgba(9, 18, 15, 0.82), rgba(9, 18, 15, 0.28)), url('${chapter.banner}')">
-        <div class="story-hero-inner">
-          <div class="story-hero-copy">
-            <p class="eyebrow">${chapter.kicker}</p>
-            <div class="story-hero-title-wrap">
-              <span class="story-hero-date">1776</span>
-              <h1>${chapter.title}</h1>
-            </div>
-            <p class="story-hero-deck">${chapter.deck}</p>
-            <div class="story-hero-actions">
-              <button type="button" class="primary" onclick="document.getElementById('story-document').scrollIntoView({behavior: 'smooth'});">Explore the document</button>
-              <button type="button" class="ghost light" onclick="document.getElementById('story-next').scrollIntoView({behavior: 'smooth'});">What happened next?</button>
-            </div>
-            <blockquote>“${chapter.quote}”</blockquote>
-          </div>
-
-          <aside class="story-side-nav" aria-label="In this chapter">
-            <p>In this chapter</p>
-            <ol>
-              ${chapter.sections.map((section) => `<li>${section.heading}</li>`).join('')}
-            </ol>
-          </aside>
+    <article class="decl">
+      <section class="decl-hero" style="background-image:linear-gradient(90deg,rgba(7,14,12,.90),rgba(7,14,12,.34)),url('${heroImage}')">
+        <div class="decl-hero-copy">
+          <p class="eyebrow">UNIT 1 · THE STORY &nbsp;&nbsp;&nbsp; CHAPTER 2 OF 5</p>
+          <h1>1776 — Declaration<br>of Independence</h1>
+          <h2>A bold statement. A new nation. A big question: now what?</h2>
+          <p>On July 4, 1776, the thirteen colonies declared that they were no longer part of Britain. The Declaration explained why — and laid out powerful ideas about liberty, rights, and government.</p>
+          <div class="decl-actions"><button onclick="document.getElementById('decl-big').scrollIntoView({behavior:'smooth'})">▶ &nbsp; Watch 2 min overview</button><button class="outline" onclick="document.getElementById('decl-doc').scrollIntoView({behavior:'smooth'})">Explore the document →</button></div>
         </div>
-      </header>
+        <blockquote>“We hold these truths to be self-evident,<br>that all men are created equal…”<small>— Declaration of Independence (1776)</small></blockquote>
+      </section>
 
-      <div class="story-timeline">
-        ${timelineItems.map((scene) => {
-          const active = scene.frame === 'declaration' ? 'is-active' : '';
-          return `
-            <article class="story-timeline-card ${active}">
-              <span>${scene.era}</span>
-              <strong>${scene.title}</strong>
-            </article>
-          `;
-        }).join('')}
-      </div>
+      <nav class="decl-timeline" aria-label="Founding journey">
+        <button onclick="show('story')"><span>1607–1775</span><b>British Colonies</b></button>
+        <button class="active"><span>1776</span><b>Declaration of Independence</b></button>
+        <button onclick="show('story')"><span>1781–1789</span><b>Articles of Confederation</b></button>
+        <button onclick="show('story')"><span>1787</span><b>Constitutional Convention</b></button>
+        <button onclick="show('constitution')"><span>1788–1791</span><b>Constitution + Bill of Rights</b></button>
+      </nav>
 
-      <div class="story-main-layout">
-        <section class="story-panel story-panel-feature">
-          <div class="story-panel-header">
-            <span class="eyebrow">The Big Picture</span>
-          </div>
-          <p>${chapter.intro}</p>
+      <div class="decl-body">
+        <section id="decl-big" class="decl-big">
+          <p class="eyebrow">THE BIG PICTURE</p><h2>Why the Declaration?</h2>
+          <p>The colonies' dispute with British rule grew around representation, imperial authority, taxation, and political rights. The Declaration turned that conflict into a public argument for independence.</p>
+          <div class="decl-quote">“Governments are instituted among Men, deriving their just powers from the consent of the governed…”<small>— Declaration of Independence</small></div>
         </section>
 
-        <section class="story-panel story-gallery-panel">
-          <div class="story-gallery-header">
-            <div>
-              <span class="eyebrow">Visual archive</span>
-              <h3>Witness the founding moment</h3>
-            </div>
-            <div class="story-gallery-count">${String(slideIndex + 1).padStart(2, '0')} / ${String(chapter.miniGallery.length).padStart(2, '0')}</div>
-          </div>
-
-          <div class="story-gallery-stage">
-            <button class="story-gallery-arrow" type="button" aria-label="Previous slide" onclick="changeDeclarationSlide(-1)">←</button>
+        <section class="decl-gallery">
+          <div class="decl-stage">
             <img src="${activeSlide.src}" alt="${activeSlide.caption}">
-            <button class="story-gallery-arrow" type="button" aria-label="Next slide" onclick="changeDeclarationSlide(1)">→</button>
+            <button class="prev" onclick="changeDeclarationSlide(-1)" aria-label="Previous image">‹</button>
+            <button class="next" onclick="changeDeclarationSlide(1)" aria-label="Next image">›</button>
+            <div><b>${activeSlide.caption}</b><small>${activeSlide.credit}</small></div><span>${slideIndex+1} / ${chapter.miniGallery.length}</span>
           </div>
+          <div class="decl-thumbs">${chapter.miniGallery.map((x,i)=>`<button class="${i===slideIndex?'active':''}" onclick="setDeclarationSlide(${i})"><img src="${x.src}" alt=""><span>${x.caption}</span></button>`).join('')}</div>
+        </section>
 
-          <div class="story-gallery-caption">
-            <strong>${activeSlide.caption}</strong>
-            <span>${activeSlide.credit}</span>
-          </div>
+        <aside class="decl-side">
+          <section><h3>🔑 &nbsp; Key Takeaways</h3><ol>
+            <li><b>1</b><span>Explains why the colonies are separating from Britain.</span></li>
+            <li><b>2</b><span>Introduces ideas about natural rights, equality, and consent of the governed.</span></li>
+            <li><b>3</b><span>Lists grievances used to justify separation.</span></li>
+            <li><b>4</b><span>Declares the colonies free and independent states.</span></li>
+            <li><b>5</b><span>States principles; it does not design the later federal government.</span></li>
+          </ol></section>
+          <section><h3>💡 &nbsp; Interesting Fact</h3><p>Thomas Jefferson drafted the initial text, and the Committee of Five and Continental Congress revised it before adoption.</p></section>
+        </aside>
 
-          <div class="story-gallery-thumbs">
-            ${chapter.miniGallery.map((image, index) => `
-              <button class="story-thumb ${index === slideIndex ? 'active' : ''}" type="button" data-thumb-index="${index}" onclick="setDeclarationSlide(${index})">
-                <img src="${image.src}" alt="${image.caption}">
-              </button>
-            `).join('')}
+        <section id="decl-doc" class="decl-document">
+          <div><p class="eyebrow">A CLOSER LOOK</p><h2>The Document</h2><p>The argument moves from principles, to grievances, to a declaration of independence.</p></div>
+          <img src="${chapter.miniGallery[1].src}" alt="Declaration of Independence facsimile">
+          <div class="decl-doc-tabs"><h3>Explore by Section</h3>
+            <button onclick="showDocPart(0)">Preamble <span>›</span></button><button onclick="showDocPart(1)">Grievances <span>›</span></button><button onclick="showDocPart(2)">Declaration <span>›</span></button><button onclick="showDocPart(3)">Signatures <span>›</span></button>
+            <p id="decl-doc-detail">Select a section to see what role it plays in the argument.</p>
           </div>
         </section>
 
-        <div class="story-lower-grid">
-          <section class="story-panel fact-panel">
-            <span class="eyebrow">Interesting Fact</span>
-            <h3>Why this document still feels modern</h3>
-            <p>${chapter.factStrip[2].value} is not just a phrase in a historical document. It became the language people used to test whether government was legitimate.</p>
-            <div class="fact-portrait">
-              <img src="${chapter.miniGallery[0].src}" alt="Declaration manuscript detail">
-            </div>
-          </section>
-
-          <section class="story-panel takeaway-panel">
-            <span class="eyebrow">Key Takeaways</span>
-            <ol>
-              ${chapter.takeaways.map((item, index) => `<li><span>${index + 1}</span><p>${item}</p></li>`).join('')}
-            </ol>
-          </section>
-        </div>
-
-        <section id="story-document" class="story-panel doc-panel">
-          <div class="story-panel-header">
-            <span class="eyebrow">Explore the document</span>
-            <h3>Declaration of Independence</h3>
-          </div>
-
-          <div class="doc-layout">
-            <div class="doc-facsimile">
-              <img src="${chapter.miniGallery[0].src}" alt="Declaration of Independence document">
-            </div>
-            <div class="doc-explorer">
-              <ol>
-                ${chapter.sections.map((section, index) => `<li class="${index === 0 ? 'active' : ''}"><span>${String(index + 1).padStart(2, '0')}</span><strong>${section.heading}</strong></li>`).join('')}
-              </ol>
-              <div class="doc-insight">
-                <h4>${chapter.sections[0].heading}</h4>
-                <p>${chapter.sections[0].body}</p>
-              </div>
-            </div>
-          </div>
+        <section class="decl-card"><h3>🌎 &nbsp; Why It Matters</h3><p>The Declaration's language of equality, rights, and consent became a reference point in later American debates about liberty and citizenship.</p></section>
+        <section class="decl-card decl-check"><h3>✅ &nbsp; Quick Check</h3><p><b>What was the main purpose of the Declaration of Independence?</b></p>
+          <button onclick="checkDecl(this,false)">A. To create a plan for the new government</button><button onclick="checkDecl(this,true)">B. To explain why the colonies were separating from Britain</button><button onclick="checkDecl(this,false)">C. To establish the Bill of Rights</button><p id="decl-feedback"></p>
         </section>
-
-        <section class="story-panel why-panel">
-          <div class="story-panel-header">
-            <span class="eyebrow">Why It Matters</span>
-            <h3>The Declaration created a new standard.</h3>
-          </div>
-          <div class="why-grid">
-            <div class="why-box">
-              <span>01</span>
-              <strong>Rights before government</strong>
-              <p>The colonists argued that liberty comes from natural rights, not royal permission.</p>
-            </div>
-            <div class="why-box">
-              <span>02</span>
-              <strong>Consent creates legitimacy</strong>
-              <p>Government is justified only when the governed accept it as a source of order and protection.</p>
-            </div>
-            <div class="why-box">
-              <span>03</span>
-              <strong>Revolution as political argument</strong>
-              <p>Separation was framed as a moral and political response to failed rule.</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="story-panel quick-check-panel">
-          <div class="story-panel-header">
-            <span class="eyebrow">Quick Check</span>
-            <h3>${chapter.knowledgeCheck[0].question}</h3>
-          </div>
-          <button type="button" class="ghost reveal-answer" onclick="document.getElementById('chapter-quick-answer').classList.toggle('visible')">Reveal answer</button>
-          <div id="chapter-quick-answer" class="quick-answer">
-            <p>${chapter.knowledgeCheck[0].answer}</p>
-          </div>
-        </section>
-
-        <section id="story-next" class="story-panel next-panel">
-          <div class="next-panel-image">
-            <img src="${content.journeyChapters[1].image}" alt="Articles of Confederation">
-          </div>
-          <div class="next-panel-copy">
-            <span class="eyebrow">What’s Next?</span>
-            <h3>${content.journeyChapters[1].title}</h3>
-            <p>${content.journeyChapters[1].summary}</p>
-            <button type="button" class="primary" onclick="openChapter('${chapter.next.id}')">${chapter.next.label}</button>
-          </div>
-        </section>
-
-        <nav class="story-bottom-nav" aria-label="Chapter navigation">
-          <button type="button" class="ghost" onclick="show('story')">← Previous chapter</button>
-          <div class="story-progress"><span>Chapter 01</span><strong>Declaration of Independence</strong></div>
-          <button type="button" class="primary" onclick="openChapter('${chapter.next.id}')">Next chapter →</button>
-        </nav>
+        <section class="decl-card decl-next"><h3>➡️ &nbsp; What’s Next?</h3><p>The Declaration was just the beginning. Next, the new nation tried its first national framework — the Articles of Confederation.</p><button onclick="show('story')">Continue the Story →</button></section>
       </div>
-    </article>
-  `;
+    </article>`;
+}
+
+function showDocPart(index) {
+  const parts = [
+    '<b>Preamble / principles:</b> introduces the argument about equality, rights, and the purpose of government.',
+    '<b>Grievances:</b> lists complaints against British rule offered as evidence for separation.',
+    '<b>Declaration:</b> announces that the colonies are free and independent states.',
+    '<b>Signatures:</b> records the delegates who endorsed the adopted Declaration.'
+  ];
+  const el=document.getElementById('decl-doc-detail'); if(el) el.innerHTML=parts[index];
+}
+function checkDecl(button, correct) {
+  document.querySelectorAll('.decl-check button').forEach(x=>x.classList.remove('correct','wrong'));
+  button.classList.add(correct?'correct':'wrong');
+  const f=document.getElementById('decl-feedback');
+  if(f) f.textContent=correct?'Correct — the Declaration justified separation; it did not create the later federal government.':'Not quite. Look again at what the document was trying to explain in 1776.';
 }
 
 function changeDeclarationSlide(direction) {
