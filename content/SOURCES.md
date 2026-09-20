@@ -20,3 +20,53 @@ Important 2026–27 update: College Board's Fall 2026 clarification adds Emancip
 
 ## Editorial rule
 Do not treat this register as permission to copy source prose. Summarize in original language and use short quotations only when the exact primary-source wording matters.
+
+
+## Founding chapter content checks
+The five Unit 1 landing pages were reviewed against the current College Board Unit 1 framework and primary federal sources. In particular:
+- College Board Unit 1: natural rights, social contract, popular sovereignty, limited government, republicanism, separation of powers, checks and balances, and federalism.
+- National Archives — Declaration timeline and history: https://www.archives.gov/founding-docs/timeline
+- National Archives — Articles of Confederation: https://www.archives.gov/milestone-documents/articles-of-confederation
+- National Archives — Constitution history and framers: https://www.archives.gov/founding-docs/more-perfect-union and https://www.archives.gov/founding-docs/founding-fathers
+- National Archives — Bill of Rights: https://www.archives.gov/founding-docs/bill-of-rights
+
+## Local image provenance — five founding chapters
+All chapter art below is stored locally under `assets/chapters/`. The live pages do **not** hotlink these sources.
+
+### British Colonies
+- `colonies/patrick-henry.jpg` — Library of Congress, *Patrick Henry before the Virginia House of Burgesses May 30, 1765*, item 2006691555. No known restrictions on publication.
+- `colonies/house-of-burgesses.jpg` — Library of Congress, Prints & Photographs digital image cph.3c19064.
+- `colonies/boston-massacre.jpg` — Library of Congress, Paul Revere, *The bloody massacre perpetrated in King Street Boston on March 5th 1770*, item 2008661777. No known restrictions on publication.
+- `colonies/boston-tea-party.jpg` — Library of Congress, *The Boston Tea Party—destruction of the tea in Boston Harbor, December 16, 1773*, item 2022643081. No known restrictions on publication.
+- `colonies/lexington.jpg` — Library of Congress, Amos Doolittle after Ralph Earl, *The Battle of Lexington, April 19, 1775*, item 2015650276. No known restrictions on publication.
+
+### Declaration of Independence
+- `declaration/committee-of-five.jpg` — Library of Congress, Prints & Photographs digital image cph.3a04728.
+- `declaration/presentation-to-congress.jpg` — Library of Congress, Prints & Photographs digital image pga.04794.
+- `declaration/signing.jpg` — Library of Congress, Currier print, *Declaration of Independence: July 4th 1776*, item 91795009. No known restrictions on publication.
+- `declaration/public-reading.jpg` — Library of Congress, *Reading the Declaration of Independence by John Nixon... July 8, 1776*, item 95501786. No known restrictions on publication.
+- `declaration/declaration-document.jpg` — National Archives, official engrossed Declaration of Independence.
+
+### Articles of Confederation
+- `articles/articles-document.jpg` — National Archives, *Articles of Confederation (1777)*.
+- `articles/treaty-of-paris.jpg` — National Archives, *Treaty of Paris (1783)*.
+- `articles/northwest-ordinance.jpg` — National Archives, *Northwest Ordinance (1787)*.
+- `articles/shays-rebellion.jpg` — Library of Congress, Prints & Photographs digital image cph.3b25109.
+- `articles/federal-hall.jpg` — Library of Congress, *Federal Hall, N.Y. 1789 — First capitol of the United States*, item 2002720476.
+
+### Constitutional Convention
+- `convention/independence-hall.jpg` — Library of Congress, Prints & Photographs digital image ppmsca.24335.
+- `convention/virginia-plan.jpg` — National Archives, Virginia Plan, 1787.
+- `convention/james-madison.jpg` — Library of Congress, Prints & Photographs digital image pga.11880.
+- `convention/signing-constitution.jpg` — Library of Congress, *Scene at signing of the Constitution of the United States*, ppmsc.00181.
+- The Constitution image used in the gallery is the same local National Archives file used by Chapter 5; it is referenced once rather than duplicated.
+
+### Constitution + Bill of Rights
+- `constitution-rights/constitution.jpg` — National Archives, first page of the Constitution of the United States.
+- `constitution-rights/bill-of-rights.jpg` — National Archives, Bill of Rights.
+- `constitution-rights/alexander-hamilton.jpg` — Library of Congress, Prints & Photographs digital image det.4a26388.
+- James Madison reuses the single local Library of Congress file in `assets/chapters/convention/james-madison.jpg`.
+- The final “living system” slide reuses the existing local Capitol image in `assets/home/course-capitol.png`.
+
+## Image-use rule
+When adding or replacing chapter art, download the image into the repository first. Chapter code must reference a local `assets/` path, never a remote image URL. Prefer National Archives, Library of Congress, National Park Service, Architect of the Capitol, and other public-domain or clearly reusable institutional collections.
