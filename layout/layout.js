@@ -11,7 +11,7 @@
 
 /** The navigation. One array, one source of truth. */
 export const NAV = [
-  { id: 'hub', label: 'Study Hub', href: './' },
+  { id: 'hub', label: '← Study Hub', href: './' },
   { id: 'home',   label: 'Home',       href: '#/' },
   { id: 'course', label: 'Course Map', href: '#/course' },
   { id: 'study',  label: 'Study',      href: '#/study' },

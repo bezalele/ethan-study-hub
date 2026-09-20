@@ -402,31 +402,98 @@
   color: var(--c-ink-soft);
 }
 .page--chapter .ch-closer__art {
+  position: relative;
   aspect-ratio: 4 / 3;
   border-radius: var(--r-md);
   overflow: hidden;
   border: 1px solid var(--c-line);
 }
+
+.page--chapter .ch-closer__slides { position: absolute; inset: 0; }
+.page--chapter .ch-closer__frame { position: absolute; inset: 0; }
+.page--chapter .ch-closer__frame[hidden] { display: none; }
+
+.page--chapter .ch-closer__arrow {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--c-forest);
+  font-size: 19px;
+  line-height: 1;
+  box-shadow: var(--shadow-md);
+}
+.page--chapter .ch-closer__arrow:hover { background: #fff; }
+.page--chapter .ch-closer__arrow--prev { left: var(--s-3); }
+.page--chapter .ch-closer__arrow--next { right: var(--s-3); }
+
+.page--chapter .ch-closer__dots {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: var(--s-3);
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+.page--chapter .ch-closer__dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  background: rgba(8, 20, 16, 0.35);
+}
+.page--chapter .ch-closer__dot.is-current { background: #fff; }
 .page--chapter .ch-closer__sections-head {
   font-size: 16px;
   margin-bottom: var(--s-3);
 }
 .page--chapter .ch-closer__sections ol { list-style: none; display: grid; gap: 6px; }
+/* Label above note, not beside it. Side by side, the `auto` note column took
+   all the width and the `1fr` label column collapsed, so a short label like
+   "1765" spilled over the note text. Stacking also gives the note room to be
+   read at a comfortable size. */
 .page--chapter .ch-section {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto 14px;
-  gap: var(--s-3);
-  align-items: baseline;
-  padding: 10px var(--s-3);
+  grid-template-columns: minmax(0, 1fr) 14px;
+  gap: 2px var(--s-3);
+  align-items: start;
+  padding: var(--s-3) var(--s-4);
   background: var(--c-parchment);
   border: 1px solid var(--c-line);
   border-radius: var(--r-sm);
   color: var(--c-ink);
 }
 .page--chapter .ch-section:hover { border-color: var(--c-forest); color: var(--c-ink); }
-.page--chapter .ch-section strong { font-family: var(--font-display); font-size: 14px; }
-.page--chapter .ch-section span { font-size: 13px; color: var(--c-ink-faint); }
-.page--chapter .ch-section i { font-style: normal; color: var(--c-forest); }
+.page--chapter .ch-section strong {
+  grid-column: 1;
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--c-brick);
+}
+.page--chapter .ch-section span {
+  grid-column: 1;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--c-ink);
+}
+.page--chapter .ch-section i {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-style: normal;
+  font-size: 17px;
+  color: var(--c-forest);
+}
 
 /* ===== Bottom cards ======================================================= */
 

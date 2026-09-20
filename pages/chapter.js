@@ -224,6 +224,33 @@ function factCard(ch) {
     </section>`;
 }
 
+/* The middle of "A closer look" is a slideshow when the chapter has more than
+   one image, and a plain picture when it has one. */
+function closerArt(cl) {
+  const images = cl.images && cl.images.length ? cl.images : (cl.image ? [cl.image] : []);
+  if (!images.length) return placeholder(cl.title, 'ch-closer__img');
+  if (images.length === 1) return picture(images[0], cl.title, 'ch-closer__img');
+
+  const frames = images.map((im, i) => `
+    <div class="ch-closer__frame" data-cframe="${i}" ${i ? 'hidden' : ''}>
+      ${picture(im, cl.title, 'ch-closer__img')}
+    </div>`).join('');
+
+  const dots = images.map((_, i) => `
+    <button class="ch-closer__dot${i ? '' : ' is-current'}" type="button"
+            data-cgoto="${i}" aria-label="Image ${i + 1} of ${images.length}"></button>`).join('');
+
+  return `
+    <div class="ch-closer__slides" data-closer>
+      ${frames}
+      <button class="ch-closer__arrow ch-closer__arrow--prev" type="button"
+              data-cstep="-1" aria-label="Previous image">‹</button>
+      <button class="ch-closer__arrow ch-closer__arrow--next" type="button"
+              data-cstep="1" aria-label="Next image">›</button>
+      <div class="ch-closer__dots">${dots}</div>
+    </div>`;
+}
+
 /* --- A closer look -------------------------------------------------------- */
 
 function closerLook(ch) {
@@ -247,9 +274,7 @@ function closerLook(ch) {
         <p class="ch-closer__body">${esc(cl.body)}</p>
         <a class="btn btn--primary" href="#/study/documents">${esc(cl.cta || 'Read the documents')} →</a>
       </div>
-      <div class="ch-closer__art">
-        ${picture(cl.image, cl.title, 'ch-closer__img')}
-      </div>
+      <div class="ch-closer__art">${closerArt(cl)}</div>
       <div class="ch-closer__sections">
         <h3 class="ch-closer__sections-head">Explore by section</h3>
         <ol>${sections}</ol>
@@ -321,6 +346,27 @@ function wireGallery(root) {
     if (step) { show(index + Number(step.dataset.step)); return; }
     const goto = e.target.closest('[data-goto]');
     if (goto) show(Number(goto.dataset.goto));
+  });
+}
+
+function wireCloser(root) {
+  const box = root.querySelector('[data-closer]');
+  if (!box) return;
+  const frames = [...box.querySelectorAll('[data-cframe]')];
+  const dots = [...box.querySelectorAll('[data-cgoto]')];
+  let i = 0;
+
+  function show(n) {
+    i = (n + frames.length) % frames.length;
+    frames.forEach((f, k) => { f.hidden = k !== i; });
+    dots.forEach((d, k) => d.classList.toggle('is-current', k === i));
+  }
+
+  box.addEventListener('click', (e) => {
+    const step = e.target.closest('[data-cstep]');
+    if (step) { show(i + Number(step.dataset.cstep)); return; }
+    const goto = e.target.closest('[data-cgoto]');
+    if (goto) show(Number(goto.dataset.cgoto));
   });
 }
 
@@ -528,6 +574,7 @@ export default {
     });
 
     wireGallery(page);
+    wireCloser(page);
     wireFacts(page);
     wireQuiz(page);
     return page;

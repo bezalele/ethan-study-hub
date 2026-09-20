@@ -38,6 +38,10 @@ function exists(rel) {
   return fs.existsSync(path.join(ROOT, rel));
 }
 
+/* index.html is the three-subject chooser; the AP Government app lives in
+   american-history.html. math-quest/, biology/ and hub/ are separate. */
+const APP = 'american-history.html';
+
 /** Files owned by this site (math-quest is a separate sub-app). */
 const PAGE_CSS = [
   'pages/home.css', 'pages/course-map.css', 'pages/study.css',
@@ -60,7 +64,7 @@ const ALL_JS = [
 /* --- 1. Every expected file is present ------------------------------------ */
 
 section('Files present');
-['index.html', ...ALL_CSS, ...ALL_JS, 'content/contentData.js'].forEach((f) => {
+[APP, 'index.html', ...ALL_CSS, ...ALL_JS, 'content/contentData.js'].forEach((f) => {
   check(f, exists(f));
 });
 
@@ -113,7 +117,7 @@ section('Only layout.css styles header/footer/body');
 /* --- 6. No inline event handlers ------------------------------------------ */
 
 section('No inline on* handlers');
-['index.html', ...ALL_JS].forEach((f) => {
+[APP, ...ALL_JS].forEach((f) => {
   const hits = (read(f).match(/\son(click|mouse\w+|focus|blur|change)\s*=/g) || []).length;
   check(`${f}`, hits === 0, `${hits} occurrence(s)`);
 });
@@ -141,8 +145,8 @@ function stripComments(src) {
 }
 
 const referenced = new Set();
-[...ALL_CSS, ...ALL_JS, 'index.html', 'content/contentData.js'].forEach((f) => {
-  for (const m of stripComments(read(f)).matchAll(/assets\/[A-Za-z0-9/_.-]+\.(?:jpg|jpeg|png|webp|svg)/g)) {
+[...ALL_CSS, ...ALL_JS, APP, 'content/contentData.js'].forEach((f) => {
+  for (const m of stripComments(read(f)).matchAll(/(?<![\w/])assets\/[A-Za-z0-9/_.-]+\.(?:jpg|jpeg|png|webp|svg)/g)) {
     referenced.add(m[0]);
   }
 });
@@ -224,8 +228,8 @@ check('all static internal links resolve', badLinks.length === 0, badLinks.join(
 
 /* --- 11. index.html links every stylesheet --------------------------------- */
 
-section('index.html wiring');
-const indexHtml = read('index.html');
+section(`${APP} wiring`);
+const indexHtml = read(APP);
 ALL_CSS.forEach((f) => check(`links ${f}`, indexHtml.includes(f)));
 check('renders the layout once', (indexHtml.match(/renderLayout\(\)/g) || []).length === 1);
 check('starts the router', indexHtml.includes('startRouter()'));

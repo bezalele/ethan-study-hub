@@ -8,6 +8,8 @@ const path = require('path');
 const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const PORT = 9414;
 const BASE = process.argv[2] || 'http://localhost:8080';
+/* The AP Government app; index.html is the subject chooser. */
+const APP = 'american-history.html';
 const CHAPTERS = ['colonies', 'declaration', 'articles', 'convention', 'constitution-rights'];
 
 function getJSON(u) {
@@ -85,7 +87,7 @@ const RUN = (wrong) => `(async () => {
 
     for (const ch of CHAPTERS) {
       for (const wrong of [false, true]) {
-        await tab.send('Page.navigate', { url: `${BASE}/?n=${Date.now()}#/study/${ch}` });
+        await tab.send('Page.navigate', { url: `${BASE}/${APP}?n=${Date.now()}#/study/${ch}` });
         await new Promise((r) => setTimeout(r, 400));
         const { result } = await tab.send('Runtime.evaluate', { expression: RUN(wrong), awaitPromise: true, returnByValue: true });
         const m = JSON.parse(result.value);

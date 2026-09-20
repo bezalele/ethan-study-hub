@@ -113,7 +113,9 @@
 
 /* --- Small screens -------------------------------------------------------- */
 
-@media (max-width: 720px) {
+/* 860px, not 720px: the nav carries four items now (Study Hub, Home, Course
+   Map, Study) and overflowed the viewport at tablet width. */
+@media (max-width: 860px) {
   #app-header {
     flex-wrap: wrap;
     gap: var(--s-2);

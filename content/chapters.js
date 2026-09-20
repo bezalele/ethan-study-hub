@@ -113,10 +113,12 @@ const DATA = [
       body:
         'In just ten years, a tax dispute became a war. The Stamp Act triggered organized protests over representation. The Boston Tea Party challenged British authority directly. Britain answered with the Coercive Acts, which closed Boston’s port and punished Massachusetts. Twelve colonies then met at the First Continental Congress to coordinate a response. In April 1775, British troops marched toward Concord to seize military supplies, and fighting broke out at Lexington and Concord.',
       cta: 'Explore the events',
-      image: {
-        src: 'assets/chapters/colonies/boston-tea-party.jpg',
-        alt: 'Historical print of colonists destroying tea in Boston Harbor',
-      },
+      images: [
+        {
+          src: 'assets/chapters/colonies/closer/thirteen-colonies-map.jpg',
+          alt: 'A period map of the thirteen British colonies along the Atlantic coast',
+        },
+      ],
       sections: [
         {
           label: '1765',
@@ -270,10 +272,12 @@ const DATA = [
       body:
         'You do not need to memorize every grievance. Follow the logic. The document starts with a theory of legitimate government, argues that Britain violated that theory, and then announces the political consequence: independence. That basic structure is what Ethan should be able to explain.',
       cta: 'Explore the document',
-      image: {
-        src: 'assets/chapters/declaration/declaration-document.jpg',
-        alt: 'The engrossed Declaration of Independence held by the National Archives',
-      },
+      images: [
+        {
+          src: 'assets/chapters/declaration/closer/the-engrossed-copy.jpg',
+          alt: 'The engrossed Declaration of Independence with quill and seal',
+        },
+      ],
       sections: [
         {
           label: 'Principles',
@@ -427,10 +431,12 @@ const DATA = [
       body:
         'The Articles were not a total failure. Congress helped win recognition of American independence and created a plan for western territories. The problem was capacity: Congress often had national responsibilities without the national powers needed to carry them out. It could request money from states but not tax directly, could not create one national trade policy, and had no separate executive branch to enforce its decisions.',
       cta: 'Explore the system',
-      image: {
-        src: 'assets/chapters/articles/articles-document.jpg',
-        alt: 'First page of the Articles of Confederation in the National Archives',
-      },
+      images: [
+        {
+          src: 'assets/chapters/articles/closer/what-it-could-not-do.jpg',
+          alt: 'The Articles of Confederation beside notes on unpaid debts and missing powers',
+        },
+      ],
       sections: [
         {
           label: '1781',
@@ -584,10 +590,12 @@ const DATA = [
       body:
         'Think of the Constitution as a set of answers to four hard questions. How should large and small states share power? How strong should the national government be? How do you prevent one branch from taking over? And how would the new system deal with slavery? The answers were compromises — some ingenious, some deeply unjust.',
       cta: 'Explore the design',
-      image: {
-        src: 'assets/chapters/convention/virginia-plan.jpg',
-        alt: 'The Virginia Plan from the Constitutional Convention',
-      },
+      images: [
+        {
+          src: 'assets/chapters/convention/closer/we-the-people.jpg',
+          alt: 'The opening of the Constitution — “We the People” and Article I — beside the flag',
+        },
+      ],
       sections: [
         {
           label: 'Representation',
@@ -741,10 +749,12 @@ const DATA = [
       body:
         'The Constitution does not rely on one single safeguard. It spreads power among institutions and levels of government, then the Bill of Rights adds explicit rules about freedoms and legal protections. Ethan should be able to recognize both kinds of limits: <strong>structural limits</strong> and <strong>rights-based limits</strong>.',
       cta: 'Explore the protections',
-      image: {
-        src: 'assets/chapters/constitution-rights/bill-of-rights.jpg',
-        alt: 'The Bill of Rights held by the National Archives',
-      },
+      images: [
+        {
+          src: 'assets/chapters/constitution-rights/closer/bill-of-rights.jpg',
+          alt: 'The Bill of Rights laid out on a desk with all ten amendments legible, delegates conferring behind it',
+        },
+      ],
       sections: [
         {
           label: 'Three branches',

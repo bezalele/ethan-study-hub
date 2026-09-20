@@ -23,6 +23,8 @@ const path = require('path');
 const fs = require('fs');
 
 const BASE = process.argv[2] || 'http://localhost:8080';
+/* The AP Government app; index.html is the subject chooser. */
+const APP = 'american-history.html';
 const PORT = 9333;
 
 const CHROME = process.env.CHROME || [
@@ -188,7 +190,7 @@ const PROBE = `(async () => {
 
       for (const route of ROUTES) {
         // Cache-bust the query so each route is a fresh document load.
-        await tab.send('Page.navigate', { url: `${BASE}/?n=${Date.now()}${route}` });
+        await tab.send('Page.navigate', { url: `${BASE}/${APP}?n=${Date.now()}${route}` });
         await new Promise((r) => setTimeout(r, 250));
 
         const { result } = await tab.send('Runtime.evaluate', {
