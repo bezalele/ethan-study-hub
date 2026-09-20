@@ -1,86 +1,305 @@
-/* HOME PAGE VISUAL ASSETS — clean, reliable sources */
-body:has(#home.active) .exact-hero{
-  background:
-    linear-gradient(90deg,rgba(4,13,12,.94) 0%,rgba(4,13,12,.58) 38%,rgba(25,16,7,.16) 72%,rgba(25,16,7,.05) 100%),
-    url("https://upload.wikimedia.org/wikipedia/commons/9/9d/Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg")
-    center 46%/cover no-repeat!important;
-}
-body:has(#home.active) .exact-actions{display:none!important}
-
-/* Journey images */
-body:has(#home.active) .exact-journey .j1{
-  background-image:url("https://commons.wikimedia.org/wiki/Special:Redirect/file/Mayflower%20in%20Plymouth%20Harbor%2C%20by%20William%20Halsall.jpg?width=450")!important;
-}
-body:has(#home.active) .exact-journey .j2{
-  background-image:url("https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20of%20Independence%20%28USA%29.jpg?width=450")!important;
-}
-body:has(#home.active) .exact-journey .j3{
-  background-image:url("https://commons.wikimedia.org/wiki/Special:Redirect/file/Articles%20of%20Confederation%201-5.jpg?width=450")!important;
-}
-body:has(#home.active) .exact-journey .j4{
-  background-image:url("https://upload.wikimedia.org/wikipedia/commons/9/9d/Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg")!important;
-}
-body:has(#home.active) .exact-journey .j5{
-  background-image:url("https://commons.wikimedia.org/wiki/Special:Redirect/file/United%20States%20Capitol%20west%20front%20edit2.jpg?width=450")!important;
+body:has(#home.active) header {
+  display: flex !important;
 }
 
-/* Keep the approved middle section geometry. */
-body:has(#home.active) .exact-cards{
-  height:305px!important;
-  box-sizing:border-box!important;
-  padding:0 max(2.7vw,calc((100vw - 1480px)/2)) 12px!important;
-  display:grid!important;
-  grid-template-columns:1.13fr .8fr 1fr!important;
-  gap:14px!important;
-  align-items:stretch!important;
-  margin:0!important;
-}
-body:has(#home.active) .exact-cards article{
-  height:280px!important;
-  min-height:0!important;
-  box-sizing:border-box!important;
-  border:1px solid #13231e10!important;
-  border-radius:13px!important;
-  padding:24px!important;
-  position:relative!important;
-  overflow:hidden!important;
-  box-shadow:none!important;
-}
-body:has(#home.active) .exact-history{
-  background:
-    linear-gradient(90deg,#e7efda 0 48%,rgba(231,239,218,.92) 56%,rgba(231,239,218,.10) 80%),
-    url("assets/home/07-colonial-soldier.png")
-    right 36% center/48% auto no-repeat!important;
-}
-body:has(#home.active) .exact-question{background:#fffaf3!important;text-align:center!important}
-body:has(#home.active) .exact-course{
-  background:
-    linear-gradient(90deg,#faf6ed 0 43%,rgba(250,246,237,.88) 52%,rgba(250,246,237,.08) 78%),
-    url("assets/home/08-capitol-cherry-blossoms.png")
-    right center/57% 100% no-repeat!important;
+body:has(#home.active) main {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 0 24px !important;
 }
 
-/* Warm scenic footer */
-body:has(#home.active) .exact-footer{
-  height:115px!important;
-  box-sizing:border-box!important;
-  padding:28px 6vw!important;
-  background:
-    linear-gradient(180deg,rgba(250,231,191,.24),rgba(220,167,92,.12)),
-    url("assets/home/09-mountain-footer.png")
-    center 55%/cover no-repeat!important;
-  color:#17211e!important;
-  text-align:center!important;
-  font:italic 15px Georgia,serif!important;
-  position:relative!important;
-  text-shadow:none!important;
+body:has(#home.active) footer:not(.ref-footer) {
+  display: none !important;
 }
-body:has(#home.active) .exact-footer span{color:#17211e!important}
-body:has(#home.active) .exact-footer b{color:#17211e!important}
 
-@media(max-width:900px){
- body:has(#home.active) .exact-cards{height:auto!important;grid-template-columns:1fr!important;padding:14px!important}
- body:has(#home.active) .exact-cards article{height:auto!important;min-height:280px!important}
+body:has(#home.active) .exact-home {
+  min-height: calc(100vh - 48px);
+  background: #f7f1e7;
+}
+
+body:has(#home.active) .exact-hero {
+  width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  min-height: 430px !important;
+  padding: 34px clamp(28px, 6vw, 88px) !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  align-items: end !important;
+  color: #fff !important;
+  background:
+    linear-gradient(90deg, rgba(6, 16, 14, 0.88) 0%, rgba(6, 16, 14, 0.52) 40%, rgba(6, 16, 14, 0.18) 72%, rgba(6, 16, 14, 0.12) 100%),
+    url('assets/home/hero-signing.jpg') center 39% / cover no-repeat !important;
+  box-shadow: none !important;
+}
+
+body:has(#home.active) .exact-copy {
+  max-width: 570px !important;
+}
+
+body:has(#home.active) .exact-copy h1,
+body:has(#home.active) .exact-deck,
+body:has(#home.active) .exact-copy blockquote,
+body:has(#home.active) .exact-hero-right blockquote {
+  text-shadow: none !important;
+}
+
+body:has(#home.active) .exact-journey,
+body:has(#home.active) .exact-cards {
+  width: min(1760px, calc(100vw - 40px)) !important;
+  margin: 0 auto !important;
+}
+
+body:has(#home.active) .exact-journey {
+  padding: 14px 0 !important;
+}
+
+body:has(#home.active) .exact-cards {
+  height: auto !important;
+  min-height: 320px;
+  padding: 0 0 12px !important;
+  display: grid !important;
+  grid-template-columns: 1.2fr 1fr 1.05fr !important;
+  gap: 14px !important;
+  align-items: stretch !important;
+}
+
+body:has(#home.active) .exact-cards article {
+  height: 285px !important;
+  min-height: 285px !important;
+  border: 1px solid #13231e10 !important;
+  border-radius: 13px !important;
+  padding: 24px !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+}
+
+body:has(#home.active) .exact-cards .label {
+  color: #a64027 !important;
+}
+
+body:has(#home.active) .exact-cards h2 {
+  color: #102d27 !important;
+}
+
+body:has(#home.active) .exact-cards article > p:not(.label) {
+  color: #334a43 !important;
+}
+
+body:has(#home.active) .exact-history {
+  background:
+    linear-gradient(90deg, #e7efda 0 44%, rgba(231, 239, 218, 0.76) 54%, rgba(231, 239, 218, 0.08) 100%),
+    url('assets/home/history-soldier.jpg') right 10px bottom / 44% auto no-repeat !important;
+}
+
+body:has(#home.active) .exact-course {
+  background:
+    linear-gradient(90deg, #faf6ed 0 42%, rgba(250, 246, 237, 0.90) 50%, rgba(250, 246, 237, 0.10) 100%),
+    url('assets/home/course-capitol.jpg') right -6px center / 60% 100% no-repeat !important;
+}
+
+body:has(#home.active) .exact-footer {
+  width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  min-height: 138px !important;
+  padding: 34px clamp(28px, 6vw, 88px) !important 28px !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+  font: italic 15px Georgia, serif !important;
+  color: #17211e !important;
+  position: relative !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 247, 231, 0.9), rgba(248, 232, 203, 0.35) 34%, rgba(225, 179, 108, 0.18) 66%, rgba(225, 179, 108, 0.28) 100%),
+    url('assets/home/footer-landscape.jpg') center 62% / cover no-repeat !important;
+  border-top: 1px solid rgba(166, 100, 52, 0.16) !important;
+}
+
+body:has(#home.active) .exact-footer span,
+body:has(#home.active) .exact-footer b {
+  color: #17211e !important;
+}
+
+body:has(#home.active) .exact-footer b {
+  position: absolute !important;
+  right: clamp(28px, 6vw, 88px) !important;
+  font: 800 9px 'Segoe UI', sans-serif !important;
+  letter-spacing: 0.2em !important;
+}
+
+body:has(#home.active) .exact-footer::before {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 46px;
+  background: linear-gradient(180deg, rgba(140, 92, 46, 0.02), rgba(140, 92, 46, 0.16));
+  pointer-events: none;
+}
+
+.image-customizer-toggle {
+  position: fixed;
+  right: 18px;
+  top: 66px;
+  z-index: 50;
+  border: 0;
+  border-radius: 999px;
+  background: #0d4035;
+  color: #fff;
+  padding: 10px 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.image-customizer {
+  position: fixed;
+  right: 18px;
+  top: 114px;
+  z-index: 50;
+  width: min(340px, calc(100vw - 36px));
+  max-height: 70vh;
+  overflow: auto;
+  background: #fffaf2;
+  border: 1px solid #d9cdbd;
+  border-radius: 12px;
+  box-shadow: 0 18px 40px rgba(16, 24, 22, 0.18);
+  padding: 14px;
+}
+
+.image-customizer.hidden {
+  display: none;
+}
+
+.image-customizer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.image-customizer h3 {
+  margin: 0;
+  font: 700 20px Georgia, serif;
+}
+
+.image-customizer p {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #50635d;
+}
+
+.image-customizer p strong {
+  color: #17332b;
+}
+
+.image-customizer-status {
+  min-height: 18px;
+  margin: 8px 0;
+  font-weight: 700;
+  color: #174c3e;
+}
+
+.image-customizer-status.error {
+  color: #a64027;
+}
+
+.image-customizer label {
+  display: block;
+  margin: 10px 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #17332b;
+}
+
+.image-customizer input[type='file'] {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.image-customizer button {
+  border: 1px solid #174c3e;
+  background: #fff;
+  color: #174c3e;
+  border-radius: 7px;
+  padding: 8px 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.image-customizer #resetHeroImage,
+.image-customizer #resetCustomImages {
+  width: 100%;
+  margin-top: 8px;
+}
+
+@media (max-width: 1100px) {
+  body:has(#home.active) .exact-hero {
+    min-height: 400px !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  body:has(#home.active) .exact-journey,
+  body:has(#home.active) .exact-cards {
+    width: min(100%, calc(100vw - 24px)) !important;
+  }
+
+  body:has(#home.active) .exact-footer {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  body:has(#home.active) .exact-hero {
+    height: auto !important;
+    min-height: 460px !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  body:has(#home.active) .exact-hero-right {
+    display: none !important;
+  }
+
+  body:has(#home.active) .exact-journey {
+    height: auto !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+
+  body:has(#home.active) .exact-journey:before {
+    display: none !important;
+  }
+
+  body:has(#home.active) .exact-journey-label {
+    grid-column: 1 / -1;
+  }
+
+  body:has(#home.active) .exact-cards {
+    grid-template-columns: 1fr !important;
+  }
+
+  body:has(#home.active) .exact-cards article {
+    height: auto !important;
+    min-height: 260px !important;
+  }
+
+  body:has(#home.active) .exact-history {
+    background:
+      linear-gradient(90deg, #e7efda 0 54%, rgba(231, 239, 218, 0.84) 63%, rgba(231, 239, 218, 0.10) 100%),
+      url('assets/home/history-soldier.jpg') right 10px bottom / 38% auto no-repeat !important;
+  }
+
+  body:has(#home.active) .exact-course {
+    background:
+      linear-gradient(90deg, #faf6ed 0 48%, rgba(250, 246, 237, 0.92) 58%, rgba(250, 246, 237, 0.10) 100%),
+      url('assets/home/course-capitol.jpg') right center / 50% 100% no-repeat !important;
+  }
+
+  body:has(#home.active) .exact-footer b {
+    display: none !important;
+  }
 }
 /* Exact user-supplied Home images — local repo assets */
 body:has(#home.active) .exact-history{

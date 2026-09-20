@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Ethan Study Hub — interactive AP U.S. Government discovery experience.">
   <title>Ethan Study Hub · AP U.S. Government</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260920-icons-final">
   <link rel="stylesheet" href="home-override.css?v=20260920-constitutionhero">
-  <link rel="stylesheet" href="home-assets.css?v=20260920-exact-home-art">
+  <link rel="stylesheet" href="home-assets.css?v=20260920-homefinal">
 </head>
 <body>
   <header>
@@ -120,6 +120,28 @@
         <p>1. Walk the Founding Story together · 2. Ethan explains “too strong → too weak → balance” without notes · 3. Zoom into the Constitution · 4. Do the questions here.</p>
       </div>
     </section>
+
+    <button id="imageCustomizerToggle" class="image-customizer-toggle" type="button">Upload Images</button>
+    <aside id="imageCustomizer" class="image-customizer hidden" aria-label="Customize images">
+      <div class="image-customizer-head">
+        <h3>Upload Images</h3>
+        <button id="imageCustomizerClose" type="button">Close</button>
+      </div>
+      <p>Choose images here. They apply instantly on this device.</p>
+      <p><strong>Important:</strong> chat attachments do not automatically become website files. Use these pickers to apply the actual images.</p>
+      <p id="imageCustomizerStatus" class="image-customizer-status" aria-live="polite"></p>
+      <label>Home hero<input type="file" accept="image/*" data-image-slot="hero"></label>
+      <button id="resetHeroImage" type="button">Use default header image</button>
+      <label>Colonies icon<input type="file" accept="image/*" data-image-slot="j1"></label>
+      <label>Declaration icon<input type="file" accept="image/*" data-image-slot="j2"></label>
+      <label>Articles icon<input type="file" accept="image/*" data-image-slot="j3"></label>
+      <label>Convention icon<input type="file" accept="image/*" data-image-slot="j4"></label>
+      <label>Constitution icon<input type="file" accept="image/*" data-image-slot="j5"></label>
+      <label>History card image<input type="file" accept="image/*" data-image-slot="history"></label>
+      <label>Course card image<input type="file" accept="image/*" data-image-slot="course"></label>
+      <label>Footer image<input type="file" accept="image/*" data-image-slot="footer"></label>
+      <button id="resetCustomImages" type="button">Reset custom images</button>
+    </aside>
 
   </main>
 

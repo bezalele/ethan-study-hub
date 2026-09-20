@@ -1,6 +1,171 @@
 const content = window.EthanStudyHubContent;
 const state = { questionIndex: 0, selectedConstitution: 'preamble' };
 const storyState = { declaration: { slide: 0 } };
+const IMAGE_STORAGE_KEY = 'ethanCustomImagesV1';
+
+const imageSlots = {
+  hero: {
+    selector: '.exact-hero',
+    apply: (el, src) => {
+      el.style.setProperty(
+        'background',
+        `linear-gradient(90deg,rgba(6,16,14,.86) 0%,rgba(6,16,14,.52) 42%,rgba(6,16,14,.22) 72%,rgba(6,16,14,.14) 100%), url('${src}') center 39%/cover no-repeat`,
+        'important'
+      );
+    }
+  },
+  history: {
+    selector: '.exact-history',
+    apply: (el, src) => {
+      el.style.setProperty(
+        'background',
+        `linear-gradient(90deg,#e7efda 0 51%,rgba(231,239,218,.88) 58%,rgba(231,239,218,.08) 100%), url('${src}') right 38% center/48% auto no-repeat`,
+        'important'
+      );
+    }
+  },
+  course: {
+    selector: '.exact-course',
+    apply: (el, src) => {
+      el.style.setProperty(
+        'background',
+        `linear-gradient(90deg,#faf6ed 0 42%,rgba(250,246,237,.90) 50%,rgba(250,246,237,.12) 76%,rgba(250,246,237,.02) 100%), url('${src}') right center/57% 100% no-repeat`,
+        'important'
+      );
+    }
+  },
+  footer: {
+    selector: '.exact-footer',
+    apply: (el, src) => {
+      el.style.setProperty(
+        'background',
+        `radial-gradient(circle at 50% 0%, rgba(255,247,231,0.9), rgba(248,232,203,0.35) 34%, rgba(225,179,108,0.18) 66%, rgba(225,179,108,0.28) 100%), url('${src}') center 62%/cover no-repeat`,
+        'important'
+      );
+    }
+  },
+  j1: { selector: '.exact-journey .j1', apply: (el, src) => { el.style.setProperty('background-image', `url('${src}')`, 'important'); } },
+  j2: { selector: '.exact-journey .j2', apply: (el, src) => { el.style.setProperty('background-image', `url('${src}')`, 'important'); } },
+  j3: { selector: '.exact-journey .j3', apply: (el, src) => { el.style.setProperty('background-image', `url('${src}')`, 'important'); } },
+  j4: { selector: '.exact-journey .j4', apply: (el, src) => { el.style.setProperty('background-image', `url('${src}')`, 'important'); } },
+  j5: { selector: '.exact-journey .j5', apply: (el, src) => { el.style.setProperty('background-image', `url('${src}')`, 'important'); } }
+};
+
+function getCustomImages() {
+  try {
+    return JSON.parse(localStorage.getItem(IMAGE_STORAGE_KEY) || '{}');
+  } catch (_error) {
+    return {};
+  }
+}
+
+function saveCustomImages(data) {
+  localStorage.setItem(IMAGE_STORAGE_KEY, JSON.stringify(data));
+}
+
+function setImageStatus(message, isError = false) {
+  const status = document.getElementById('imageCustomizerStatus');
+  if (!status) return;
+  status.textContent = message;
+  status.classList.toggle('error', isError);
+}
+
+function applyImageToSlot(slot, src) {
+  const config = imageSlots[slot];
+  if (!config || !src) return;
+  const node = document.querySelector(config.selector);
+  if (!node) return;
+  config.apply(node, src);
+}
+
+function resizeImageForStorage(file, maxWidth = 1600, quality = 0.86) {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.onerror = () => reject(new Error('Could not read image file.'));
+    fileReader.onload = () => {
+      const image = new Image();
+      image.onerror = () => reject(new Error('Could not load selected image.'));
+      image.onload = () => {
+        const scale = Math.min(1, maxWidth / image.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+        const context = canvas.getContext('2d');
+        if (!context) {
+          reject(new Error('Canvas is not available in this browser.'));
+          return;
+        }
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      image.src = String(fileReader.result);
+    };
+    fileReader.readAsDataURL(file);
+  });
+}
+
+function applyCustomImages() {
+  const saved = getCustomImages();
+  Object.entries(saved).forEach(([slot, src]) => {
+    applyImageToSlot(slot, src);
+  });
+}
+
+function wireImageCustomizer() {
+  const panel = document.getElementById('imageCustomizer');
+  const toggle = document.getElementById('imageCustomizerToggle');
+  const close = document.getElementById('imageCustomizerClose');
+  const reset = document.getElementById('resetCustomImages');
+  const resetHero = document.getElementById('resetHeroImage');
+  if (!panel || !toggle || !close || !reset || !resetHero) return;
+
+  if (Object.keys(getCustomImages()).length === 0) {
+    panel.classList.remove('hidden');
+  }
+
+  toggle.addEventListener('click', () => panel.classList.toggle('hidden'));
+  close.addEventListener('click', () => panel.classList.add('hidden'));
+  reset.addEventListener('click', () => {
+    localStorage.removeItem(IMAGE_STORAGE_KEY);
+    window.location.reload();
+  });
+
+  resetHero.addEventListener('click', () => {
+    const saved = getCustomImages();
+    delete saved.hero;
+    saveCustomImages(saved);
+    window.location.reload();
+  });
+
+  panel.querySelectorAll('input[type="file"][data-image-slot]').forEach((input) => {
+    input.addEventListener('change', () => {
+      const file = input.files && input.files[0];
+      const slot = input.dataset.imageSlot;
+      if (!file || !slot || !imageSlots[slot]) return;
+
+      setImageStatus(`Applying ${file.name}...`);
+
+      const previewUrl = URL.createObjectURL(file);
+      applyImageToSlot(slot, previewUrl);
+
+      resizeImageForStorage(file)
+        .then((storedSrc) => {
+          const saved = getCustomImages();
+          saved[slot] = storedSrc;
+          saveCustomImages(saved);
+          applyImageToSlot(slot, storedSrc);
+          setImageStatus(`${file.name} applied.`);
+        })
+        .catch((error) => {
+          setImageStatus(error.message || 'Image upload failed.', true);
+        })
+        .finally(() => {
+          URL.revokeObjectURL(previewUrl);
+          input.value = '';
+        });
+    });
+  });
+}
 
 function getProgress() {
   try {
@@ -41,6 +206,11 @@ function show(id, preserveScroll=false) {
   else window.scrollTo({top:0,behavior:'instant'});
   mark(navKey);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  wireImageCustomizer();
+  applyCustomImages();
+});
 
 
 
