@@ -49,18 +49,21 @@ function cards() {
       <article class="home-card home-card--story">
         <div class="home-card__body">
           <p class="eyebrow">The founding story</p>
-          <h2>Five steps that<br>built the system.</h2>
+          <h2>From colonies<br>to a Constitution.</h2>
           <p class="home-card__text">
-            One simple storyline connects the history to the government Ethan
-            studies today.
+            Americans learned self-government, broke with Britain, tried a weak
+            national government, then created the Constitution and Bill of Rights.
           </p>
-          <ol class="home-storyline" aria-label="The founding story in five steps">
-            <li><span>01</span><strong>Colonies</strong><small>learn self-government</small></li>
-            <li><span>02</span><strong>Independence</strong><small>rights + consent</small></li>
-            <li><span>03</span><strong>Articles</strong><small>first government is too weak</small></li>
-            <li><span>04</span><strong>Constitution</strong><small>power is strengthened + divided</small></li>
-            <li><span>05</span><strong>Bill of Rights</strong><small>liberties are explicitly protected</small></li>
-          </ol>
+          <div class="home-storyline" aria-label="Colonies to Bill of Rights">
+            <span>Colonies</span><b aria-hidden="true">→</b>
+            <span>Independence</span><b aria-hidden="true">→</b>
+            <span>Articles</span><b aria-hidden="true">→</b>
+            <span>Constitution</span><b aria-hidden="true">→</b>
+            <span>Bill of Rights</span>
+          </div>
+          <p class="home-card__insight">
+            Each stage answered a problem from the one before it.
+          </p>
         </div>
         <img class="home-card__art" src="${IMAGES.soldier.src}" alt="" loading="lazy">
       </article>
