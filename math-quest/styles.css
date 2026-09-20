@@ -490,7 +490,16 @@ button.primary:hover {
   background: var(--tint);
 }
 .unit small {
-  font-size: 12px;
+  display: inline-block;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #123c4a;
+  background: #e8f1ee;
+  padding: 4px 9px;
+  border-radius: 5px;
+  margin-bottom: 6px;
 }
 .unit h3 {
   font-size: 17px;
