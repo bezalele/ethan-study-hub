@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/chapter-verify.yml'
+      - 'content/chapters.js'
+      - 'assets/chapters/**'
+      - 'pages/chapter.js'
+      - 'pages/chapter.css'
 
 permissions:
   contents: read
