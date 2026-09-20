@@ -68,6 +68,12 @@ const foundingPages={
 };
 function openFoundingPage(key,preserveScroll=false){
  const x=foundingPages[key], target=document.getElementById('foundingDetailContent'); if(!x||!target)return;
+ const visuals={
+  colonies:{img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Patrick%20Henry%20before%20the%20Virginia%20House%20of%20Burgesses%20May%2030%2C%201765%20LCCN2006691555.jpg?width=1800',facts:[['1619','First representative assembly in Virginia'],['1765','Stamp Act conflict'],['1775','War begins']]},
+  articles:{img:'https://www.archives.gov/files/milestone-documents/images/doc-003-big.jpg',facts:[['1777','Congress adopts the Articles'],['1781','All 13 states ratify'],['1 vote','Each state in Congress']]},
+  convention:{img:'https://upload.wikimedia.org/wikipedia/commons/9/9d/Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg',facts:[['May 1787','Convention opens'],['55','Delegates attended'],['Sept. 17','Constitution signed']]},
+  'constitution-rights':{img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Constitution_of_the_United_States%2C_page_1.jpg?width=1800',facts:[['1787','Constitution signed'],['1788','Ninth state ratifies'],['1791','Bill of Rights ratified']]}
+ }[key];
  const meta={
   colonies:{big:'Why did colonial government matter?',matter:'Colonial experience with assemblies, representation, and British authority shaped the political arguments that followed.',nextText:'Tensions with Britain eventually turned into a decision to declare independence.'},
   articles:{big:'Why did the Articles struggle?',matter:'The Articles reveal the central problem the founders faced: how to preserve state independence while creating a national government capable of acting.',nextText:'Concern about the Confederation system led delegates to meet in Philadelphia in 1787.'},
@@ -77,9 +83,9 @@ function openFoundingPage(key,preserveScroll=false){
  const keys=['colonies','declaration','articles','convention','constitution-rights'], labels=['British Colonies','Declaration of Independence','Articles of Confederation','Constitutional Convention','Constitution + Bill of Rights'], dates=['1607–1775','1776','1781–1789','1787','1787–1791'], current=keys.indexOf(key);
  const timeline=keys.map((k,i)=>'<button class="'+(i===current?'active':'')+'" onclick="'+(k==='declaration'?"show('declaration',true)":"openFoundingPage('"+k+"',true)")+'"><span>'+dates[i]+'</span><b>'+labels[i]+'</b></button>').join('');
  target.innerHTML=`<article class="decl founding-decl">
-  <section class="decl-hero founding-decl-hero">
+  <section class="decl-hero founding-decl-hero" style="background-image:linear-gradient(90deg,rgba(7,14,12,.91),rgba(7,14,12,.32)),url('${visuals.img}')">
    <div class="decl-hero-copy"><p class="eyebrow">UNIT 1 · THE STORY &nbsp;&nbsp;&nbsp; ${x.chapter}</p><h1><span class="fd-hero-year">${x.date}</span><span class="fd-hero-title">${x.title}</span></h1><h2>${x.subtitle}</h2><p>${x.intro}</p></div>
-   <blockquote>“${x.question}”<small>— The big question</small></blockquote>
+   <div class="fd-hero-side"><blockquote>“${x.question}”<small>— The big question</small></blockquote><nav class="fd-fact-nav">${visuals.facts.map((f,i)=>'<button onclick="jumpFoundingFact('+i+')"><b>'+f[0]+'</b><span>'+f[1]+'</span></button>').join('')}</nav></div>
   </section>
   <nav class="decl-timeline">${timeline}</nav>
   <div class="decl-body">
@@ -94,6 +100,7 @@ function openFoundingPage(key,preserveScroll=false){
  </article>`;
  show('foundingDetail',preserveScroll);
 }
+function jumpFoundingFact(i){const cards=document.querySelectorAll('#foundingDetail .founding-thumbs button');if(cards[i]){cards[i].click();document.getElementById('founding-learn')?.scrollIntoView({behavior:'smooth',block:'center'});}}
 function selectFoundingIdea(btn,key,i){
  const x=foundingPages[key], box=document.querySelector('#foundingDetail .founding-idea-main'), stage=document.querySelector('#foundingDetail .founding-stage>div'); if(!x)return;
  if(box)box.innerHTML='<h3>'+x.cards[i][0]+'</h3><p>'+x.cards[i][1]+'</p>';
