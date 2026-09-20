@@ -13,18 +13,18 @@
   height: calc(100dvh - var(--header-h) - var(--footer-h));
   display: grid;
   grid-template-rows:
-    minmax(0, 1.04fr)   /* hero     */
-    auto                /* timeline */
-    minmax(0, 1fr)      /* cards    */
-    auto;               /* closing  */
+    minmax(0, 0.86fr)   /* hero — yields space to the timeline */
+    auto                /* timeline — the study focus, sized by content */
+    minmax(0, 1fr)      /* cards */
+    auto;               /* closing */
   overflow: hidden;
 }
 
 /* The model runs nearly edge to edge. Scoped to home so other pages keep the
    narrower reading measure. */
 .page--home .shell {
-  max-width: 1560px;
-  padding-inline: max(2.4vw, 16px);
+  max-width: 1720px;
+  padding-inline: max(1.8vw, 16px);
 }
 
 /* ===== Hero =============================================================== */
@@ -71,10 +71,7 @@
   color: var(--c-on-dark);
 }
 
-.page--home .home-hero__copy {
-  text-align: left;
-  padding-left: clamp(0px, 1.8vw, 34px);  /* the model insets the hero copy past the card gutter */
-}
+.page--home .home-hero__copy { text-align: left; }
 
 .page--home .home-hero__title {
   font-size: clamp(30px, min(4.4vw, 7.4vh), 68px);
@@ -129,7 +126,7 @@
   align-items: stretch;
   gap: 0;
   list-style: none;
-  padding-block: clamp(8px, 1.5vh, 16px);
+  padding-block: clamp(10px, 2.1vh, 22px);
 }
 
 /* Connector: a dot centred on a rule that spans the gap between two cards. */
@@ -165,11 +162,11 @@
 
 .page--home .home-tl__card {
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr);
-  gap: var(--s-3);
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: var(--s-4);
   align-items: center;
   height: 100%;
-  padding: 9px var(--s-3);
+  padding: var(--s-3) var(--s-4);
   background: var(--c-paper);
   border: 1px solid var(--c-line);
   border-radius: var(--r-md);
@@ -185,8 +182,8 @@
 }
 
 .page--home .home-tl__thumb {
-  width: 46px;
-  height: 46px;
+  width: 62px;
+  height: 68px;
   object-fit: cover;
   border-radius: var(--r-sm);
   border: 1px solid var(--c-line);
@@ -197,18 +194,20 @@
 .page--home .home-tl__year {
   display: block;
   font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 700;
+  font-size: clamp(15px, 1.25vw, 19px);
+  font-weight: 600;
+  letter-spacing: 0.01em;
   color: var(--c-brick);
   white-space: nowrap;
 }
 
 .page--home .home-tl__title {
   display: block;
-  margin-top: 1px;
+  margin-top: 3px;
   font-family: var(--font-display);
-  font-size: 14px;
-  line-height: 1.18;
+  font-size: clamp(14px, 1.2vw, 18px);
+  font-weight: 600;
+  line-height: 1.2;
   color: var(--c-ink);
 }
 
@@ -277,6 +276,27 @@
 .page--home .home-card--story,
 .page--home .home-card--course {
   padding-right: 30%;
+}
+
+/* The soldier was cropped by object-fit: cover once max-width clamped its
+   width. `contain` shows the whole engraving, but then its own pale paper
+   background reads as a rectangle on the sage card. It is a line engraving,
+   so multiply blending drops that background into the card instead. */
+.page--home .home-card--story .home-card__art {
+  object-fit: contain;
+  object-position: right bottom;
+  max-width: 42%;
+  /* Zoomed out, the engraving brings its own sky and trees, which read as a
+     pasted rectangle. Fading top as well as left dissolves both hard edges
+     into the card. */
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent, #000 28%),
+    linear-gradient(180deg, transparent, #000 26%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent, #000 28%),
+    linear-gradient(180deg, transparent, #000 26%);
+  mask-composite: intersect;
 }
 
 .page--home .home-card--story {
@@ -355,19 +375,21 @@
 /* Two tiers of height pressure, both only while the one-screen layout is in
    play (min-width 1001px).
 
-   Tier 1, under ~980px: the Franklin pull-quote is the least essential thing
-   in the hero, so it goes first and everything else keeps its full size.
+   Tier 1, under ~1100px: the Franklin pull-quote is the least essential thing
+   in the hero, so it goes first and everything else keeps its full size. The
+   threshold is high because the hero deliberately yields row space to the
+   timeline, which is the page's study focus.
    Tier 2, under ~820px: the hero also gives up type size and the cards claim
    a larger share, because their content has a hard floor (eyebrow, heading,
    two lines of text, a button). */
 
-@media (max-height: 980px) and (min-width: 1001px) {
+@media (max-height: 1100px) and (min-width: 1001px) {
   .page--home .home-hero__copy > .home-hero__quote { display: none; }
 }
 
 @media (max-height: 820px) and (min-width: 1001px) {
   .page--home {
-    grid-template-rows: minmax(0, 0.9fr) auto minmax(0, 1fr) auto;
+    grid-template-rows: minmax(0, 0.78fr) auto minmax(0, 1fr) auto;
   }
   .page--home .home-card__body { gap: var(--s-2); }
   .page--home .home-card { gap: 6px; }
