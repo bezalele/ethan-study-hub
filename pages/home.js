@@ -48,13 +48,19 @@ function cards() {
     <section class="home-cards shell">
       <article class="home-card home-card--story">
         <div class="home-card__body">
-          <p class="eyebrow">Start with the story</p>
-          <h2>History first.<br>AP Government<br>underneath.</h2>
+          <p class="eyebrow">The founding story</p>
+          <h2>Five steps that<br>built the system.</h2>
           <p class="home-card__text">
-            Understand what happened, why it mattered, and how it connects to
-            the government we have today.
+            One simple storyline connects the history to the government Ethan
+            studies today.
           </p>
-          <a class="btn btn--primary" href="#/study">Begin the Journey →</a>
+          <ol class="home-storyline" aria-label="The founding story in five steps">
+            <li><span>01</span><strong>Colonies</strong><small>learn self-government</small></li>
+            <li><span>02</span><strong>Independence</strong><small>rights + consent</small></li>
+            <li><span>03</span><strong>Articles</strong><small>first government is too weak</small></li>
+            <li><span>04</span><strong>Constitution</strong><small>power is strengthened + divided</small></li>
+            <li><span>05</span><strong>Bill of Rights</strong><small>liberties are explicitly protected</small></li>
+          </ol>
         </div>
         <img class="home-card__art" src="${IMAGES.soldier.src}" alt="" loading="lazy">
       </article>
