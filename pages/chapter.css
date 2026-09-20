@@ -1,9 +1,4 @@
-/* ---------------------------------------------------------------------------
-   chapter.css — the standard chapter template.
-   INVARIANT: every selector begins with .page--chapter.
-   --------------------------------------------------------------------------- */
 
-.page--chapter .shell { max-width: 1720px; padding-inline: max(1.8vw, 16px); }
 
 /* ===== Placeholders ======================================================= */
 
@@ -247,7 +242,7 @@
   position: absolute;
   right: var(--s-5);
   bottom: var(--s-4);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--c-on-dark);
 }
@@ -281,8 +276,8 @@
 .page--chapter .ch-thumb .ch-ph__mark { width: 14px; height: 14px; border-width: 1px; }
 .page--chapter .ch-thumb .ch-ph__label { display: none; }
 .page--chapter .ch-thumb__label {
-  font-size: 11px;
-  line-height: 1.2;
+  font-size: 13px;
+  line-height: 1.25;
   color: var(--c-ink-soft);
 }
 
@@ -377,7 +372,7 @@
   font-size: 15px;
 }
 .page--chapter .ch-fact__who figcaption span {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--c-ink-faint);
 }
 
@@ -426,7 +421,7 @@
 }
 .page--chapter .ch-section:hover { border-color: var(--c-forest); color: var(--c-ink); }
 .page--chapter .ch-section strong { font-family: var(--font-display); font-size: 14px; }
-.page--chapter .ch-section span { font-size: 11px; color: var(--c-ink-faint); }
+.page--chapter .ch-section span { font-size: 13px; color: var(--c-ink-faint); }
 .page--chapter .ch-section i { font-style: normal; color: var(--c-forest); }
 
 /* ===== Bottom cards ======================================================= */
@@ -452,7 +447,7 @@
   background: var(--c-sage);
   border: 1px solid #c6d3bd;
   border-radius: var(--r-sm);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--c-forest);
 }
@@ -509,7 +504,7 @@
 .page--chapter .ch-check__result--none { color: var(--c-ink-faint); font-weight: 600; }
 .page--chapter .ch-check__why {
   margin-top: var(--s-2);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.55;
   color: var(--c-ink-soft);
 }
@@ -536,7 +531,7 @@
 }
 .page--chapter .ch-next small {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;

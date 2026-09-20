@@ -44,7 +44,7 @@
   --t-h3:      21px;
   --t-body:    16px;
   --t-small:   13px;
-  --t-eyebrow: 11px;
+  --t-eyebrow: 12px;   /* floor for uppercase labels; nothing goes below this */
 
   --lh-tight: 1.05;
   --lh-snug:  1.25;
@@ -70,9 +70,9 @@
   --r-pill: 999px;
 
   /* --- Layout ------------------------------------------------------------ */
-  --measure:    1240px;  /* max content width */
+  --measure:    1720px;  /* max content width — shared by every page */
   --measure-text: 68ch;  /* max width for running prose */
-  --gutter:     max(5vw, 20px);
+  --gutter:     max(1.8vw, 16px);
   --header-h:   56px;
   --footer-h:   44px;   /* fixed so the home page can fill exactly one screen */
 

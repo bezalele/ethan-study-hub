@@ -1,208 +1,242 @@
 /* ---------------------------------------------------------------------------
-   course-map.css
+   course-map.css — the main study page.
    INVARIANT: every selector begins with .page--course-map.
-   No body scroll locking: the explorer is a normal scrolling document.
+
+   The page fills exactly one viewport and never scrolls. The summary panel
+   scrolls internally instead, with a slim styled scrollbar, so the rail and
+   the page header stay put while reading a unit.
+
+   Nothing here is smaller than 13px. The previous version used 9px for the
+   unit weight and 11px for the unit description, which were not readable.
    --------------------------------------------------------------------------- */
 
-/* ===== Hero =============================================================== */
+.page--course-map {
+  height: calc(100dvh - var(--header-h) - var(--footer-h));
+  overflow: hidden;
+}
 
-.page--course-map .cm-hero {
+.page--course-map .cm-shell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+}
+
+/* ===== Page header — deliberately compact ================================= */
+
+.page--course-map .cm-head {
   background: linear-gradient(115deg, var(--c-forest), var(--c-forest-soft));
   color: var(--c-on-dark);
 }
 
-/* Grid, not wrapping flex: as flex the note dropped to its own line and left
-   a large gap under the title whenever the two were within ~20px of fitting. */
-.page--course-map .cm-hero__inner {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
-  align-items: end;
-  gap: var(--s-7);
-  padding-block: var(--s-7);
+.page--course-map .cm-head__inner {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-6);
+  flex-wrap: wrap;
+  padding-block: clamp(var(--s-4), 2.6vh, var(--s-5));
 }
 
-.page--course-map .cm-hero__title {
-  margin-top: var(--s-3);
-  line-height: var(--lh-tight);
+.page--course-map .cm-head__title {
+  margin-top: var(--s-2);
+  font-size: clamp(24px, min(2.4vw, 4vh), 38px);
+  line-height: 1.1;
 }
 
-.page--course-map .cm-hero__note {
-  max-width: 42ch;
+.page--course-map .cm-head__note {
+  max-width: 40ch;
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.5;
   color: var(--c-on-dark-soft);
 }
 
-/* ===== Explorer shell ===================================================== */
+/* ===== Explorer =========================================================== */
 
 .page--course-map .cm-explorer {
   display: grid;
   grid-template-columns: 300px minmax(0, 1fr);
   gap: var(--s-5);
-  align-items: start;
-  padding-block: var(--s-7);
+  min-height: 0;
+  padding-block: var(--s-5);
 }
 
 /* ===== Left rail ========================================================== */
 
 .page--course-map .cm-rail {
-  /* A grid item defaults to min-width:auto, i.e. its min-content width. The
-     rail's list was 5 x 190px wide, which pushed the track 300px past the
-     viewport at tablet size. */
   min-width: 0;
-  position: sticky;
-  top: calc(var(--header-h) + var(--s-4));
-  padding: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  padding: var(--s-5) var(--s-4);
   background: var(--c-parchment-dim);
   border: 1px solid var(--c-line);
   border-radius: var(--r-lg);
+  overflow-y: auto;
+}
+
+.page--course-map .cm-rail__head {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-brick);
 }
 
 .page--course-map .cm-rail__list {
-  list-style: none;
-  margin-top: var(--s-4);
   display: grid;
   gap: var(--s-2);
+  list-style: none;
 }
 
-.page--course-map .cm-rail__item {
+.page--course-map .cm-unit {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) 14px;
+  grid-template-columns: 38px minmax(0, 1fr) 14px;
   gap: var(--s-3);
   align-items: center;
-  padding: var(--s-3);
+  padding: var(--s-3) var(--s-4);
   border: 1px solid transparent;
   border-radius: var(--r-md);
   color: var(--c-ink);
   transition: background var(--dur) var(--ease),
               border-color var(--dur) var(--ease);
 }
-.page--course-map .cm-rail__item:hover {
+.page--course-map .cm-unit:hover {
   background: var(--c-paper);
   border-color: var(--c-line);
   color: var(--c-ink);
 }
-.page--course-map .cm-rail__item[aria-current="true"] {
+.page--course-map .cm-unit[aria-current="page"] {
   background: var(--c-paper);
   border-color: var(--c-forest);
+  border-width: 2px;
   box-shadow: var(--shadow-sm);
 }
 
-.page--course-map .cm-rail__n {
+.page--course-map .cm-unit__n {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--c-brick);
 }
 
-.page--course-map .cm-rail__text { min-width: 0; display: block; }
+.page--course-map .cm-unit__text { min-width: 0; display: block; }
 
-.page--course-map .cm-rail__weight {
+/* Was 9px. */
+.page--course-map .cm-unit__meta {
   display: block;
-  font-size: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-brick);
+}
+
+.page--course-map .cm-unit__name {
+  display: block;
+  margin-top: 1px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.page--course-map .cm-unit__chev { font-size: 20px; color: var(--c-ink-faint); }
+
+/* ===== Summary panel ====================================================== */
+
+.page--course-map .cm-panel {
+  min-width: 0;
+  min-height: 0;
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* The only scrolling region on the page. */
+.page--course-map .cm-panel__scroll {
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--s-6);
+  display: grid;
+  gap: var(--s-5);
+  align-content: start;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-line) transparent;
+}
+.page--course-map .cm-panel__scroll::-webkit-scrollbar { width: 8px; }
+.page--course-map .cm-panel__scroll::-webkit-scrollbar-track { background: transparent; }
+.page--course-map .cm-panel__scroll::-webkit-scrollbar-thumb {
+  background: var(--c-line);
+  border-radius: var(--r-pill);
+}
+.page--course-map .cm-panel__scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--c-ink-faint);
+}
+
+.page--course-map .cm-panel__kicker {
+  font-family: var(--font-ui);
+  font-size: 13px;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--c-brick);
 }
 
-.page--course-map .cm-rail__short {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 18px;
-  line-height: 1.15;
-  margin-top: 2px;
-}
-
-.page--course-map .cm-rail__title {
-  display: block;
-  font-size: 11px;
-  line-height: 1.35;
-  color: var(--c-ink-faint);
-}
-
-.page--course-map .cm-rail__chev {
-  font-size: 18px;
-  color: var(--c-ink-faint);
-}
-
-/* ===== Right panel ======================================================== */
-
-.page--course-map .cm-panel {
-  min-width: 0;
-  background: var(--c-paper);
-  border: 1px solid var(--c-line);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.page--course-map .cm-panel__head {
-  padding: var(--s-6);
-  background: var(--c-forest);
-  color: var(--c-on-dark);
-}
-
-.page--course-map .cm-panel__kicker {
-  font-size: var(--t-eyebrow);
-  font-weight: 800;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  color: var(--c-gold);
-}
-
 .page--course-map .cm-panel__title {
   margin-top: var(--s-2);
-  font-size: var(--t-h2);
-  line-height: var(--lh-snug);
+  font-size: clamp(26px, min(2.5vw, 4.2vh), 40px);
+  line-height: 1.12;
 }
 
-.page--course-map .cm-panel__why {
-  margin-top: var(--s-3);
-  max-width: 54ch;
+/* The one sentence that says what the unit is. Sits above everything else. */
+.page--course-map .cm-lede {
+  max-width: 68ch;
   font-family: var(--font-display);
-  font-style: italic;
-  color: var(--c-on-dark-soft);
-}
-
-.page--course-map .cm-panel__body {
-  display: grid;
-  gap: var(--s-6);
-  padding: var(--s-6);
-}
-
-/* --- What it is about ----------------------------------------------------- */
-
-.page--course-map .cm-about {
-  display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-  gap: var(--s-5);
-  padding: var(--s-5);
-  background: var(--c-parchment);
-  border-radius: var(--r-md);
-}
-
-.page--course-map .cm-about__know {
-  margin-top: var(--s-3);
-  font-family: var(--font-display);
-  font-size: 19px;
-  line-height: 1.45;
+  font-size: clamp(17px, min(1.4vw, 2.4vh), 22px);
+  line-height: 1.5;
   color: var(--c-ink);
 }
 
-.page--course-map .cm-about__aside {
-  padding-left: var(--s-5);
-  border-left: 3px solid var(--c-brick);
+.page--course-map .cm-points {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--s-4);
 }
-.page--course-map .cm-about__aside p:last-child {
-  margin-top: var(--s-3);
-  font-family: var(--font-display);
-  font-style: italic;
+
+.page--course-map .cm-point {
+  padding: var(--s-4) var(--s-5);
+  background: var(--c-parchment);
+  border-radius: var(--r-md);
+  border-left: 3px solid var(--c-forest);
+}
+.page--course-map .cm-point--why { border-left-color: var(--c-brick); }
+
+.page--course-map .cm-point__head {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-brick);
+}
+
+.page--course-map .cm-point__body {
+  margin-top: var(--s-2);
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--c-ink-soft);
+}
+
+.page--course-map .cm-sub {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-brick);
+  margin-bottom: var(--s-3);
 }
 
 /* --- The idea chain ------------------------------------------------------- */
@@ -212,112 +246,95 @@
   align-items: center;
   flex-wrap: wrap;
   gap: var(--s-2);
-  margin-top: var(--s-3);
   list-style: none;
 }
 
 .page--course-map .cm-chain__step {
-  padding: 10px var(--s-4);
+  padding: 9px var(--s-4);
   background: var(--c-sage);
   border: 1px solid #c6d3bd;
   border-radius: var(--r-sm);
-  font-size: var(--t-small);
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--c-forest);
 }
 
-.page--course-map .cm-chain__arrow {
-  color: var(--c-brick);
-  font-weight: 700;
-}
+.page--course-map .cm-chain__arrow { color: var(--c-brick); font-weight: 700; }
 
-/* --- Topics + CTA --------------------------------------------------------- */
-
-.page--course-map .cm-next {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: var(--s-5);
-  align-items: start;
-}
+/* --- What you will learn — the detail, so it sits last -------------------- */
 
 .page--course-map .cm-topics {
-  list-style: none;
-  margin-top: var(--s-3);
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: var(--s-2);
+  list-style: none;
 }
 
 .page--course-map .cm-topic {
   display: grid;
-  grid-template-columns: 30px minmax(0, 1fr) 18px;
+  grid-template-columns: 26px minmax(0, 1fr);
   gap: var(--s-3);
-  align-items: center;
-  padding: 13px var(--s-4);
+  align-items: baseline;
+  padding: 10px var(--s-3);
   background: var(--c-parchment);
   border: 1px solid var(--c-line);
   border-radius: var(--r-sm);
-  color: var(--c-ink);
-  transition: border-color var(--dur) var(--ease),
-              background var(--dur) var(--ease);
-}
-.page--course-map .cm-topic:hover {
-  background: var(--c-paper);
-  border-color: var(--c-forest);
-  color: var(--c-ink);
 }
 
 .page--course-map .cm-topic__n {
   font-family: var(--font-display);
+  font-size: 14px;
   font-weight: 700;
   color: var(--c-brick);
 }
-.page--course-map .cm-topic__label { font-size: 14px; font-weight: 600; }
-.page--course-map .cm-topic__chev { color: var(--c-forest); }
+.page--course-map .cm-topic__label { font-size: 15px; line-height: 1.35; }
 
-.page--course-map .cm-next__cta {
-  padding: var(--s-5);
-  background: var(--c-sage);
-  border: 1px solid #c6d3bd;
-  border-radius: var(--r-md);
+/* --- Go to the full guide ------------------------------------------------- */
+
+.page--course-map .cm-go {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--c-line);
 }
-.page--course-map .cm-next__text {
-  margin: var(--s-3) 0 var(--s-4);
-  font-size: var(--t-small);
+
+.page--course-map .cm-go__lens {
+  max-width: 54ch;
+  font-size: 14px;
   line-height: 1.55;
   color: var(--c-ink-soft);
 }
-.page--course-map .cm-next__lens {
-  margin-top: var(--s-4);
-  padding-top: var(--s-4);
-  border-top: 1px solid #c6d3bd;
-  font-size: 12px;
+.page--course-map .cm-go__lens strong { color: var(--c-ink); }
+
+.page--course-map .cm-soon {
+  max-width: 40ch;
+  font-size: 14px;
   line-height: 1.5;
-  color: var(--c-ink-soft);
+  color: var(--c-ink-faint);
 }
 
-/* ===== Responsive ========================================================= */
+/* ===== Fall back to normal flow when one screen is not enough ============= */
 
-@media (max-width: 1000px) {
-  .page--course-map .cm-hero__inner { grid-template-columns: 1fr; }
+@media (max-height: 620px), (max-width: 900px) {
+  .page--course-map { height: auto; overflow: visible; }
+  .page--course-map .cm-shell { display: block; height: auto; }
+  .page--course-map .cm-panel { overflow: visible; }
+  .page--course-map .cm-panel__scroll { height: auto; overflow: visible; }
+  .page--course-map .cm-rail { overflow: visible; }
+}
+
+@media (max-width: 900px) {
   .page--course-map .cm-explorer { grid-template-columns: 1fr; }
-  .page--course-map .cm-rail { position: static; }
-  /* Wrap rather than scroll sideways: grid-auto-flow:column forced five
-     190px tracks regardless of available width. */
   .page--course-map .cm-rail__list {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  }
-  .page--course-map .cm-about,
-  .page--course-map .cm-next { grid-template-columns: 1fr; }
-  .page--course-map .cm-about__aside {
-    padding-left: 0;
-    padding-top: var(--s-4);
-    border-left: 0;
-    border-top: 3px solid var(--c-brick);
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   }
 }
 
-@media (max-width: 620px) {
-  .page--course-map .cm-panel__head,
-  .page--course-map .cm-panel__body { padding: var(--s-5); }
+@media (max-width: 560px) {
   .page--course-map .cm-rail__list { grid-template-columns: 1fr; }
+  .page--course-map .cm-panel__scroll { padding: var(--s-5); }
+  .page--course-map .cm-go { flex-direction: column; align-items: flex-start; }
 }

@@ -1,48 +1,52 @@
 /* ---------------------------------------------------------------------------
-   course-map.js — the five AP course areas.
+   course-map.js — the five AP course areas. The main study page.
 
-   The old version locked body scroll (`body.no-scroll`) to force the whole
-   explorer into one viewport, which clipped the panel and overlapped the
-   heading with its own body text. This version simply scrolls.
+   Routes: #/course (defaults to Unit 1) and #/course/:unit
+
+   Layout: a compact page header, then a two-column explorer that fills the
+   rest of the viewport. The page itself never scrolls; the summary panel
+   scrolls internally if a unit needs more room.
+
+   Panel order is deliberate: the high-level idea first, then the one-line
+   sequence, then the detail. Ethan should be able to say what a unit is about
+   from the top of the panel alone.
    --------------------------------------------------------------------------- */
 
 import { AREAS, getArea } from '../content/course.js';
 import { el, html, esc } from '../layout/dom.js';
 
-function hero() {
-  return html(`
-    <section class="cm-hero">
-      <div class="cm-hero__inner shell">
+function header() {
+  return `
+    <header class="cm-head">
+      <div class="cm-head__inner shell">
         <div>
           <p class="eyebrow eyebrow--on-dark">AP U.S. Government &amp; Politics · Course map</p>
-          <h1 class="cm-hero__title">Five areas.<br>One connected course.</h1>
+          <h1 class="cm-head__title">Five areas. One connected course.</h1>
         </div>
-        <p class="cm-hero__note">
-          See the whole course first. Pick an area to read what it is really
-          about, then open the full study guide.
+        <p class="cm-head__note">
+          Pick an area to see what it is really about, then open its study guide.
         </p>
       </div>
-    </section>`);
+    </header>`;
 }
 
 function rail(selected) {
   const items = AREAS.map((a) => `
     <li>
-      <a class="cm-rail__item" href="#/course/${a.n}"
-         ${a.n === selected ? 'aria-current="true"' : ''}>
-        <span class="cm-rail__n">0${a.n}</span>
-        <span class="cm-rail__text">
-          <small class="cm-rail__weight">Unit ${a.n} · ${esc(a.weight)}</small>
-          <strong class="cm-rail__short">${esc(a.short)}</strong>
-          <span class="cm-rail__title">${esc(a.title)}</span>
+      <a class="cm-unit" href="#/course/${a.n}"
+         ${a.n === selected ? 'aria-current="page"' : ''}>
+        <span class="cm-unit__n">0${a.n}</span>
+        <span class="cm-unit__text">
+          <span class="cm-unit__meta">Unit ${a.n} · ${esc(a.weight)}</span>
+          <span class="cm-unit__name">${esc(a.short)}</span>
         </span>
-        <span class="cm-rail__chev" aria-hidden="true">›</span>
+        <span class="cm-unit__chev" aria-hidden="true">›</span>
       </a>
     </li>`).join('');
 
   return `
     <nav class="cm-rail" aria-label="Course areas">
-      <p class="eyebrow">The course · five areas</p>
+      <p class="cm-rail__head">The course · five areas</p>
       <ol class="cm-rail__list">${items}</ol>
     </nav>`;
 }
@@ -53,54 +57,54 @@ function panel(area) {
     .join('<li class="cm-chain__arrow" aria-hidden="true">→</li>');
 
   const topics = area.topics.map((t, i) => `
-    <li>
-      <a class="cm-topic" href="#/study">
-        <span class="cm-topic__n">0${i + 1}</span>
-        <span class="cm-topic__label">${esc(t)}</span>
-        <span class="cm-topic__chev" aria-hidden="true">→</span>
-      </a>
+    <li class="cm-topic">
+      <span class="cm-topic__n">${String(i + 1).padStart(2, '0')}</span>
+      <span class="cm-topic__label">${esc(t)}</span>
     </li>`).join('');
 
-  return `
-    <article class="cm-panel">
-      <header class="cm-panel__head">
-        <p class="cm-panel__kicker">Unit 0${area.n} · before you study</p>
-        <h2 class="cm-panel__title">${esc(area.title)}</h2>
-        <p class="cm-panel__why">${esc(area.why)}</p>
-      </header>
+  const cta = area.detail
+    ? `<a class="btn btn--primary" href="${esc(area.detail)}">Open the ${esc(area.short)} study guide →</a>`
+    : `<p class="cm-soon">The full ${esc(area.short)} study guide is being written.
+         Unit 1 is the one to start with.</p>
+       <a class="btn btn--ghost" href="#/course/1">Go to Unit 1 →</a>`;
 
-      <div class="cm-panel__body">
-        <section class="cm-about">
-          <div>
-            <p class="eyebrow">What this area is really about</p>
-            <p class="cm-about__know">${esc(area.know)}</p>
-          </div>
-          <aside class="cm-about__aside">
-            <p class="eyebrow">Why it matters</p>
-            <p>${esc(area.matters)}</p>
-          </aside>
-        </section>
+  return `
+    <article class="cm-panel" id="cm-panel" tabindex="-1">
+      <div class="cm-panel__scroll">
+
+        <header class="cm-panel__head">
+          <p class="cm-panel__kicker">Unit 0${area.n} · ${esc(area.weight)} of the exam</p>
+          <h2 class="cm-panel__title">${esc(area.title)}</h2>
+        </header>
+
+        <p class="cm-lede">${esc(area.know)}</p>
+
+        <div class="cm-points">
+          <section class="cm-point">
+            <h3 class="cm-point__head">The question it answers</h3>
+            <p class="cm-point__body">${esc(area.question)}</p>
+          </section>
+          <section class="cm-point cm-point--why">
+            <h3 class="cm-point__head">Why it matters</h3>
+            <p class="cm-point__body">${esc(area.matters)}</p>
+          </section>
+        </div>
 
         <section class="cm-idea">
-          <p class="eyebrow">See the idea</p>
+          <h3 class="cm-sub">See the idea</h3>
           <ol class="cm-chain">${chain}</ol>
         </section>
 
-        <section class="cm-next">
-          <div class="cm-next__topics">
-            <p class="eyebrow">What you will learn</p>
-            <ol class="cm-topics">${topics}</ol>
-          </div>
-          <aside class="cm-next__cta">
-            <p class="eyebrow">Ready to go deeper?</p>
-            <p class="cm-next__text">
-              The study guide breaks this area into short explanations,
-              visuals, examples, and practice.
-            </p>
-            <a class="btn btn--primary" href="#/study">Open the ${esc(area.short)} study guide →</a>
-            <p class="cm-next__lens"><strong>Study lens:</strong> ${esc(area.lens)}</p>
-          </aside>
+        <section class="cm-learn">
+          <h3 class="cm-sub">What you will learn</h3>
+          <ol class="cm-topics">${topics}</ol>
         </section>
+
+        <footer class="cm-go">
+          <p class="cm-go__lens"><strong>Study lens.</strong> ${esc(area.lens)}</p>
+          ${cta}
+        </footer>
+
       </div>
     </article>`;
 }
@@ -116,11 +120,13 @@ export default {
     // Unknown or missing unit falls back to the first area rather than blank.
     const area = getArea(params.unit) || AREAS[0];
     const page = el('div', 'page page--course-map');
-    page.append(hero());
     page.append(html(`
-      <div class="cm-explorer shell">
-        ${rail(area.n)}
-        ${panel(area)}
+      <div class="cm-shell">
+        ${header()}
+        <div class="cm-explorer shell">
+          ${rail(area.n)}
+          ${panel(area)}
+        </div>
       </div>`));
     return page;
   },

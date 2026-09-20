@@ -20,13 +20,6 @@
   overflow: hidden;
 }
 
-/* The model runs nearly edge to edge. Scoped to home so other pages keep the
-   narrower reading measure. */
-.page--home .shell {
-  max-width: 1720px;
-  padding-inline: max(1.8vw, 16px);
-}
-
 /* ===== Hero =============================================================== */
 
 .page--home .home-hero {
@@ -144,7 +137,7 @@
 }
 
 .page--home .home-card__text {
-  font-size: clamp(11px, min(0.95vw, 1.6vh), 14px);
+  font-size: clamp(13px, min(0.95vw, 1.6vh), 14px);
   line-height: 1.5;
   color: var(--c-ink-soft);
 }
@@ -237,7 +230,7 @@
 }
 .page--home .home-closing__quote cite {
   font-family: var(--font-ui);
-  font-size: 12px;
+  font-size: 13px;
   font-style: normal;
   color: #6b5735;
 }

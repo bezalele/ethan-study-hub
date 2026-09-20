@@ -109,11 +109,27 @@ const PROBE = `(async () => {
         '.' + (el.className || '').toString().trim().split(/\\s+/)[0]);
     }
   });
+  // Bands that must not clip their own content. The course map panel is
+  // excluded: it is meant to scroll internally.
   const clipped = [];
-  document.querySelectorAll('.page--home section, .page--home nav').forEach(b => {
+  document.querySelectorAll('.page--home section, .page--home nav, .page--course-map .cm-head, .page--course-map .cm-rail').forEach(b => {
     if (b.scrollHeight > b.clientHeight + 2) clipped.push(b.className.split(/\s+/)[0] + ' by ' + (b.scrollHeight - b.clientHeight) + 'px');
   });
+  // Anything under 12px in the main content is unreadable for a student.
+  const tiny = new Map();
+  document.querySelectorAll('#app-main *').forEach(el => {
+    if (!el.childNodes.length) return;
+    const hasText = [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());
+    if (!hasText) return;
+    const px = parseFloat(getComputedStyle(el).fontSize);
+    if (px && px < 12) {
+      const key = (el.className || el.tagName).toString().trim().split(/\s+/)[0] + ' @' + px + 'px';
+      tiny.set(key, (tiny.get(key) || 0) + 1);
+    }
+  });
+
   return JSON.stringify({
+    tiny: [...tiny.keys()].slice(0, 4),
     chars: main ? main.textContent.trim().length : 0,
     imgs: document.querySelectorAll('#app-main img').length,
     broken: [...document.querySelectorAll('#app-main img')]
@@ -171,8 +187,13 @@ const PROBE = `(async () => {
         if (m.chars < 40) problems.push('EMPTY');
         if (m.hOver > 1) problems.push(`H-OVERFLOW ${m.hOver}px (${m.over.join(', ')})`);
         if (m.broken.length) problems.push(`BROKEN IMG ${m.broken.join(', ')}`);
-        if (route === '#/' && w >= 1001 && h >= 700) {
-          if (m.vOver > 1) problems.push(`HOME SCROLLS ${m.vOver}px`);
+        if (m.tiny.length) problems.push(`TINY TEXT ${m.tiny.join(', ')}`);
+        // Home and the course map are both one-screen layouts above their
+        // fallback breakpoints.
+        const oneScreen = route === '#/'
+          || route === '#/course' || route.startsWith('#/course/');
+        if (oneScreen && w >= 1001 && h >= 700) {
+          if (m.vOver > 1) problems.push(`PAGE SCROLLS ${m.vOver}px`);
           if (m.clipped.length) problems.push(`CLIPPED ${m.clipped.join(', ')}`);
         }
 

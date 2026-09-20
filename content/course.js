@@ -5,6 +5,11 @@
    "hooks" array, merged into one record per area so the two can no longer
    drift out of alignment. Exam weights are College Board multiple-choice
    weightings.
+
+   `detail` is the route to that unit's full study content. Only Unit 1 has
+   one so far — the founding story. Set the others as their pages are built
+   and the Course Map picks them up automatically; until then the panel says
+   so rather than offering a link that goes nowhere.
    --------------------------------------------------------------------------- */
 
 export const AREAS = [
@@ -20,6 +25,7 @@ export const AREAS = [
     know: 'You learn why the Constitution was created, what problem it was trying to solve, and why power was divided and limited.',
     matters: 'Every later unit makes more sense once you understand this foundation.',
     lens: 'Start with the founding story, then connect each event to a principle of government.',
+    detail: '#/study',
     chain: ['Declaration', 'Articles', 'Constitution', 'Bill of Rights'],
     topics: [
       'Ideals of democracy',
@@ -41,6 +47,7 @@ export const AREAS = [
     matters:
       'When you hear “Congress,” “the White House,” or “the Supreme Court” in the news, this unit tells you who can actually do what.',
     lens: 'Think of this unit as a system: institutions have different jobs, but none works completely alone.',
+    detail: null,
     chain: ['Congress makes laws', 'President executes', 'Agencies implement', 'Courts interpret'],
     topics: ['Congress', 'Presidency', 'Courts', 'Federal bureaucracy', 'Checks and balances'],
   },
@@ -57,6 +64,7 @@ export const AREAS = [
     matters:
       'Speech, religion, privacy, due process, and equal protection are not abstract ideas — they affect real people.',
     lens: 'Keep two ideas separate: civil liberties protect freedoms; civil rights focus on equal treatment.',
+    detail: null,
     chain: ['Bill of Rights', 'Fourteenth Amendment', 'Incorporation', 'Equal protection'],
     topics: [
       'Bill of Rights',
@@ -79,6 +87,7 @@ export const AREAS = [
     matters:
       'It helps you separate what people believe from how we know what the public actually thinks.',
     lens: 'This unit asks both what people believe and how political scientists can measure those beliefs.',
+    detail: null,
     chain: ['Experiences', 'Beliefs', 'Public opinion', 'Polling'],
     topics: [
       'Political socialization',
@@ -101,6 +110,7 @@ export const AREAS = [
     matters:
       'It explains how ordinary people try to influence who governs and what government does.',
     lens: 'Participation is broader than voting: parties, groups, campaigns, media, and civic activity all connect people to government.',
+    detail: null,
     chain: ['Citizens', 'Parties & groups', 'Campaigns & media', 'Government'],
     topics: [
       'Voting',
