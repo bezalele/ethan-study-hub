@@ -6,7 +6,7 @@
   <meta name="description" content="Ethan Study Hub — interactive AP U.S. Government discovery experience.">
   <title>Ethan Study Hub · AP U.S. Government</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="home-override.css?v=20260920-fullbleed">
+  <link rel="stylesheet" href="home-override.css?v=20260920-coursemap1">
 </head>
 <body>
   <header>
@@ -54,20 +54,12 @@
       <div id="foundingDetailContent"></div>
     </section>
 
-    <section id="map" class="page guided-map" aria-label="Start learning AP Government">
-      <div class="guide-hero"><p class="eyebrow">START HERE</p><h1>American government,<br>one story at a time.</h1><p>You do not need to know where to go. Follow the path from 1 to 5. Each chapter starts simple and opens details only when you want them.</p><button onclick="openLearn(1)">Start Chapter 1 →</button></div>
-      <div class="guide-course">
-        <div class="guide-intro"><p class="eyebrow">THE WHOLE COURSE ON ONE SCREEN</p><h2>Five chapters. Five questions.</h2><p>This is the map. Everything else on the site belongs underneath one of these chapters.</p></div>
-        <div class="course-path">
-          <button onclick="openLearn(1)"><b>1</b><span><small>FOUNDATIONS · 15–22%</small><strong>Why was American government designed this way?</strong><em>History → Declaration → Articles → Constitution → Federalism</em></span><i>Start →</i></button>
-          <button onclick="openLearn(2)"><b>2</b><span><small>BRANCHES · 25–36%</small><strong>Who has power — and who can stop them?</strong><em>Congress → President → Courts → Bureaucracy → Checks & balances</em></span><i>Open →</i></button>
-          <button onclick="openLearn(3)"><b>3</b><span><small>LIBERTIES & RIGHTS · 13–18%</small><strong>What can government do — and what must it not do?</strong><em>Bill of Rights → Liberties → Due process → Equal protection</em></span><i>Open →</i></button>
-          <button onclick="openLearn(4)"><b>4</b><span><small>BELIEFS & IDEOLOGY · 10–15%</small><strong>Why do Americans disagree about government?</strong><em>Socialization → Public opinion → Ideology → Policy</em></span><i>Open →</i></button>
-          <button onclick="openLearn(5)"><b>5</b><span><small>PARTICIPATION · 20–27%</small><strong>How do people influence government?</strong><em>Voting → Parties → Groups → Elections → Campaigns → Media</em></span><i>Open →</i></button>
-        </div>
-      </div>
-      <div class="guide-rule"><b>How to study</b><span>① Understand the story</span><span>② Open the details</span><span>③ Connect a document or case</span><span>④ Check yourself</span></div>
+    <section id="map" class="page course-map-page" aria-label="AP Government course map">
+      <div class="cm-hero"><p class="eyebrow">AP U.S. GOVERNMENT & POLITICS · COURSE MAP</p><h1>Five areas.<br>One connected course.</h1><p>See the whole course first. Hover for a quick preview, click a card for more detail, or open the full study page.</p></div>
+      <div id="courseMapContent"></div>
     </section>
+
+    <section id="unitStudy" class="page" aria-label="Course area study page"><div id="unitStudyContent"></div></section>
 
     <section id="story" class="page lesson-page" aria-label="Guided course lesson">
       <div class="lesson-top"><button onclick="show('map')">← Course Map</button><span id="lessonProgress">Chapter 1 of 5</span></div>
