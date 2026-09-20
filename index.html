@@ -29,7 +29,7 @@
           <p class="exact-kicker">PEOPLE. IDEAS. A MORE PERFECT UNION.</p>
           <h1>The story of<br>America.</h1>
           <p class="exact-deck">Explore how a group of colonies became a nation —<br>and what their story teaches us about government,<br>freedom, and our responsibilities today.</p>
-          <div class="exact-actions"><button onclick="openLearn(1)">Start the Story →</button><button class="outline" onclick="show('map')">View Course Map</button></div>
+          
           <blockquote>“The experiment, sir, is not over.”<small>— Benjamin Franklin, 1787</small></blockquote>
         </div>
         <div class="exact-hero-right"><blockquote>“We hold these truths to be self-evident,<br>that all men are created equal…”<small>— Declaration of Independence, 1776</small></blockquote></div>
@@ -37,7 +37,7 @@
       <div class="exact-journey">
         <div class="exact-journey-label"><b>EXPLORE<br>THE JOURNEY</b><p>Five chapters. One big<br>story. Click any chapter<br>to dive in.</p></div>
         <button onclick="openFoundingPage('colonies')" onmouseenter="showJourneyFact(1,this)" onmouseleave="hideJourneyFact()" onfocus="showJourneyFact(1,this)" onblur="hideJourneyFact()"><i class="j1"></i><span class="num">01</span><span class="date">1607–1775</span><strong>British Colonies</strong><small>Foundations and frustrations</small></button>
-        <button class="active" onclick="show('declaration')" onmouseenter="showJourneyFact(2,this)" onmouseleave="hideJourneyFact()" onfocus="showJourneyFact(2,this)" onblur="hideJourneyFact()"><i class="j2"></i><span class="num">02</span><span class="date">1776</span><strong>Declaration of Independence</strong><small>A new nation</small></button>
+        <button onclick="openFoundingPage('declaration')" onmouseenter="showJourneyFact(2,this)" onmouseleave="hideJourneyFact()" onfocus="showJourneyFact(2,this)" onblur="hideJourneyFact()"><i class="j2"></i><span class="num">02</span><span class="date">1776</span><strong>Declaration of Independence</strong><small>A new nation</small></button>
         <button onclick="openFoundingPage('articles')" onmouseenter="showJourneyFact(3,this)" onmouseleave="hideJourneyFact()" onfocus="showJourneyFact(3,this)" onblur="hideJourneyFact()"><i class="j3"></i><span class="num">03</span><span class="date">1781–1789</span><strong>Articles of Confederation</strong><small>A government in practice</small></button>
         <button onclick="openFoundingPage('convention')" onmouseenter="showJourneyFact(4,this)" onmouseleave="hideJourneyFact()" onfocus="showJourneyFact(4,this)" onblur="hideJourneyFact()"><i class="j4"></i><span class="num">04</span><span class="date">1787</span><strong>Constitutional Convention</strong><small>Designing a better system</small></button>
         <button onclick="openFoundingPage('constitution-rights')" onmouseenter="showJourneyFact(5,this)" onmouseleave="hideJourneyFact()" onfocus="showJourneyFact(5,this)" onblur="hideJourneyFact()"><i class="j5"></i><span class="num">05</span><span class="date">1788–1791</span><strong>Constitution + Bill of Rights</strong><small>Rights, balance, and a lasting union</small></button>
@@ -112,6 +112,6 @@
   </footer>
 
   <script src="content/contentData.js"></script>
-  <script src="app.js?v=20260920-unified2"></script>
+  <script src="app.js?v=20260920-cleanhero"></script>
 </body>
 </html>
