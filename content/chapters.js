@@ -55,67 +55,75 @@ const DATA = [
     title: 'The British Colonies',
     tagline: 'Foundations and frustrations',
     summary:
-      'Long before independence, colonists were already governing themselves — electing assemblies, arguing about taxes, and deciding much of their daily life.',
-    question: 'If you already govern yourselves in practice, who really holds authority?',
+      'Before independence, many colonists already had practice with elected assemblies. That made later British taxes and tighter control feel like a challenge to habits of self-government.',
+    question: 'If people help govern themselves locally, who has the final say?',
 
-    deck: 'Self-government arrived long before independence.',
+    deck: 'Self-government existed long before independence.',
     intro:
-      'For more than a century before 1776, the colonies elected their own assemblies and ran much of their own affairs. When Britain tightened control after 1763, it was interrupting a habit of self-rule that was already old.',
+      'The colonies were part of the British Empire, but many also elected local assemblies that handled taxes and laws. Political participation was limited and unequal. After 1763, Parliament tightened control and raised revenue, forcing a question that would drive the Revolution: who had the right to govern the colonies?',
     heroQuote: {
       text: 'No taxation without representation.',
-      source: 'Colonial slogan, 1760s',
+      source: 'Colonial political slogan, 1760s',
+    },
+    hero: {
+      src: 'assets/chapters/colonies/patrick-henry.jpg',
+      alt: 'Patrick Henry speaking before the Virginia House of Burgesses during the Stamp Act crisis',
     },
 
     bigPicture: {
       heading: 'Why did the colonies drift apart from Britain?',
       body:
-        'The colonies were British possessions, but distance did its work. Colonial <strong>assemblies</strong> taxed and legislated locally for generations. After war debt pushed Parliament to tax the colonies directly, the dispute became less about money and more about <strong>who had the right to decide</strong>.',
+        'Colonists did not begin with a blank slate in 1776. Elected <strong>assemblies</strong> had given many white male property holders experience with representative government, while many others were excluded. After the Seven Years’ War, new taxes and tighter British oversight turned a dispute over revenue into a dispute over <strong>representation, consent, and authority</strong>.',
     },
     takeaways: [
-      'Colonial assemblies gave Americans long practice at representative self-government.',
-      'Britain governed loosely for decades — a pattern later called salutary neglect.',
-      'War debt after 1763 pushed Parliament to tax the colonies directly.',
-      'Colonists objected that taxation required representation they did not have.',
-      'By 1775 a constitutional argument had become an armed conflict.',
+      'Colonies remained under British authority while elected assemblies handled many local decisions.',
+      'Political participation was limited; women, enslaved people, and many others lacked political power.',
+      'After 1763, Britain increased taxes and regulation to raise revenue and tighten imperial control.',
+      'Colonists argued that legitimate taxation required representation and consent.',
+      'Protest, punishment, and failed compromise turned a political dispute into armed conflict by 1775.',
     ],
     fact: {
       text:
-        'Virginia’s House of Burgesses first met in 1619 — more than 150 years before independence. Representative government in America is older than the United States.',
+        'Virginia’s House of Burgesses first met in 1619 — more than 150 years before independence. Representative institutions in the colonies were older than the United States itself.',
       name: 'House of Burgesses',
       dates: 'first met 1619',
     },
     closerLook: {
-      title: 'The road to rupture',
+      title: 'From self-rule to resistance',
       body:
-        'Four moments turned a loose imperial relationship into a constitutional crisis. Each one raised the same question about consent.',
+        'The Revolution did not begin with one tax or one protest. Watch the argument escalate as colonists and Parliament each insisted that legitimate authority was on their side.',
       cta: 'Read the documents',
+      image: {
+        src: 'assets/chapters/colonies/boston-tea-party.jpg',
+        alt: 'Engraving of colonists destroying tea in Boston Harbor',
+      },
       sections: [
-        { label: 'Salutary neglect', note: 'Decades of loose control' },
-        { label: 'Stamp Act', note: '1765 — direct taxation' },
-        { label: 'Townshend & Tea', note: 'Escalation and boycott' },
-        { label: 'Coercive Acts', note: '1774 — the breaking point' },
+        { label: 'Local assemblies', note: 'Practice in self-rule' },
+        { label: 'Stamp Act', note: '1765 — consent challenged' },
+        { label: 'Boston Tea Party', note: '1773 — direct resistance' },
+        { label: 'Lexington', note: '1775 — fighting begins' },
       ],
     },
     whyItMatters: {
       body:
-        'The founders did not invent self-government in 1776. They were defending something they already had — which is why the Declaration reads as a list of things taken away.',
-      steps: ['Local assemblies', 'New taxes', 'Protest', 'Armed conflict'],
+        'The founding argument begins here: government needs authority, but people also expect a voice in how that authority is used. Representation and consent remain basic ideas in American government.',
+      steps: ['Local self-rule', 'New controls', 'Resistance', 'Revolution'],
     },
     quickCheck: {
       question: 'What was the colonists’ main constitutional objection to the Stamp Act?',
       options: [
-        'The tax rate was higher than in Britain',
-        'Parliament taxed them without their representation',
-        'It applied only to the northern colonies',
-        'It was imposed by the king rather than Parliament',
+        'The tax rate was higher than taxes paid in Britain',
+        'Parliament taxed them without representatives they had elected',
+        'The tax applied only to northern colonies',
+        'The king, rather than Parliament, created the tax',
       ],
       answer: 1,
       why:
-        'The objection was about consent, not cost: colonists argued that only a body in which they were represented could tax them.',
+        'The central objection was about consent and representation: colonists argued that a legislature in which they had no elected representatives should not tax them.',
     },
     whatsNext: {
       body:
-        'The argument over consent eventually produced a formal break — and a statement of the principles behind it.',
+        'By 1776, resistance had become a decision to separate. The next challenge was explaining why independence was justified.',
     },
   },
 
@@ -127,71 +135,75 @@ const DATA = [
     title: 'Declaration of Independence',
     tagline: 'A new nation',
     summary:
-      'The colonies turned a political dispute into a principle: governments derive their just powers from the consent of the governed.',
+      'The Declaration turned independence into an argument about natural rights, equality, and the idea that legitimate government rests on the consent of the governed.',
     question: 'What makes a government legitimate in the first place?',
 
-    deck: 'A bold statement. A new nation. A big question: now what?',
+    deck: 'Independence needed an argument, not just an announcement.',
     intro:
-      'On July 4, 1776, the thirteen colonies declared that they were no longer part of Britain. The Declaration of Independence explained why — and laid out powerful ideas about liberty, rights, and government.',
+      'On July 4, 1776, Congress adopted a statement explaining why the colonies were leaving Britain. The Declaration connected independence to natural rights, equality, and consent of the governed — ideas that became central to American political thought even when the country did not yet live up to them.',
     heroQuote: {
       text: 'We hold these truths to be self-evident, that all men are created equal…',
-      source: 'Declaration of Independence (1776)',
+      source: 'Declaration of Independence, 1776',
+    },
+    hero: {
+      src: 'assets/chapters/declaration/presentation-to-congress.jpg',
+      alt: 'Historical print depicting the Declaration of Independence being presented to the Continental Congress',
     },
 
     bigPicture: {
-      heading: 'Why the Declaration?',
+      heading: 'What argument does the Declaration make?',
       body:
-        'The colonies were frustrated with British rule — high taxes, limited representation, and <strong>increasing control</strong>. The <strong>Declaration of Independence</strong> was their formal statement to the world: they were leaving, and they were forming a new nation.',
+        'The Declaration begins with <strong>natural rights</strong> and says governments gain legitimate power from the <strong>consent of the governed</strong>. It then lists grievances meant to show that British rule violated those principles. Its conclusion is independence. It explains <strong>why to leave</strong>; it does not design the new government.',
     },
     takeaways: [
-      'Explains why the colonies are separating from Britain.',
-      'Introduces powerful ideas: natural rights, equality, and consent of the governed.',
-      'Lists specific complaints against the king.',
-      'Declares the colonies to be free and independent states.',
-      'Serves as a statement of principles, not a detailed plan for government.',
+      'Natural rights are rights people possess by virtue of being human.',
+      'Government is legitimate when its authority rests on the consent of the governed.',
+      'The grievances are evidence for the claim that British rule violated those principles.',
+      'The document declares the colonies to be free and independent states.',
+      'The Declaration states political principles; it is not a constitution or plan of government.',
     ],
     fact: {
       text:
-        'Thomas Jefferson was the main author, but it was edited by others, including John Adams and Benjamin Franklin.',
-      name: 'Thomas Jefferson',
-      dates: '1743–1826',
+        'Congress voted for independence on July 2, adopted the Declaration on July 4, and delegates began signing the engrossed parchment on August 2. The famous signing was not one single July 4 event.',
+      name: 'The Declaration',
+      dates: '1776',
     },
     closerLook: {
-      title: 'The Document',
+      title: 'The argument on one page',
       body:
-        'The Declaration has four main parts: a statement of principles, a list of complaints, a declaration of independence, and a statement of mutual support.',
+        'The Declaration is easier to remember as a four-part argument: principles, evidence, conclusion, and a public pledge by the signers.',
       cta: 'Read & explore the document',
+      image: {
+        src: 'assets/chapters/declaration/declaration-document.jpg',
+        alt: 'The engrossed Declaration of Independence held by the National Archives',
+      },
       sections: [
-        { label: 'Preamble', note: 'The big idea' },
-        { label: 'Grievances', note: 'List of complaints' },
-        { label: 'Declaration', note: 'The break' },
-        { label: 'Signatures', note: '56 signers' },
+        { label: 'Principles', note: 'Rights and consent' },
+        { label: 'Grievances', note: 'Evidence against the king' },
+        { label: 'Independence', note: 'The political break' },
+        { label: 'Signatures', note: 'A public commitment' },
       ],
     },
     whyItMatters: {
       body:
-        'The Declaration’s ideas — equality and natural rights — influenced other movements for freedom around the world.',
-      steps: [
-        'American Revolution (1776)',
-        'French Revolution (1789)',
-        'Independence movements (19th–20th c.)',
-      ],
+        'Later Americans repeatedly returned to the Declaration’s language of equality and rights — including abolitionists, women’s-rights advocates, and civil-rights leaders — to challenge the gap between national ideals and lived reality.',
+      steps: ['Natural rights', 'Consent', 'Independence', 'A lasting ideal'],
     },
     quickCheck: {
       question: 'What was the main purpose of the Declaration of Independence?',
       options: [
-        'To create a plan for the new government',
-        'To explain why the colonies were separating from Britain',
-        'To establish the Bill of Rights',
-        'To end slavery',
+        'To create the structure of the new national government',
+        'To explain and justify the colonies’ separation from Britain',
+        'To add a bill of rights to the new government',
+        'To divide power among three branches',
       ],
       answer: 1,
       why:
-        'The Declaration justifies separation. The plan of government comes later, with the Articles and then the Constitution.',
+        'The Declaration justifies separation. A governing framework came later, first through the Articles of Confederation and then the Constitution.',
     },
     whatsNext: {
       body:
-        'The Declaration was just the beginning. Next, the new nation tried its first constitution — the Articles of Confederation.',
+        'Independence answered “Why leave Britain?” It did not answer “How should thirteen states govern together?” That became the next experiment.',
     },
   },
 
@@ -203,67 +215,75 @@ const DATA = [
     title: 'The Articles of Confederation',
     tagline: 'A government in practice',
     summary:
-      'America’s first national framework was deliberately weak — and its weakness revealed exactly which powers a working government cannot do without.',
-    question: 'How much power is too little?',
+      'America’s first constitution protected state independence and gave Congress important national responsibilities, but it left the central government dependent on state cooperation.',
+    question: 'What happens when a national government has too little power to solve shared problems?',
 
-    deck: 'A government designed to be weak — and it was.',
+    deck: 'The first design protected the states — sometimes too well.',
     intro:
-      'Having just fought a war against concentrated power, the states built a national government that could barely act. The Articles held the union together, but only just.',
+      'Congress adopted the Articles in 1777, but all thirteen states had to ratify them before they took effect. Maryland became the final state to ratify in 1781. The Confederation helped conduct the war and diplomacy, yet Congress lacked reliable revenue and several powers needed to manage a growing union.',
     heroQuote: {
-      text: 'A firm league of friendship…',
-      source: 'Articles of Confederation, Article III',
+      text: 'Each state retains its sovereignty, freedom and independence…',
+      source: 'Articles of Confederation, Article II',
+    },
+    hero: {
+      src: 'assets/chapters/articles/federal-hall.jpg',
+      alt: 'Historical view of Federal Hall in New York, a national seat of government at the end of the 1780s',
     },
 
     bigPicture: {
-      heading: 'What happens when government is too weak?',
+      heading: 'What could the Confederation do — and not do?',
       body:
-        'Congress could declare war and make treaties, but it could not <strong>tax</strong>, could not <strong>regulate commerce</strong>, and could not enforce its own laws. Every state had <strong>one vote</strong>, and amendments required <strong>unanimous</strong> consent.',
+        'Congress could conduct diplomacy, make treaties, declare war, and manage western lands. But it could not <strong>tax people directly</strong> or <strong>regulate interstate commerce</strong>. There was no separate national executive or national court system. Major decisions depended heavily on the states, making coordinated action difficult.',
     },
     takeaways: [
-      'The Articles created a league of sovereign states, not a national government.',
-      'Congress could not tax; it could only request money from the states.',
-      'Congress could not regulate interstate or foreign commerce.',
-      'There was no national executive and no national court system.',
-      'Amending the Articles required all thirteen states to agree.',
+      'The Articles created a union of states whose governments kept most political authority.',
+      'Each state had one vote in the Confederation Congress, regardless of population.',
+      'Congress could request money from states but could not impose direct federal taxes.',
+      'The Confederation achieved important results, including the Treaty of Paris and Northwest Ordinance.',
+      'Debt, trade disputes, unrest, and weak enforcement increased pressure for a stronger national framework.',
     ],
     fact: {
       text:
-        'Congress could ask the states for money but never compel it. Through the 1780s the states paid only a fraction of what Congress requested.',
-      name: 'The Articles',
-      dates: 'in force 1781–1789',
+        'Maryland was the thirteenth and final state to ratify the Articles. Its approval on March 1, 1781, allowed the Articles formally to take effect — a useful local connection for Maryland students.',
+      name: 'Maryland',
+      dates: 'ratified March 1, 1781',
     },
     closerLook: {
-      title: 'What the Articles could not do',
+      title: 'A government with real limits',
       body:
-        'Each gap below became a specific power written into the Constitution a few years later.',
+        'The Articles were not “no government.” Congress had national responsibilities. The problem was that several of those responsibilities came without the powers or revenue needed to carry them out consistently.',
       cta: 'Read the documents',
+      image: {
+        src: 'assets/chapters/articles/articles-document.jpg',
+        alt: 'First page of the Articles of Confederation in the National Archives',
+      },
       sections: [
-        { label: 'No power to tax', note: 'Requests, not revenue' },
-        { label: 'No commerce power', note: 'States set their own rules' },
-        { label: 'No executive', note: 'Nobody to carry out law' },
-        { label: 'Unanimous amendment', note: 'Any one state could block' },
+        { label: 'War & treaties', note: 'National powers existed' },
+        { label: 'Revenue', note: 'Requests, not direct taxes' },
+        { label: 'Commerce', note: 'No national trade rule' },
+        { label: 'Enforcement', note: 'No separate executive' },
       ],
     },
     whyItMatters: {
       body:
-        'Nearly every major feature of the Constitution is an answer to a specific failure of the Articles.',
-      steps: ['Weak centre', 'Debt & disorder', 'Calls for reform', 'Convention'],
+        'The Constitution makes more sense when you see it as a response to the Articles. Many powers granted in 1787 answer specific coordination problems experienced during the 1780s.',
+      steps: ['Limited union', 'Shared problems', 'Pressure for reform', 'Convention'],
     },
     quickCheck: {
-      question: 'Which power did the national government lack under the Articles?',
+      question: 'Which power did Congress lack under the Articles of Confederation?',
       options: [
         'The power to declare war',
         'The power to make treaties',
-        'The power to tax directly',
-        'The power to run a postal service',
+        'The power to impose direct federal taxes',
+        'The power to manage western territories',
       ],
       answer: 2,
       why:
-        'Congress could requisition money from the states but had no power to tax, which left it dependent and often unpaid.',
+        'Congress could ask states for money, but it could not levy direct federal taxes. That made reliable national revenue difficult.',
     },
     whatsNext: {
       body:
-        'The weaknesses became impossible to ignore. Delegates gathered in Philadelphia to fix them — and wrote something new instead.',
+        'By 1787, many leaders believed the system needed more than small repairs. Delegates met in Philadelphia to revise the Articles and produced a new design instead.',
     },
   },
 
@@ -275,67 +295,75 @@ const DATA = [
     title: 'The Constitutional Convention',
     tagline: 'Designing a better system',
     summary:
-      'Delegates in Philadelphia rebuilt the government around a hard trade-off: enough power to govern, divided enough that no one part could dominate.',
-    question: 'How do you divide power so it still works?',
+      'The Philadelphia Convention redesigned national government around representation, federalism, separated powers, and checks — while also making compromises that protected slavery.',
+    question: 'How do you build a government strong enough to act but limited enough to resist abuse?',
 
-    deck: 'Fifty-five delegates. One hard trade-off.',
+    deck: 'The assignment was revision. The result was a new system.',
     intro:
-      'Delegates met to revise the Articles and instead wrote a new framework. The core problem: build a government strong enough to govern, and divided enough that no part of it could take over.',
+      'A quorum of delegates gathered in Philadelphia on May 25, 1787. Fifty-five delegates from twelve states attended at some point; Rhode Island sent none. Instead of merely repairing the Articles, they debated representation, national power, executive authority, slavery, and the relationship between states and the new federal government.',
     heroQuote: {
       text: 'If men were angels, no government would be necessary.',
-      source: 'James Madison, Federalist No. 51',
+      source: 'James Madison, Federalist No. 51, 1788',
+    },
+    hero: {
+      src: 'assets/chapters/convention/signing-constitution.jpg',
+      alt: 'Howard Chandler Christy painting of delegates at the signing of the United States Constitution',
     },
 
     bigPicture: {
-      heading: 'How do you divide power so it still works?',
+      heading: 'How did the framers divide power?',
       body:
-        'The <strong>Great Compromise</strong> settled representation with a House based on population and a Senate with equal state votes. Power was split between <strong>branches</strong> and between <strong>levels of government</strong>, each able to check the others.',
+        'The <strong>Great Compromise</strong> created a House based on population and a Senate with equal state representation. The Constitution divided authority among branches and between federal and state governments. Other bargains were deeply unjust: the <strong>Three-Fifths Clause</strong> increased slaveholding states’ representation while enslaved people had no political rights.',
     },
     takeaways: [
-      'Delegates replaced the Articles rather than amending them.',
-      'The Great Compromise created a bicameral Congress.',
-      'The Three-Fifths Compromise settled representation by counting enslaved people as three-fifths.',
-      'Separation of powers divides authority among three branches.',
-      'Checks and balances let each branch restrain the others.',
+      'The convention was called to revise the Articles but produced an entirely new Constitution.',
+      'The Great Compromise created a two-house Congress balancing population and equal state representation.',
+      'Separation of powers gives legislative, executive, and judicial institutions different responsibilities.',
+      'Checks and balances give each branch tools to restrain the others.',
+      'Compromises over slavery protected the institution and shaped representation in the new government.',
     ],
     fact: {
       text:
-        'The delegates met in secret through a Philadelphia summer with the windows shut, so their debates would not be reported before they had finished.',
-      name: 'James Madison',
-      dates: '1751–1836',
+        'Seventy-four delegates were appointed, 55 attended at some point, and only 39 signed the finished Constitution. Rhode Island was the only state that sent no delegates.',
+      name: 'Philadelphia Convention',
+      dates: 'May–September 1787',
     },
     closerLook: {
-      title: 'The compromises',
+      title: 'The design problems',
       body:
-        'The Constitution was not designed from a single plan. It is a set of bargains between states that wanted different things.',
+        'The Constitution grew out of competing plans and interests. The most useful way to study the convention is to ask what problem each compromise or structural choice was trying to solve.',
       cta: 'Read the documents',
+      image: {
+        src: 'assets/chapters/convention/virginia-plan.jpg',
+        alt: 'Virginia Plan document from the Constitutional Convention',
+      },
       sections: [
-        { label: 'Great Compromise', note: 'House and Senate' },
-        { label: 'Three-Fifths', note: 'Representation and slavery' },
-        { label: 'Electoral College', note: 'Choosing a president' },
-        { label: 'Commerce', note: 'Trade and the slave trade' },
+        { label: 'Representation', note: 'Large states vs. small' },
+        { label: 'Three branches', note: 'Separate institutions' },
+        { label: 'Federalism', note: 'National and state power' },
+        { label: 'Slavery', note: 'Power and human bondage' },
       ],
     },
     whyItMatters: {
       body:
-        'Nearly every argument in American politics today runs through a structure decided in one room in 1787.',
-      steps: ['Convention', 'Compromise', 'Separated powers', 'Checks and balances'],
+        'Congress, the presidency, the courts, federalism, and the amendment process all grow from choices made in 1787. Later AP Government units are largely a study of how this architecture works in practice.',
+      steps: ['Competing plans', 'Compromise', 'New architecture', 'Ratification'],
     },
     quickCheck: {
       question: 'What did the Great Compromise resolve?',
       options: [
-        'Whether to keep the Articles of Confederation',
-        'How states would be represented in Congress',
-        'Whether the president could veto legislation',
-        'How federal judges would be appointed',
+        'Whether the United States would keep the Articles of Confederation',
+        'How states would be represented in the national legislature',
+        'Whether presidents could veto legislation',
+        'How the Bill of Rights would be written',
       ],
       answer: 1,
       why:
-        'It combined representation by population in the House with equal representation by state in the Senate.',
+        'It combined representation by population in the House with equal representation for each state in the Senate.',
     },
     whatsNext: {
       body:
-        'A finished draft is not a government. It still had to be ratified — and ratification came with a condition.',
+        'Writing a Constitution did not make it law. The proposed system still had to win ratification — and critics demanded stronger protection for individual liberty.',
     },
   },
 
@@ -347,70 +375,78 @@ const DATA = [
     title: 'The Constitution and the Bill of Rights',
     tagline: 'Rights, balance, and a lasting union',
     summary:
-      'Ratification came with a promise. The first ten amendments wrote specific protections for individual liberty into the constitutional settlement.',
-    question: 'How is liberty protected once the government is strong?',
+      'Ratification created a stronger federal system; the Bill of Rights then added explicit protections for individual liberty and limits on national power.',
+    question: 'How can government be strong enough to work and still remain limited?',
 
-    deck: 'Ratification came with a promise.',
+    deck: 'A stronger government came with an argument about liberty.',
     intro:
-      'Anti-Federalists warned that a stronger national government would threaten liberty. Ratification succeeded partly on a pledge: the first Congress would add explicit protections for individual rights.',
+      'The Constitution was ratified in 1788 and the new federal government began operating in 1789. Federalists defended the new structure; Anti-Federalists warned that centralized power could endanger liberty. The First Congress answered a central criticism by proposing amendments that became the Bill of Rights in 1791.',
     heroQuote: {
       text: 'A bill of rights is what the people are entitled to against every government on earth.',
-      source: 'Thomas Jefferson, 1787',
+      source: 'Thomas Jefferson to James Madison, 1787',
+    },
+    hero: {
+      src: 'assets/chapters/constitution-rights/bill-of-rights.jpg',
+      alt: 'The Bill of Rights held by the National Archives',
     },
 
     bigPicture: {
-      heading: 'How is liberty protected once the government is strong?',
+      heading: 'How does the Constitution limit power?',
       body:
-        '<strong>Federalists</strong> argued that a large republic would control faction and that structure alone would restrain power. <strong>Anti-Federalists</strong> answered that no structure is enough without written limits. The <strong>Bill of Rights</strong> wrote those limits down.',
+        'The Constitution begins with <strong>popular sovereignty</strong> — “We the People” — and distributes power through <strong>federalism, separation of powers, and checks and balances</strong>. The ratification debate asked whether structure alone was enough. The <strong>Bill of Rights</strong> added written protections for speech, religion, due process, and other liberties.',
     },
     takeaways: [
-      'Ratification required nine of thirteen states and was closely contested.',
-      'Federalists defended the Constitution in the Federalist Papers.',
-      'Anti-Federalists demanded explicit protection for individual rights.',
-      'The Bill of Rights was ratified in 1791 as the first ten amendments.',
-      'The Tenth Amendment reserves remaining powers to the states and the people.',
+      'The Constitution creates a federal republic in which national and state governments share power.',
+      'Separation of powers and checks and balances are designed to prevent concentrated authority.',
+      'Federalists argued for ratification; Anti-Federalists warned about centralized power and individual liberty.',
+      'Twelve amendments were proposed in 1789; ten were ratified as the Bill of Rights in 1791.',
+      'The first ten amendments protect liberties while also reserving undelegated powers to states or the people.',
     ],
     fact: {
       text:
-        'One amendment proposed alongside the Bill of Rights in 1789 was not ratified until 1992 — 202 years later. It became the Twenty-Seventh Amendment.',
+        'Congress proposed twelve amendments in 1789, not ten. Ten became the Bill of Rights in 1791; one of the other two was eventually ratified in 1992 as the Twenty-Seventh Amendment.',
       name: 'Bill of Rights',
       dates: 'ratified 1791',
     },
     closerLook: {
-      title: 'The first ten',
+      title: 'Read the architecture and the rights together',
       body:
-        'The Bill of Rights is short. Most of the rights arguments you will study are about how these few lines apply to new situations.',
+        'The Constitution mostly limits power by designing institutions; the Bill of Rights adds explicit rules about what government may not do. AP Government asks you to understand both kinds of limits.',
       cta: 'Read the documents',
+      image: {
+        src: 'assets/chapters/constitution-rights/constitution.jpg',
+        alt: 'First page of the United States Constitution in the National Archives',
+      },
       sections: [
-        { label: 'First Amendment', note: 'Speech, press, religion, assembly' },
-        { label: 'Second Amendment', note: 'Arms' },
-        { label: 'Fourth–Eighth', note: 'Process and the accused' },
-        { label: 'Ninth–Tenth', note: 'Unenumerated and reserved powers' },
+        { label: 'Structure', note: 'Articles I–III' },
+        { label: 'Federalism', note: 'Shared sovereignty' },
+        { label: 'First Amendment', note: 'Core expressive freedoms' },
+        { label: 'Ninth–Tenth', note: 'Rights and reserved powers' },
       ],
     },
     whyItMatters: {
       body:
-        'Most rights cases today are arguments about how these ten amendments apply to situations the founders never imagined.',
-      steps: ['Ratification debate', 'Bill of Rights', 'Incorporation', 'Rights today'],
+        'The rest of AP Government keeps returning to this settlement: who has power, how institutions check one another, what rights government must respect, and how citizens use the system.',
+      steps: ['Ratification', 'New government', 'Bill of Rights', 'Government today'],
     },
     quickCheck: {
       question: 'Why was the Bill of Rights added to the Constitution?',
       options: [
-        'To give the national government more power',
-        'To answer Anti-Federalist demands for explicit protection of rights',
-        'To replace the Articles of Confederation',
-        'To settle representation between large and small states',
+        'To give Congress more power over the states',
+        'To answer demands for explicit protections of individual rights and limits on government',
+        'To replace the system of checks and balances',
+        'To decide representation between large and small states',
       ],
       answer: 1,
       why:
-        'Several states ratified only on the understanding that written protections for individual rights would follow.',
+        'Anti-Federalist criticism and ratifying-convention recommendations pushed Federalists to support explicit protections, which the First Congress proposed in 1789.',
     },
     whatsNext: {
       body:
-        'That is the founding story. From here the course moves into how the system actually runs — branches, rights, beliefs and participation.',
+        'That completes the founding story. The course now turns from designing the system to watching it operate through branches, rights, beliefs, elections, and participation.',
     },
   },
-];
+]
 
 /* ---------------------------------------------------------------------------
    GALLERY SLIDES
@@ -424,41 +460,166 @@ const DATA = [
 
 const GALLERIES = {
   colonies: [
-    { src: null, label: 'Settlement',      caption: 'Colonists arrive and build local institutions along the coast.' },
-    { src: null, label: 'Self-government', caption: 'Elected assemblies debate taxes and local law.' },
-    { src: null, label: 'New taxes',       caption: 'Parliament imposes direct taxes after the war debt of 1763.' },
-    { src: null, label: 'Protest',         caption: 'Boycotts and petitions answer taxation without representation.' },
-    { src: null, label: 'Open conflict',   caption: 'By 1775 the constitutional dispute has become a war.' },
+    {
+      src: 'assets/chapters/colonies/house-of-burgesses.jpg',
+      alt: 'Historical image of the Virginia House of Burgesses chamber',
+      label: 'Self-government',
+      caption: 'Colonial assemblies gave many settlers experience with elected representative government.',
+    },
+    {
+      src: 'assets/chapters/colonies/patrick-henry.jpg',
+      alt: 'Patrick Henry speaking against the Stamp Act before the Virginia House of Burgesses',
+      label: 'Stamp Act',
+      caption: 'New imperial taxes sharpen the argument over representation and consent.',
+    },
+    {
+      src: 'assets/chapters/colonies/boston-massacre.jpg',
+      alt: 'Paul Revere engraving depicting the Boston Massacre',
+      label: 'Tension',
+      caption: 'A famous propaganda image shows how conflict was framed for colonial audiences.',
+    },
+    {
+      src: 'assets/chapters/colonies/boston-tea-party.jpg',
+      alt: 'Engraving of colonists destroying tea in Boston Harbor',
+      label: 'Resistance',
+      caption: 'The Boston Tea Party turns opposition to taxation into direct political action.',
+    },
+    {
+      src: 'assets/chapters/colonies/lexington.jpg',
+      alt: 'Amos Doolittle print of the Battle of Lexington in April 1775',
+      label: 'Open conflict',
+      caption: 'At Lexington, the constitutional dispute finally becomes an armed conflict.',
+    },
   ],
   declaration: [
-    { src: null, label: 'Drafting',        caption: 'A committee, including Thomas Jefferson, drafts the Declaration in June 1776.' },
-    { src: null, label: 'The Document',    caption: 'Principles, grievances, and a formal declaration of separation.' },
-    { src: null, label: 'Public Reading',  caption: 'The Declaration is read aloud in towns across the colonies.' },
-    { src: null, label: 'Spreading',       caption: 'Printers carry the text far beyond Philadelphia.' },
-    { src: null, label: 'A New Nation',    caption: 'Thirteen colonies declare themselves free and independent states.' },
+    {
+      src: 'assets/chapters/declaration/committee-of-five.jpg',
+      alt: 'Historical print of the committee appointed to draft the Declaration of Independence',
+      label: 'Drafting',
+      caption: 'Jefferson drafts the text, with Adams and Franklin among those reviewing it.',
+    },
+    {
+      src: 'assets/chapters/declaration/presentation-to-congress.jpg',
+      alt: 'Historical print of the Declaration being presented to Congress',
+      label: 'Debate',
+      caption: 'Congress edits the draft after voting for independence on July 2.',
+    },
+    {
+      src: 'assets/chapters/declaration/declaration-document.jpg',
+      alt: 'The engrossed Declaration of Independence',
+      label: 'The document',
+      caption: 'Principles and grievances build toward a formal declaration of independence.',
+    },
+    {
+      src: 'assets/chapters/declaration/public-reading.jpg',
+      alt: 'Historical print of a public reading of the Declaration of Independence',
+      label: 'Public reading',
+      caption: 'Printed copies carry the argument beyond Philadelphia to soldiers and communities.',
+    },
+    {
+      src: 'assets/chapters/declaration/signing.jpg',
+      alt: 'Historical print depicting the signing of the Declaration of Independence',
+      label: 'A new nation',
+      caption: 'The engrossed parchment becomes a public commitment by the signers.',
+    },
   ],
   articles: [
-    { src: null, label: 'First framework', caption: 'The Articles join sovereign states in a deliberately limited union.' },
-    { src: null, label: 'A weak Congress', caption: 'One vote per state, and no power to tax.' },
-    { src: null, label: 'Trade disputes',  caption: 'States set their own commercial rules against one another.' },
-    { src: null, label: 'Debt & unrest',   caption: 'Economic pressure tests whether the union can hold.' },
-    { src: null, label: 'Calls for reform',caption: 'Leaders begin arguing that the framework itself is the problem.' },
+    {
+      src: 'assets/chapters/articles/articles-document.jpg',
+      alt: 'The Articles of Confederation document',
+      label: 'First framework',
+      caption: 'The first U.S. constitution creates a union while preserving broad state authority.',
+    },
+    {
+      src: 'assets/chapters/articles/treaty-of-paris.jpg',
+      alt: 'The Treaty of Paris of 1783',
+      label: 'A real success',
+      caption: 'The Confederation government helps secure the treaty that ends the Revolutionary War.',
+    },
+    {
+      src: 'assets/chapters/articles/northwest-ordinance.jpg',
+      alt: 'The Northwest Ordinance document',
+      label: 'Western lands',
+      caption: 'The Northwest Ordinance creates a durable process for governing and admitting territories.',
+    },
+    {
+      src: 'assets/chapters/articles/shays-rebellion.jpg',
+      alt: 'Historical proclamation connected with Shays’ Rebellion',
+      label: 'Debt & unrest',
+      caption: 'Economic unrest adds urgency to arguments over the government’s capacity to act.',
+    },
+    {
+      src: 'assets/chapters/articles/federal-hall.jpg',
+      alt: 'Historical view of Federal Hall in New York',
+      label: 'A changing system',
+      caption: 'By the end of the 1780s, Americans are moving toward a different national framework.',
+    },
   ],
   convention: [
-    { src: null, label: 'Philadelphia',    caption: 'Delegates gather in May 1787 to revise the Articles.' },
-    { src: null, label: 'The debate',      caption: 'Large and small states argue over representation.' },
-    { src: null, label: 'Compromise',      caption: 'A bicameral Congress settles the deadlock.' },
-    { src: null, label: 'Separated power', caption: 'Authority is divided among three branches.' },
-    { src: null, label: 'Signing',         caption: 'The delegates sign the finished draft in September 1787.' },
+    {
+      src: 'assets/chapters/convention/independence-hall.jpg',
+      alt: 'Independence Hall in Philadelphia',
+      label: 'Philadelphia',
+      caption: 'Delegates gather in the Pennsylvania State House to reconsider the national system.',
+    },
+    {
+      src: 'assets/chapters/convention/virginia-plan.jpg',
+      alt: 'The Virginia Plan from the Constitutional Convention',
+      label: 'Competing plans',
+      caption: 'The Virginia Plan begins a major debate over representation and national power.',
+    },
+    {
+      src: 'assets/chapters/convention/james-madison.jpg',
+      alt: 'Portrait of James Madison',
+      label: 'The debates',
+      caption: 'Madison’s detailed notes became a major record of the convention’s arguments.',
+    },
+    {
+      src: 'assets/chapters/constitution-rights/constitution.jpg',
+      alt: 'First page of the United States Constitution',
+      label: 'New architecture',
+      caption: 'The final framework separates powers while creating a government able to act nationally.',
+    },
+    {
+      src: 'assets/chapters/convention/signing-constitution.jpg',
+      alt: 'Howard Chandler Christy painting of the signing of the Constitution',
+      label: 'Signing',
+      caption: 'Thirty-nine delegates sign the finished Constitution on September 17, 1787.',
+    },
   ],
   'constitution-rights': [
-    { src: null, label: 'Ratification',    caption: 'State conventions debate whether to accept the Constitution.' },
-    { src: null, label: 'The argument',    caption: 'Federalists and Anti-Federalists make their case in print.' },
-    { src: null, label: 'A promise',       caption: 'Several states ratify expecting a bill of rights to follow.' },
-    { src: null, label: 'Bill of Rights',  caption: 'Ten amendments are ratified in 1791.' },
-    { src: null, label: 'A lasting union', caption: 'The framework still structures national government today.' },
+    {
+      src: 'assets/chapters/constitution-rights/constitution.jpg',
+      alt: 'First page of the United States Constitution',
+      label: 'The Constitution',
+      caption: '“We the People” introduces a new federal framework based on popular sovereignty.',
+    },
+    {
+      src: 'assets/chapters/convention/james-madison.jpg',
+      alt: 'Portrait of James Madison',
+      label: 'Federalist case',
+      caption: 'Federalists defend the proposed Constitution and explain its republican design.',
+    },
+    {
+      src: 'assets/chapters/constitution-rights/alexander-hamilton.jpg',
+      alt: 'Portrait of Alexander Hamilton',
+      label: 'Ratification',
+      caption: 'Federalists and Anti-Federalists debate power, representation, and the protection of liberty.',
+    },
+    {
+      src: 'assets/chapters/constitution-rights/bill-of-rights.jpg',
+      alt: 'The Bill of Rights held by the National Archives',
+      label: 'Bill of Rights',
+      caption: 'Ten amendments are ratified in 1791 with explicit protections for individual liberty.',
+    },
+    {
+      src: 'assets/home/course-capitol.png',
+      alt: 'United States Capitol dome framed by cherry blossoms',
+      label: 'A living system',
+      caption: 'The constitutional framework still organizes national government more than two centuries later.',
+    },
   ],
-};
+}
 
 /** Attach the timeline thumbnail and the hero image to each chapter. */
 export const CHAPTERS = DATA.map((c) => ({
