@@ -278,27 +278,6 @@
   padding-right: 30%;
 }
 
-/* The soldier was cropped by object-fit: cover once max-width clamped its
-   width. `contain` shows the whole engraving, but then its own pale paper
-   background reads as a rectangle on the sage card. It is a line engraving,
-   so multiply blending drops that background into the card instead. */
-.page--home .home-card--story .home-card__art {
-  object-fit: contain;
-  object-position: right bottom;
-  max-width: 42%;
-  /* Zoomed out, the engraving brings its own sky and trees, which read as a
-     pasted rectangle. Fading top as well as left dissolves both hard edges
-     into the card. */
-  -webkit-mask-image:
-    linear-gradient(90deg, transparent, #000 28%),
-    linear-gradient(180deg, transparent, #000 26%);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(90deg, transparent, #000 28%),
-    linear-gradient(180deg, transparent, #000 26%);
-  mask-composite: intersect;
-}
-
 .page--home .home-card--story {
   background: var(--c-sage);
   border-color: #c6d3bd;
