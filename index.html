@@ -16,10 +16,9 @@
     </div>
     <nav aria-label="Main navigation">
       <button type="button" onclick="show('home')">Home</button>
-      <button type="button" onclick="show('map')">Course Map</button>
-      <button type="button" onclick="show('story')">Founding Story</button>
-      <button type="button" onclick="show('declaration')">Declaration</button>
-      <button type="button" onclick="show('constitution')">Constitution</button>
+      <button type="button" onclick="show('map')">Big Picture</button>
+      <button type="button" onclick="show('story')">Learn</button>
+      <button type="button" onclick="show('constitution')">Documents & Cases</button>
       <button type="button" onclick="show('practice')">Practice</button>
     </nav>
   </header>
@@ -52,23 +51,50 @@
       <div class="exact-footer">“A well-instructed people alone can be permanently a free people.” <span>— James Madison</span><b>PAST INFORMS THE FUTURE &nbsp; ──</b></div>
     </section>
 
-    <section id="map" class="page" aria-label="Course map overview">
-      <div class="hero">
-        <p class="eyebrow">MAP FIRST · ZOOM SECOND</p>
-        <h1>See the whole government.<br><em>Then zoom in.</em></h1>
-        <p class="lead">Built for Ethan + Dad: learn the story, connect the ideas, then practice like the AP exam.</p>
-        <div class="stats">
-          <b>5 AP Units</b>
-          <b>5 Core Skills</b>
-          <b id="progress">0% explored</b>
-        </div>
+    <section id="map" class="page course-roadmap" aria-label="AP Government big picture">
+      <div class="roadmap-hero">
+        <p class="eyebrow">THE BIG PICTURE</p>
+        <h1>One system.<br><em>Five questions.</em></h1>
+        <p>Don't memorize a pile of topics. First understand how American government fits together. Then zoom into one idea at a time.</p>
       </div>
 
-      <div class="overview-block">
-        <h2>The course at a glance</h2>
-        <p class="muted">Click any unit to zoom in. Exam weights are College Board multiple-choice weightings.</p>
-        <div id="unitGrid" class="units" aria-live="polite"></div>
-      </div>
+      <section class="roadmap-spine">
+        <header><p class="eyebrow">THE COURSE STORY</p><h2>Start here. Then zoom in.</h2><p>Each chapter answers one big question. Open a chapter only when you are ready for the details.</p></header>
+
+        <details open class="road-unit u1">
+          <summary><span>01</span><div><small>FOUNDATIONS · 15–22%</small><h3>Why was American government designed this way?</h3><p>From independence → a weak first government → Constitution → federalism.</p></div><b>+</b></summary>
+          <div class="zoom">
+            <div><h4>See the story</h4><p>Colonies → Declaration → Articles → Convention → Constitution → Bill of Rights.</p><button onclick="show('story')">Explore the Founding Story →</button></div>
+            <div><h4>Then zoom into</h4><p>Democratic ideals · types of democracy · government power & rights · Articles of Confederation · ratification · principles of government · federalism.</p></div>
+            <div><h4>Anchor evidence</h4><p>Foundational documents and the constitutional arguments that explain why the system was built this way.</p><button onclick="show('constitution')">Open Documents →</button></div>
+          </div>
+        </details>
+
+        <details class="road-unit u2">
+          <summary><span>02</span><div><small>BRANCHES · 25–36%</small><h3>Who has power — and who can stop them?</h3><p>Congress, president, courts, and bureaucracy share power and compete over policy.</p></div><b>+</b></summary>
+          <div class="zoom"><div><h4>See the system</h4><p>Congress makes laws. The president executes them. Courts interpret them. The bureaucracy carries policy out.</p></div><div><h4>Then zoom into</h4><p>House & Senate · congressional powers & behavior · presidency · presidential power · courts · judicial review · bureaucracy · policymaking.</p></div><div><h4>Connect everything</h4><p>Checks and balances are the thread: every institution has power, but none acts completely alone.</p></div></div>
+        </details>
+
+        <details class="road-unit u3">
+          <summary><span>03</span><div><small>LIBERTIES & RIGHTS · 13–18%</small><h3>What can government do — and what must it not do?</h3><p>The Constitution protects liberty while government also tries to maintain order and equality.</p></div><b>+</b></summary>
+          <div class="zoom"><div><h4>See the distinction</h4><p><b>Civil liberties</b> protect people from government. <b>Civil rights</b> concern equal treatment and protection.</p></div><div><h4>Then zoom into</h4><p>Bill of Rights · religion · speech · press · Second Amendment · due process · privacy · incorporation · equal protection · social movements · affirmative action.</p></div><div><h4>Cases matter here</h4><p>Supreme Court decisions show how broad constitutional language becomes rules applied to real disputes.</p></div></div>
+        </details>
+
+        <details class="road-unit u4">
+          <summary><span>04</span><div><small>BELIEFS & IDEOLOGY · 10–15%</small><h3>Why do Americans disagree about what government should do?</h3><p>Beliefs are shaped by experience, political socialization, events, ideology, and public opinion.</p></div><b>+</b></summary>
+          <div class="zoom"><div><h4>See the human layer</h4><p>Institutions do not operate in a vacuum. Citizens bring different values and expectations to politics.</p></div><div><h4>Then zoom into</h4><p>Political attitudes · socialization · ideology · political events · polling · evaluating data · party ideology · economic and social policy.</p></div><div><h4>Practice the skill</h4><p>This unit is a natural place to learn how to read polls, graphs, samples, trends, and claims carefully.</p></div></div>
+        </details>
+
+        <details class="road-unit u5">
+          <summary><span>05</span><div><small>PARTICIPATION · 20–27%</small><h3>How do people influence government?</h3><p>Voting is only one path. Parties, interest groups, campaigns, elections, and media connect people to power.</p></div><b>+</b></summary>
+          <div class="zoom"><div><h4>See the loop</h4><p>People form opinions → organize → vote and campaign → choose leaders → influence policy → react to results.</p></div><div><h4>Then zoom into</h4><p>Voting rights & behavior · turnout · parties · third parties · interest groups · presidential & congressional elections · campaigns · finance · media.</p></div><div><h4>Bring it together</h4><p>This chapter connects citizens back to every institution studied earlier in the course.</p></div></div>
+        </details>
+      </section>
+
+      <section class="roadmap-tools">
+        <p class="eyebrow">ALWAYS UNDERNEATH THE STORY</p><h2>Three things travel with every chapter.</h2>
+        <div><article><b>01</b><h3>Documents & Cases</h3><p>Use primary evidence to understand where ideas and rules come from.</p></article><article><b>02</b><h3>Connections</h3><p>Ask how this topic connects to the Constitution, institutions, rights, and citizens.</p></article><article><b>03</b><h3>AP Practice</h3><p>After understanding the idea, practice concept application, SCOTUS, data, sources, and argumentation.</p></article></div>
+      </section>
     </section>
 
     <section id="story" class="page" aria-label="Founding story">
