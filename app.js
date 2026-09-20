@@ -232,39 +232,39 @@ function hideJourneyFact(){const p=document.getElementById('journeyFactPop');if(
 
 const foundingGallery={
  colonies:[
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Patrick%20Henry%20before%20the%20Virginia%20House%20of%20Burgesses%20May%2030%2C%201765%20LCCN2006691555.jpg?width=1200','Self-government','Colonial assemblies gave Americans practice choosing representatives and debating local laws.'],
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Boston%20Tea%20Party%20Currier%20colored.jpg?width=1200','Conflict grows','Taxes and parliamentary authority turned political disagreement into resistance.'],
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Battle_of_Lexington%2C_1775.jpg?width=1200','From protest to war','By 1775, the constitutional dispute with Britain had become armed conflict.']
+  ['assets/home/07-colonial-soldier.png','Self-government','Colonial assemblies gave Americans practice choosing representatives and debating local laws.'],
+  ['assets/journey-icons/colonies.jpg','Conflict grows','Taxes and parliamentary authority turned political disagreement into resistance.'],
+  ['assets/home/07-colonial-soldier.png','From protest to war','By 1775, the constitutional dispute with Britain had become armed conflict.']
  ],
  declaration:[
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20independence.jpg?width=1200','Drafting the Declaration','Jefferson drafted the text; Congress debated and revised it before adoption.'],
+  ['assets/home/hero-signing.jpg','Drafting the Declaration','Jefferson drafted the text; Congress debated and revised it before adoption.'],
   ['https://commons.wikimedia.org/wiki/Special:Redirect/file/United_States_Declaration_of_Independence.jpg?width=1200','The document','Principles, grievances, and a declaration of political separation.'],
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration_of_Independence_%281819%29%2C_by_John_Trumbull.jpg?width=1200','A public argument','The Declaration explained the colonies’ case for independence to a wider world.']
+  ['assets/home/hero-signing.jpg','A public argument','The Declaration explained the colonies’ case for independence to a wider world.']
  ],
  articles:[
-  ['https://www.archives.gov/files/milestone-documents/images/doc-003-big.jpg','America’s first framework','The Articles joined sovereign states in a deliberately limited national union.'],
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Shays%27_Rebellion.jpg?width=1200','Pressure for change','Economic and political unrest intensified arguments over whether national institutions were strong enough.'],
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Independence_Hall_Assembly_Room.jpg?width=1200','Toward Philadelphia','Concerns about the Confederation helped bring delegates together in 1787.']
+  ['assets/journey-icons/articles.jpg','America’s first framework','The Articles joined sovereign states in a deliberately limited national union.'],
+  ['assets/journey-icons/articles.jpg','Pressure for change','Economic and political unrest intensified arguments over whether national institutions were strong enough.'],
+  ['assets/journey-icons/convention.jpg','Toward Philadelphia','Concerns about the Confederation helped bring delegates together in 1787.']
  ],
  convention:[
-  ['https://upload.wikimedia.org/wikipedia/commons/9/9d/Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg','Designing a new system','Delegates replaced the Confederation framework with a stronger federal structure.'],
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Independence_Hall_Assembly_Room.jpg?width=1200','The room where it happened','Delegates debated representation, national power, and the design of institutions.'],
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Constitution_of_the_United_States%2C_page_1.jpg?width=1200','The result','The Constitution separated powers and created institutions able to act nationally.']
+  ['assets/home/hero-signing.jpg','Designing a new system','Delegates replaced the Confederation framework with a stronger federal structure.'],
+  ['assets/journey-icons/convention.jpg','The room where it happened','Delegates debated representation, national power, and the design of institutions.'],
+  ['assets/journey-icons/constitution-rights.jpg','The result','The Constitution separated powers and created institutions able to act nationally.']
  ],
  'constitution-rights':[
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Constitution_of_the_United_States%2C_page_1.jpg?width=1200','The framework','The Constitution establishes the structure and powers of the federal government.'],
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/US%20Bill%20of%20Rights.jpg?width=1200','The Bill of Rights','The first ten amendments protect specific liberties and limit government action.'],
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/United_States_Capitol_west_front_edit2.jpg?width=1200','A living system','The constitutional framework still structures national government today.']
+  ['assets/journey-icons/constitution-rights.jpg','The framework','The Constitution establishes the structure and powers of the federal government.'],
+  ['assets/journey-icons/constitution-rights.jpg','The Bill of Rights','The first ten amendments protect specific liberties and limit government action.'],
+  ['assets/home/08-capitol-cherry-blossoms.png','A living system','The constitutional framework still structures national government today.']
  ]
 };
 let homeSlide=0;
 function setHomeSlide(i){
  const slides=[
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Patrick%20Henry%20before%20the%20Virginia%20House%20of%20Burgesses%20May%2030%2C%201765%20LCCN2006691555.jpg?width=1200','Before independence','Americans already had experience with assemblies, representation, and local self-government.'],
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20independence.jpg?width=1200','1776 · A new nation','The Declaration turned resistance into a claim built on natural rights and consent of the governed.'],
-  ['https://www.archives.gov/files/milestone-documents/images/doc-003-big.jpg','1781 · First government','The Articles protected state independence — but left the national government with limited power.'],
-  ['https://upload.wikimedia.org/wikipedia/commons/9/9d/Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg','1787 · A redesign','The Constitution created stronger institutions while dividing and checking political power.'],
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/US%20Bill%20of%20Rights.jpg?width=1200','1791 · Protecting liberty','The Bill of Rights placed explicit protections for individual liberty into the constitutional system.']
+  ['assets/home/07-colonial-soldier.png','Before independence','Americans already had experience with assemblies, representation, and local self-government.'],
+  ['assets/home/hero-signing.jpg','1776 · A new nation','The Declaration turned resistance into a claim built on natural rights and consent of the governed.'],
+  ['assets/journey-icons/articles.jpg','1781 · First government','The Articles protected state independence — but left the national government with limited power.'],
+  ['assets/home/hero-signing.jpg','1787 · A redesign','The Constitution created stronger institutions while dividing and checking political power.'],
+  ['assets/journey-icons/constitution-rights.jpg','1791 · Protecting liberty','The Bill of Rights placed explicit protections for individual liberty into the constitutional system.']
  ];
  homeSlide=(i+slides.length)%slides.length; const box=document.querySelector('.home-story-slide'); if(!box)return; const x=slides[homeSlide];
  box.style.backgroundImage="linear-gradient(90deg,rgba(5,18,15,.84),rgba(5,18,15,.18)),url('"+x[0]+"')";
@@ -288,11 +288,11 @@ const foundingPages={
 function openFoundingPage(key,preserveScroll=false){
  const x=foundingPages[key], target=document.getElementById('foundingDetailContent'); if(!x||!target)return;
  const visuals={
-  declaration:{img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20independence.jpg?width=1800',facts:[['July 4','Declaration adopted'],['56','Delegates signed'],['3 parts','Principles · grievances · independence']]},
-  colonies:{img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Patrick%20Henry%20before%20the%20Virginia%20House%20of%20Burgesses%20May%2030%2C%201765%20LCCN2006691555.jpg?width=1800',facts:[['1619','First representative assembly in Virginia'],['1765','Stamp Act conflict'],['1775','War begins']]},
-  articles:{img:'https://www.archives.gov/files/milestone-documents/images/doc-003-big.jpg',facts:[['1777','Congress adopts the Articles'],['1781','All 13 states ratify'],['1 vote','Each state in Congress']]},
-  convention:{img:'https://upload.wikimedia.org/wikipedia/commons/9/9d/Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg',facts:[['May 1787','Convention opens'],['55','Delegates attended'],['Sept. 17','Constitution signed']]},
-  'constitution-rights':{img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Constitution_of_the_United_States%2C_page_1.jpg?width=1800',facts:[['1787','Constitution signed'],['1788','Ninth state ratifies'],['1791','Bill of Rights ratified']]}
+  declaration:{img:'assets/home/hero-signing.jpg',facts:[['July 4','Declaration adopted'],['56','Delegates signed'],['3 parts','Principles · grievances · independence']]},
+  colonies:{img:'assets/home/07-colonial-soldier.png',facts:[['1619','First representative assembly in Virginia'],['1765','Stamp Act conflict'],['1775','War begins']]},
+  articles:{img:'assets/journey-icons/articles.jpg',facts:[['1777','Congress adopts the Articles'],['1781','All 13 states ratify'],['1 vote','Each state in Congress']]},
+  convention:{img:'assets/home/hero-signing.jpg',facts:[['May 1787','Convention opens'],['55','Delegates attended'],['Sept. 17','Constitution signed']]},
+  'constitution-rights':{img:'assets/journey-icons/constitution-rights.jpg',facts:[['1787','Constitution signed'],['1788','Ninth state ratifies'],['1791','Bill of Rights ratified']]}
  }[key];
  const meta={
   declaration:{big:'Why the Declaration?',matter:'The Declaration turned the break with Britain into a public argument based on natural rights, equality, and consent of the governed.',nextText:'Independence created the next challenge: how should thirteen states govern themselves together?'},
@@ -467,7 +467,7 @@ function renderDeclaration() {
   const chapter = content.declarationChapter;
   const slideIndex = storyState.declaration.slide || 0;
   const activeSlide = chapter.miniGallery[slideIndex] || chapter.miniGallery[0];
-  const heroImage = 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20independence.jpg?width=1800';
+  const heroImage = 'assets/home/hero-signing.jpg';
 
   target.innerHTML = `
     <article class="decl">
