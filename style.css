@@ -1312,3 +1312,8 @@ url('https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20inde
 .home-reference-canvas:after{content:"PEOPLE. IDEAS. A MORE PERFECT UNION.\A\A Explore how a group of colonies became a nation —\A and what their story teaches us about government,\A freedom, and our responsibilities today.";white-space:pre;position:absolute;left:5.3%;top:5%;font:800 10px/1.55 'Segoe UI',sans-serif;letter-spacing:.14em;color:#efc274;z-index:1;padding-top:0}
 .hotspot{position:absolute;background:transparent;border:0;cursor:pointer;z-index:5}.hs-start{left:5.3%;top:34%;width:10%;height:4.5%}.hs-map{left:16.2%;top:34%;width:10%;height:4.5%}.hs-colonies{left:14%;top:48%;width:15%;height:12%}.hs-declaration{left:31%;top:48%;width:15%;height:12%}.hs-articles{left:48%;top:48%;width:15%;height:12%}.hs-convention{left:65%;top:48%;width:15%;height:12%}.hs-constitution{left:82%;top:48%;width:15%;height:12%}.hs-begin{left:5%;top:82%;width:12%;height:5%}.hs-course{left:70%;top:79%;width:13%;height:5%}
 @media(max-width:900px){.home-reference-canvas{min-height:720px;background-size:auto 46%}.home-reference-canvas:before{left:6%;top:9%;font-size:54px}.home-reference-canvas:after{left:6%}}
+
+/* FIX: home is real DOM again; keep normal navigation visible */
+body:has(#home.active) header{display:flex!important}
+body:has(#home.active) footer:not(.ref-footer){display:none}
+body:has(#home.active) main{max-width:none;padding:0}
