@@ -400,7 +400,7 @@ function bootstrap() {
   renderConstitution();
   renderQuiz();
   updateProgress();
-  show('map');
+  show('home');
 }
 
 document.addEventListener('DOMContentLoaded', bootstrap);
