@@ -89,7 +89,7 @@ function gallery(ch) {
     <li>
       <button class="ch-thumb" type="button" data-goto="${i}"
               ${i === 0 ? 'aria-current="true"' : ''}>
-        ${picture(s, s.label, 'ch-thumb__img')}
+        ${picture({ src: s.thumb || s.src, alt: '' }, s.label, 'ch-thumb__img')}
         <span class="ch-thumb__label">${esc(s.label)}</span>
       </button>
     </li>`).join('');

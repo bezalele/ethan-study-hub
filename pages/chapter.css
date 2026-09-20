@@ -181,10 +181,10 @@
 
 .page--chapter .ch-gallery__stage {
   position: relative;
-  /* 3:2 in a ~1090px column is 700px tall. A wide ratio with a hard cap keeps
-     the stage in proportion with the rail beside it. */
-  aspect-ratio: 21 / 9;
-  max-height: 420px;
+  /* Matches the 2000x800 source images exactly, so nothing is cropped. The
+     cap keeps the stage in proportion with the rail beside it. */
+  aspect-ratio: 5 / 2;
+  max-height: 440px;
   border-radius: var(--r-md);
   overflow: hidden;
   background: var(--c-parchment-dim);
