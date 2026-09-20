@@ -24,10 +24,10 @@ window.EthanStudyHubContent = {
   ],
   declarationChapter: {
     chapter: 'Declaration of Independence',
-    banner: 'https://upload.wikimedia.org/wikipedia/commons/4/4f/Declaration_of_Independence_%28cropped%29.jpg',
-    kicker: 'Founding Story · Chapter 01',
-    title: 'Why did the colonies declare independence?',
-    deck: 'The Declaration is not just a breakup letter. It is an argument about power, rights, and legitimacy.',
+    banner: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/John_Trumbull%2C_Declaration_of_Independence.jpg/1280px-John_Trumbull%2C_Declaration_of_Independence.jpg',
+    kicker: 'UNIT 1 · THE STORY     ·     CHAPTER 2 OF 5',
+    title: '1776 — Declaration of Independence',
+    deck: 'A bold statement. A new nation. A big question: now what?',
     quote: 'That to secure these rights, Governments are instituted among Men, deriving their just powers from the consent of the governed.',
     intro: 'The Declaration transforms a political dispute into a principle: when government threatens rights, the people may alter or abolish it. That idea becomes the foundation for the constitutional story that follows.',
     factStrip: [
