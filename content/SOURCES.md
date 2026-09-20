@@ -70,3 +70,16 @@ All chapter art below is stored locally under `assets/chapters/`. The live pages
 
 ## Image-use rule
 When adding or replacing chapter art, download the image into the repository first. Chapter code must reference a local `assets/` path, never a remote image URL. Prefer National Archives, Library of Congress, National Park Service, Architect of the Capitol, and other public-domain or clearly reusable institutional collections.
+
+
+## Vivid chapter artwork added for the ninth-grade landing pages
+These files are downloaded into the repository. The live study pages reference only local `assets/` paths.
+
+- `assets/chapters/colonies/embarkation-pilgrims.webp` — Robert W. Weir, *Embarkation of the Pilgrims*, U.S. Capitol collection, Architect of the Capitol: https://www.aoc.gov/explore-capitol-campus/art/embarkation-pilgrims
+- `assets/chapters/colonies/baptism-pocahontas.webp` — John Gadsby Chapman, *Baptism of Pocahontas*, U.S. Capitol collection, Architect of the Capitol: https://www.aoc.gov/explore-capitol-campus/art/baptism-pocahontas
+- `assets/chapters/declaration/declaration-aoc.webp` — John Trumbull, *Declaration of Independence*, U.S. Capitol Rotunda, Architect of the Capitol: https://www.aoc.gov/explore-capitol-campus/art/declaration-independence
+- `assets/chapters/declaration/surrender-burgoyne.webp` — John Trumbull, *Surrender of General Burgoyne*, U.S. Capitol Rotunda, Architect of the Capitol: https://www.aoc.gov/explore-capitol-campus/art/surrender-general-burgoyne
+- `assets/chapters/articles/surrender-cornwallis.webp` — John Trumbull, *Surrender of Lord Cornwallis*, U.S. Capitol Rotunda, Architect of the Capitol: https://www.aoc.gov/explore-capitol-campus/art/surrender-lord-cornwallis
+- `assets/chapters/articles/washington-resigns.webp` — John Trumbull, *General George Washington Resigning His Commission*, U.S. Capitol Rotunda. The event occurred at the Maryland State House in Annapolis: https://www.aoc.gov/explore-capitol-campus/art/general-george-washington-resigning-his-commission
+
+The paintings are historical interpretations, not eyewitness photographs. Captions identify them as paintings where that distinction matters.
