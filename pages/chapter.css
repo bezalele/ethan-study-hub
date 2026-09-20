@@ -78,17 +78,32 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 0.7fr);
   gap: var(--s-6);
-  align-items: end;
+  align-items: stretch;
   width: 100%;
   padding-block: clamp(var(--s-5), 4vh, var(--s-7));
 }
 .page--chapter .ch-hero__sep { margin-inline: var(--s-3); opacity: 0.6; }
 
+/* The kicker sits at the top of the hero and the year/title/intro group at the
+   bottom, so the chapter marker is clearly separate from the content. The auto
+   margin collapses to nothing when the hero is only as tall as its content, so
+   short viewports degrade to the old stacked spacing. */
+.page--chapter .ch-hero__copy {
+  display: flex;
+  flex-direction: column;
+}
+/* padding, not margin: `margin-bottom: auto` would swallow a margin, leaving
+   the kicker touching the year whenever the hero has no spare height. */
+.page--chapter .ch-hero__copy > .eyebrow {
+  padding-bottom: var(--s-6);
+  margin-bottom: auto;
+}
+
 /* The years are the thing to memorise, so they get their own line in gold —
    clearly legible, but lighter and smaller than the title so it still reads
    as a date rather than a second headline. */
 .page--chapter .ch-hero__year {
-  margin-top: var(--s-3);
+  margin-top: 0;
   font-family: var(--font-display);
   font-size: clamp(19px, 1.7vw, 26px);
   font-weight: 400;
@@ -124,6 +139,7 @@
 }
 .page--chapter .ch-hero__quote {
   margin: 0;
+  align-self: end;
   justify-self: end;
   max-width: 34ch;
   text-align: right;
