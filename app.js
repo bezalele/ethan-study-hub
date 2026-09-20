@@ -77,6 +77,7 @@ function openFoundingPage(key,preserveScroll=false){
   'constitution-rights':{img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Constitution_of_the_United_States%2C_page_1.jpg?width=1800',facts:[['1787','Constitution signed'],['1788','Ninth state ratifies'],['1791','Bill of Rights ratified']]}
  }[key];
  const meta={
+  declaration:{big:'Why the Declaration?',matter:'The Declaration turned the break with Britain into a public argument based on natural rights, equality, and consent of the governed.',nextText:'Independence created the next challenge: how should thirteen states govern themselves together?'},
   colonies:{big:'Why did colonial government matter?',matter:'Colonial experience with assemblies, representation, and British authority shaped the political arguments that followed.',nextText:'Tensions with Britain eventually turned into a decision to declare independence.'},
   articles:{big:'Why did the Articles struggle?',matter:'The Articles reveal the central problem the founders faced: how to preserve state independence while creating a national government capable of acting.',nextText:'Concern about the Confederation system led delegates to meet in Philadelphia in 1787.'},
   convention:{big:'Why redesign the government?',matter:'The Convention produced a new framework built around separated institutions, checks and balances, and a stronger national government.',nextText:'The proposed Constitution then faced ratification — and demands for explicit protections of individual liberty.'},
@@ -87,7 +88,7 @@ function openFoundingPage(key,preserveScroll=false){
  target.innerHTML=`<article class="decl founding-decl">
   <section class="decl-hero founding-decl-hero" style="background-image:linear-gradient(90deg,rgba(7,14,12,.91),rgba(7,14,12,.32)),url('${visuals.img}')">
    <div class="decl-hero-copy"><p class="eyebrow">UNIT 1 · THE STORY &nbsp;&nbsp;&nbsp; ${x.chapter}</p><h1><span class="fd-hero-year">${x.date}</span><span class="fd-hero-title">${x.title}</span></h1><h2>${x.subtitle}</h2><p>${x.intro}</p></div>
-   <div class="fd-hero-side"><blockquote>“${x.question}”<small>— The big question</small></blockquote><nav class="fd-fact-nav">${visuals.facts.map((f,i)=>'<button onclick="jumpFoundingFact('+i+')"><b>'+f[0]+'</b><span>'+f[1]+'</span></button>').join('')}</nav></div>
+   <div class="fd-hero-side"><blockquote>“${x.question}”<small>— The big question</small></blockquote><div class="fd-fact-slider" data-facts='${JSON.stringify(visuals.facts).replace(/'/g,"&#39;")}'><button class="fd-arrow" onclick="changeHeroFact(-1)" aria-label="Previous fact">‹</button><div class="fd-fact"><small>QUICK FACT</small><b>${visuals.facts[0][0]}</b><span>${visuals.facts[0][1]}</span></div><div class="fd-dots">${visuals.facts.map((_,i)=>'<button class="'+(i===0?'active':'')+'" onclick="setHeroFact('+i+')" aria-label="Fact '+(i+1)+'"></button>').join('')}</div><button class="fd-arrow" onclick="changeHeroFact(1)" aria-label="Next fact">›</button></div></div>
   </section>
   <nav class="decl-timeline">${timeline}</nav>
   <div class="decl-body">
@@ -102,7 +103,9 @@ function openFoundingPage(key,preserveScroll=false){
  </article>`;
  show('foundingDetail',preserveScroll);
 }
-function jumpFoundingFact(i){const cards=document.querySelectorAll('#foundingDetail .founding-thumbs button');if(cards[i]){cards[i].click();document.getElementById('founding-learn')?.scrollIntoView({behavior:'smooth',block:'center'});}}
+let heroFactIndex=0;
+function setHeroFact(i){const slider=document.querySelector('#foundingDetail .fd-fact-slider');if(!slider)return;const facts=JSON.parse(slider.dataset.facts);heroFactIndex=(i+facts.length)%facts.length;const fact=slider.querySelector('.fd-fact');fact.innerHTML='<small>QUICK FACT</small><b>'+facts[heroFactIndex][0]+'</b><span>'+facts[heroFactIndex][1]+'</span>';slider.querySelectorAll('.fd-dots button').forEach((b,n)=>b.classList.toggle('active',n===heroFactIndex));}
+function changeHeroFact(step){setHeroFact(heroFactIndex+step)}
 function selectFoundingIdea(btn,key,i){
  const x=foundingPages[key], box=document.querySelector('#foundingDetail .founding-idea-main'), stage=document.querySelector('#foundingDetail .founding-stage>div'); if(!x)return;
  if(box)box.innerHTML='<h3>'+x.cards[i][0]+'</h3><p>'+x.cards[i][1]+'</p>';
@@ -111,6 +114,8 @@ function selectFoundingIdea(btn,key,i){
 }
 // Inline chapter navigation is rendered dynamically; expose handlers explicitly for browser globals.
 window.openFoundingPage = openFoundingPage;
+window.setHeroFact=setHeroFact;
+window.changeHeroFact=changeHeroFact;
 window.show = show;
 
 
