@@ -1249,7 +1249,7 @@ body:has(#home.active) main,body:has(#declaration.active) main{max-width:none;pa
 body:has(#home.active) footer,body:has(#declaration.active)>footer{display:none}
 #home,#declaration{max-width:none}
 .home-cinematic{background:#f6efe4;min-height:calc(100vh - 52px)}
-.home-hero{min-height:430px;background:linear-gradient(90deg,rgba(5,16,13,.90) 0%,rgba(5,16,13,.48) 50%,rgba(5,16,13,.22) 100%),url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/John_Trumbull%2C_Declaration_of_Independence.jpg/1280px-John_Trumbull%2C_Declaration_of_Independence.jpg');background-size:cover;background-position:center 37%;position:relative;color:#fff;padding:42px max(5vw,calc((100vw - 1450px)/2));display:grid;grid-template-columns:1.25fr .75fr;align-items:end;gap:50px}
+.home-hero{min-height:430px;background:linear-gradient(90deg,rgba(5,16,13,.90) 0%,rgba(5,16,13,.48) 50%,rgba(5,16,13,.22) 100%),url('https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20independence.jpg?width=1800');background-size:cover;background-position:center 37%;position:relative;color:#fff;padding:42px max(5vw,calc((100vw - 1450px)/2));display:grid;grid-template-columns:1.25fr .75fr;align-items:end;gap:50px}
 .home-copy{max-width:720px}.home-copy .eyebrow{color:#f0c37d}
 .home-copy h1{font-size:clamp(64px,6vw,100px);line-height:.83;color:#fff;margin:10px 0 20px;text-shadow:0 3px 20px #0008}.home-copy h1 em{color:#f4d39b;font-style:normal}
 .home-deck{font:20px/1.35 Georgia,serif;max-width:620px;color:#fff}
