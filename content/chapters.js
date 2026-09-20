@@ -212,12 +212,12 @@ const DATA = [
     title: 'Declaration of Independence',
     tagline: 'A new nation',
     summary:
-      'The colonies turned a political dispute into a principle: governments derive their just powers from the consent of the governed.',
+      'The Declaration turned independence into an argument: people have rights, government gets power from the people, and government can lose legitimacy when it repeatedly violates those rights.',
     question: 'What makes a government legitimate in the first place?',
 
-    deck: 'The Declaration is an argument for independence — not a plan of government.',
+    deck: 'The Declaration explains why the colonies believed they had the right to leave Britain.',
     intro:
-      'Congress voted for independence on July 2, 1776 and adopted the Declaration on July 4. Thomas Jefferson drafted the first version, with help and edits from John Adams, Benjamin Franklin, the Committee of Five, and Congress. The document explains what government is for, what Britain had done wrong, and why the colonies believed separation was justified.',
+      'Congress voted for independence on July 2, 1776 and adopted the Declaration on July 4. Thomas Jefferson drafted the first version, with edits from John Adams, Benjamin Franklin, the Committee of Five, and Congress. The document is not a plan for government. It is a public argument: people have natural rights, governments exist to protect those rights, and rulers who repeatedly violate them can lose the consent of the governed.',
     heroQuote: {
       text: 'We hold these truths to be self-evident, that all men are created equal…',
       source: 'Declaration of Independence, 1776',
@@ -228,104 +228,136 @@ const DATA = [
     },
 
     bigPicture: {
-      heading: 'The Declaration does three big jobs',
+      heading: 'The Declaration is a three-part argument',
       body:
-        'First, it states the <strong>idea</strong>: people have natural rights and government gets legitimate power from their consent. Second, it gives the <strong>evidence</strong>: a long list of grievances against British rule. Third, it announces the <strong>decision</strong>: the colonies are now free and independent states. Remember: it explains <strong>why</strong> independence happened, not how the new government would work.',
+        '<strong>1. The principle:</strong> people possess natural rights, and legitimate government depends on their consent. <strong>2. The evidence:</strong> the Declaration lists grievances meant to show a pattern of British abuses. <strong>3. The conclusion:</strong> because that political relationship had broken down, the colonies declared themselves free and independent states. This is why the Declaration matters in AP Government: it connects <strong>natural rights, popular sovereignty, and limited government</strong>.',
     },
     takeaways: [
-      'Natural rights are rights people possess simply because they are human.',
-      'Consent of the governed means legitimate political power comes from the people.',
-      'The grievances are the evidence used to justify breaking with Britain.',
-      'Congress adopted the Declaration on July 4, 1776; most delegates signed later.',
-      'Its equality language became a powerful ideal even though slavery and political exclusion continued.',
+      'Natural rights are rights people possess simply because they are human; the Declaration names life, liberty, and the pursuit of happiness.',
+      'Consent of the governed means legitimate political power ultimately comes from the people, not simply from a king or legislature.',
+      'The grievances are evidence: the Declaration argues that repeated abuses showed Britain had broken the political relationship.',
+      'Congress voted for independence on July 2, adopted the Declaration on July 4, and delegates began signing the engrossed parchment on August 2.',
+      'The Declaration’s equality language became a lasting American ideal even though slavery and major political exclusions continued in 1776.',
     ],
-    fact: {
-      text:
-        'July 4 is famous, but Congress actually voted for independence on July 2. The final parchment was prepared afterward, and most delegates signed it beginning on August 2.',
-      name: 'Three dates to remember',
-      dates: 'July 2 · July 4 · August 2',
-    },
+    facts: [
+      {
+        text:
+          'July 4 is the date Congress adopted the Declaration, but the vote for independence happened two days earlier, on July 2.',
+        name: 'The famous date',
+        dates: 'July 2 → July 4, 1776',
+      },
+      {
+        text:
+          'Most delegates did not sign the parchment on July 4. Congress ordered an engrossed copy later, and delegates began signing that version on August 2.',
+        name: 'The signing came later',
+        dates: 'August 2, 1776',
+      },
+      {
+        text:
+          'Fifty-six delegates eventually signed the Declaration. Some members of Congress who supported independence never signed the engrossed copy.',
+        name: '56 signers',
+        dates: '13 states',
+      },
+      {
+        text:
+          'Printer John Dunlap worked through the night after adoption and produced about 200 broadside copies so the Declaration could be sent to assemblies, committees, and military commanders.',
+        name: 'News spreads fast',
+        dates: 'July 4–5, 1776',
+      },
+    ],
     closerLook: {
-      title: 'Read it like an argument',
+      title: 'Read the Declaration in four moves',
       body:
-        'You do not need to memorize the whole document. Follow its logic: principle → grievances → independence. That structure makes the Declaration much easier to understand.',
-      cta: 'Read & explore the document',
+        'You do not need to memorize every grievance. Follow the logic. The document starts with a theory of legitimate government, argues that Britain violated that theory, and then announces the political consequence: independence. That basic structure is what Ethan should be able to explain.',
+      cta: 'Explore the document',
       image: {
         src: 'assets/chapters/declaration/declaration-document.jpg',
         alt: 'The engrossed Declaration of Independence held by the National Archives',
       },
       sections: [
-        { label: 'Principles', note: 'Rights and consent' },
-        { label: 'Grievances', note: 'What Britain did wrong' },
-        { label: 'Conclusion', note: 'Independence declared' },
-        { label: 'Signatures', note: 'A public commitment' },
+        {
+          label: 'Principles',
+          note: 'Natural rights + equality — government exists to secure rights, not create them.',
+        },
+        {
+          label: 'Consent',
+          note: 'Government gets its “just powers” from the governed; political authority is not unlimited.',
+        },
+        {
+          label: 'Grievances',
+          note: 'The long complaint list is the evidence meant to show a repeated pattern of abuse.',
+        },
+        {
+          label: 'Independence',
+          note: 'The colonies conclude that they are “Free and Independent States,” ending political ties with Britain.',
+        },
       ],
     },
     whyItMatters: {
       body:
-        'The Declaration gave later generations a language for challenging unequal treatment. Abolitionists, women’s-rights advocates, and civil-rights leaders all returned to its promises of equality and natural rights.',
-      steps: ['Natural rights', 'Consent', 'Independence', 'A lasting ideal'],
+        'AP Government returns to these ideas again and again: natural rights, popular sovereignty, and limited government. Later Americans also used the Declaration’s language of equality to challenge slavery, racial discrimination, and the exclusion of women from political rights.',
+      steps: ['Natural rights', 'Consent', 'Grievances', 'Independence'],
     },
     quiz: [
-    {
-      question: 'What was the Declaration\'s main purpose?',
-      options: [
-        'To create a plan for the new government',
-        'To explain why the colonies were separating from Britain',
-        'To establish the Bill of Rights',
-        'To end slavery',
-      ],
-      answer: 1,
-      why: 'It justifies separation. The plan of government comes later, with the Articles and then the Constitution.',
-    },
-    {
-      question: 'Which idea does the Declaration use to explain where government authority comes from?',
-      options: [
-        'The divine right of kings',
-        'The consent of the governed',
-        'The authority of Parliament',
-        'The decision of the courts',
-      ],
-      answer: 1,
-      why: 'Government is legitimate only when it derives its powers from the people it governs.',
-    },
-    {
-      question: 'What are natural rights, as the Declaration uses the term?',
-      options: [
-        'Rights granted to citizens by Parliament',
-        'Rights that exist before government and that government must protect',
-        'Rights that apply only during wartime',
-        'Rights written into colonial charters',
-      ],
-      answer: 1,
-      why: 'The Declaration treats rights as prior to government, which is what makes altering or abolishing a government defensible.',
-    },
-    {
-      question: 'Why does the Declaration list grievances against the king?',
-      options: [
-        'To request better trade terms',
-        'To show that the break was justified, not impulsive',
-        'To propose amendments to British law',
-        'To divide territory between the colonies',
-      ],
-      answer: 1,
-      why: 'The list is the evidence for the argument: it shows a pattern of abuse rather than a single dispute.',
-    },
-    {
-      question: 'What did the Declaration NOT do?',
-      options: [
-        'Declare the colonies free and independent states',
-        'State principles of equality and rights',
-        'Set out how the new nation would govern itself',
-        'List complaints against the king',
-      ],
-      answer: 2,
-      why: 'It is a statement of principles and a declaration of separation. The structure of government came afterwards.',
-    },
+      {
+        question: 'What was the Declaration\'s main purpose?',
+        options: [
+          'To create a plan for the new government',
+          'To explain why the colonies were separating from Britain',
+          'To establish the Bill of Rights',
+          'To divide power among three branches',
+        ],
+        answer: 1,
+        why: 'The Declaration explains and justifies separation. A governing framework came later.',
+      },
+      {
+        question: 'Which idea does the Declaration use to explain where legitimate government authority comes from?',
+        options: [
+          'The divine right of kings',
+          'The consent of the governed',
+          'The authority of Parliament',
+          'The decision of the courts',
+        ],
+        answer: 1,
+        why: 'The Declaration says governments derive their just powers from the consent of the governed.',
+      },
+      {
+        question: 'What are natural rights in the Declaration\'s argument?',
+        options: [
+          'Rights granted by Parliament',
+          'Rights people possess that government is supposed to protect',
+          'Rights that exist only during wartime',
+          'Rights held only by elected officials',
+        ],
+        answer: 1,
+        why: 'The Declaration treats rights as belonging to people before government; government exists to secure them.',
+      },
+      {
+        question: 'Why does the Declaration list grievances against British rule?',
+        options: [
+          'To ask for better trade terms',
+          'To provide evidence that separation was justified',
+          'To propose amendments to British law',
+          'To divide territory among the colonies',
+        ],
+        answer: 1,
+        why: 'The grievance list is the evidence for the larger argument that British rule had repeatedly violated colonial rights.',
+      },
+      {
+        question: 'What did the Declaration NOT do?',
+        options: [
+          'Declare the colonies free and independent states',
+          'State principles about rights and consent',
+          'Create the structure of the new national government',
+          'List complaints about British rule',
+        ],
+        answer: 2,
+        why: 'It explains principles and separation; the structure of government came later with the Articles and Constitution.',
+      },
     ],
     whatsNext: {
       body:
-        'The colonies had answered “Why are we leaving Britain?” Now they faced a harder practical question: how should thirteen independent states govern together?',
+        'Independence answered “Why leave Britain?” It did not answer “How should thirteen states govern together?” The first attempt was the Articles of Confederation.',
     },
   },
 
@@ -337,12 +369,12 @@ const DATA = [
     title: 'The Articles of Confederation',
     tagline: 'A government in practice',
     summary:
-      'America’s first national framework was deliberately weak — and its weakness revealed exactly which powers a working government cannot do without.',
+      'The first national government was intentionally weak. It could handle diplomacy and war, but it struggled to raise money, manage trade, enforce decisions, or solve problems that crossed state lines.',
     question: 'How much power is too little?',
 
-    deck: 'The first U.S. government had no president and no national Supreme Court.',
+    deck: 'The first U.S. government had a Congress — but no separate president and no national Supreme Court.',
     intro:
-      'The states had just fought a war against powerful central authority, so they built a national government designed to be limited. The Articles took effect in 1781 after Maryland became the final state to ratify them. The system could conduct diplomacy and war, but it depended heavily on the states for money and enforcement.',
+      'Americans had just fought a war against a powerful central authority, so the Articles of Confederation were designed to protect state independence. The system formally took effect in 1781 after Maryland became the final state to ratify it. Congress could declare war, make treaties, borrow money, and manage western lands, but it relied heavily on the states for money and enforcement. By the mid-1780s, the central question was obvious: could a union survive if its national government could ask but often could not compel?',
     heroQuote: {
       text: 'Each state retains its sovereignty, freedom and independence…',
       source: 'Articles of Confederation, Article II',
@@ -353,104 +385,136 @@ const DATA = [
     },
 
     bigPicture: {
-      heading: 'The first U.S. government had one national branch',
+      heading: 'Why was the first national government so weak?',
       body:
-        'At the national level there was a <strong>Congress</strong>, but no separate president and no national court system like today’s. Each state had <strong>one vote</strong>. Congress could make treaties, declare war, and manage western lands, but it could not directly tax citizens or regulate interstate commerce. The design protected state power — but made national action difficult.',
+        'The weakness was partly intentional. States feared replacing British rule with another distant, powerful government. Under the Articles, each state had <strong>one vote in Congress</strong>. Congress could conduct diplomacy and war, but it could not <strong>levy direct federal taxes</strong> or <strong>regulate interstate commerce</strong>. There was no separate national executive and no national court system like today’s. Even changing the Articles required <strong>all thirteen states</strong> to agree.',
     },
     takeaways: [
-      'Maryland became the final state to ratify the Articles on March 1, 1781.',
-      'Each state had one vote in Congress, whether large or small.',
-      'Congress could not impose direct federal taxes; it had to ask states for money.',
-      'The Confederation achieved real successes, including the Treaty of Paris and Northwest Ordinance.',
-      'Debt, interstate trade problems, and unrest helped build support for constitutional change.',
+      'Maryland became the final state to ratify the Articles on March 1, 1781, allowing the Confederation government formally to begin.',
+      'Each state had one vote in Congress, whether it was large or small.',
+      'Congress could make treaties and declare war, but it could not impose direct federal taxes or regulate commerce among the states.',
+      'The Confederation had real successes, especially the Treaty of Paris and the Northwest Ordinance, but it struggled with debt, trade disputes, and enforcement.',
+      'Shays’ Rebellion in 1786–1787 increased fears that the national government was too weak to respond effectively to serious domestic problems.',
     ],
-    fact: {
-      text:
-        'A major moment in this chapter happened close to home: George Washington resigned his military commission to Congress in Annapolis in 1783, reinforcing the principle that the military answers to civilian government.',
-      name: 'Maryland connection',
-      dates: 'Annapolis · December 23, 1783',
-    },
+    facts: [
+      {
+        text:
+          'Maryland was the thirteenth and final state to ratify the Articles. The Confederation government formally began on March 1, 1781.',
+        name: 'Maryland finished the job',
+        dates: 'March 1, 1781',
+      },
+      {
+        text:
+          'Under the Articles, tiny Delaware and populous Virginia each had exactly one vote in Congress.',
+        name: 'One state, one vote',
+        dates: 'Equal state voting',
+      },
+      {
+        text:
+          'George Washington resigned his military commission to Congress at the Maryland State House in Annapolis in 1783 — a dramatic example of military power returning to civilian authority.',
+        name: 'A Maryland moment',
+        dates: 'Annapolis · December 23, 1783',
+      },
+      {
+        text:
+          'The Northwest Ordinance of 1787 created a process for governing western territory and admitting new states — one of the Confederation Congress’s most important accomplishments.',
+        name: 'A major success',
+        dates: 'Northwest Ordinance · 1787',
+      },
+    ],
     closerLook: {
-      title: 'Strong enough to win a war — too weak to run the peace?',
+      title: 'What worked — and what broke?',
       body:
-        'The Articles were not useless. The better question is whether Congress had enough power to solve problems that crossed state lines once the Revolutionary War was over.',
-      cta: 'Read the documents',
+        'The Articles were not a total failure. Congress helped win recognition of American independence and created a plan for western territories. The problem was capacity: Congress often had national responsibilities without the national powers needed to carry them out. It could request money from states but not tax directly, could not create one national trade policy, and had no separate executive branch to enforce its decisions.',
+      cta: 'Explore the system',
       image: {
         src: 'assets/chapters/articles/articles-document.jpg',
         alt: 'First page of the Articles of Confederation in the National Archives',
       },
       sections: [
-        { label: 'Money', note: 'No direct federal tax' },
-        { label: 'Trade', note: 'No commerce power' },
-        { label: 'Executive', note: 'No separate president' },
-        { label: 'Amendments', note: 'All 13 states needed' },
+        {
+          label: '1781',
+          note: 'Maryland becomes the 13th state to ratify; the Articles formally take effect.',
+        },
+        {
+          label: '1783',
+          note: 'Treaty of Paris recognizes U.S. independence; Washington resigns his commission in Annapolis.',
+        },
+        {
+          label: '1786–87',
+          note: 'Shays’ Rebellion exposes fears about debt, unrest, and the government’s limited ability to respond.',
+        },
+        {
+          label: '1787',
+          note: 'Northwest Ordinance succeeds — but delegates also gather in Philadelphia because deeper structural problems remain.',
+        },
       ],
     },
     whyItMatters: {
       body:
-        'Many powers in the Constitution make more sense when you see the problem they were designed to fix. The Articles are the “before” picture for understanding the stronger federal system created in 1787.',
-      steps: ['Limited union', 'Shared problems', 'Pressure for reform', 'Convention'],
+        'The Constitution is easier to understand when you see it as an answer to the Articles. Federal taxing power, commerce power, an executive branch, a federal judiciary, and a more workable amendment process all respond to problems experienced during the 1780s.',
+      steps: ['Weak center', 'Shared problems', 'Pressure for reform', 'Convention'],
     },
     quiz: [
-    {
-      question: 'Which power did the national government lack under the Articles?',
-      options: [
-        'The power to declare war',
-        'The power to make treaties',
-        'The power to tax directly',
-        'The power to run a postal service',
-      ],
-      answer: 2,
-      why: 'Congress could request money from the states but never compel it, which left it dependent and often unpaid.',
-    },
-    {
-      question: 'How was power divided under the Articles?',
-      options: [
-        'The national government held most power',
-        'The states held most power',
-        'Power was split evenly by written formula',
-        'A monarch held final authority',
-      ],
-      answer: 1,
-      why: 'The Articles created a league of sovereign states, not a national government above them.',
-    },
-    {
-      question: 'Why could Congress not settle trade disputes between states?',
-      options: [
-        'It had no power to regulate commerce',
-        'It met only once every five years',
-        'The states had no separate economies',
-        'Trade was controlled by Britain',
-      ],
-      answer: 0,
-      why: 'Each state set its own commercial rules, and Congress had no authority to override them.',
-    },
-    {
-      question: 'What did Shays\' Rebellion reveal?',
-      options: [
-        'That the states were too powerful militarily',
-        'That the national government could not keep order',
-        'That taxes were too low',
-        'That the Articles needed no changes',
-      ],
-      answer: 1,
-      why: 'Armed unrest in Massachusetts showed how little the national government could actually do.',
-    },
-    {
-      question: 'What made the Articles almost impossible to reform?',
-      options: [
-        'Amendments required all thirteen states to agree',
-        'Only the president could propose amendments',
-        'Amendments needed approval from Britain',
-        'There was no written amendment process',
-      ],
-      answer: 0,
-      why: 'Unanimity meant any single state could block change, which is why delegates eventually replaced the framework instead.',
-    },
+      {
+        question: 'Which power did the national government lack under the Articles?',
+        options: [
+          'The power to declare war',
+          'The power to make treaties',
+          'The power to impose direct federal taxes',
+          'The power to manage western territories',
+        ],
+        answer: 2,
+        why: 'Congress could request money from states but could not levy direct federal taxes.',
+      },
+      {
+        question: 'How was political power distributed under the Articles?',
+        options: [
+          'The national government held most power',
+          'The states retained most power',
+          'A president held final authority',
+          'Federal courts controlled the states',
+        ],
+        answer: 1,
+        why: 'The Articles created a loose confederation in which states retained broad sovereignty.',
+      },
+      {
+        question: 'Why could Congress not create one national solution to trade disputes among states?',
+        options: [
+          'It had no power to regulate interstate commerce',
+          'Congress met only once every five years',
+          'Britain still controlled all American trade',
+          'The states had no separate economies',
+        ],
+        answer: 0,
+        why: 'The Articles did not give Congress a general power to regulate interstate commerce.',
+      },
+      {
+        question: 'Why did Shays\' Rebellion worry supporters of a stronger national government?',
+        options: [
+          'It showed that Britain had retaken Massachusetts',
+          'It highlighted how limited the national government was in responding to serious domestic unrest',
+          'It proved the Northwest Ordinance had failed',
+          'It showed that Congress was collecting too many taxes',
+        ],
+        answer: 1,
+        why: 'The unrest strengthened arguments that the Confederation government lacked enough power to respond to national problems.',
+      },
+      {
+        question: 'Why was changing the Articles so difficult?',
+        options: [
+          'Amendments required all thirteen states to agree',
+          'Only a president could propose an amendment',
+          'Britain had to approve every amendment',
+          'There was no written amendment process',
+        ],
+        answer: 0,
+        why: 'Unanimous state approval made structural reform extremely difficult.',
+      },
     ],
     whatsNext: {
       body:
-        'By 1787 many leaders thought the problem was not one bad law but the design itself. Delegates gathered in Philadelphia to rethink the system.',
+        'By 1787, many leaders believed the problem was the design itself. Delegates went to Philadelphia to revise the Articles and ended up proposing an entirely new Constitution.',
     },
   },
 
@@ -462,12 +526,12 @@ const DATA = [
     title: 'The Constitutional Convention',
     tagline: 'Designing a better system',
     summary:
-      'Delegates in Philadelphia rebuilt the government around a hard trade-off: enough power to govern, divided enough that no one part could dominate.',
-    question: 'How do you divide power so it still works?',
+      'The delegates were solving a design problem: make the national government strong enough to act, but divide its power enough that no one institution could dominate.',
+    question: 'How do you build a stronger government without creating another tyranny?',
 
-    deck: 'One summer. Fifty-five delegates. A completely new design.',
+    deck: 'One summer. Fifty-five delegates. A completely new design for government.',
     intro:
-      'Delegates met in Philadelphia in 1787 to revise the Articles, but they soon began designing a new government. Fifty-five delegates from twelve states attended at some point; Rhode Island sent none. The debates centered on representation, national versus state power, the presidency, the courts, and slavery.',
+      'Delegates gathered in Philadelphia in 1787 with instructions to revise the Articles of Confederation. Instead, they designed a new Constitution. Fifty-five delegates from twelve states attended at some point; Rhode Island sent none. The major fights were about representation, national versus state power, the presidency, the courts, and slavery.',
     heroQuote: {
       text: 'If men were angels, no government would be necessary.',
       source: 'James Madison, Federalist No. 51, 1788',
@@ -480,102 +544,134 @@ const DATA = [
     bigPicture: {
       heading: 'The Convention was a giant design problem',
       body:
-        'The delegates wanted a government strong enough to act, but not strong enough to become tyrannical. The <strong>Great Compromise</strong> created a House based on population and a Senate with equal state representation. They also divided power among branches and between federal and state governments. Some compromises protected slavery and increased the political power of slaveholding states.',
+        'The delegates wanted a government strong enough to tax, regulate commerce, enforce laws, and act for the whole country — but they also feared concentrated power. Their answer was to <strong>divide power twice</strong>: among legislative, executive, and judicial branches, and between the federal government and the states. Representation required another compromise: a <strong>House based on population</strong> and a <strong>Senate with equal representation for every state</strong>. Some compromises also protected slavery and increased the political power of slaveholding states.',
     },
     takeaways: [
-      'The Convention met from May to September 1787 in Philadelphia.',
-      'The Great Compromise created today’s House and Senate structure.',
-      'Separation of powers gives legislative, executive, and judicial institutions different jobs.',
-      'Checks and balances give each branch tools to limit the others.',
-      'Thirty-nine delegates signed the final Constitution on September 17, 1787.',
+      'The Convention met in Philadelphia from May to September 1787; 55 delegates attended at some point and George Washington presided.',
+      'The Great Compromise created a House based on population and a Senate with equal representation for each state.',
+      'Separation of powers gives the legislative, executive, and judicial branches different responsibilities.',
+      'Checks and balances give each branch tools to limit the others, while federalism divides authority between national and state governments.',
+      'The Constitution also included compromises protecting slavery, including the Three-Fifths Clause; 39 delegates signed the final document on September 17.',
     ],
-    fact: {
-      text:
-        'The delegates kept their debates secret. Windows were often shut despite the summer heat so people outside could not easily hear what was being discussed.',
-      name: 'Inside Independence Hall',
-      dates: 'summer 1787',
-    },
+    facts: [
+      {
+        text:
+          'Benjamin Franklin was 81, the oldest delegate at the Convention. Jonathan Dayton of New Jersey was 26, the youngest.',
+        name: 'A 55-year age span',
+        dates: 'Ages 26 to 81',
+      },
+      {
+        text:
+          'Fifty-five delegates attended at some point, but only thirty-nine signed the Constitution. Three of the forty-two present on the final day refused to sign.',
+        name: '55 attended · 39 signed',
+        dates: 'September 17, 1787',
+      },
+      {
+        text:
+          'The delegates agreed to keep their debates secret. The closed-door setting was meant to let members change positions and negotiate without constant outside pressure.',
+        name: 'Secret deliberations',
+        dates: 'Philadelphia · 1787',
+      },
+      {
+        text:
+          'George Mason, Elbridge Gerry, and Edmund Randolph were present on the final day but refused to sign. One major concern was the absence of a bill of rights.',
+        name: 'Not everyone agreed',
+        dates: '3 refused to sign',
+      },
+    ],
     closerLook: {
       title: 'Four problems they had to solve',
       body:
-        'The Constitution is easier to understand when you treat each major feature as an answer to a problem the delegates were facing.',
-      cta: 'Read the documents',
+        'Think of the Constitution as a set of answers to four hard questions. How should large and small states share power? How strong should the national government be? How do you prevent one branch from taking over? And how would the new system deal with slavery? The answers were compromises — some ingenious, some deeply unjust.',
+      cta: 'Explore the design',
       image: {
         src: 'assets/chapters/convention/virginia-plan.jpg',
         alt: 'The Virginia Plan from the Constitutional Convention',
       },
       sections: [
-        { label: 'Representation', note: 'Large vs. small states' },
-        { label: 'Power', note: 'National vs. state' },
-        { label: 'Control', note: 'Checks among branches' },
-        { label: 'Slavery', note: 'Compromise and injustice' },
+        {
+          label: 'Representation',
+          note: 'Great Compromise — House by population; Senate gives every state two senators.',
+        },
+        {
+          label: 'Power',
+          note: 'Federalism — national and state governments each have important powers.',
+        },
+        {
+          label: 'Control',
+          note: 'Separation of powers + checks and balances — divide the jobs and let branches restrain one another.',
+        },
+        {
+          label: 'Slavery',
+          note: 'Three-Fifths Clause counted enslaved people as three-fifths for representation and direct taxation, increasing slaveholding states’ representation while denying enslaved people political rights.',
+        },
       ],
     },
     whyItMatters: {
       body:
-        'The rest of AP Government is largely the story of this architecture in action: Congress, the presidency, courts, federalism, elections, rights, and conflicts over who can do what.',
-      steps: ['Competing plans', 'Compromise', 'New architecture', 'Ratification'],
+        'Most of the rest of AP Government is this design operating in real life: Congress making laws, presidents executing them, courts interpreting them, states sharing power with Washington, and institutions checking one another.',
+      steps: ['Representation', 'Federalism', 'Checks & balances', 'Ratification'],
     },
     quiz: [
-    {
-      question: 'What did the Great Compromise resolve?',
-      options: [
-        'Whether to keep the Articles of Confederation',
-        'How states would be represented in Congress',
-        'Whether the president could veto legislation',
-        'How federal judges would be appointed',
-      ],
-      answer: 1,
-      why: 'It combined representation by population in the House with equal representation by state in the Senate.',
-    },
-    {
-      question: 'What did delegates actually do at the Convention?',
-      options: [
-        'Amended the Articles as instructed',
-        'Wrote an entirely new framework of government',
-        'Dissolved the union',
-        'Drafted the Bill of Rights',
-      ],
-      answer: 1,
-      why: 'They were sent to revise the Articles and instead replaced them.',
-    },
-    {
-      question: 'What does separation of powers mean?',
-      options: [
-        'Different branches are given different powers',
-        'Each branch can block the others',
-        'States and the nation share authority',
-        'The people elect every official directly',
-      ],
-      answer: 0,
-      why: 'Separation assigns different jobs to different branches. Checks and balances is the separate idea that each can restrain the others.',
-    },
-    {
-      question: 'What does checks and balances add to separation of powers?',
-      options: [
-        'It gives each branch tools to restrain the others',
-        'It divides power between states and the nation',
-        'It makes Congress supreme over the other branches',
-        'It removes the need for elections',
-      ],
-      answer: 0,
-      why: 'Separation divides the work; checks and balances lets each branch push back on the others.',
-    },
-    {
-      question: 'What was the Three-Fifths Compromise about?',
-      options: [
-        'How to count enslaved people for representation and taxation',
-        'How many states were needed to ratify',
-        'How to elect the president',
-        'How to divide western territory',
-      ],
-      answer: 0,
-      why: 'It counted enslaved people as three-fifths of a person for both representation and taxation — a concession to slaveholding states.',
-    },
+      {
+        question: 'What did the Great Compromise resolve?',
+        options: [
+          'Whether to keep the Articles of Confederation',
+          'How states would be represented in Congress',
+          'Whether the president could veto legislation',
+          'How federal judges would be appointed',
+        ],
+        answer: 1,
+        why: 'It combined representation by population in the House with equal state representation in the Senate.',
+      },
+      {
+        question: 'What did delegates actually do at the Convention?',
+        options: [
+          'Made small amendments to the Articles',
+          'Created an entirely new framework of government',
+          'Dissolved the union',
+          'Drafted the Bill of Rights',
+        ],
+        answer: 1,
+        why: 'They were sent to revise the Articles but ultimately proposed a new Constitution.',
+      },
+      {
+        question: 'What does separation of powers mean?',
+        options: [
+          'Different branches are assigned different responsibilities',
+          'Each branch can restrain the others',
+          'States and the national government share authority',
+          'The people elect every federal official directly',
+        ],
+        answer: 0,
+        why: 'Separation of powers divides government responsibilities among institutions.',
+      },
+      {
+        question: 'What do checks and balances add to separation of powers?',
+        options: [
+          'They give each branch tools to restrain the others',
+          'They divide power between states and the nation',
+          'They make Congress supreme over every other branch',
+          'They remove the need for elections',
+        ],
+        answer: 0,
+        why: 'Separation divides the jobs; checks and balances give institutions ways to push back on one another.',
+      },
+      {
+        question: 'What was the Three-Fifths Compromise about?',
+        options: [
+          'How enslaved people would be counted for representation and direct taxation',
+          'How many states were needed to ratify',
+          'How presidents would be elected',
+          'How western territory would be divided',
+        ],
+        answer: 0,
+        why: 'The clause counted enslaved people as three-fifths for representation and direct taxation, increasing representation for slaveholding states while enslaved people themselves had no political rights.',
+      },
     ],
     whatsNext: {
       body:
-        'Writing the Constitution did not make it law. The new system still had to win approval from the states — and critics demanded stronger protection for liberty.',
+        'The delegates had written a Constitution, but it still was not law. The next fight happened in the states: should Americans ratify this stronger national system, and did it protect liberty enough?',
     },
   },
 
@@ -587,12 +683,12 @@ const DATA = [
     title: 'The Constitution and the Bill of Rights',
     tagline: 'Rights, balance, and a lasting union',
     summary:
-      'Ratification came with a promise. The first ten amendments wrote specific protections for individual liberty into the constitutional settlement.',
-    question: 'How is liberty protected once the government is strong?',
+      'Ratification created a stronger federal government. The Bill of Rights then added explicit protections for individual liberty and reinforced the idea that government power has limits.',
+    question: 'How can government be strong enough to work and still remain limited?',
 
-    deck: 'The Constitution builds the machine. The Bill of Rights draws lines it should not cross.',
+    deck: 'The Constitution builds the system. The Bill of Rights draws important lines government should not cross.',
     intro:
-      'The Constitution won the required ninth state for ratification in 1788, and the new federal government began operating in 1789. Federalists defended the stronger system; Anti-Federalists worried about centralized power and individual liberty. The First Congress answered a major criticism by proposing amendments that became the Bill of Rights in 1791.',
+      'The proposed Constitution needed nine states to ratify it. New Hampshire became the ninth in 1788, and the new federal government began operating in 1789. Federalists argued that the new structure was necessary for an effective union. Anti-Federalists warned that the national government might become too powerful and objected especially to the lack of a bill of rights. The First Congress responded by proposing amendments in 1789; ten were ratified in 1791.',
     heroQuote: {
       text: 'A bill of rights is what the people are entitled to against every government on earth.',
       source: 'Thomas Jefferson to James Madison, 1787',
@@ -603,106 +699,138 @@ const DATA = [
     },
 
     bigPicture: {
-      heading: 'Constitution = structure. Bill of Rights = limits.',
+      heading: 'Constitution = structure. Bill of Rights = explicit protections.',
       body:
-        'The Constitution organizes power through <strong>popular sovereignty, federalism, separation of powers, and checks and balances</strong>. The Bill of Rights adds explicit protections for liberties such as speech, religion, assembly, due process, and protection from unreasonable searches. Together they answer two questions: <strong>How can government work?</strong> and <strong>How can government be limited?</strong>',
+        'The Constitution limits power mainly by <strong>designing the government</strong>: three branches, checks and balances, federalism, elections, and a written list of powers and procedures. The Bill of Rights adds <strong>specific protections</strong> such as freedoms of religion, speech, press, assembly, due process, and protection from unreasonable searches. The <strong>Tenth Amendment</strong> also reinforces federalism by reserving powers not delegated to the United States — and not prohibited to the states — to the states or the people.',
     },
     takeaways: [
-      'Nine states were required to ratify the Constitution; New Hampshire became the ninth in 1788.',
-      'The new federal government began operating in 1789 under the Constitution.',
-      'Federalists supported ratification; Anti-Federalists pressed hard for stronger protections of liberty.',
-      'Congress proposed twelve amendments in 1789; ten were ratified in 1791.',
-      'The Bill of Rights became the first ten amendments to the Constitution.',
+      'Article VII required nine states to ratify the Constitution; New Hampshire became the ninth state in June 1788.',
+      'The new federal government began operating in 1789 with George Washington as the first president and Congress meeting under the new Constitution.',
+      'Federalists supported ratification; Anti-Federalists feared excessive national power and pushed strongly for a bill of rights.',
+      'Congress proposed twelve amendments in 1789; ten were ratified on December 15, 1791 and became the Bill of Rights.',
+      'The Bill of Rights protects individual liberties, while the Tenth Amendment also reinforces the federal system by reserving undelegated powers to states or the people.',
     ],
-    fact: {
-      text:
-        'The Bill of Rights began as twelve proposed amendments. Ten were ratified in 1791. Another waited more than 200 years before becoming the Twenty-Seventh Amendment in 1992.',
-      name: '12 proposed → 10 ratified',
-      dates: '1789 · 1791 · 1992',
-    },
+    facts: [
+      {
+        text:
+          'Nine states were enough to put the Constitution into effect among the ratifying states. New Hampshire became number nine in June 1788.',
+        name: 'The magic number was 9',
+        dates: 'New Hampshire · 1788',
+      },
+      {
+        text:
+          'Maryland was the seventh state to ratify the Constitution, joining the new framework before the required ninth state had been reached.',
+        name: 'Maryland connection',
+        dates: '7th state to ratify',
+      },
+      {
+        text:
+          'Congress proposed twelve amendments in 1789, but only ten were ratified in 1791. Those ten became the Bill of Rights.',
+        name: '12 proposed → 10 ratified',
+        dates: '1789 → 1791',
+      },
+      {
+        text:
+          'One of the two amendments that failed in 1791 was finally ratified more than 200 years later, in 1992, and became the Twenty-Seventh Amendment.',
+        name: 'A 203-year wait',
+        dates: '1789 → 1992',
+      },
+    ],
     closerLook: {
-      title: 'Two ways the system limits power',
+      title: 'How does the system protect liberty?',
       body:
-        'The Constitution mostly limits government by dividing power among institutions. The Bill of Rights adds direct rules about freedoms and legal protections government must respect.',
-      cta: 'Read the documents',
+        'The Constitution does not rely on one single safeguard. It spreads power among institutions and levels of government, then the Bill of Rights adds explicit rules about freedoms and legal protections. Ethan should be able to recognize both kinds of limits: <strong>structural limits</strong> and <strong>rights-based limits</strong>.',
+      cta: 'Explore the protections',
       image: {
         src: 'assets/chapters/constitution-rights/bill-of-rights.jpg',
         alt: 'The Bill of Rights held by the National Archives',
       },
       sections: [
-        { label: 'Articles I–III', note: 'Three branches' },
-        { label: 'Federalism', note: 'Two levels of power' },
-        { label: 'Amendments 1–8', note: 'Freedoms and process' },
-        { label: 'Amendments 9–10', note: 'Rights and reserved power' },
+        {
+          label: 'Three branches',
+          note: 'Articles I–III create Congress, the presidency, and the federal judiciary, each with different jobs.',
+        },
+        {
+          label: 'Checks & balances',
+          note: 'Branches share and limit power so no single institution can easily control the entire national government.',
+        },
+        {
+          label: 'First Amendment',
+          note: 'Protects religion, speech, press, assembly, and petition — core freedoms used throughout American public life.',
+        },
+        {
+          label: 'Tenth Amendment',
+          note: 'Powers not delegated to the United States, and not prohibited to the states, are reserved to the states or the people.',
+        },
       ],
     },
     whyItMatters: {
       body:
-        'Almost every later AP Government topic comes back to this framework: who has power, who can stop whom, what rights government must respect, and how citizens use the system.',
-      steps: ['Ratification', 'New government', 'Bill of Rights', 'Government today'],
+        'Almost every later AP Government topic comes back to this framework: which level of government has power, how branches check each other, when government may restrict individual freedom, and how citizens use constitutional rights to participate.',
+      steps: ['Ratification', 'Three branches', 'Bill of Rights', 'Government today'],
     },
     quiz: [
-    {
-      question: 'Why was the Bill of Rights added to the Constitution?',
-      options: [
-        'To give Congress more power over the states',
-        'To answer demands for explicit protections of individual rights',
-        'To replace checks and balances with a list of freedoms',
-        'To decide representation between large and small states',
-      ],
-      answer: 1,
-      why: 'Several states ratified only on the understanding that written protections for individual liberty would follow.',
-    },
-    {
-      question: 'How many states had to ratify before the Constitution took effect?',
-      options: [
-        'Seven',
-        'Nine',
-        'Eleven',
-        'All thirteen',
-      ],
-      answer: 1,
-      why: 'Nine of thirteen. New Hampshire became the ninth in 1788, and the new government began operating in 1789.',
-    },
-    {
-      question: 'What separated Federalists from Anti-Federalists?',
-      options: [
-        'Whether to declare independence',
-        'Whether the Constitution gave the national government too much power',
-        'Whether to keep a king',
-        'Whether to expand westward',
-      ],
-      answer: 1,
-      why: 'Federalists defended the stronger national system; Anti-Federalists feared it without written limits on power.',
-    },
-    {
-      question: 'How many amendments did Congress propose in 1789, and how many were ratified in 1791?',
-      options: [
-        'Ten proposed, ten ratified',
-        'Twelve proposed, ten ratified',
-        'Twelve proposed, twelve ratified',
-        'Fifteen proposed, ten ratified',
-      ],
-      answer: 1,
-      why: 'Twelve were proposed and ten ratified. One of the leftovers finally became the Twenty-Seventh Amendment in 1992.',
-    },
-    {
-      question: 'What does the Tenth Amendment do?',
-      options: [
-        'Guarantees freedom of speech',
-        'Reserves remaining powers to the states and the people',
-        'Sets the number of Supreme Court justices',
-        'Requires a warrant for searches',
-      ],
-      answer: 1,
-      why: 'It is the backstop of federalism: powers not given to the national government stay with the states and the people.',
-    },
+      {
+        question: 'Why was the Bill of Rights added to the Constitution?',
+        options: [
+          'To give Congress more power over the states',
+          'To answer demands for explicit protections of individual rights and limits on government',
+          'To replace checks and balances with a list of freedoms',
+          'To decide representation between large and small states',
+        ],
+        answer: 1,
+        why: 'Anti-Federalist criticism and ratifying-state demands helped produce explicit protections for individual liberty.',
+      },
+      {
+        question: 'How many states had to ratify before the Constitution could take effect under Article VII?',
+        options: [
+          'Seven',
+          'Nine',
+          'Eleven',
+          'All thirteen',
+        ],
+        answer: 1,
+        why: 'Nine states were required. New Hampshire became the ninth in 1788.',
+      },
+      {
+        question: 'What separated Federalists from Anti-Federalists during ratification?',
+        options: [
+          'Whether to declare independence from Britain',
+          'Whether the proposed Constitution created too much national power and protected liberty enough',
+          'Whether to keep a hereditary king',
+          'Whether states should exist at all',
+        ],
+        answer: 1,
+        why: 'Federalists defended the stronger national framework; Anti-Federalists feared concentrated power and pressed for explicit rights protections.',
+      },
+      {
+        question: 'How many amendments did Congress propose in 1789, and how many were ratified in 1791?',
+        options: [
+          'Ten proposed, ten ratified',
+          'Twelve proposed, ten ratified',
+          'Twelve proposed, twelve ratified',
+          'Fifteen proposed, ten ratified',
+        ],
+        answer: 1,
+        why: 'Congress proposed twelve. Ten were ratified in 1791 and became the Bill of Rights.',
+      },
+      {
+        question: 'What does the Tenth Amendment reinforce?',
+        options: [
+          'Freedom of speech',
+          'Federalism by reserving undelegated powers to the states or the people',
+          'The number of Supreme Court justices',
+          'The president\'s veto power',
+        ],
+        answer: 1,
+        why: 'The Tenth Amendment states that powers not delegated to the United States, and not prohibited to the states, are reserved to the states or the people.',
+      },
     ],
     whatsNext: {
       body:
-        'That completes the founding story. From here, the course moves from designing the system to seeing how its branches, rights, beliefs, elections, and participation work in practice.',
+        'That completes the founding story. The rest of AP Government asks what happens when this constitutional design meets real institutions, political conflict, civil liberties, public opinion, elections, parties, and citizen participation.',
     },
-  },
+  }
 ]
 
 /* ---------------------------------------------------------------------------
