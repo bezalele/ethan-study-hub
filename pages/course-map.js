@@ -12,8 +12,8 @@
    from the top of the panel alone.
    --------------------------------------------------------------------------- */
 
-import { AREAS, getArea } from '../content/course.js?v=3';
-import { el, html, esc } from '../layout/dom.js?v=3';
+import { AREAS, getArea } from '../content/course.js?v=4';
+import { el, html, esc } from '../layout/dom.js?v=4';
 
 function header() {
   return `
