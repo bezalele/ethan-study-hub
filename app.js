@@ -238,7 +238,7 @@ const foundingGallery={
  ],
  declaration:[
   ['assets/home/hero-signing.jpg','Drafting the Declaration','Jefferson drafted the text; Congress debated and revised it before adoption.'],
-  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/United_States_Declaration_of_Independence.jpg?width=1200','The document','Principles, grievances, and a declaration of political separation.'],
+  ['assets/journey-icons/declaration.jpg','The document','Principles, grievances, and a declaration of political separation.'],
   ['assets/home/hero-signing.jpg','A public argument','The Declaration explained the colonies’ case for independence to a wider world.']
  ],
  articles:[
