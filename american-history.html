@@ -8,19 +8,19 @@
   <title>Ethan Study Hub · AP U.S. Government</title>
 
   <!-- Order matters: tokens define the variables everything else consumes. -->
-  <link rel="stylesheet" href="styles/tokens.css?v=5">
-  <link rel="stylesheet" href="styles/base.css?v=5">
-  <link rel="stylesheet" href="layout/layout.css?v=5">
+  <link rel="stylesheet" href="styles/tokens.css?v=6">
+  <link rel="stylesheet" href="styles/base.css?v=6">
+  <link rel="stylesheet" href="layout/layout.css?v=6">
 
   <!-- Shared components. Each owns a .c-NAME class namespace. -->
-  <link rel="stylesheet" href="components/timeline.css?v=5">
+  <link rel="stylesheet" href="components/timeline.css?v=6">
 
   <!-- Page stylesheets. Each is scoped to its own .page--NAME root. -->
-  <link rel="stylesheet" href="pages/home.css?v=5">
-  <link rel="stylesheet" href="pages/course-map.css?v=5">
-  <link rel="stylesheet" href="pages/study.css?v=5">
-  <link rel="stylesheet" href="pages/chapter.css?v=5">
-  <link rel="stylesheet" href="pages/practice.css?v=5">
+  <link rel="stylesheet" href="pages/home.css?v=6">
+  <link rel="stylesheet" href="pages/course-map.css?v=6">
+  <link rel="stylesheet" href="pages/study.css?v=6">
+  <link rel="stylesheet" href="pages/chapter.css?v=6">
+  <link rel="stylesheet" href="pages/practice.css?v=6">
 </head>
 <body>
   <a class="visually-hidden" href="#app-main">Skip to content</a>
@@ -30,14 +30,14 @@
   <footer id="app-footer"></footer>
 
   <!-- Classic script: runs before deferred modules, so the global is ready. -->
-  <script src="content/contentData.js?v=5"></script>
+  <script src="content/contentData.js?v=6"></script>
 
   <!-- Every module URL carries the same ?v= as the stylesheets. They must match
        across the whole graph: a differing query string would load a second,
        separate instance of that module. tests/smoke.cjs enforces it. -->
   <script type="module">
-    import { renderLayout } from './layout/layout.js?v=5';
-    import { startRouter } from './layout/router.js?v=5';
+    import { renderLayout } from './layout/layout.js?v=6';
+    import { startRouter } from './layout/router.js?v=6';
 
     renderLayout();   // once, and only once
     startRouter();
