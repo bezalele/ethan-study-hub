@@ -15,11 +15,11 @@
       <span>AP U.S. Government & Politics · 2026–27</span>
     </div>
     <nav aria-label="Main navigation">
-      <button type="button" onclick="show('home')">Home</button>
-      <button type="button" onclick="show('map')">Big Picture</button>
-      <button type="button" onclick="show('story')">Learn</button>
-      <button type="button" onclick="show('constitution')">Documents & Cases</button>
-      <button type="button" onclick="show('practice')">Practice</button>
+      <button type="button" data-nav="home" onclick="show('home')">Home</button>
+      <button type="button" data-nav="map" onclick="show('map')">Big Picture</button>
+      <button type="button" data-nav="learn" onclick="openLearn(1)">Learn</button>
+      <button type="button" data-nav="library" onclick="show('library')">Documents & Cases</button>
+      <button type="button" data-nav="practice" onclick="show('practice')">Practice</button>
     </nav>
   </header>
 
@@ -30,21 +30,21 @@
           <p class="exact-kicker">PEOPLE. IDEAS. A MORE PERFECT UNION.</p>
           <h1>The story of<br>America.</h1>
           <p class="exact-deck">Explore how a group of colonies became a nation —<br>and what their story teaches us about government,<br>freedom, and our responsibilities today.</p>
-          <div class="exact-actions"><button onclick="show('story')">Start the Story →</button><button class="outline" onclick="show('map')">View Course Map</button></div>
+          <div class="exact-actions"><button onclick="openLearn(1)">Start the Story →</button><button class="outline" onclick="show('map')">View Course Map</button></div>
           <blockquote>“The experiment, sir, is not over.”<small>— Benjamin Franklin, 1787</small></blockquote>
         </div>
         <div class="exact-hero-right"><blockquote>“We hold these truths to be self-evident,<br>that all men are created equal…”<small>— Declaration of Independence, 1776</small></blockquote></div>
       </div>
       <div class="exact-journey">
         <div class="exact-journey-label"><b>EXPLORE<br>THE JOURNEY</b><p>Five chapters. One big<br>story. Click any chapter<br>to dive in.</p></div>
-        <button onclick="show('story')"><i class="j1"></i><span class="num">01</span><span class="date">1607–1775</span><strong>British Colonies</strong><small>Foundations and frustrations</small></button>
+        <button onclick="openLearn(1)"><i class="j1"></i><span class="num">01</span><span class="date">1607–1775</span><strong>British Colonies</strong><small>Foundations and frustrations</small></button>
         <button class="active" onclick="show('declaration')"><i class="j2"></i><span class="num">02</span><span class="date">1776</span><strong>Declaration of Independence</strong><small>A new nation</small></button>
         <button onclick="show('story')"><i class="j3"></i><span class="num">03</span><span class="date">1781–1789</span><strong>Articles of Confederation</strong><small>A government in practice</small></button>
         <button onclick="show('story')"><i class="j4"></i><span class="num">04</span><span class="date">1787</span><strong>Constitutional Convention</strong><small>Designing a better system</small></button>
-        <button onclick="show('constitution')"><i class="j5"></i><span class="num">05</span><span class="date">1788–1791</span><strong>Constitution + Bill of Rights</strong><small>Rights, balance, and a lasting union</small></button>
+        <button onclick="openLearn(1)"><i class="j5"></i><span class="num">05</span><span class="date">1788–1791</span><strong>Constitution + Bill of Rights</strong><small>Rights, balance, and a lasting union</small></button>
       </div>
       <div class="exact-cards">
-        <article class="exact-history"><p class="label">START WITH THE STORY</p><h2>History first.<br>AP Government<br>underneath.</h2><p>Understand what happened, why it mattered,<br>and how it connects to the government we have<br>today.</p><button onclick="show('story')">Begin the Journey →</button></article>
+        <article class="exact-history"><p class="label">START WITH THE STORY</p><h2>History first.<br>AP Government<br>underneath.</h2><p>Understand what happened, why it mattered,<br>and how it connects to the government we have<br>today.</p><button onclick="openLearn(1)">Begin the Journey →</button></article>
         <article class="exact-question"><p class="label">THE BIG QUESTION</p><h2>How do you give<br>government enough<br>power to protect people —<br>without giving it so much<br>power that it threatens<br>their liberty?</h2><i></i><b>EXPLORE. THINK. DISCUSS. PRACTICE.</b><span>Built for Ethan — and any curious learner.</span></article>
         <article class="exact-course"><p class="label">AP SUCCESS</p><h2>Need the full<br>course view?</h2><p>See all units, topics, and practice<br>— connected to the historical<br>story.</p><button onclick="show('map')">Open Course Map →</button></article>
       </div>
@@ -64,9 +64,9 @@
         <details open class="road-unit u1">
           <summary><span>01</span><div><small>FOUNDATIONS · 15–22%</small><h3>Why was American government designed this way?</h3><p>From independence → a weak first government → Constitution → federalism.</p></div><b>+</b></summary>
           <div class="zoom">
-            <div><h4>See the story</h4><p>Colonies → Declaration → Articles → Convention → Constitution → Bill of Rights.</p><button onclick="show('story')">Explore the Founding Story →</button></div>
+            <div><h4>See the story</h4><p>Colonies → Declaration → Articles → Convention → Constitution → Bill of Rights.</p><button onclick="openLearn(1)">Explore the Founding Story →</button></div>
             <div><h4>Then zoom into</h4><p>Democratic ideals · types of democracy · government power & rights · Articles of Confederation · ratification · principles of government · federalism.</p></div>
-            <div><h4>Anchor evidence</h4><p>Foundational documents and the constitutional arguments that explain why the system was built this way.</p><button onclick="show('constitution')">Open Documents →</button></div>
+            <div><h4>Anchor evidence</h4><p>Foundational documents and the constitutional arguments that explain why the system was built this way.</p><button onclick="show('library')">Open Documents →</button></div>
           </div>
         </details>
 
@@ -97,65 +97,59 @@
       </section>
     </section>
 
-    <section id="story" class="page" aria-label="Founding story">
-      <button class="back" type="button" onclick="show('map')">← Course map</button>
-      <div class="page-intro">
-        <p class="eyebrow">FOUNDING STORY</p>
-        <h1>How did a country get built from disagreement?</h1>
-        <p class="lead">One tension drives the founding: <strong>How do you make government strong enough to work, but limited enough to protect liberty?</strong></p>
-      </div>
-      <div id="storyTimeline" class="timeline" aria-live="polite"></div>
-      <div class="callout">
-        <h3>🧠 Ethan's mental model</h3>
-        <p><strong>Britain felt too powerful → Articles were too weak → Constitution seeks balance.</strong></p>
-        <button type="button" class="primary" onclick="show('declaration')">Read the Declaration →</button>
+    <section id="story" class="page learn-page" aria-label="Course learning chapters">
+      <div class="learn-shell">
+        <aside class="learn-rail">
+          <button class="learn-back" onclick="show('map')">← Big Picture</button>
+          <p>LEARN</p>
+          <button data-chapter="1" onclick="openLearn(1)"><b>01</b><span>Foundations<small>Why was government designed this way?</small></span></button>
+          <button data-chapter="2" onclick="openLearn(2)"><b>02</b><span>Branches & Power<small>Who has power — and who can stop them?</small></span></button>
+          <button data-chapter="3" onclick="openLearn(3)"><b>03</b><span>Liberties & Rights<small>What must government not do?</small></span></button>
+          <button data-chapter="4" onclick="openLearn(4)"><b>04</b><span>Beliefs & Ideology<small>Why do Americans disagree?</small></span></button>
+          <button data-chapter="5" onclick="openLearn(5)"><b>05</b><span>Participation<small>How do people influence government?</small></span></button>
+        </aside>
+        <article id="learnContent" class="learn-content"></article>
       </div>
     </section>
 
     <section id="declaration" class="page" aria-label="Declaration of Independence chapter">
-      <button class="back" type="button" onclick="show('map')">← Course map</button>
+      <button class="back" type="button" onclick="openLearn(1)">← Foundations</button>
       <div id="declarationContent"></div>
     </section>
 
     <section id="constitution" class="page" aria-label="Constitution explorer">
-      <button class="back" type="button" onclick="show('map')">← Course map</button>
-      <div class="page-intro">
-        <p class="eyebrow">CONSTITUTION EXPLORER</p>
-        <h1>The Constitution as a machine.</h1>
-        <p class="lead">It does not simply give power. It <strong>organizes, divides, limits, and connects</strong> power.</p>
-      </div>
+      <button class="back" type="button" onclick="show('library')">← Documents & Cases</button>
+      <div class="page-intro"><p class="eyebrow">FOUNDATIONAL DOCUMENT</p><h1>The Constitution</h1><p class="lead">Zoom into the structure only when the course story brings you here.</p></div>
+      <div class="constitution-layout"><div id="constitutionGrid" class="constitution-grid" aria-live="polite"></div><aside id="constitutionDetail" class="constitution-detail" aria-live="polite">Select a section to inspect the constitutional structure.</aside></div>
+    </section>
 
-      <div class="constitution-layout">
-        <div id="constitutionGrid" class="constitution-grid" aria-live="polite"></div>
-        <aside id="constitutionDetail" class="constitution-detail" aria-live="polite">
-          Select a section to inspect the constitutional structure and the basic idea behind it.
-        </aside>
+    <section id="library" class="page library-page" aria-label="Documents and cases">
+      <div class="section-hero"><p class="eyebrow">REFERENCE LIBRARY</p><h1>Documents & Cases</h1><p>Evidence lives here. Learn the story first; come here when a chapter points to a document or Supreme Court case.</p></div>
+      <div class="library-grid">
+        <section><p class="eyebrow">FOUNDATIONAL DOCUMENTS</p><h2>Ideas that built the system</h2>
+          <button onclick="show('declaration')"><b>Declaration of Independence</b><span>Natural rights · consent · independence</span></button>
+          <button onclick="show('constitution')"><b>U.S. Constitution</b><span>Structure · powers · limits · federalism</span></button>
+          <button onclick="openLibraryNote('Federalist No. 10','Factions and the argument for a large republic.')"><b>Federalist No. 10</b><span>Factions · pluralism</span></button>
+          <button onclick="openLibraryNote('Brutus No. 1','An Anti-Federalist warning about consolidated national power.')"><b>Brutus No. 1</b><span>Anti-Federalist argument</span></button>
+          <button onclick="openLibraryNote('Federalist No. 51','Separation of powers and checks and balances.')"><b>Federalist No. 51</b><span>Checks & balances</span></button>
+          <button onclick="openLibraryNote('Federalist No. 70','The case for an energetic, unitary executive.')"><b>Federalist No. 70</b><span>Executive power</span></button>
+          <button onclick="openLibraryNote('Federalist No. 78','The judiciary, judicial independence, and constitutional interpretation.')"><b>Federalist No. 78</b><span>Judiciary</span></button>
+        </section>
+        <section><p class="eyebrow">SUPREME COURT CASES</p><h2>Constitutional ideas in real disputes</h2>
+          <button onclick="openLibraryNote('Marbury v. Madison','Judicial review and the Supreme Court’s role in constitutional interpretation.')"><b>Marbury v. Madison</b><span>Judicial review</span></button>
+          <button onclick="openLibraryNote('McCulloch v. Maryland','Implied powers, the Necessary and Proper Clause, and federal supremacy.')"><b>McCulloch v. Maryland</b><span>Federal power</span></button>
+          <button onclick="openLibraryNote('Brown v. Board of Education','Equal protection and school segregation.')"><b>Brown v. Board</b><span>Equal protection</span></button>
+          <button onclick="openLibraryNote('Tinker v. Des Moines','Student speech and First Amendment protection in public schools.')"><b>Tinker v. Des Moines</b><span>Student speech</span></button>
+          <button onclick="openLibraryNote('Citizens United v. FEC','Political spending, corporations and First Amendment protections.')"><b>Citizens United v. FEC</b><span>Campaign finance</span></button>
+        </section>
       </div>
-
-      <div class="principles-grid">
-        <article>
-          <b>Separation of Powers</b>
-          <p>Different institutions receive different powers.</p>
-        </article>
-        <article>
-          <b>Checks &amp; Balances</b>
-          <p>Branches can restrain one another.</p>
-        </article>
-        <article>
-          <b>Federalism</b>
-          <p>Power is divided between national and state governments.</p>
-        </article>
-        <article>
-          <b>Limited Government</b>
-          <p>Government is bound by law and constitutional structure.</p>
-        </article>
-      </div>
+      <aside id="libraryDetail" class="library-detail"><b>How to use this page</b><p>Do not memorize this library from top to bottom. Open an item when it appears in a Learn chapter, understand why it matters, then return to the story.</p></aside>
     </section>
 
     <section id="practice" class="page" aria-label="Practice review">
-      <button class="back" type="button" onclick="show('map')">← Course map</button>
+      <button class="back" type="button" onclick="show('map')">← Big Picture</button>
       <div class="page-intro">
-        <p class="eyebrow">RETRIEVAL PRACTICE</p>
+        <p class="eyebrow">PRACTICE AFTER UNDERSTANDING</p>
         <h1>Can you explain it?</h1>
       </div>
       <div id="quiz" aria-live="polite"></div>
@@ -166,10 +160,6 @@
       </div>
     </section>
 
-    <section id="unit" class="page" aria-label="Unit detail page">
-      <button class="back" type="button" onclick="show('map')">← Course map</button>
-      <div id="unitContent"></div>
-    </section>
   </main>
 
   <footer>
