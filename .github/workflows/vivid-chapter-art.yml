@@ -56,7 +56,12 @@ jobs:
               m = re.search(p, text, re.I)
               if m:
                 return html.unescape(m.group(1))
-            raise RuntimeError(f"No og:image found on {page}")
+            # AOC sometimes omits social meta for automated requests. The
+            # actual artwork is still present in the responsive image markup.
+            m = re.search(r'(https://www\\.aoc\\.gov)?(/sites/default/files/[^"\\'<> ]+?\\.webp(?:\\?[^"\\'<> ]*)?)', text, re.I)
+            if m:
+              return html.unescape((m.group(1) or 'https://www.aoc.gov') + m.group(2))
+            raise RuntimeError(f"No artwork image found on {page}")
 
           for page, out in items:
             os.makedirs(os.path.dirname(out), exist_ok=True)
