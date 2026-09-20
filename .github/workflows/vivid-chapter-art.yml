@@ -62,7 +62,7 @@ jobs:
                 return html.unescape(m.group(1))
             # AOC sometimes omits social meta for automated requests. The
             # actual artwork is still present in the responsive image markup.
-            m = re.search(r'(https://www\\.aoc\\.gov)?(/sites/default/files/[^"\\'<> ]+?\\.webp(?:\\?[^"\\'<> ]*)?)', text, re.I)
+            m = re.search(r"(https://www\\.aoc\\.gov)?(/sites/default/files/[^\\\"'<> ]+?\\.webp(?:\\?[^\\\"'<> ]*)?)", text, re.I)
             if m:
               return html.unescape((m.group(1) or 'https://www.aoc.gov') + m.group(2))
             raise RuntimeError(f"No artwork image found on {page}")
