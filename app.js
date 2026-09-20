@@ -60,6 +60,54 @@ function showJourneyFact(n,el){
 }
 function hideJourneyFact(){const p=document.getElementById('journeyFactPop');if(p)p.classList.remove('show');}
 
+const foundingGallery={
+ colonies:[
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Patrick%20Henry%20before%20the%20Virginia%20House%20of%20Burgesses%20May%2030%2C%201765%20LCCN2006691555.jpg?width=1200','Self-government','Colonial assemblies gave Americans practice choosing representatives and debating local laws.'],
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Boston%20Tea%20Party%20Currier%20colored.jpg?width=1200','Conflict grows','Taxes and parliamentary authority turned political disagreement into resistance.'],
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Battle_of_Lexington%2C_1775.jpg?width=1200','From protest to war','By 1775, the constitutional dispute with Britain had become armed conflict.']
+ ],
+ declaration:[
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20independence.jpg?width=1200','Drafting the Declaration','Jefferson drafted the text; Congress debated and revised it before adoption.'],
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/United_States_Declaration_of_Independence.jpg?width=1200','The document','Principles, grievances, and a declaration of political separation.'],
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration_of_Independence_%281819%29%2C_by_John_Trumbull.jpg?width=1200','A public argument','The Declaration explained the colonies’ case for independence to a wider world.']
+ ],
+ articles:[
+  ['https://www.archives.gov/files/milestone-documents/images/doc-003-big.jpg','America’s first framework','The Articles joined sovereign states in a deliberately limited national union.'],
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Shays%27_Rebellion.jpg?width=1200','Pressure for change','Economic and political unrest intensified arguments over whether national institutions were strong enough.'],
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Independence_Hall_Assembly_Room.jpg?width=1200','Toward Philadelphia','Concerns about the Confederation helped bring delegates together in 1787.']
+ ],
+ convention:[
+  ['https://upload.wikimedia.org/wikipedia/commons/9/9d/Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg','Designing a new system','Delegates replaced the Confederation framework with a stronger federal structure.'],
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Independence_Hall_Assembly_Room.jpg?width=1200','The room where it happened','Delegates debated representation, national power, and the design of institutions.'],
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Constitution_of_the_United_States%2C_page_1.jpg?width=1200','The result','The Constitution separated powers and created institutions able to act nationally.']
+ ],
+ 'constitution-rights':[
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Constitution_of_the_United_States%2C_page_1.jpg?width=1200','The framework','The Constitution establishes the structure and powers of the federal government.'],
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/US%20Bill%20of%20Rights.jpg?width=1200','The Bill of Rights','The first ten amendments protect specific liberties and limit government action.'],
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/United_States_Capitol_west_front_edit2.jpg?width=1200','A living system','The constitutional framework still structures national government today.']
+ ]
+};
+let homeSlide=0;
+function setHomeSlide(i){
+ const slides=[
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Patrick%20Henry%20before%20the%20Virginia%20House%20of%20Burgesses%20May%2030%2C%201765%20LCCN2006691555.jpg?width=1200','Before independence','Americans already had experience with assemblies, representation, and local self-government.'],
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20independence.jpg?width=1200','1776 · A new nation','The Declaration turned resistance into a claim built on natural rights and consent of the governed.'],
+  ['https://www.archives.gov/files/milestone-documents/images/doc-003-big.jpg','1781 · First government','The Articles protected state independence — but left the national government with limited power.'],
+  ['https://upload.wikimedia.org/wikipedia/commons/9/9d/Scene_at_the_Signing_of_the_Constitution_of_the_United_States.jpg','1787 · A redesign','The Constitution created stronger institutions while dividing and checking political power.'],
+  ['https://commons.wikimedia.org/wiki/Special:Redirect/file/US%20Bill%20of%20Rights.jpg?width=1200','1791 · Protecting liberty','The Bill of Rights placed explicit protections for individual liberty into the constitutional system.']
+ ];
+ homeSlide=(i+slides.length)%slides.length; const box=document.querySelector('.home-story-slide'); if(!box)return; const x=slides[homeSlide];
+ box.style.backgroundImage="linear-gradient(90deg,rgba(5,18,15,.84),rgba(5,18,15,.18)),url('"+x[0]+"')";
+ box.querySelector('h3').textContent=x[1]; box.querySelector('p').textContent=x[2]; box.querySelector('.home-slide-count').textContent=(homeSlide+1)+' / '+slides.length;
+ document.querySelectorAll('.home-slide-dots button').forEach((b,n)=>b.classList.toggle('active',n===homeSlide));
+}
+function moveHomeSlide(n){setHomeSlide(homeSlide+n)}
+function setFoundingGallery(key,i){
+ const slides=foundingGallery[key], stage=document.querySelector('#foundingDetail .founding-stage'); if(!slides||!stage)return; const x=slides[i];
+ stage.style.backgroundImage="linear-gradient(0deg,rgba(4,16,13,.88),rgba(4,16,13,.08)),url('"+x[0]+"')";
+ stage.innerHTML='<div><span>'+foundingPages[key].date+'</span><h2>'+x[1]+'</h2><p>'+x[2]+'</p></div>';
+ document.querySelectorAll('#foundingDetail .founding-photo-thumbs button').forEach((b,n)=>b.classList.toggle('active',n===i));
+}
 const foundingPages={
  declaration:{chapter:'CHAPTER 2 OF 5',date:'1776',title:'Declaration of Independence',subtitle:'A bold statement. A new nation. A big question: now what?',intro:'The thirteen colonies declared that they were no longer part of Britain and explained why, grounding their argument in ideas about liberty, rights, equality, and consent of the governed.',question:'Why did the colonies believe independence was justified?',takeaways:['Explains why the colonies were separating from Britain.','Introduces natural rights, equality, and consent of the governed.','Lists grievances against British rule.','Declares the colonies free and independent states.','States principles; it does not design the later federal government.'],cards:[['Principles','Natural rights and consent of the governed'],['Grievances','The case against British rule'],['Independence','The colonies declare separation'],['Legacy','Ideas that echo through later debates']],fact:'Thomas Jefferson drafted the initial text, and the Committee of Five and Continental Congress revised it before adoption.',next:'Articles of Confederation',nextKey:'articles'},
  colonies:{chapter:'CHAPTER 1 OF 5',date:'1607–1775',title:'British Colonies',subtitle:'Before independence, Americans learned how to govern locally.',intro:'The colonies were part of the British Empire, but elected colonial assemblies gave many colonists practical experience with representative government.',question:'How did life in the colonies shape American ideas about government?',hero:'COLONIAL AMERICA',takeaways:['Colonists lived under British authority but also used elected colonial assemblies.','Local self-government helped build expectations about representation.','After the Seven Years’ War, disputes over taxes and parliamentary authority intensified.','The conflict gradually moved from protest to independence.'],cards:[['Self-government','Colonial assemblies gave many colonists experience choosing representatives and making local laws.'],['British authority','The colonies remained subject to the Crown and Britain’s imperial system.'],['The conflict grows','Arguments over taxation, representation, and Parliament’s authority became central political disputes.'],['The connection','These experiences help explain why consent and representation became important founding ideas.']],fact:'A useful study connection: Americans did not invent representative government in 1776. Many colonists already had generations of experience with elected assemblies.',next:'Declaration of Independence',nextAction:"openFoundingPage('declaration')"},
@@ -84,6 +132,7 @@ function openFoundingPage(key,preserveScroll=false){
   'constitution-rights':{big:'Why the Constitution and Bill of Rights?',matter:'Together they establish the federal framework and protect specific liberties, creating the foundation for many questions studied throughout AP Government.',nextText:'Now connect the founding story to the full Foundations of American Democracy course area.'}
  }[key];
  const keys=['colonies','declaration','articles','convention','constitution-rights'], labels=['British Colonies','Declaration of Independence','Articles of Confederation','Constitutional Convention','Constitution + Bill of Rights'], dates=['1607–1775','1776','1781–1789','1787','1787–1791'], current=keys.indexOf(key);
+ const gallery=foundingGallery[key];
  const timeline=keys.map((k,i)=>'<button class="'+(i===current?'active':'')+'" onclick="'+("openFoundingPage('"+k+"',true)")+'"><span>'+dates[i]+'</span><b>'+labels[i]+'</b></button>').join('');
  target.innerHTML=`<article class="decl founding-decl">
   <section class="decl-hero founding-decl-hero" style="background-image:linear-gradient(90deg,rgba(7,14,12,.91),rgba(7,14,12,.32)),url('${visuals.img}')">
@@ -93,7 +142,7 @@ function openFoundingPage(key,preserveScroll=false){
   <nav class="decl-timeline">${timeline}</nav>
   <div class="decl-body">
    <section id="founding-big" class="decl-big"><p class="eyebrow">THE BIG PICTURE</p><h2>${meta.big}</h2><p>${x.intro}</p><div class="decl-quote">${x.question}<small>Keep this question in mind as you study.</small></div></section>
-   <section id="founding-learn" class="founding-gallery"><div class="founding-stage"><div><span>${x.date}</span><h2>${x.title}</h2><p>${x.cards[0][1]}</p></div></div><div class="founding-thumbs">${x.cards.map((c,i)=>'<button onclick="selectFoundingIdea(this,\''+key+'\','+i+')"><b>0'+(i+1)+'</b><span>'+c[0]+'</span></button>').join('')}</div></section>
+   <section id="founding-learn" class="founding-gallery"><div class="founding-stage" style="background-image:linear-gradient(0deg,rgba(4,16,13,.88),rgba(4,16,13,.08)),url('${gallery[0][0]}')"><div><span>${x.date}</span><h2>${gallery[0][1]}</h2><p>${gallery[0][2]}</p></div></div><div class="founding-photo-thumbs">${gallery.map((g,i)=>'<button class="'+(i===0?'active':'')+'" onclick="setFoundingGallery(\''+key+'\','+i+')" style="background-image:url(\''+g[0]+'\')"><span>'+g[1]+'</span></button>').join('')}</div><div class="founding-thumbs">${x.cards.map((c,i)=>'<button onclick="selectFoundingIdea(this,\''+key+'\','+i+')"><b>0'+(i+1)+'</b><span>'+c[0]+'</span></button>').join('')}</div></section>
    <aside class="decl-side"><section><h3>🔑 &nbsp; Key Takeaways</h3><ol>${x.takeaways.map((p,i)=>'<li><b>'+(i+1)+'</b><span>'+p+'</span></li>').join('')}</ol></section><section><h3>💡 &nbsp; Interesting Fact</h3><p>${x.fact}</p></section></aside>
    <section class="decl-document founding-ideas"><div><p class="eyebrow">A CLOSER LOOK</p><h2>Key Ideas</h2><p>Open each idea and explain it in your own words.</p></div><div class="founding-idea-main"><h3>${x.cards[0][0]}</h3><p>${x.cards[0][1]}</p></div><div class="decl-doc-tabs"><h3>Explore by Topic</h3>${x.cards.map((c,i)=>'<button onclick="selectFoundingIdea(this,\''+key+'\','+i+')">'+c[0]+' <span>›</span></button>').join('')}</div></section>
    <section class="decl-card"><h3>🌎 &nbsp; Why It Matters</h3><p>${meta.matter}</p></section>
