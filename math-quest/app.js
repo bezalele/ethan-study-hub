@@ -240,11 +240,11 @@ function course(query = "") {
       .toLowerCase()
       .includes(query.toLowerCase()),
   );
-  main.innerHTML = `<h1 class="page-title">${query ? "Find your next step" : "Your Algebra 1 course"}</h1><p class="intro">Explore the whole course. Choose the topic you’re learning at school, or revisit an earlier idea.</p>${query ? `<p>Results for “${esc(query)}”</p>` : ""}${list.length ? unitCards(list) : '<div class="card empty">No matches yet. Try “equations”, “graphs”, or “factoring”.</div>'}<div class="notice">Foundations, Unit 1, and Unit 2 now have worked examples, practice by skill, and self-checks. Units 3–7 and cumulative review are the next course expansion.</div><p class="muted">Course structure follows <a class="text-link" href="https://www.montgomeryschoolsmd.org/curriculum/math/high/algebra1/" target="_blank" rel="noopener">MCPS Algebra 1</a>. Your teacher’s pacing may differ.</p>`;
+  main.innerHTML = `<h1 class="page-title">${query ? "Find your next step" : "Your Algebra 1 course"}</h1><p class="intro">Explore the whole course. Choose the topic you’re learning at school, or revisit an earlier idea.</p>${query ? `<p>Results for “${esc(query)}”</p>` : ""}${list.length ? unitCards(list) : '<div class="card empty">No matches yet. Try “equations”, “graphs”, or “factoring”.</div>'}<div class="notice">Foundations and Units 1–3 now have worked examples, practice by skill, and self-checks. Units 4–7 and cumulative review are the next course expansion.</div><p class="muted">Course structure follows <a class="text-link" href="https://www.montgomeryschoolsmd.org/curriculum/math/high/algebra1/" target="_blank" rel="noopener">MCPS Algebra 1</a>. Your teacher’s pacing may differ.</p>`;
 }
 function unit(id) {
   if (id === "equations") return u2Overview();
-  if (["foundations", "statistics"].includes(id)) return courseOverview(id);
+  if (["foundations", "statistics", "two-variable"].includes(id)) return courseOverview(id);
   const u = units.find((u) => u.id === id);
   if (!u) {
     course();
@@ -364,7 +364,7 @@ function correct(given, q) {
 }
 function practice(topic = "") {
   if (!topic) return coursePracticeHub();
-  if (["foundations", "statistics"].includes(topic)) return coursePractice(topic);
+  if (["foundations", "statistics", "two-variable"].includes(topic)) return coursePractice(topic);
   if (topic === "equations") return u2Practice("exam");
   session = null;
   main.innerHTML = `<h1 class="page-title">A little practice, every day.</h1><p class="intro">Choose a focus. Take your time. Every mistake gives you something useful to learn.</p><section class="card"><div class="controls"><label>Topic <select id="practice-topic"><option value="equations">Equations · fresh variations</option><option value="mixed">Mixed topic review</option>${originalTopics

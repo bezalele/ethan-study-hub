@@ -1,0 +1,20 @@
+name: Verify Algebra content
+on:
+  pull_request:
+    paths: ['math-quest/**', '.github/workflows/algebra-verify.yml']
+  push:
+    branches: ['content/algebra-unit-3']
+    paths: ['math-quest/**', '.github/workflows/algebra-verify.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node math-quest/tests/course-content.cjs
+      - run: node math-quest/tests/unit2-content.cjs
+      - run: node math-quest/tests/unit3-content.cjs
