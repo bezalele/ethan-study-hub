@@ -1,0 +1,314 @@
+/* ---------------------------------------------------------------------------
+   home.css
+   INVARIANT: every selector begins with .page--home. Nothing here can reach
+   another page, the header or the footer.
+
+   The page fills exactly one viewport with no scrollbar. Four bands: hero and
+   cards flex, timeline and closing band are fixed. Below 820px tall or 1000px
+   wide the page reverts to normal document flow and scrolls, because crushing
+   the content to fit a short window would make it unreadable.
+   --------------------------------------------------------------------------- */
+
+.page--home {
+  height: calc(100dvh - var(--header-h) - var(--footer-h));
+  display: grid;
+  grid-template-rows:
+    minmax(0, 0.86fr)   /* hero — yields space to the timeline */
+    auto                /* timeline — the study focus, sized by content */
+    minmax(0, 1fr)      /* cards */
+    auto;               /* closing */
+  overflow: hidden;
+}
+
+/* The model runs nearly edge to edge. Scoped to home so other pages keep the
+   narrower reading measure. */
+.page--home .shell {
+  max-width: 1720px;
+  padding-inline: max(1.8vw, 16px);
+}
+
+/* ===== Hero =============================================================== */
+
+.page--home .home-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 0;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+}
+
+.page--home .home-hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 36%;
+  z-index: -2;
+}
+
+/* Left-weighted scrim: keeps the copy legible without flattening the art. */
+.page--home .home-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg,
+      rgba(8, 20, 16, 0.93) 0%,
+      rgba(8, 20, 16, 0.74) 34%,
+      rgba(8, 20, 16, 0.26) 66%,
+      rgba(8, 20, 16, 0.44) 100%);
+}
+
+.page--home .home-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
+  gap: var(--s-6);
+  align-items: end;
+  width: 100%;
+  padding-block: clamp(var(--s-4), 2.6vh, var(--s-6));
+  color: var(--c-on-dark);
+}
+
+.page--home .home-hero__copy { text-align: left; }
+
+.page--home .home-hero__title {
+  font-size: clamp(30px, min(4.4vw, 7.4vh), 68px);
+  line-height: var(--lh-tight);
+  margin: var(--s-2) 0 var(--s-3);
+  text-shadow: 0 3px 24px rgba(0, 0, 0, 0.45);
+}
+
+.page--home .home-hero__deck {
+  max-width: 44ch;
+  font-size: clamp(13px, min(1.15vw, 1.95vh), 17px);
+  line-height: 1.55;
+  color: var(--c-on-dark-soft);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+
+.page--home .home-hero__quote {
+  margin: var(--s-4) 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(13px, min(1.1vw, 1.85vh), 17px);
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--c-on-dark);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+.page--home .home-hero__quote cite {
+  display: block;
+  margin-top: var(--s-2);
+  font-family: var(--font-ui);
+  font-size: var(--t-small);
+  font-style: normal;
+  color: var(--c-on-dark-soft);
+}
+
+.page--home .home-hero__quote--aside {
+  margin: 0;
+  text-align: right;
+  font-size: clamp(14px, min(1.35vw, 2.2vh), 20px);
+  max-width: 34ch;
+  justify-self: end;
+}
+
+/* ===== Three cards ======================================================== */
+
+.page--home .home-cards {
+  display: grid;
+  grid-template-columns: 1.14fr 0.84fr 1.02fr;
+  gap: var(--s-4);
+  padding-block: clamp(var(--s-4), 2.4vh, var(--s-6));
+  min-height: 0;
+}
+
+.page--home .home-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: 0;
+  padding: clamp(var(--s-4), 2.4vh, var(--s-6));
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.page--home .home-card h2 {
+  font-size: clamp(18px, min(2vw, 3.3vh), 32px);
+  line-height: 1.12;
+}
+
+.page--home .home-card__text {
+  font-size: clamp(11px, min(0.95vw, 1.6vh), 14px);
+  line-height: 1.5;
+  color: var(--c-ink-soft);
+}
+
+.page--home .home-card__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+
+/* Art is anchored to the card's right edge and fades into the surface. The
+   card reserves room for it with padding-right rather than a max-width on the
+   copy, because the three cards are different widths and one percentage
+   cleared the wide card while clipping the narrow one. */
+.page--home .home-card__art {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: auto;
+  max-width: 46%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 42%);
+          mask-image: linear-gradient(90deg, transparent, #000 42%);
+}
+
+.page--home .home-card--story,
+.page--home .home-card--course {
+  padding-right: 30%;
+}
+
+.page--home .home-card--story {
+  background: var(--c-sage);
+  border-color: #c6d3bd;
+}
+
+.page--home .home-card--course {
+  background: linear-gradient(120deg, #eef3f7, #e4edf4);
+  border-color: #cdd8e0;
+}
+
+.page--home .home-card--question {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--s-2);
+  background: var(--c-paper);
+}
+.page--home .home-card h2.home-card__question {
+  font-size: clamp(15px, min(1.45vw, 2.5vh), 25px);
+  line-height: 1.28;
+  color: var(--c-forest);
+  max-width: 22ch;
+}
+.page--home .home-card__rule {
+  width: 52px;
+  height: 2px;
+  border: 0;
+  margin: 0;
+  background: var(--c-brick);
+  opacity: 0.5;
+}
+
+/* ===== Closing band ======================================================= */
+
+.page--home .home-closing {
+  background: linear-gradient(100deg, #f4e6cd, #e9cda2 52%, #dcb98c);
+  border-top: 1px solid var(--c-line);
+}
+
+.page--home .home-closing__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+  padding-block: clamp(var(--s-4), 2.6vh, var(--s-6));
+}
+
+.page--home .home-closing__quote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.15vw, 17px);
+  font-style: italic;
+  color: #4a3a22;
+}
+.page--home .home-closing__quote cite {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-style: normal;
+  color: #6b5735;
+}
+
+.page--home .home-closing__tag {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  white-space: nowrap;
+  font-size: var(--t-eyebrow);
+  font-weight: 800;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: #7a6238;
+}
+
+/* Two tiers of height pressure, both only while the one-screen layout is in
+   play (min-width 1001px).
+
+   Tier 1, under ~1100px: the Franklin pull-quote is the least essential thing
+   in the hero, so it goes first and everything else keeps its full size. The
+   threshold is high because the hero deliberately yields row space to the
+   timeline, which is the page's study focus.
+   Tier 2, under ~820px: the hero also gives up type size and the cards claim
+   a larger share, because their content has a hard floor (eyebrow, heading,
+   two lines of text, a button). */
+
+@media (max-height: 1100px) and (min-width: 1001px) {
+  .page--home .home-hero__copy > .home-hero__quote { display: none; }
+}
+
+@media (max-height: 820px) and (min-width: 1001px) {
+  .page--home {
+    grid-template-rows: minmax(0, 0.78fr) auto minmax(0, 1fr) auto;
+  }
+  .page--home .home-card__body { gap: var(--s-2); }
+  .page--home .home-card { gap: 6px; }
+  .page--home .btn { padding: 8px 14px; font-size: 13px; }
+
+  /* A wider measure drops the deck from three lines to two. */
+  .page--home .home-hero__title { font-size: clamp(28px, min(4.4vw, 5.6vh), 68px); }
+  .page--home .home-hero__deck { max-width: 62ch; }
+  .page--home .home-hero__inner { padding-block: clamp(8px, 1.2vh, 16px); }
+  .page--home .home-hero__quote--aside { font-size: clamp(13px, min(1.25vw, 2vh), 18px); }
+}
+
+/* ===== Fall back to normal flow when one screen is not enough ============= */
+
+@media (max-height: 640px), (max-width: 1000px) {
+  .page--home {
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+  .page--home .home-hero { min-height: 62vh; }
+  .page--home .home-cards { padding-block: var(--s-6); }
+}
+
+@media (max-width: 1000px) {
+  .page--home .home-cards { grid-template-columns: 1fr 1fr; }
+  .page--home .home-card--question { grid-column: 1 / -1; order: -1; }
+}
+
+@media (max-width: 860px) {
+  .page--home .home-hero__inner { grid-template-columns: 1fr; }
+  .page--home .home-hero__quote--aside { display: none; }
+}
+
+@media (max-width: 640px) {
+  .page--home .home-cards { grid-template-columns: 1fr; }
+  .page--home .home-card--story,
+  .page--home .home-card--course { padding-right: 34%; }
+  .page--home .home-closing__inner { flex-wrap: wrap; }
+}

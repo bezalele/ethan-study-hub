@@ -1,0 +1,130 @@
+/* ---------------------------------------------------------------------------
+   layout.css — the master page chrome: header, nav, footer, main.
+   INVARIANT: this is the ONLY stylesheet permitted to select
+   `header`, `footer`, `body` or `#app-main`. Page stylesheets must not.
+   The header is rendered once at boot and is identical on every route.
+   --------------------------------------------------------------------------- */
+
+#app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+  min-height: var(--header-h);
+  padding: var(--s-2) var(--gutter);
+  background: var(--c-forest);
+  color: var(--c-on-dark);
+  box-shadow: var(--shadow-md);
+}
+
+/* --- Brand --------------------------------------------------------------- */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  color: var(--c-on-dark);
+  text-decoration: none;
+}
+.brand:hover { color: var(--c-on-dark); }
+
+.brand__mark {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  color: var(--c-gold);
+}
+
+.brand__name {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.brand__sub {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  opacity: 0.72;
+  white-space: nowrap;
+}
+
+/* --- Nav ----------------------------------------------------------------- */
+
+#app-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+}
+
+.nav__link {
+  position: relative;
+  padding: var(--s-2) 0;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-on-dark);
+  text-decoration: none;
+  opacity: 0.82;
+  white-space: nowrap;
+  transition: opacity var(--dur) var(--ease);
+}
+.nav__link:hover { opacity: 1; color: var(--c-on-dark); }
+
+/* Active state is expressed ONLY by aria-current. Nothing else changes. */
+.nav__link[aria-current="page"] { opacity: 1; }
+.nav__link[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--c-gold);
+  border-radius: var(--r-pill);
+}
+
+/* --- Main ---------------------------------------------------------------- */
+
+#app-main { display: block; }
+
+/* --- Footer -------------------------------------------------------------- */
+
+/* Fixed height: the home page sizes itself to 100dvh minus the header and
+   this, so a variable footer would reintroduce a scrollbar. */
+#app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  height: var(--footer-h);
+  padding-inline: var(--gutter);
+  background: var(--c-forest-deep);
+  color: var(--c-on-dark-soft);
+  font-size: 12px;
+  overflow: hidden;
+}
+#app-footer a { color: var(--c-gold); }
+
+/* --- Small screens -------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  #app-header {
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    padding-bottom: 0;
+  }
+  .brand__sub { display: none; }
+  #app-nav {
+    width: 100%;
+    gap: var(--s-4);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  #app-nav::-webkit-scrollbar { display: none; }
+}
