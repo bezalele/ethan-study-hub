@@ -3,13 +3,17 @@
 
    Route: #/study/:chapter
 
-   Every block is driven by content/chapters.js and every block is optional:
-   if a chapter has no `fact`, no Interesting Fact card is rendered; if it has
-   no gallery, no carousel. That means content can be filled in one field at a
-   time and the page is never broken or half-empty.
+   The page opens on one full screen: a compact hero, the chapter timeline,
+   and then the slideshow with its thumbnails beside the quiz. Everything
+   below that — the big picture, takeaways, facts, documents — is there when
+   you scroll, but nothing Ethan needs on landing is hidden.
 
-   Image slots that have no file yet render a designed placeholder rather than
-   a broken image, so the layout is final before the art arrives.
+   The explanation is spread across the slides rather than sitting in one
+   paragraph: each slide carries one point, taken from the chapter's own
+   takeaways unless the slide defines its own.
+
+   Every block is driven by content/chapters.js and every block is optional,
+   so content can be filled in one field at a time without the page breaking.
    --------------------------------------------------------------------------- */
 
 import {
@@ -38,14 +42,16 @@ function picture(image, label, modifier = '') {
   return placeholder(label, modifier);
 }
 
+/** The chapter's facts, whether it supplies one or several. */
+function factsOf(ch) {
+  if (Array.isArray(ch.facts)) return ch.facts;
+  return ch.fact ? [ch.fact] : [];
+}
+
 /* --- Hero ----------------------------------------------------------------- */
 
 function hero(ch) {
   const pos = chapterPosition(ch.id);
-  const actions = (ch.actions || []).map((a) => `
-    <a class="btn ${a.primary ? 'btn--on-dark' : 'btn--outline-light'}"
-       href="${esc(a.href || '#/study')}">${esc(a.label)}</a>`).join('');
-
   return `
     <section class="ch-hero">
       <img class="ch-hero__bg" src="${ch.hero.src}" alt="${esc(ch.hero.alt || '')}" fetchpriority="high">
@@ -58,8 +64,6 @@ function hero(ch) {
           <p class="ch-hero__year">${esc(ch.years)}</p>
           <h1 class="ch-hero__title">${esc(ch.title)}</h1>
           ${ch.deck ? `<p class="ch-hero__deck">${esc(ch.deck)}</p>` : ''}
-          ${ch.intro ? `<p class="ch-hero__intro">${esc(ch.intro)}</p>` : ''}
-          ${actions ? `<div class="ch-hero__actions">${actions}</div>` : ''}
         </div>
         ${ch.heroQuote ? `
           <blockquote class="ch-hero__quote">
@@ -70,18 +74,21 @@ function hero(ch) {
     </section>`;
 }
 
-/* --- Gallery -------------------------------------------------------------- */
+/* --- Slideshow ------------------------------------------------------------ */
 
 function gallery(ch) {
   const slides = ch.gallery || [];
   if (!slides.length) return '';
 
+  // One point per slide: the slide's own, else the matching takeaway.
+  const pointFor = (s, i) => s.point || (ch.takeaways || [])[i] || s.caption || '';
+
   const stage = slides.map((s, i) => `
     <figure class="ch-slide" data-slide="${i}" ${i ? 'hidden' : ''}>
       ${picture(s, s.label, 'ch-slide__img')}
       <figcaption class="ch-slide__cap">
-        <strong>${esc(s.label)}</strong>
-        <span>${esc(s.caption)}</span>
+        <strong class="ch-slide__label">${esc(s.label)}</strong>
+        <span class="ch-slide__point">${esc(pointFor(s, i))}</span>
       </figcaption>
     </figure>`).join('');
 
@@ -97,7 +104,7 @@ function gallery(ch) {
   const multi = slides.length > 1;
 
   return `
-    <div class="ch-gallery" data-gallery data-count="${slides.length}">
+    <div class="ch-gallery" data-gallery>
       <div class="ch-gallery__stage">
         ${stage}
         ${multi ? `
@@ -111,7 +118,55 @@ function gallery(ch) {
     </div>`;
 }
 
-/* --- Right rail ----------------------------------------------------------- */
+/* --- Quiz ----------------------------------------------------------------- */
+
+function quiz(ch) {
+  const qs = ch.quiz || [];
+  if (!qs.length) return '';
+
+  const cards = qs.map((q, n) => `
+    <fieldset class="ch-q" data-q="${n}" ${n ? 'hidden' : ''}>
+      <legend class="ch-q__text">${esc(q.question)}</legend>
+      <ol class="ch-q__opts">
+        ${q.options.map((o, i) => `
+          <li>
+            <label class="ch-opt">
+              <input type="radio" name="q${n}" value="${i}">
+              <span class="ch-opt__marker" aria-hidden="true"></span>
+              <span class="ch-opt__label">${esc(o)}</span>
+            </label>
+          </li>`).join('')}
+      </ol>
+      <p class="ch-q__why" data-why hidden>${esc(q.why || '')}</p>
+    </fieldset>`).join('');
+
+  return `
+    <section class="ch-quiz" data-quiz data-total="${qs.length}" data-chapter="${esc(ch.id)}">
+      <header class="ch-quiz__head">
+        <h2 class="ch-quiz__title">Quick check</h2>
+        <p class="ch-quiz__meta"><span data-progress>1</span> of ${qs.length}</p>
+      </header>
+
+      <ol class="ch-quiz__dots" aria-hidden="true">
+        ${qs.map((_, i) => `<li class="ch-quiz__dot${i ? '' : ' is-current'}" data-dot="${i}"></li>`).join('')}
+      </ol>
+
+      <form class="ch-quiz__form" data-form>${cards}</form>
+
+      <div class="ch-quiz__foot">
+        <button class="btn btn--ghost" type="button" data-prev disabled>← Back</button>
+        <button class="btn btn--primary" type="button" data-next>Check</button>
+      </div>
+
+      <div class="ch-quiz__result" data-result hidden>
+        <p class="ch-quiz__score"><strong data-score>0</strong> out of ${qs.length}</p>
+        <p class="ch-quiz__best" data-best></p>
+        <button class="btn btn--ghost" type="button" data-again>Try again</button>
+      </div>
+    </section>`;
+}
+
+/* --- Right rail (below the fold) ------------------------------------------ */
 
 function takeaways(ch) {
   if (!ch.takeaways || !ch.takeaways.length) return '';
@@ -129,21 +184,18 @@ function takeaways(ch) {
 }
 
 function factCard(ch) {
-  const f = ch.fact;
-  if (!f) return '';
+  const facts = factsOf(ch);
+  if (!facts.length) return '';
 
-  // With no portrait file, draw a medallion from the subject's initials.
-  const initials = (f.name || '?')
-    .split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+  const panels = facts.map((f, i) => {
+    const initials = (f.name || '?')
+      .split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+    const figure = f.portrait
+      ? `<img class="ch-fact__portrait" src="${f.portrait}" alt="${esc(f.name || '')}" loading="lazy">`
+      : `<span class="ch-fact__medallion" aria-hidden="true">${esc(initials)}</span>`;
 
-  const figure = f.portrait
-    ? `<img class="ch-fact__portrait" src="${f.portrait}" alt="${esc(f.name || '')}" loading="lazy">`
-    : `<span class="ch-fact__medallion" aria-hidden="true">${esc(initials)}</span>`;
-
-  return `
-    <section class="ch-card ch-card--fact">
-      <h2 class="ch-card__head"><span class="ch-card__icon" aria-hidden="true">💡</span> Interesting Fact</h2>
-      <div class="ch-fact">
+    return `
+      <div class="ch-fact" data-fact="${i}" ${i ? 'hidden' : ''}>
         <p class="ch-fact__text">${esc(f.text)}</p>
         ${(f.name || f.portrait) ? `
           <figure class="ch-fact__who">
@@ -153,7 +205,22 @@ function factCard(ch) {
               ${f.dates ? `<span>${esc(f.dates)}</span>` : ''}
             </figcaption>
           </figure>` : ''}
-      </div>
+      </div>`;
+  }).join('');
+
+  // A pager appears only when there is more than one fact.
+  const pager = facts.length > 1 ? `
+    <div class="ch-fact__pager">
+      <button class="ch-fact__arrow" type="button" data-fact-step="-1" aria-label="Previous fact">‹</button>
+      <span class="ch-fact__count"><span data-fact-label>1</span> / ${facts.length}</span>
+      <button class="ch-fact__arrow" type="button" data-fact-step="1" aria-label="Next fact">›</button>
+    </div>` : '';
+
+  return `
+    <section class="ch-card ch-card--fact" data-facts>
+      <h2 class="ch-card__head"><span class="ch-card__icon" aria-hidden="true">💡</span> Interesting Fact</h2>
+      ${panels}
+      ${pager}
     </section>`;
 }
 
@@ -195,7 +262,6 @@ function closerLook(ch) {
 function whyItMatters(ch) {
   const w = ch.whyItMatters;
   if (!w) return '';
-
   const steps = (w.steps || []).map((s, i, arr) => `
     <li class="ch-flow__step">${esc(s)}</li>
     ${i < arr.length - 1 ? '<li class="ch-flow__arrow" aria-hidden="true">→</li>' : ''}`).join('');
@@ -205,30 +271,6 @@ function whyItMatters(ch) {
       <h2 class="ch-card__head"><span class="ch-card__icon" aria-hidden="true">🌎</span> Why It Matters</h2>
       <p class="ch-card__text">${esc(w.body)}</p>
       ${steps ? `<ol class="ch-flow">${steps}</ol>` : ''}
-    </section>`;
-}
-
-function quickCheck(ch) {
-  const q = ch.quickCheck;
-  if (!q) return '';
-
-  const options = q.options.map((o, i) => `
-    <li>
-      <label class="ch-opt">
-        <input type="radio" name="ch-quick" value="${i}">
-        <span class="ch-opt__marker" aria-hidden="true"></span>
-        <span class="ch-opt__label">${esc(o)}</span>
-      </label>
-    </li>`).join('');
-
-  return `
-    <section class="ch-card ch-card--check" data-quickcheck data-answer="${q.answer}">
-      <h2 class="ch-card__head"><span class="ch-card__icon" aria-hidden="true">✅</span> Quick Check</h2>
-      <p class="ch-check__q">${esc(q.question)}</p>
-      <ol class="ch-opts">${options}</ol>
-      <button class="btn btn--primary" type="button" data-check>Check answer</button>
-      <p class="ch-check__result" data-result hidden></p>
-      ${q.why ? `<p class="ch-check__why" data-why hidden>${esc(q.why)}</p>` : ''}
     </section>`;
 }
 
@@ -249,7 +291,7 @@ function whatsNext(ch) {
           </span>
         </a>
         <a class="btn btn--ghost" href="#/study/${next.id}">Continue the story →</a>`
-      : `<a class="btn btn--ghost" href="#/study/practice">Practice what you read →</a>`}
+      : '<a class="btn btn--ghost" href="#/study/practice">Practice what you read →</a>'}
     </section>`;
 }
 
@@ -282,30 +324,128 @@ function wireGallery(root) {
   });
 }
 
-function wireQuickCheck(root) {
-  const card = root.querySelector('[data-quickcheck]');
-  if (!card) return;
+function wireFacts(root) {
+  const box = root.querySelector('[data-facts]');
+  if (!box) return;
+  const panels = [...box.querySelectorAll('[data-fact]')];
+  const label = box.querySelector('[data-fact-label]');
+  if (panels.length < 2) return;
+  let i = 0;
 
-  const answer = Number(card.dataset.answer);
-  const result = card.querySelector('[data-result]');
-  const why = card.querySelector('[data-why]');
+  box.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-fact-step]');
+    if (!btn) return;
+    i = (i + Number(btn.dataset.factStep) + panels.length) % panels.length;
+    panels.forEach((p, n) => { p.hidden = n !== i; });
+    if (label) label.textContent = String(i + 1);
+  });
+}
 
-  card.querySelector('[data-check]').addEventListener('click', () => {
-    const picked = card.querySelector('input[name="ch-quick"]:checked');
+const SCORE_KEY = 'ethanQuizScoresV1';
+
+function readScores() {
+  try { return JSON.parse(localStorage.getItem(SCORE_KEY)) || {}; }
+  catch (e) { return {}; }
+}
+
+function saveScore(chapter, score, total) {
+  // Best-effort only: private windows and blocked storage must not break the quiz.
+  try {
+    const all = readScores();
+    const prev = all[chapter] || { best: 0, attempts: 0 };
+    all[chapter] = {
+      best: Math.max(prev.best || 0, score),
+      last: score,
+      total,
+      attempts: (prev.attempts || 0) + 1,
+    };
+    localStorage.setItem(SCORE_KEY, JSON.stringify(all));
+    return all[chapter];
+  } catch (e) {
+    return { best: score, last: score, total, attempts: 1 };
+  }
+}
+
+function wireQuiz(root) {
+  const box = root.querySelector('[data-quiz]');
+  if (!box) return;
+
+  const total = Number(box.dataset.total);
+  const chapter = box.dataset.chapter;
+  const cards = [...box.querySelectorAll('.ch-q')];
+  const dots = [...box.querySelectorAll('[data-dot]')];
+  const progress = box.querySelector('[data-progress]');
+  const prevBtn = box.querySelector('[data-prev]');
+  const nextBtn = box.querySelector('[data-next]');
+  const result = box.querySelector('[data-result]');
+  const scoreEl = box.querySelector('[data-score]');
+  const bestEl = box.querySelector('[data-best]');
+  const answers = new Array(total).fill(null);
+
+  // Each question carries its correct index on the element, stamped at render.
+  const CORRECT = cards.map((c) => Number(c.dataset.answer));
+
+  let i = 0;
+  let checked = false;
+
+  function render() {
+    cards.forEach((c, n) => { c.hidden = n !== i; });
+    dots.forEach((d, n) => d.classList.toggle('is-current', n === i));
+    progress.textContent = String(i + 1);
+    prevBtn.disabled = i === 0;
+    checked = answers[i] !== null;
+    nextBtn.textContent = checked ? (i === total - 1 ? 'See score' : 'Next →') : 'Check';
+  }
+
+  function grade() {
+    const card = cards[i];
+    const picked = card.querySelector('input:checked');
     if (!picked) {
-      result.hidden = false;
-      result.className = 'ch-check__result ch-check__result--none';
-      result.textContent = 'Choose an answer first.';
+      card.classList.add('is-nudge');
+      setTimeout(() => card.classList.remove('is-nudge'), 400);
       return;
     }
-    const right = Number(picked.value) === answer;
+    answers[i] = Number(picked.value);
+    card.querySelectorAll('.ch-opt').forEach((o) => o.classList.add('is-locked'));
+    const label = picked.closest('.ch-opt');
+    const right = Number(picked.value) === CORRECT[i];
+    label.classList.add(right ? 'ch-opt--right' : 'ch-opt--wrong');
+    if (!right) {
+      const good = card.querySelectorAll('.ch-opt')[CORRECT[i]];
+      if (good) good.classList.add('ch-opt--right');
+    }
+    const why = card.querySelector('[data-why]');
+    if (why && why.textContent.trim()) why.hidden = false;
+    dots[i].classList.add(right ? 'is-right' : 'is-wrong');
+    checked = true;
+    nextBtn.textContent = i === total - 1 ? 'See score' : 'Next →';
+  }
+
+  function finish() {
+    const score = answers.reduce((n, a, k) => n + (a === CORRECT[k] ? 1 : 0), 0);
+    scoreEl.textContent = String(score);
+    const rec = saveScore(chapter, score, total);
+    bestEl.textContent = rec.attempts > 1
+      ? `Best so far ${rec.best} of ${total} · ${rec.attempts} attempts`
+      : 'Saved on this device.';
+    box.querySelector('[data-form]').hidden = true;
+    box.querySelector('.ch-quiz__foot').hidden = true;
+    box.querySelector('.ch-quiz__dots').hidden = true;
     result.hidden = false;
-    result.className = `ch-check__result ${right ? 'ch-check__result--right' : 'ch-check__result--wrong'}`;
-    result.textContent = right ? 'Correct.' : 'Not quite — try again.';
-    picked.closest('.ch-opt').classList.toggle('ch-opt--right', right);
-    picked.closest('.ch-opt').classList.toggle('ch-opt--wrong', !right);
-    if (why && right) why.hidden = false;
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (!checked) { grade(); return; }
+    if (i === total - 1) { finish(); return; }
+    i += 1;
+    render();
   });
+  prevBtn.addEventListener('click', () => { if (i > 0) { i -= 1; render(); } });
+  box.querySelector('[data-again]').addEventListener('click', () => {
+    window.location.reload();
+  });
+
+  render();
 }
 
 /* --- Module --------------------------------------------------------------- */
@@ -321,7 +461,6 @@ export default {
     const ch = getChapter(params.chapter);
     const page = el('div', 'page page--chapter');
 
-    // Unknown chapter id: send the reader to the index rather than a blank page.
     if (!ch) {
       page.append(html(`
         <div class="ch-missing shell">
@@ -335,24 +474,29 @@ export default {
     const next = nextChapter(ch.id);
     const pos = chapterPosition(ch.id);
 
-    page.append(html(hero(ch)));
-    page.append(renderTimeline(ch.id));
-
-    page.append(html(`
-      <div class="ch-body shell">
-        <div class="ch-main">
+    /* The first screen: hero, timeline, then slideshow beside the quiz. */
+    const top = el('div', 'ch-top');
+    top.append(html(hero(ch)));
+    top.append(renderTimeline(ch.id));
+    top.append(html(`
+      <div class="ch-focus shell">
+        <div class="ch-focus__main">
           ${ch.bigPicture ? `
-            <section class="ch-big">
-              <p class="eyebrow">The big picture</p>
-              <h2 class="ch-big__head">${esc(ch.bigPicture.heading)}</h2>
-              <p class="ch-big__body">${ch.bigPicture.body}</p>
-            </section>` : ''}
+            <div class="ch-lede">
+              <h2 class="ch-lede__head">${esc(ch.bigPicture.heading)}</h2>
+              <p class="ch-lede__body">${ch.bigPicture.body}</p>
+            </div>` : ''}
           ${gallery(ch)}
         </div>
-        <aside class="ch-rail">
-          ${takeaways(ch)}
-          ${factCard(ch)}
-        </aside>
+        ${quiz(ch)}
+      </div>`));
+    page.append(top);
+
+    /* Everything below the first screen. */
+    page.append(html(`
+      <div class="ch-more shell">
+        ${takeaways(ch)}
+        ${factCard(ch)}
       </div>`));
 
     if (ch.closerLook) page.append(html(`<div class="shell">${closerLook(ch)}</div>`));
@@ -360,13 +504,14 @@ export default {
     page.append(html(`
       <div class="ch-cards shell">
         ${whyItMatters(ch)}
-        ${quickCheck(ch)}
         ${whatsNext(ch)}
       </div>`));
 
     page.append(html(`
       <nav class="ch-pager shell" aria-label="Chapter navigation">
-        <a class="ch-pager__back" href="#/study">← Back to the story</a>
+        <a class="ch-pager__back" href="${prev ? `#/study/${prev.id}` : '#/study'}">
+          ← ${prev ? esc(prev.short) : 'Back to the story'}
+        </a>
         <ol class="ch-pager__dots">
           ${CHAPTERS.map((c, i) => `
             <li><a class="ch-pager__dot" href="#/study/${c.id}"
@@ -375,17 +520,18 @@ export default {
         </ol>
         ${next
           ? `<a class="ch-pager__next" href="#/study/${next.id}">Next: ${esc(next.short)} →</a>`
-          : `<a class="ch-pager__next" href="#/course">Next: Course Map →</a>`}
+          : '<a class="ch-pager__next" href="#/course">Next: Course Map →</a>'}
       </nav>`));
 
-    // Hidden but useful: keep prev reachable from the keyboard order.
-    if (prev) {
-      page.querySelector('.ch-pager__back').setAttribute('href', `#/study/${prev.id}`);
-      page.querySelector('.ch-pager__back').textContent = `← ${prev.short}`;
-    }
+    // Stamp each question with its answer so the grader reads it from the DOM.
+    (ch.quiz || []).forEach((q, n) => {
+      const card = page.querySelector(`.ch-q[data-q="${n}"]`);
+      if (card) card.dataset.answer = String(q.answer);
+    });
 
     wireGallery(page);
-    wireQuickCheck(page);
+    wireFacts(page);
+    wireQuiz(page);
     return page;
   },
 };

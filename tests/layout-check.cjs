@@ -112,6 +112,19 @@ const PROBE = `(async () => {
   // Bands that must not clip their own content. The course map panel is
   // excluded: it is meant to scroll internally.
   const clipped = [];
+  // A chapter page's first screen must fit: the slideshow thumbnails have to
+  // be visible on landing without scrolling.
+  const top = document.querySelector('.page--chapter .ch-top');
+  if (top && getComputedStyle(top).overflow === 'hidden') {
+    const thumbs = top.querySelector('.ch-gallery__thumbs');
+    if (thumbs && thumbs.getBoundingClientRect().bottom > window.innerHeight + 1) {
+      clipped.push('thumbnails below the fold by ' +
+        Math.round(thumbs.getBoundingClientRect().bottom - window.innerHeight) + 'px');
+    }
+    if (top.scrollHeight > top.clientHeight + 2) {
+      clipped.push('ch-top overflows by ' + (top.scrollHeight - top.clientHeight) + 'px');
+    }
+  }
   document.querySelectorAll('.page--home section, .page--home nav, .page--course-map .cm-head, .page--course-map .cm-rail').forEach(b => {
     if (b.scrollHeight > b.clientHeight + 2) clipped.push(b.className.split(/\s+/)[0] + ' by ' + (b.scrollHeight - b.clientHeight) + 'px');
   });
@@ -192,6 +205,9 @@ const PROBE = `(async () => {
         // fallback breakpoints.
         const oneScreen = route === '#/'
           || route === '#/course' || route.startsWith('#/course/');
+        if (w >= 1001 && h >= 700 && m.clipped.length && route.startsWith('#/study/')) {
+          problems.push(`FIRST SCREEN ${m.clipped.join(', ')}`);
+        }
         if (oneScreen && w >= 1001 && h >= 700) {
           if (m.vOver > 1) problems.push(`PAGE SCROLLS ${m.vOver}px`);
           if (m.clipped.length) problems.push(`CLIPPED ${m.clipped.join(', ')}`);

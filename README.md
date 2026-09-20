@@ -56,6 +56,7 @@ assets/             images
 docs/CONTENT-GUIDE.md  field-by-field brief for filling in chapter content
 tests/smoke.cjs        structural invariants (source)
 tests/layout-check.cjs rendered checks in a real browser
+tests/quiz-check.cjs   drives the chapter quizzes and checks scoring
 math-quest/         a separate, self-contained sub-app
 ```
 
@@ -103,6 +104,7 @@ An unknown hash falls back to home rather than rendering a blank page.
 ```
 node tests/smoke.cjs          # source checks, no browser needed
 node tests/layout-check.cjs   # rendered checks; needs Chrome + the server running
+node tests/quiz-check.cjs     # drives each chapter quiz and checks the scoring
 ```
 
 `smoke.cjs` checks that every file is present, every route resolves, every nav and in-page
@@ -111,8 +113,12 @@ image file, no two image files are byte-identical, and the five rules above all 
 
 `layout-check.cjs` drives a real Chrome over the DevTools protocol and checks the rendered
 result at six viewport sizes: that every route actually paints content, that no element
-overflows horizontally, that no image is broken, and that the home page fits one screen
-with nothing clipped. Start the server first.
+overflows horizontally, that no image is broken, that no text renders below 12px, that the
+home page and course map fit one screen, and that a chapter page's slideshow thumbnails are
+visible on landing. Start the server first.
+
+`quiz-check.cjs` answers every question on all five chapters correctly and then incorrectly,
+and checks the page reports 5/5 and 0/5.
 
 ## Writing chapter content
 

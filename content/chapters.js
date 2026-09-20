@@ -109,18 +109,63 @@ const DATA = [
         'AP Government begins with a question that started before independence: when is political power legitimate? The colonial experience made representation and consent central to the American argument about government.',
       steps: ['Local self-rule', 'British control', 'Resistance', 'Revolution'],
     },
-    quickCheck: {
-      question: 'What was the colonists’ main constitutional objection to the Stamp Act?',
+    quiz: [
+    {
+      question: 'Before 1776, how were the thirteen colonies organised?',
       options: [
-        'The tax was more expensive than taxes paid in Britain',
-        'Parliament taxed them without representatives they had elected',
-        'The tax applied only to New England colonies',
-        'The king created the tax without Parliament',
+        'As one united American country',
+        'As thirteen separate British colonies',
+        'As independent republics allied by treaty',
+        'As provinces governed directly from Parliament with no local bodies',
       ],
       answer: 1,
-      why:
-        'The main objection was about political consent: colonists argued that a legislature in which they had no elected representatives should not tax them.',
+      why: 'They were separate colonies under the Crown. Thinking of them as one country before independence is the most common early mistake.',
     },
+    {
+      question: 'What did colonial assemblies give many colonists practice in?',
+      options: [
+        'Electing a national president',
+        'Handling local laws and taxes themselves',
+        'Negotiating foreign treaties',
+        'Appointing royal governors',
+      ],
+      answer: 1,
+      why: 'Elected assemblies handled local law and taxation for generations, which is why later interference felt like something being taken away.',
+    },
+    {
+      question: 'What changed British policy towards the colonies after the Seven Years\' War?',
+      options: [
+        'Britain lost interest in North America',
+        'Britain needed revenue and tightened imperial control',
+        'Britain granted the colonies seats in Parliament',
+        'Britain handed the colonies to France',
+      ],
+      answer: 1,
+      why: 'War debt pushed Parliament to raise money from the colonies and govern them more closely.',
+    },
+    {
+      question: 'What was the colonists\' core constitutional objection to the new taxes?',
+      options: [
+        'The rates were higher than in Britain',
+        'Taxation required representation they did not have',
+        'Only colonial governors should levy taxes',
+        'Taxes should be paid in goods rather than coin',
+      ],
+      answer: 1,
+      why: 'The argument was about consent and who had the right to decide, not about the amount of money.',
+    },
+    {
+      question: 'By 1775, what had the dispute become?',
+      options: [
+        'A settled compromise with Parliament',
+        'Armed conflict at Lexington and Concord',
+        'A peaceful separation agreed by treaty',
+        'A trade agreement between equals',
+      ],
+      answer: 1,
+      why: 'Political protest had turned into fighting, which set up the argument the Declaration would make in 1776.',
+    },
+    ],
     whatsNext: {
       body:
         'By 1776 the argument was no longer just about taxes. The colonies now had to explain why they had the right to leave Britain altogether.',
@@ -189,18 +234,63 @@ const DATA = [
         'The Declaration gave later generations a language for challenging unequal treatment. Abolitionists, women’s-rights advocates, and civil-rights leaders all returned to its promises of equality and natural rights.',
       steps: ['Natural rights', 'Consent', 'Independence', 'A lasting ideal'],
     },
-    quickCheck: {
-      question: 'What was the main purpose of the Declaration of Independence?',
+    quiz: [
+    {
+      question: 'What was the Declaration\'s main purpose?',
       options: [
-        'To create the structure of the new national government',
-        'To explain and justify the colonies’ separation from Britain',
-        'To create the Bill of Rights',
-        'To divide power among three branches',
+        'To create a plan for the new government',
+        'To explain why the colonies were separating from Britain',
+        'To establish the Bill of Rights',
+        'To end slavery',
       ],
       answer: 1,
-      why:
-        'The Declaration explains and justifies separation. The actual structure of government came later with the Articles and then the Constitution.',
+      why: 'It justifies separation. The plan of government comes later, with the Articles and then the Constitution.',
     },
+    {
+      question: 'Which idea does the Declaration use to explain where government authority comes from?',
+      options: [
+        'The divine right of kings',
+        'The consent of the governed',
+        'The authority of Parliament',
+        'The decision of the courts',
+      ],
+      answer: 1,
+      why: 'Government is legitimate only when it derives its powers from the people it governs.',
+    },
+    {
+      question: 'What are natural rights, as the Declaration uses the term?',
+      options: [
+        'Rights granted to citizens by Parliament',
+        'Rights that exist before government and that government must protect',
+        'Rights that apply only during wartime',
+        'Rights written into colonial charters',
+      ],
+      answer: 1,
+      why: 'The Declaration treats rights as prior to government, which is what makes altering or abolishing a government defensible.',
+    },
+    {
+      question: 'Why does the Declaration list grievances against the king?',
+      options: [
+        'To request better trade terms',
+        'To show that the break was justified, not impulsive',
+        'To propose amendments to British law',
+        'To divide territory between the colonies',
+      ],
+      answer: 1,
+      why: 'The list is the evidence for the argument: it shows a pattern of abuse rather than a single dispute.',
+    },
+    {
+      question: 'What did the Declaration NOT do?',
+      options: [
+        'Declare the colonies free and independent states',
+        'State principles of equality and rights',
+        'Set out how the new nation would govern itself',
+        'List complaints against the king',
+      ],
+      answer: 2,
+      why: 'It is a statement of principles and a declaration of separation. The structure of government came afterwards.',
+    },
+    ],
     whatsNext: {
       body:
         'The colonies had answered “Why are we leaving Britain?” Now they faced a harder practical question: how should thirteen independent states govern together?',
@@ -269,18 +359,63 @@ const DATA = [
         'Many powers in the Constitution make more sense when you see the problem they were designed to fix. The Articles are the “before” picture for understanding the stronger federal system created in 1787.',
       steps: ['Limited union', 'Shared problems', 'Pressure for reform', 'Convention'],
     },
-    quickCheck: {
-      question: 'Which power did Congress lack under the Articles of Confederation?',
+    quiz: [
+    {
+      question: 'Which power did the national government lack under the Articles?',
       options: [
         'The power to declare war',
         'The power to make treaties',
-        'The power to impose direct federal taxes',
-        'The power to manage western territories',
+        'The power to tax directly',
+        'The power to run a postal service',
       ],
       answer: 2,
-      why:
-        'Congress could ask states for money, but it could not levy direct federal taxes. That made reliable national revenue difficult.',
+      why: 'Congress could request money from the states but never compel it, which left it dependent and often unpaid.',
     },
+    {
+      question: 'How was power divided under the Articles?',
+      options: [
+        'The national government held most power',
+        'The states held most power',
+        'Power was split evenly by written formula',
+        'A monarch held final authority',
+      ],
+      answer: 1,
+      why: 'The Articles created a league of sovereign states, not a national government above them.',
+    },
+    {
+      question: 'Why could Congress not settle trade disputes between states?',
+      options: [
+        'It had no power to regulate commerce',
+        'It met only once every five years',
+        'The states had no separate economies',
+        'Trade was controlled by Britain',
+      ],
+      answer: 0,
+      why: 'Each state set its own commercial rules, and Congress had no authority to override them.',
+    },
+    {
+      question: 'What did Shays\' Rebellion reveal?',
+      options: [
+        'That the states were too powerful militarily',
+        'That the national government could not keep order',
+        'That taxes were too low',
+        'That the Articles needed no changes',
+      ],
+      answer: 1,
+      why: 'Armed unrest in Massachusetts showed how little the national government could actually do.',
+    },
+    {
+      question: 'What made the Articles almost impossible to reform?',
+      options: [
+        'Amendments required all thirteen states to agree',
+        'Only the president could propose amendments',
+        'Amendments needed approval from Britain',
+        'There was no written amendment process',
+      ],
+      answer: 0,
+      why: 'Unanimity meant any single state could block change, which is why delegates eventually replaced the framework instead.',
+    },
+    ],
     whatsNext: {
       body:
         'By 1787 many leaders thought the problem was not one bad law but the design itself. Delegates gathered in Philadelphia to rethink the system.',
@@ -349,18 +484,63 @@ const DATA = [
         'The rest of AP Government is largely the story of this architecture in action: Congress, the presidency, courts, federalism, elections, rights, and conflicts over who can do what.',
       steps: ['Competing plans', 'Compromise', 'New architecture', 'Ratification'],
     },
-    quickCheck: {
+    quiz: [
+    {
       question: 'What did the Great Compromise resolve?',
       options: [
         'Whether to keep the Articles of Confederation',
         'How states would be represented in Congress',
         'Whether the president could veto legislation',
-        'How the Bill of Rights would be written',
+        'How federal judges would be appointed',
       ],
       answer: 1,
-      why:
-        'It combined representation by population in the House with equal representation for each state in the Senate.',
+      why: 'It combined representation by population in the House with equal representation by state in the Senate.',
     },
+    {
+      question: 'What did delegates actually do at the Convention?',
+      options: [
+        'Amended the Articles as instructed',
+        'Wrote an entirely new framework of government',
+        'Dissolved the union',
+        'Drafted the Bill of Rights',
+      ],
+      answer: 1,
+      why: 'They were sent to revise the Articles and instead replaced them.',
+    },
+    {
+      question: 'What does separation of powers mean?',
+      options: [
+        'Different branches are given different powers',
+        'Each branch can block the others',
+        'States and the nation share authority',
+        'The people elect every official directly',
+      ],
+      answer: 0,
+      why: 'Separation assigns different jobs to different branches. Checks and balances is the separate idea that each can restrain the others.',
+    },
+    {
+      question: 'What does checks and balances add to separation of powers?',
+      options: [
+        'It gives each branch tools to restrain the others',
+        'It divides power between states and the nation',
+        'It makes Congress supreme over the other branches',
+        'It removes the need for elections',
+      ],
+      answer: 0,
+      why: 'Separation divides the work; checks and balances lets each branch push back on the others.',
+    },
+    {
+      question: 'What was the Three-Fifths Compromise about?',
+      options: [
+        'How to count enslaved people for representation and taxation',
+        'How many states were needed to ratify',
+        'How to elect the president',
+        'How to divide western territory',
+      ],
+      answer: 0,
+      why: 'It counted enslaved people as three-fifths of a person for both representation and taxation — a concession to slaveholding states.',
+    },
+    ],
     whatsNext: {
       body:
         'Writing the Constitution did not make it law. The new system still had to win approval from the states — and critics demanded stronger protection for liberty.',
@@ -429,18 +609,63 @@ const DATA = [
         'Almost every later AP Government topic comes back to this framework: who has power, who can stop whom, what rights government must respect, and how citizens use the system.',
       steps: ['Ratification', 'New government', 'Bill of Rights', 'Government today'],
     },
-    quickCheck: {
+    quiz: [
+    {
       question: 'Why was the Bill of Rights added to the Constitution?',
       options: [
         'To give Congress more power over the states',
-        'To answer demands for explicit protections of individual rights and limits on government',
+        'To answer demands for explicit protections of individual rights',
         'To replace checks and balances with a list of freedoms',
         'To decide representation between large and small states',
       ],
       answer: 1,
-      why:
-        'Anti-Federalist criticism and state ratifying conventions pushed supporters of the Constitution to add explicit protections for individual liberty.',
+      why: 'Several states ratified only on the understanding that written protections for individual liberty would follow.',
     },
+    {
+      question: 'How many states had to ratify before the Constitution took effect?',
+      options: [
+        'Seven',
+        'Nine',
+        'Eleven',
+        'All thirteen',
+      ],
+      answer: 1,
+      why: 'Nine of thirteen. New Hampshire became the ninth in 1788, and the new government began operating in 1789.',
+    },
+    {
+      question: 'What separated Federalists from Anti-Federalists?',
+      options: [
+        'Whether to declare independence',
+        'Whether the Constitution gave the national government too much power',
+        'Whether to keep a king',
+        'Whether to expand westward',
+      ],
+      answer: 1,
+      why: 'Federalists defended the stronger national system; Anti-Federalists feared it without written limits on power.',
+    },
+    {
+      question: 'How many amendments did Congress propose in 1789, and how many were ratified in 1791?',
+      options: [
+        'Ten proposed, ten ratified',
+        'Twelve proposed, ten ratified',
+        'Twelve proposed, twelve ratified',
+        'Fifteen proposed, ten ratified',
+      ],
+      answer: 1,
+      why: 'Twelve were proposed and ten ratified. One of the leftovers finally became the Twenty-Seventh Amendment in 1992.',
+    },
+    {
+      question: 'What does the Tenth Amendment do?',
+      options: [
+        'Guarantees freedom of speech',
+        'Reserves remaining powers to the states and the people',
+        'Sets the number of Supreme Court justices',
+        'Requires a warrant for searches',
+      ],
+      answer: 1,
+      why: 'It is the backstop of federalism: powers not given to the national government stay with the states and the people.',
+    },
+    ],
     whatsNext: {
       body:
         'That completes the founding story. From here, the course moves from designing the system to seeing how its branches, rights, beliefs, elections, and participation work in practice.',

@@ -47,7 +47,7 @@
   overflow: hidden;
   display: grid;
   align-items: center;
-  min-height: clamp(300px, 42vh, 430px);
+  min-height: clamp(210px, 26vh, 300px);
   color: var(--c-on-dark);
 }
 .page--chapter .ch-hero__bg {
@@ -64,10 +64,11 @@
   inset: 0;
   z-index: -1;
   background: linear-gradient(90deg,
-    rgba(8, 20, 16, 0.94) 0%,
-    rgba(8, 20, 16, 0.76) 36%,
-    rgba(8, 20, 16, 0.30) 68%,
-    rgba(8, 20, 16, 0.46) 100%);
+    rgba(6, 16, 13, 0.97) 0%,
+    rgba(6, 16, 13, 0.90) 34%,
+    rgba(6, 16, 13, 0.62) 58%,
+    rgba(6, 16, 13, 0.40) 78%,
+    rgba(6, 16, 13, 0.58) 100%);
 }
 .page--chapter .ch-hero__inner {
   display: grid;
@@ -75,7 +76,7 @@
   gap: var(--s-6);
   align-items: stretch;
   width: 100%;
-  padding-block: clamp(var(--s-5), 4vh, var(--s-7));
+  padding-block: clamp(var(--s-4), 2.4vh, var(--s-5));
 }
 .page--chapter .ch-hero__sep { margin-inline: var(--s-3); opacity: 0.6; }
 
@@ -90,7 +91,7 @@
 /* padding, not margin: `margin-bottom: auto` would swallow a margin, leaving
    the kicker touching the year whenever the hero has no spare height. */
 .page--chapter .ch-hero__copy > .eyebrow {
-  padding-bottom: var(--s-6);
+  padding-bottom: var(--s-4);
   margin-bottom: auto;
 }
 
@@ -100,7 +101,7 @@
 .page--chapter .ch-hero__year {
   margin-top: 0;
   font-family: var(--font-display);
-  font-size: clamp(19px, 1.7vw, 26px);
+  font-size: clamp(17px, min(1.5vw, 2.6vh), 23px);
   font-weight: 400;
   letter-spacing: 0.03em;
   color: var(--c-gold);
@@ -109,14 +110,14 @@
 
 .page--chapter .ch-hero__title {
   margin-top: 2px;
-  font-size: clamp(28px, 3vw, 46px);
+  font-size: clamp(25px, min(2.7vw, 4.6vh), 40px);
   line-height: var(--lh-tight);
   text-shadow: 0 3px 24px rgba(0, 0, 0, 0.45);
 }
 .page--chapter .ch-hero__deck {
   margin-top: var(--s-3);
   font-family: var(--font-display);
-  font-size: clamp(16px, 1.4vw, 21px);
+  font-size: clamp(14px, min(1.2vw, 2vh), 18px);
   color: var(--c-on-dark);
 }
 .page--chapter .ch-hero__intro {
@@ -233,10 +234,13 @@
   font-size: 22px;
   line-height: 1;
   box-shadow: var(--shadow-md);
+  z-index: 2;
 }
 .page--chapter .ch-gallery__arrow:hover { background: #fff; }
-.page--chapter .ch-gallery__arrow--prev { left: var(--s-4); }
-.page--chapter .ch-gallery__arrow--next { right: var(--s-4); }
+/* Sit above the caption's top edge so a short stage does not put the arrow
+   on top of the slide's point. */
+.page--chapter .ch-gallery__arrow--prev { left: var(--s-4); top: 38%; }
+.page--chapter .ch-gallery__arrow--next { right: var(--s-4); top: 38%; }
 
 .page--chapter .ch-gallery__count {
   position: absolute;
@@ -317,9 +321,9 @@
   grid-template-columns: 26px minmax(0, 1fr);
   gap: var(--s-3);
   align-items: start;
-  font-size: var(--t-small);
-  line-height: 1.5;
-  color: var(--c-ink-soft);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--c-ink);
 }
 .page--chapter .ch-take__n {
   display: grid;
@@ -336,9 +340,9 @@
 
 .page--chapter .ch-fact { margin-top: var(--s-3); }
 .page--chapter .ch-fact__text {
-  font-size: var(--t-small);
+  font-size: 15px;
   line-height: 1.6;
-  color: var(--c-ink-soft);
+  color: var(--c-ink);
 }
 .page--chapter .ch-fact__who {
   display: flex;
@@ -588,4 +592,273 @@
   .page--chapter .ch-gallery__thumbs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .page--chapter .ch-pager { flex-wrap: wrap; }
   .page--chapter .ch-pager__dots { order: 3; width: 100%; justify-content: center; }
+}
+
+/* ===========================================================================
+   FIRST SCREEN
+   The hero, timeline, slideshow and quiz together fill one viewport, so the
+   thumbnails are visible on landing without scrolling. Everything else sits
+   below and scrolls normally. Below 700px tall or 1000px wide this relaxes
+   into ordinary flow, because compressing it further hurts more than the
+   scrolling it avoids.
+   =========================================================================== */
+
+.page--chapter .ch-top {
+  height: calc(100dvh - var(--header-h) - var(--footer-h));
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.page--chapter .ch-focus {
+  display: grid;
+  grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
+  gap: var(--s-5);
+  align-items: stretch;
+  min-height: 0;
+  padding-block: clamp(var(--s-3), 2vh, var(--s-5));
+}
+
+.page--chapter .ch-focus__main {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.4vh, 14px);
+  min-height: 0;
+}
+
+/* The small paragraph. The rest of the explanation rides on the slides. */
+.page--chapter .ch-lede__head {
+  font-size: clamp(19px, min(1.6vw, 2.9vh), 27px);
+  line-height: 1.15;
+}
+.page--chapter .ch-lede__body {
+  max-width: 96ch;
+  margin-top: 4px;
+  font-size: clamp(12px, min(0.92vw, 1.6vh), 14px);
+  line-height: 1.5;
+  color: var(--c-ink-soft);
+}
+.page--chapter .ch-lede__body strong { color: var(--c-ink); font-weight: 700; }
+
+/* ===== Slideshow inside the first screen ================================== */
+
+.page--chapter .ch-top .ch-gallery {
+  margin-top: 0;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1vh, 12px);
+}
+
+/* The stage takes whatever height is left rather than a fixed ratio, so the
+   thumbnail strip below it is always on screen. */
+.page--chapter .ch-top .ch-gallery__stage {
+  flex: 1;
+  min-height: 210px;
+  aspect-ratio: auto;
+  max-height: none;
+}
+
+.page--chapter .ch-slide__label {
+  font-size: clamp(15px, min(1.25vw, 2.2vh), 19px);
+}
+.page--chapter .ch-slide__point {
+  display: block;
+  max-width: 78ch;
+  margin-top: 3px;
+  font-size: clamp(12px, min(0.95vw, 1.7vh), 15px);
+  line-height: 1.45;
+  color: #fff;
+}
+/* A deeper gradient than the old caption bar: the point has to be readable
+   over whatever the painting happens to be doing at the bottom edge. */
+.page--chapter .ch-slide__cap {
+  padding: clamp(28px, 6vh, 64px) var(--s-5) clamp(10px, 1.8vh, 18px);
+  background: linear-gradient(transparent, rgba(5, 14, 11, 0.55) 35%, rgba(5, 14, 11, 0.94));
+}
+
+.page--chapter .ch-top .ch-gallery__thumbs { margin-top: 0; }
+.page--chapter .ch-top .ch-thumb__img,
+.page--chapter .ch-top .ch-thumb .ch-ph {
+  max-height: clamp(38px, 6.4vh, 68px);
+}
+
+/* ===== Quiz =============================================================== */
+
+.page--chapter .ch-quiz {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: clamp(var(--s-4), 2.2vh, var(--s-5));
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.page--chapter .ch-quiz__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+.page--chapter .ch-quiz__title { font-size: clamp(18px, min(1.5vw, 2.6vh), 24px); }
+.page--chapter .ch-quiz__meta {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c-brick);
+}
+
+.page--chapter .ch-quiz__dots {
+  display: flex;
+  gap: 5px;
+  margin-top: var(--s-3);
+  list-style: none;
+}
+.page--chapter .ch-quiz__dot {
+  flex: 1;
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: var(--c-line);
+}
+.page--chapter .ch-quiz__dot.is-current { background: var(--c-ink-faint); }
+.page--chapter .ch-quiz__dot.is-right { background: var(--c-forest); }
+.page--chapter .ch-quiz__dot.is-wrong { background: var(--c-brick); }
+
+.page--chapter .ch-quiz__form {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin-top: var(--s-4);
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-line) transparent;
+}
+.page--chapter .ch-quiz__form::-webkit-scrollbar { width: 7px; }
+.page--chapter .ch-quiz__form::-webkit-scrollbar-thumb {
+  background: var(--c-line);
+  border-radius: var(--r-pill);
+}
+
+.page--chapter .ch-q {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  transition: transform 120ms var(--ease);
+}
+.page--chapter .ch-q.is-nudge { transform: translateX(-4px); }
+
+.page--chapter .ch-q__text {
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: clamp(15px, min(1.2vw, 2.1vh), 19px);
+  line-height: 1.35;
+  color: var(--c-ink);
+}
+
+.page--chapter .ch-q__opts {
+  display: grid;
+  gap: 6px;
+  margin-top: var(--s-3);
+  list-style: none;
+}
+
+.page--chapter .ch-q__why {
+  margin-top: var(--s-3);
+  padding: var(--s-3);
+  background: var(--c-sage);
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--c-ink);
+}
+
+.page--chapter .ch-quiz__foot {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+}
+.page--chapter .ch-quiz__foot .btn { flex: 1; justify-content: center; }
+.page--chapter .ch-quiz__foot .btn:disabled { opacity: 0.4; cursor: default; }
+
+/* `display: grid` outranks the [hidden] attribute, so hiding has to be
+   restated at higher specificity or the score shows before the quiz starts. */
+.page--chapter .ch-quiz__result[hidden] { display: none; }
+
+.page--chapter .ch-quiz__result {
+  display: grid;
+  gap: var(--s-3);
+  justify-items: center;
+  margin-top: auto;
+  padding-top: var(--s-5);
+  text-align: center;
+}
+.page--chapter .ch-quiz__score {
+  font-family: var(--font-display);
+  font-size: clamp(22px, min(2vw, 3.4vh), 32px);
+  color: var(--c-forest);
+}
+.page--chapter .ch-quiz__score strong { font-size: 1.5em; color: var(--c-brick); }
+.page--chapter .ch-quiz__best { font-size: 13px; color: var(--c-ink-soft); }
+
+/* Locked state after an answer is checked. */
+.page--chapter .ch-opt.is-locked { cursor: default; }
+.page--chapter .ch-opt.is-locked:hover { border-color: var(--c-line); }
+
+/* ===== Below the first screen ============================================= */
+
+.page--chapter .ch-more {
+  display: grid;
+  grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
+  gap: var(--s-5);
+  align-items: start;
+  padding-block: var(--s-6);
+}
+
+/* ===== Fact pager ========================================================= */
+
+.page--chapter .ch-fact__pager {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--c-line);
+}
+.page--chapter .ch-fact__arrow {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--c-line);
+  border-radius: 50%;
+  background: var(--c-parchment);
+  color: var(--c-forest);
+  font-size: 17px;
+  line-height: 1;
+}
+.page--chapter .ch-fact__arrow:hover { border-color: var(--c-forest); }
+.page--chapter .ch-fact__count {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c-ink-soft);
+}
+
+/* ===== Relax when one screen is not enough ================================ */
+
+@media (max-height: 880px), (max-width: 1000px) {
+  .page--chapter .ch-top { height: auto; display: block; overflow: visible; }
+  .page--chapter .ch-top .ch-gallery__stage {
+    aspect-ratio: 5 / 2;
+    max-height: 440px;
+    flex: none;
+  }
+  .page--chapter .ch-quiz__form { overflow: visible; }
+}
+
+@media (max-width: 1000px) {
+  .page--chapter .ch-focus,
+  .page--chapter .ch-more { grid-template-columns: 1fr; }
 }
