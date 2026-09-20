@@ -418,3 +418,97 @@ body:has(#map.active) footer{display:none!important}
   .course-map-page .cm-hero h1{font-size:42px!important}
   .course-map-page .cm-hero>p:last-child{margin-top:10px!important}
 }
+
+/* Home reset: remove slideshow spacing and restore the stronger mockup composition */
+.home-story-slider{display:none!important}
+.home-mockup-cards{
+  max-width:1200px!important;
+  margin:14px auto 18px!important;
+  padding:0 18px!important;
+  display:grid!important;
+  grid-template-columns:1.18fr .86fr 1.08fr!important;
+  gap:12px!important;
+  align-items:stretch!important;
+}
+.home-mockup-card{
+  min-height:260px!important;
+  border:1px solid #e1d8ca!important;
+  border-radius:12px!important;
+  overflow:hidden!important;
+  position:relative!important;
+  background:#fffaf2!important;
+  box-shadow:0 8px 20px rgba(29,43,36,.045)!important;
+}
+.home-mockup-card .label{
+  color:#a64b34!important;
+  font-size:9px!important;
+  font-weight:900!important;
+  letter-spacing:.16em!important;
+  margin:0 0 8px!important;
+}
+.home-mockup-card h2{
+  color:#102d27!important;
+  font:700 29px/.98 Georgia,serif!important;
+  letter-spacing:-.035em!important;
+  margin:0 0 11px!important;
+}
+.home-mockup-card p:not(.label){
+  color:#445b53!important;
+  font-size:12px!important;
+  line-height:1.45!important;
+}
+.home-card-copy{position:relative;z-index:2;padding:24px!important}
+.home-history-card{
+  display:grid!important;
+  grid-template-columns:1.12fr .88fr!important;
+  background:linear-gradient(90deg,#e8f0dd 0 58%,#f7f4ea 100%)!important;
+}
+.home-card-soldier{
+  background:
+    linear-gradient(90deg,rgba(232,240,221,.94),rgba(232,240,221,.06) 48%),
+    url("https://commons.wikimedia.org/wiki/Special:Redirect/file/Minute_Man_statue_Lexington_Massachusetts.jpg?width=800")
+    center/cover no-repeat!important;
+}
+.home-question-card{
+  padding:24px 26px!important;
+  text-align:center!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  background:#fffaf4!important;
+}
+.home-question-card h2{font-size:27px!important;line-height:1.02!important}
+.home-question-card p:not(.label){max-width:92%;margin:0 auto!important}
+.home-question-rule{width:34px;height:2px;background:#a64b34;margin:1px auto 10px}
+.home-course-card{
+  display:grid!important;
+  grid-template-columns:1.05fr .95fr!important;
+  background:#f6f1e7!important;
+}
+.home-course-card .home-card-copy{padding-right:8px!important}
+.home-card-capitol{
+  background:
+    linear-gradient(90deg,#f6f1e7 0%,rgba(246,241,231,.28) 38%,rgba(246,241,231,0) 72%),
+    url("https://commons.wikimedia.org/wiki/Special:Redirect/file/United%20States%20Capitol%20west%20front%20edit2.jpg?width=1000")
+    center/cover no-repeat!important;
+}
+.home-five-lines{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:5px!important;
+  margin-top:12px!important;
+}
+.home-five-lines span{
+  background:rgba(255,255,255,.75)!important;
+  border:1px solid #d8d0c4!important;
+  border-radius:5px!important;
+  padding:5px 7px!important;
+  font-size:9px!important;
+  font-weight:800!important;
+  white-space:nowrap!important;
+}
+.home-five-lines b{color:#a64b34!important;margin-right:4px!important}
+@media(max-width:900px){
+  .home-mockup-cards{grid-template-columns:1fr!important}
+  .home-mockup-card{min-height:230px!important}
+}
