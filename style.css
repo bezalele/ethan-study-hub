@@ -1200,3 +1200,46 @@ footer {
   }
 }
 
+
+/* Cinematic home — approved discovery-first direction */
+#home{max-width:none}
+body:has(#home.active) main{max-width:none;padding:0}
+body:has(#home.active) footer{display:none}
+.home-cinematic{background:#f3ede3;min-height:calc(100vh - 52px)}
+.home-hero{min-height:500px;background-size:cover;background-position:center 38%;position:relative;color:#fff;padding:64px max(5vw,calc((100vw - 1450px)/2));display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);align-items:end;gap:50px}
+.home-copy{max-width:780px}
+.home-copy .eyebrow{color:#e5bd87;margin-bottom:18px}
+.home-copy h1{font-size:clamp(62px,6.6vw,112px);line-height:.86;color:#fff;margin-bottom:24px;text-shadow:0 4px 30px rgba(0,0,0,.3)}
+.home-copy h1 em{color:#e5bd87;font-style:normal}
+.home-deck{font:22px/1.48 Georgia,serif;max-width:720px;color:rgba(255,255,255,.9)}
+.home-actions{display:flex;gap:12px;margin-top:28px}
+.home-primary,.home-secondary{padding:13px 20px;border-radius:8px;font-weight:700}
+.home-primary{border:0;background:#f7f1e7;color:#17382e}
+.home-secondary{border:1px solid rgba(255,255,255,.75);background:rgba(0,0,0,.18);color:#fff}
+.home-question{align-self:end;border-left:1px solid rgba(255,255,255,.4);padding:10px 0 10px 28px;margin-bottom:20px}
+.home-question span,.home-story-intro span,.home-continue>span,.home-school>span{font-size:10px;letter-spacing:.18em;font-weight:800;color:#c8734d}
+.home-question span{color:#e5bd87}
+.home-question blockquote{font:italic 24px/1.35 Georgia,serif;margin:12px 0 0;color:#fff}
+.home-story-strip{max-width:1450px;margin:0 auto;padding:18px 4vw;display:grid;grid-template-columns:1.25fr repeat(5,1fr);gap:8px;align-items:stretch}
+.home-story-intro{padding:12px 12px 8px}
+.home-story-intro strong{display:block;font:700 21px/1.15 Georgia,serif;margin-top:7px}
+.home-story-strip button{border:1px solid rgba(23,56,46,.12);background:rgba(255,255,255,.62);border-radius:14px;padding:12px;text-align:left;color:#1b2a27;display:grid;grid-template-columns:30px 1fr;column-gap:8px}
+.home-story-strip button b{grid-row:1/4;font:700 25px Georgia,serif;color:#b86542}
+.home-story-strip button span{font-size:10px;color:#a85e3a;font-weight:800;letter-spacing:.08em}
+.home-story-strip button strong{font:700 16px Georgia,serif;margin:2px 0}
+.home-story-strip button small{color:#64736e}
+.home-story-strip button.current{outline:2px solid #1d5a48;background:#fffaf2}
+.home-bottom{max-width:1370px;margin:4px auto 0;padding:20px 4vw 44px;display:grid;grid-template-columns:1.25fr 1fr .8fr;gap:18px}
+.home-bottom section{padding:24px;border-radius:18px}
+.home-bottom section:first-child{padding-left:0}
+.home-bottom h2{font-size:42px;line-height:1;margin:7px 0 12px}
+.home-bottom h3{font:700 24px/1.05 Georgia,serif;margin:10px 0}
+.home-bottom p{color:#536560;line-height:1.6}
+.home-continue{background:#17382e;color:#fff}
+.home-continue p{color:rgba(255,255,255,.75)}
+.home-continue button,.home-school button{margin-top:18px;border:0;border-radius:8px;padding:10px 14px;font-weight:700}
+.home-continue button{background:#f4eadc;color:#17382e}
+.home-school{background:rgba(255,255,255,.55);border:1px solid rgba(23,56,46,.1)}
+.home-school button{background:#17382e;color:#fff}
+@media(max-width:900px){.home-hero{grid-template-columns:1fr;padding:44px 24px}.home-question{display:none}.home-story-strip{grid-template-columns:1fr 1fr}.home-story-intro{grid-column:1/-1}.home-bottom{grid-template-columns:1fr}.home-bottom section:first-child{padding:20px}.home-copy h1{font-size:58px}}
+@media(max-width:560px){.home-story-strip{grid-template-columns:1fr}.home-copy h1{font-size:48px}.home-deck{font-size:18px}}
