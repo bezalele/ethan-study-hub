@@ -524,6 +524,93 @@
 }
 .page--chapter .ch-flow__arrow { color: var(--c-brick); font-weight: 700; }
 
+.page--chapter .ch-card__minihead {
+  margin-top: var(--s-4);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--c-line);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-brick);
+}
+
+.page--chapter .ch-meaning {
+  display: grid;
+  gap: 7px;
+  margin-top: var(--s-3);
+  list-style: none;
+}
+.page--chapter .ch-meaning__row {
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) 18px minmax(0, 1.15fr);
+  gap: 6px;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-sm);
+  background: linear-gradient(90deg, var(--c-parchment) 0 47%, var(--c-sage) 47% 100%);
+}
+.page--chapter .ch-meaning__from {
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--c-ink-soft);
+}
+.page--chapter .ch-meaning__arrow {
+  text-align: center;
+  color: var(--c-brick);
+  font-weight: 800;
+}
+.page--chapter .ch-meaning__to {
+  font-size: 12px;
+  line-height: 1.3;
+  font-weight: 800;
+  color: var(--c-forest);
+}
+
+.page--chapter .ch-bridge {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: var(--s-4);
+  list-style: none;
+}
+.page--chapter .ch-bridge__item {
+  min-height: 86px;
+  padding: 10px 11px;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-sm);
+  background: var(--c-parchment);
+}
+.page--chapter .ch-bridge__label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--c-brick);
+}
+.page--chapter .ch-bridge__item strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 15px;
+  line-height: 1.2;
+  color: var(--c-ink);
+}
+.page--chapter .ch-bridge__note {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--c-ink-soft);
+}
+.page--chapter .ch-next--compact {
+  margin-top: var(--s-3);
+  margin-bottom: 0;
+}
+
+
 .page--chapter .ch-check__q {
   margin-top: var(--s-3);
   font-family: var(--font-display);
