@@ -1,17 +1,15 @@
 /* ---------------------------------------------------------------------------
    study.js — the founding story.
 
-   Three views off one module, chosen by route params:
+   Two views off one module, chosen by route params:
      #/study                 chapter index
      #/study/documents       reference shelf   (params.view === 'documents')
-     #/study/:chapter        one chapter
 
-   Ported from the old foundingDetail / library sections. Behaviour is made
-   correct in the new shell; the visual treatment is deliberately restrained
-   and is the next thing to design.
+   An individual chapter is its own page module, pages/chapter.js, because it
+   carries the full standard chapter template.
    --------------------------------------------------------------------------- */
 
-import { CHAPTERS, getChapter, nextChapter, prevChapter } from '../content/chapters.js';
+import { CHAPTERS } from '../content/chapters.js';
 import { el, html, esc } from '../layout/dom.js';
 
 /* --- Reference shelf ------------------------------------------------------ */
@@ -127,93 +125,17 @@ function indexView() {
     </div>`);
 }
 
-/* --- One chapter ---------------------------------------------------------- */
-
-function chapterView(chapter) {
-  const prev = prevChapter(chapter.id);
-  const next = nextChapter(chapter.id);
-
-  const steps = CHAPTERS.map((c) => `
-    <li>
-      <a class="st-steps__step" href="#/study/${c.id}"
-         ${c.id === chapter.id ? 'aria-current="true"' : ''}>
-        <span class="st-steps__n">${c.n}</span>
-        <span class="st-steps__label">${esc(c.title)}</span>
-      </a>
-    </li>`).join('');
-
-  return html(`
-    <div>
-      <section class="st-chapter-hero">
-        <img class="st-chapter-hero__bg" src="${chapter.image.src}" alt="${esc(chapter.image.alt)}">
-        <div class="st-chapter-hero__scrim"></div>
-        <div class="st-chapter-hero__inner shell">
-          <p class="eyebrow eyebrow--on-dark">
-            Chapter ${chapter.n} of 05 · ${esc(chapter.years)}
-          </p>
-          <h1>${esc(chapter.title)}</h1>
-          <p class="st-chapter-hero__tagline">${esc(chapter.tagline)}</p>
-        </div>
-      </section>
-
-      <nav class="st-steps shell" aria-label="Chapters">
-        <ol class="st-steps__list">${steps}</ol>
-      </nav>
-
-      <div class="st-chapter shell">
-        <article class="st-chapter__main">
-          <p class="eyebrow">The big picture</p>
-          <p class="st-chapter__summary">${esc(chapter.summary)}</p>
-
-          <aside class="st-question">
-            <p class="eyebrow">The question this chapter answers</p>
-            <p class="st-question__text">${esc(chapter.question)}</p>
-          </aside>
-        </article>
-
-        <aside class="st-chapter__side">
-          <p class="eyebrow">Where this sits</p>
-          <p class="st-chapter__side-text">
-            ${esc(chapter.title)} is chapter ${chapter.n} of the founding story.
-            Each chapter sets up the problem the next one tries to solve.
-          </p>
-          <a class="btn btn--ghost" href="#/study/documents">See the documents →</a>
-        </aside>
-      </div>
-
-      <nav class="st-pager shell" aria-label="Chapter navigation">
-        ${prev
-          ? `<a class="st-pager__link" href="#/study/${prev.id}">← ${esc(prev.title)}</a>`
-          : '<span></span>'}
-        ${next
-          ? `<a class="st-pager__link st-pager__link--next" href="#/study/${next.id}">${esc(next.title)} →</a>`
-          : '<a class="st-pager__link st-pager__link--next" href="#/study/practice">Practice what you read →</a>'}
-      </nav>
-    </div>`);
-}
-
 /* --- Module --------------------------------------------------------------- */
 
 export default {
   id: 'study',
   nav: 'study',
-  title: (params) => {
-    if (params.view === 'documents') return 'Documents & Cases';
-    const c = getChapter(params.chapter);
-    return c ? c.title : 'Study';
-  },
+  title: (params) => (params.view === 'documents' ? 'Documents & Cases' : 'Study'),
   render(params) {
     const page = el('div', 'page page--study');
 
     if (params.view === 'documents') {
       page.append(documentsView());
-      return page;
-    }
-
-    if (params.chapter) {
-      const chapter = getChapter(params.chapter);
-      // Unknown chapter id falls back to the index rather than an empty page.
-      page.append(chapter ? chapterView(chapter) : indexView());
       return page;
     }
 

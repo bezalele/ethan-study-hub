@@ -114,103 +114,6 @@
   justify-self: end;
 }
 
-/* ===== Timeline =========================================================== */
-
-.page--home .home-tl {
-  background: var(--c-parchment-dim);
-  border-block: 1px solid var(--c-line);
-}
-
-.page--home .home-tl__list {
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-  list-style: none;
-  padding-block: clamp(10px, 2.1vh, 22px);
-}
-
-/* Connector: a dot centred on a rule that spans the gap between two cards. */
-.page--home .home-tl__node {
-  flex: 0 1 34px;
-  align-self: center;
-  height: 9px;
-  position: relative;
-}
-.page--home .home-tl__node::before {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  top: 50%;
-  height: 1px;
-  background: var(--c-brick);
-  opacity: 0.4;
-}
-.page--home .home-tl__node::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 9px;
-  height: 9px;
-  margin: -4.5px 0 0 -4.5px;
-  border: 1px solid var(--c-brick);
-  border-radius: 50%;
-  background: var(--c-parchment-dim);
-}
-
-.page--home .home-tl__item { flex: 1 1 0; min-width: 0; }
-
-.page--home .home-tl__card {
-  display: grid;
-  grid-template-columns: 62px minmax(0, 1fr);
-  gap: var(--s-4);
-  align-items: center;
-  height: 100%;
-  padding: var(--s-3) var(--s-4);
-  background: var(--c-paper);
-  border: 1px solid var(--c-line);
-  border-radius: var(--r-md);
-  color: var(--c-ink);
-  box-shadow: var(--shadow-sm);
-  transition: border-color var(--dur) var(--ease),
-              box-shadow var(--dur) var(--ease);
-}
-.page--home .home-tl__card:hover {
-  color: var(--c-ink);
-  border-color: var(--c-forest);
-  box-shadow: var(--shadow-md);
-}
-
-.page--home .home-tl__thumb {
-  width: 62px;
-  height: 68px;
-  object-fit: cover;
-  border-radius: var(--r-sm);
-  border: 1px solid var(--c-line);
-}
-
-.page--home .home-tl__text { min-width: 0; display: block; }
-
-.page--home .home-tl__year {
-  display: block;
-  font-family: var(--font-display);
-  font-size: clamp(15px, 1.25vw, 19px);
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  color: var(--c-brick);
-  white-space: nowrap;
-}
-
-.page--home .home-tl__title {
-  display: block;
-  margin-top: 3px;
-  font-family: var(--font-display);
-  font-size: clamp(14px, 1.2vw, 18px);
-  font-weight: 600;
-  line-height: 1.2;
-  color: var(--c-ink);
-}
-
 /* ===== Three cards ======================================================== */
 
 .page--home .home-cards {
@@ -375,9 +278,10 @@
   .page--home .btn { padding: 8px 14px; font-size: 13px; }
 
   /* A wider measure drops the deck from three lines to two. */
-  .page--home .home-hero__title { font-size: clamp(30px, min(4.4vw, 6.2vh), 68px); }
+  .page--home .home-hero__title { font-size: clamp(28px, min(4.4vw, 5.6vh), 68px); }
   .page--home .home-hero__deck { max-width: 62ch; }
-  .page--home .home-hero__inner { padding-block: clamp(10px, 1.8vh, 20px); }
+  .page--home .home-hero__inner { padding-block: clamp(8px, 1.2vh, 16px); }
+  .page--home .home-hero__quote--aside { font-size: clamp(13px, min(1.25vw, 2vh), 18px); }
 }
 
 /* ===== Fall back to normal flow when one screen is not enough ============= */
@@ -395,9 +299,6 @@
 @media (max-width: 1000px) {
   .page--home .home-cards { grid-template-columns: 1fr 1fr; }
   .page--home .home-card--question { grid-column: 1 / -1; order: -1; }
-  .page--home .home-tl__list { flex-wrap: wrap; gap: var(--s-2); }
-  .page--home .home-tl__node { display: none; }
-  .page--home .home-tl__item { flex: 1 1 210px; }
 }
 
 @media (max-width: 860px) {

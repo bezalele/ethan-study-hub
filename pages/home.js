@@ -13,8 +13,8 @@
    --------------------------------------------------------------------------- */
 
 import { IMAGES } from '../content/assets.js';
-import { CHAPTERS } from '../content/chapters.js';
-import { el, html, esc } from '../layout/dom.js';
+import { renderTimeline } from '../components/timeline.js';
+import { el, html } from '../layout/dom.js';
 
 function hero() {
   return html(`
@@ -41,29 +41,6 @@ function hero() {
         </blockquote>
       </div>
     </section>`);
-}
-
-/* The timeline reads as one continuous line: a connector node sits before the
-   first chapter, between each pair, and after the last. Year and title only —
-   no ordinal, no tagline. */
-function timeline() {
-  const node = '<li class="home-tl__node" aria-hidden="true"></li>';
-
-  const items = CHAPTERS.map((c) => `
-    <li class="home-tl__item">
-      <a class="home-tl__card" href="#/study/${c.id}">
-        <img class="home-tl__thumb" src="${c.image.src}" alt="" loading="lazy">
-        <span class="home-tl__text">
-          <span class="home-tl__year">${esc(c.years)}</span>
-          <span class="home-tl__title">${esc(c.title)}</span>
-        </span>
-      </a>
-    </li>`).join(node);
-
-  return html(`
-    <nav class="home-tl" aria-label="The founding story">
-      <ol class="home-tl__list shell">${node}${items}${node}</ol>
-    </nav>`);
 }
 
 function cards() {
@@ -126,7 +103,7 @@ export default {
   title: '',
   render() {
     const page = el('div', 'page page--home');
-    page.append(hero(), timeline(), cards(), closing());
+    page.append(hero(), renderTimeline(), cards(), closing());
     return page;
   },
 };

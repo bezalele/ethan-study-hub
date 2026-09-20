@@ -21,7 +21,7 @@ const ROUTES = [
   { path: '/study',             page: 'study' },
   { path: '/study/practice',    page: 'practice' },
   { path: '/study/documents',   page: 'study', params: { view: 'documents' } },
-  { path: '/study/:chapter',    page: 'study' },
+  { path: '/study/:chapter',    page: 'chapter' },
 ];
 
 const FALLBACK = '#/';

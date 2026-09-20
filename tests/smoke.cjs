@@ -39,12 +39,22 @@ function exists(rel) {
 }
 
 /** Files owned by this site (math-quest is a separate sub-app). */
-const PAGE_CSS = ['pages/home.css', 'pages/course-map.css', 'pages/study.css', 'pages/practice.css'];
-const ALL_CSS = ['styles/tokens.css', 'styles/base.css', 'layout/layout.css', ...PAGE_CSS];
+const PAGE_CSS = [
+  'pages/home.css', 'pages/course-map.css', 'pages/study.css',
+  'pages/practice.css', 'pages/chapter.css',
+];
+/* Shared components own a .c-NAME namespace instead of a .page--NAME one. */
+const COMPONENT_CSS = ['components/timeline.css'];
+const ALL_CSS = [
+  'styles/tokens.css', 'styles/base.css', 'layout/layout.css',
+  ...COMPONENT_CSS, ...PAGE_CSS,
+];
 const ALL_JS = [
   'layout/layout.js', 'layout/router.js', 'layout/dom.js',
+  'components/timeline.js',
   'content/assets.js', 'content/chapters.js', 'content/course.js',
-  'pages/home.js', 'pages/course-map.js', 'pages/study.js', 'pages/practice.js',
+  'pages/home.js', 'pages/course-map.js', 'pages/study.js',
+  'pages/practice.js', 'pages/chapter.js',
 ];
 
 /* --- 1. Every expected file is present ------------------------------------ */
@@ -71,9 +81,10 @@ ALL_CSS.forEach((f) => {
 
 /* --- 4. Page CSS is scoped ------------------------------------------------ */
 
-section('Page CSS is scoped to its own root');
-PAGE_CSS.forEach((f) => {
-  const root = '.page--' + path.basename(f, '.css');
+section('Stylesheets are scoped to their own root');
+[...PAGE_CSS, ...COMPONENT_CSS].forEach((f) => {
+  const base = path.basename(f, '.css');
+  const root = f.startsWith('components/') ? '.c-' + base : '.page--' + base;
   const css = read(f)
     .replace(/\/\*[\s\S]*?\*\//g, '')            // strip comments
     .replace(/@media[^{]+\{/g, '')               // unwrap media queries
@@ -93,7 +104,7 @@ PAGE_CSS.forEach((f) => {
 /* --- 5. Only layout.css may style the chrome ------------------------------ */
 
 section('Only layout.css styles header/footer/body');
-PAGE_CSS.forEach((f) => {
+[...PAGE_CSS, ...COMPONENT_CSS].forEach((f) => {
   const css = read(f).replace(/\/\*[\s\S]*?\*\//g, '');
   const bad = /(^|[\s,{])(header|footer|body|#app-header|#app-footer|#app-main)\b/m.test(css);
   check(`${f} leaves the chrome alone`, !bad);
