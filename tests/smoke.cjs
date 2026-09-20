@@ -238,6 +238,35 @@ check('has the three mount points',
   && indexHtml.includes('id="app-main"')
   && indexHtml.includes('id="app-footer"'));
 
+/* --- 12. Cache-busting version is consistent everywhere ------------------- */
+
+section('Asset version is consistent');
+{
+  const shell = read(APP);
+  const versions = new Set([...shell.matchAll(/\?v=(\d+)/g)].map((m) => m[1]));
+  check('the shell uses exactly one version', versions.size === 1,
+    [...versions].join(', ') || 'none found');
+  const V = [...versions][0];
+
+  /* Every relative import must carry the same ?v=. A module reached under two
+     different URLs is loaded twice as two separate instances. */
+  const bad = [];
+  ALL_JS.forEach((f) => {
+    const src = read(f);
+    for (const m of src.matchAll(/from '(\.\.?\/[^']+)'/g)) {
+      if (!m[1].endsWith(`?v=${V}`)) bad.push(`${f}: ${m[1]}`);
+    }
+    for (const m of src.matchAll(/import\(`([^`]+)`\)/g)) {
+      if (!m[1].endsWith(`?v=${V}`)) bad.push(`${f}: ${m[1]}`);
+    }
+  });
+  check(`every module import carries ?v=${V}`, bad.length === 0, bad.slice(0, 5).join(' | '));
+
+  ALL_CSS.forEach((f) => {
+    check(`shell links ${f} at ?v=${V}`, shell.includes(`${f}?v=${V}`));
+  });
+}
+
 /* --- Result ---------------------------------------------------------------- */
 
 console.log(`\n${checks - failures}/${checks} checks passed`);
