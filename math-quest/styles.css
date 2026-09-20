@@ -892,3 +892,182 @@ button.ghost {
 .math {
   font-family: "Lora", "Noto Sans Math", "Noto Sans Symbols 2", serif;
 }
+/* Unit 2 study center */
+.u2-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 22px;
+  background: #e1ece2;
+  border: 1px solid #95b7a0;
+  border-left: 5px solid #32786c;
+  border-radius: 10px;
+  padding: 20px 26px;
+  margin: 8px 0 18px;
+}
+.u2-banner h2 {
+  font-size: 25px;
+  margin: 3px 0;
+}
+.u2-banner p {
+  margin: 4px 0;
+}
+.u2-banner .eyebrow {
+  color: #306c59;
+}
+.u2-heading {
+  background: #e8efe4;
+  border: 1px solid #afc8b1;
+  border-left: 5px solid #377b6b;
+  border-radius: 12px;
+  padding: 26px;
+  margin-top: 20px;
+}
+.u2-heading .page-title {
+  margin-top: 8px;
+}
+.u2-heading .intro {
+  margin-bottom: 14px;
+}
+.unit.current {
+  border: 2px solid #448d7b;
+  background: #eaf3e9;
+  box-shadow: 0 4px 14px #315f4510;
+}
+.unit.current .badge {
+  display: inline-block;
+  margin: 4px 0;
+}
+.u2-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.skill-card {
+  display: flex;
+  flex-direction: column;
+}
+.skill-card h3 {
+  font-size: 23px;
+  margin: 0 0 8px;
+}
+.skill-card p {
+  margin: 6px 0;
+}
+.skill-card .controls {
+  margin-top: auto;
+  padding-top: 16px;
+  margin-bottom: 0;
+}
+.skill-progress {
+  font-size: 13px;
+  color: #316450;
+}
+.study-routine {
+  margin: 24px 0;
+}
+.lesson-tabs {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 12px 0 20px;
+}
+.lesson-tabs a {
+  font-weight: bold;
+  color: #255f60;
+}
+.lesson-tabs .button {
+  color: white;
+}
+.worked-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+.worked-example h3 {
+  font-size: 20px;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+.worked-example details {
+  border: 0;
+}
+.worked-steps {
+  padding-left: 24px;
+}
+.worked-steps li {
+  margin: 14px 0;
+  padding-left: 6px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.answer-box {
+  padding: 14px;
+  background: #eaf1e5;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+.method-box {
+  padding: 16px 22px;
+  border-left: 3px solid #679985;
+  background: #f3f6ed;
+}
+.method-box li {
+  margin: 8px 0;
+}
+.input-help {
+  font-size: 13px;
+  color: #657585;
+}
+.u2-answer-form {
+  max-width: 650px;
+}
+.u2-help {
+  margin-top: 15px;
+}
+#line-explorer {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  border: 1px solid #d5dfd4;
+  border-radius: 8px;
+}
+#u2-understand,
+#u2-examples,
+#u2-try {
+  scroll-margin-top: 20px;
+}
+.u2-heading .controls {
+  margin-bottom: 0;
+}
+@media (max-width: 760px) {
+  .u2-banner {
+    display: block;
+    padding: 20px;
+  }
+  .u2-banner .button {
+    margin-top: 12px;
+  }
+  .u2-grid,
+  .worked-grid {
+    grid-template-columns: 1fr;
+  }
+  .u2-heading {
+    padding: 20px;
+  }
+  .lesson-tabs {
+    gap: 16px;
+  }
+  .skill-card h3 {
+    font-size: 21px;
+  }
+  .u2-banner h2 {
+    font-size: 23px;
+  }
+  .u2-heading .page-title {
+    font-size: 29px;
+  }
+}
