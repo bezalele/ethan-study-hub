@@ -55,12 +55,12 @@ const DATA = [
     title: 'The British Colonies',
     tagline: 'Foundations and frustrations',
     summary:
-      'Long before independence, colonists were already governing themselves — electing assemblies, arguing about taxes, and deciding much of their daily life.',
-    question: 'If you already govern yourselves in practice, who really holds authority?',
+      'Long before independence, colonists were already governing themselves locally — and that made later British control feel like something was being taken away.',
+    question: 'If people already help govern themselves, who gets the final say?',
 
-    deck: 'Before there was a United States, there were thirteen separate colonies.',
+    deck: 'Before there was a United States, there were thirteen separate British colonies.',
     intro:
-      'The colonies belonged to Britain, but many had elected assemblies that handled local taxes and laws. Political power was still limited to a small part of the population. After Britain tightened control and raised new revenue after 1763, a disagreement over taxes grew into a much bigger argument about representation, consent, and who had the right to govern.',
+      'Before the United States existed, the thirteen colonies were part of the British Empire. Many colonies had elected assemblies that handled local laws and taxes, so generations of colonists grew used to having a voice in government. After the Seven Years’ War ended in 1763, Britain tried to raise more revenue and tighten imperial control. The argument quickly became bigger than money: could Parliament tax the colonies when colonists elected no members to Parliament?',
     heroQuote: {
       text: 'No taxation without representation.',
       source: 'Colonial political slogan, 1760s',
@@ -71,104 +71,136 @@ const DATA = [
     },
 
     bigPicture: {
-      heading: 'Start here: America was not a country yet',
+      heading: 'Why did loyal British colonists end up rebelling?',
       body:
-        'Each colony had its own government, but the <strong>king and Parliament</strong> still claimed final authority. Colonial assemblies gave many white male property holders real experience voting and making local laws, while women, enslaved people, Indigenous peoples, and many poor men had little or no political voice. That tension between <strong>local self-rule</strong> and distant power is the beginning of the story.',
+        'For more than a century, many colonists had practiced <strong>local self-government</strong> through elected assemblies. Britain still held final authority, and political participation was limited — women, enslaved people, Indigenous peoples, and many poor men had little or no political power. After 1763, Parliament began using that authority more aggressively. What started as a fight over taxes became a fight over <strong>representation, consent, and who had the right to govern</strong>.',
     },
     takeaways: [
-      'The thirteen colonies were separate British colonies, not one united country.',
-      'Many colonies had elected assemblies that handled local laws and taxes.',
-      'After the Seven Years’ War, Britain increased taxes and tightened imperial control.',
-      'Colonists increasingly argued that taxation required representation and consent.',
-      'By 1775, political protest had turned into armed conflict at Lexington and Concord.',
+      'Before 1776, the thirteen colonies were British colonies — not one united American country.',
+      'Many colonists had practiced local self-government through elected assemblies for generations.',
+      'After the Seven Years’ War ended in 1763, Britain sought more revenue and tighter control over the colonies.',
+      'The Stamp Act crisis made representation the central issue: colonists objected to taxation by a Parliament in which they elected no members.',
+      'The Tea Party, the Coercive Acts, and Lexington and Concord moved the colonies from protest to coordinated resistance and then war.',
     ],
-    fact: {
-      text:
-        'Virginia’s House of Burgesses first met in 1619 — more than 150 years before independence. Representative government in British North America was already an old habit by 1776.',
-      name: 'House of Burgesses',
-      dates: 'first met 1619',
-    },
+    facts: [
+      {
+        text:
+          'Virginia’s House of Burgesses first met at Jamestown in 1619. That means representative government in Virginia existed more than 150 years before the Declaration of Independence.',
+        name: 'House of Burgesses',
+        dates: 'Jamestown · 1619',
+      },
+      {
+        text:
+          'During the Boston Tea Party on December 16, 1773, protesters destroyed 342 chests of East India Company tea from three ships in Boston Harbor.',
+        name: '342 chests of tea',
+        dates: 'Boston · 1773',
+      },
+      {
+        text:
+          'The First Continental Congress met in Philadelphia in 1774 with delegates from twelve colonies. Georgia was the only colony that did not send delegates.',
+        name: '12 colonies met',
+        dates: 'Philadelphia · 1774',
+      },
+      {
+        text:
+          'The first shots of the Revolutionary War were fired at Lexington and Concord on April 19, 1775. Accounts disagree about exactly who fired first at Lexington.',
+        name: 'War begins',
+        dates: 'April 19, 1775',
+      },
+    ],
     closerLook: {
-      title: 'How a tax argument became a revolution',
+      title: 'From protest to revolution: 1765–1775',
       body:
-        'Think of the crisis as an escalation: Britain wanted more control and revenue; colonists pushed back; Britain punished resistance; the colonies organized together; then fighting began.',
-      cta: 'Read the documents',
+        'In just ten years, a tax dispute became a war. The Stamp Act triggered organized protests over representation. The Boston Tea Party challenged British authority directly. Britain answered with the Coercive Acts, which closed Boston’s port and punished Massachusetts. Twelve colonies then met at the First Continental Congress to coordinate a response. In April 1775, British troops marched toward Concord to seize military supplies, and fighting broke out at Lexington and Concord.',
+      cta: 'Explore the events',
       image: {
         src: 'assets/chapters/colonies/boston-tea-party.jpg',
         alt: 'Historical print of colonists destroying tea in Boston Harbor',
       },
       sections: [
-        { label: '1765', note: 'Stamp Act protest' },
-        { label: '1773', note: 'Boston Tea Party' },
-        { label: '1774', note: 'Continental Congress' },
-        { label: '1775', note: 'Lexington & Concord' },
+        {
+          label: '1765',
+          note: 'Stamp Act — a direct tax on printed materials. Colonists answer: taxation requires representation.',
+        },
+        {
+          label: '1773',
+          note: 'Boston Tea Party — protesters destroy 342 chests of taxed tea in Boston Harbor.',
+        },
+        {
+          label: '1774',
+          note: 'First Continental Congress — delegates from 12 colonies coordinate a response to Britain’s Coercive Acts.',
+        },
+        {
+          label: '1775',
+          note: 'Lexington & Concord — British troops and colonial militia exchange fire; the Revolutionary War begins.',
+        },
       ],
     },
     whyItMatters: {
       body:
-        'AP Government begins with a question that started before independence: when is political power legitimate? The colonial experience made representation and consent central to the American argument about government.',
+        'This chapter sets up one of AP Government’s biggest ideas: legitimate power depends on more than simply having authority. Britain claimed the legal power to govern the colonies; colonists increasingly argued that government also needed representation and consent. That disagreement leads directly into the Declaration of Independence.',
       steps: ['Local self-rule', 'British control', 'Resistance', 'Revolution'],
     },
     quiz: [
-    {
-      question: 'Before 1776, how were the thirteen colonies organised?',
-      options: [
-        'As one united American country',
-        'As thirteen separate British colonies',
-        'As independent republics allied by treaty',
-        'As provinces governed directly from Parliament with no local bodies',
-      ],
-      answer: 1,
-      why: 'They were separate colonies under the Crown. Thinking of them as one country before independence is the most common early mistake.',
-    },
-    {
-      question: 'What did colonial assemblies give many colonists practice in?',
-      options: [
-        'Electing a national president',
-        'Handling local laws and taxes themselves',
-        'Negotiating foreign treaties',
-        'Appointing royal governors',
-      ],
-      answer: 1,
-      why: 'Elected assemblies handled local law and taxation for generations, which is why later interference felt like something being taken away.',
-    },
-    {
-      question: 'What changed British policy towards the colonies after the Seven Years\' War?',
-      options: [
-        'Britain lost interest in North America',
-        'Britain needed revenue and tightened imperial control',
-        'Britain granted the colonies seats in Parliament',
-        'Britain handed the colonies to France',
-      ],
-      answer: 1,
-      why: 'War debt pushed Parliament to raise money from the colonies and govern them more closely.',
-    },
-    {
-      question: 'What was the colonists\' core constitutional objection to the new taxes?',
-      options: [
-        'The rates were higher than in Britain',
-        'Taxation required representation they did not have',
-        'Only colonial governors should levy taxes',
-        'Taxes should be paid in goods rather than coin',
-      ],
-      answer: 1,
-      why: 'The argument was about consent and who had the right to decide, not about the amount of money.',
-    },
-    {
-      question: 'By 1775, what had the dispute become?',
-      options: [
-        'A settled compromise with Parliament',
-        'Armed conflict at Lexington and Concord',
-        'A peaceful separation agreed by treaty',
-        'A trade agreement between equals',
-      ],
-      answer: 1,
-      why: 'Political protest had turned into fighting, which set up the argument the Declaration would make in 1776.',
-    },
+      {
+        question: 'Before 1776, how were the thirteen colonies organised?',
+        options: [
+          'As one united American country',
+          'As thirteen separate British colonies',
+          'As independent republics allied by treaty',
+          'As provinces with no local governments',
+        ],
+        answer: 1,
+        why: 'They were separate British colonies. The United States did not yet exist as one country.',
+      },
+      {
+        question: 'What did colonial assemblies give many colonists practice in?',
+        options: [
+          'Electing a national president',
+          'Handling local laws and taxes through representatives',
+          'Negotiating foreign treaties',
+          'Choosing members of the British Parliament',
+        ],
+        answer: 1,
+        why: 'For generations, elected colonial assemblies handled many local laws and taxes, giving colonists experience with representative government.',
+      },
+      {
+        question: 'Why did Britain tighten control and seek more revenue after 1763?',
+        options: [
+          'The Seven Years’ War had ended and Britain faced large costs and debt',
+          'The colonies had already declared independence',
+          'France controlled Parliament',
+          'The colonies refused to trade with Britain at all',
+        ],
+        answer: 0,
+        why: 'After the Seven Years’ War, Britain sought more revenue from the colonies and enforced imperial rules more closely.',
+      },
+      {
+        question: 'What did “no taxation without representation” mean?',
+        options: [
+          'Colonists wanted every tax abolished',
+          'Colonists argued they should not be taxed by a Parliament in which they elected no representatives',
+          'Only the king could create taxes',
+          'Colonists wanted to pay taxes only with goods',
+        ],
+        answer: 1,
+        why: 'The central argument was about consent and representation — who had the right to make binding tax decisions for the colonies.',
+      },
+      {
+        question: 'What happened at Lexington and Concord in April 1775?',
+        options: [
+          'Britain repealed all colonial taxes',
+          'The First Continental Congress met for the first time',
+          'Armed fighting began between British troops and colonial militia',
+          'The Declaration of Independence was signed',
+        ],
+        answer: 2,
+        why: 'The first shots of the Revolutionary War were fired at Lexington and Concord on April 19, 1775.',
+      },
     ],
     whatsNext: {
       body:
-        'By 1776 the argument was no longer just about taxes. The colonies now had to explain why they had the right to leave Britain altogether.',
+        'By 1776, the dispute was no longer just about taxes or Parliament. The colonies now had to explain why they believed they had the right to leave Britain and create independent states.',
     },
   },
 
