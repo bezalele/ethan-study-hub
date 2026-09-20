@@ -51,7 +51,7 @@ jobs:
           get assets/chapters/articles/surrender-cornwallis.webp             "$base/Surrender_of_Lord_Cornwallis-2000w.jpg.webp"             "$popup/Surrender_of_Lord_Cornwallis-2000w.jpg.webp"
           get assets/chapters/articles/washington-resigns.webp             "$base/General_George_Washington_Resigning_His_Commission-2000w.jpg.webp"             "$popup/General_George_Washington_Resigning_His_Commission-2000w.jpg.webp"
 
-          get assets/chapters/convention/signing-aoc.webp             "$base/Signing_of_the_Constitution-2000w.jpg.webp"             "$popup/Signing_of_the_Constitution-2000w.jpg.webp"
+          get assets/chapters/convention/signing-aoc.webp             "$base/Signing_of_the_Constitution-2000w.jpg.webp"             "$popup/Signing_of_the_Constitution-2000w.jpg.webp" || true
 
           # These two are useful for the final chapter. They are optional
           # because historical AOC filenames sometimes change.
