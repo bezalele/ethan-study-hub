@@ -6,7 +6,7 @@
   <meta name="description" content="Ethan Study Hub — interactive AP U.S. Government discovery experience.">
   <title>Ethan Study Hub · AP U.S. Government</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="home-override.css?v=20260920-mapviewport">
+  <link rel="stylesheet" href="home-override.css?v=20260920-homeclean">
 </head>
 <body>
   <header>
@@ -34,14 +34,6 @@
         </div>
         <div class="exact-hero-right"><blockquote>“We hold these truths to be self-evident,<br>that all men are created equal…”<small>— Declaration of Independence, 1776</small></blockquote></div>
       </div>
-      <section class="home-story-slider" aria-label="Founding story visual overview">
-        <div class="home-story-slide" style="background-image:linear-gradient(90deg,rgba(5,18,15,.84),rgba(5,18,15,.18)),url('https://commons.wikimedia.org/wiki/Special:Redirect/file/Patrick%20Henry%20before%20the%20Virginia%20House%20of%20Burgesses%20May%2030%2C%201765%20LCCN2006691555.jpg?width=1200')">
-          <button class="home-slide-prev" onclick="moveHomeSlide(-1)" aria-label="Previous story">‹</button>
-          <div><small>THE FOUNDING STORY · IN FIVE SCENES</small><h3>Before independence</h3><p>Americans already had experience with assemblies, representation, and local self-government.</p><span class="home-slide-count">1 / 5</span></div>
-          <button class="home-slide-next" onclick="moveHomeSlide(1)" aria-label="Next story">›</button>
-        </div>
-        <div class="home-slide-dots"><button class="active" onclick="setHomeSlide(0)" aria-label="Story scene 1"></button><button class="" onclick="setHomeSlide(1)" aria-label="Story scene 2"></button><button class="" onclick="setHomeSlide(2)" aria-label="Story scene 3"></button><button class="" onclick="setHomeSlide(3)" aria-label="Story scene 4"></button><button class="" onclick="setHomeSlide(4)" aria-label="Story scene 5"></button></div>
-      </section>
       <div class="exact-journey">
         <div class="exact-journey-label"><b>EXPLORE<br>THE JOURNEY</b><p>Five chapters. One big<br>story. Click any chapter<br>to dive in.</p></div>
         <button onclick="openFoundingPage('colonies')" onmouseenter="showJourneyFact(1,this)" onmouseleave="hideJourneyFact()" onfocus="showJourneyFact(1,this)" onblur="hideJourneyFact()"><i class="j1"></i><span class="num">01</span><span class="date">1607–1775</span><strong>British Colonies</strong><small>Foundations and frustrations</small></button>
@@ -50,10 +42,34 @@
         <button onclick="openFoundingPage('convention')" onmouseenter="showJourneyFact(4,this)" onmouseleave="hideJourneyFact()" onfocus="showJourneyFact(4,this)" onblur="hideJourneyFact()"><i class="j4"></i><span class="num">04</span><span class="date">1787</span><strong>Constitutional Convention</strong><small>Designing a better system</small></button>
         <button onclick="openFoundingPage('constitution-rights')" onmouseenter="showJourneyFact(5,this)" onmouseleave="hideJourneyFact()" onfocus="showJourneyFact(5,this)" onblur="hideJourneyFact()"><i class="j5"></i><span class="num">05</span><span class="date">1788–1791</span><strong>Constitution + Bill of Rights</strong><small>Rights, balance, and a lasting union</small></button>
       </div>
-      <div class="exact-cards home-insight-cards">
-        <article class="home-insight home-insight-story"><p class="label">THE FOUNDING STORY</p><h2>Five moments<br>changed everything.</h2><p>Colonies learned self-government. Independence broke with Britain. A weak first government failed. The Constitution redesigned power. The Bill of Rights protected liberty.</p><div class="insight-sequence"><span>Colonies</span><i>→</i><span>1776</span><i>→</i><span>Articles</span><i>→</i><span>Constitution</span><i>→</i><span>Rights</span></div></article>
-        <article class="home-insight home-insight-question"><p class="label">THE BIG QUESTION</p><h2>Power<br><em>vs.</em><br>Liberty</h2><p>Government needs enough power to protect people and solve shared problems — but its power also needs limits.</p><div class="balance"><span>LIBERTY</span><b>⚖</b><span>POWER</span></div></article>
-        <article class="home-insight home-insight-course"><p class="label">THE COURSE AT A GLANCE</p><h2>What Ethan will learn.</h2><div class="five-areas"><span><b>01</b> Foundations</span><span><b>02</b> Branches</span><span><b>03</b> Rights</span><span><b>04</b> Beliefs</span><span><b>05</b> Participation</span></div><p class="course-note">One connected story: how government is built, limited, influenced, and used by citizens.</p></article>
+      <div class="exact-cards home-mockup-cards">
+        <article class="home-mockup-card home-history-card">
+          <div class="home-card-copy">
+            <p class="label">START WITH THE STORY</p>
+            <h2>Know what happened.<br>Then understand why<br>government works this way.</h2>
+            <p>The founding story is not extra history. It explains why Americans cared so much about representation, limited power, rights, and a government strong enough to function.</p>
+          </div>
+          <div class="home-card-art home-card-soldier" aria-hidden="true"></div>
+        </article>
+
+        <article class="home-mockup-card home-question-card">
+          <p class="label">THE QUESTION BEHIND THE COURSE</p>
+          <h2>How do you give<br>government enough power<br>to work — without giving it<br>so much power that liberty<br>is threatened?</h2>
+          <div class="home-question-rule"></div>
+          <p>That tension connects the Constitution, the branches, civil rights, political beliefs, and participation.</p>
+        </article>
+
+        <article class="home-mockup-card home-course-card">
+          <div class="home-card-copy">
+            <p class="label">THE WHOLE COURSE</p>
+            <h2>Five units.<br>One government.</h2>
+            <p>Foundations explain the design. Branches show the machinery. Rights set the limits. Beliefs shape opinions. Participation shows how citizens influence the system.</p>
+            <div class="home-five-lines">
+              <span><b>01</b> Foundations</span><span><b>02</b> Branches</span><span><b>03</b> Rights</span><span><b>04</b> Beliefs</span><span><b>05</b> Participation</span>
+            </div>
+          </div>
+          <div class="home-card-art home-card-capitol" aria-hidden="true"></div>
+        </article>
       </div>
       <div class="exact-footer">“A well-instructed people alone can be permanently a free people.” <span>— James Madison</span><b>PAST INFORMS THE FUTURE &nbsp; ──</b></div>
     </section>
