@@ -100,6 +100,10 @@ function selectFoundingIdea(btn,key,i){
  if(stage)stage.innerHTML='<span>'+x.date+'</span><h2>'+x.cards[i][0]+'</h2><p>'+x.cards[i][1]+'</p>';
  document.querySelectorAll('#foundingDetail .founding-thumbs button').forEach((b,n)=>b.classList.toggle('active',n===i));
 }
+// Inline chapter navigation is rendered dynamically; expose handlers explicitly for browser globals.
+window.openFoundingPage = openFoundingPage;
+window.show = show;
+
 
 const courseAreas=[
  {n:1,title:'Foundations of American Democracy',short:'Foundations',q:'Why was American government designed this way?',summary:'The Constitution, why government was designed this way, checks and balances, and federal versus state powers.',weight:'15–22%',topics:['Ideals of democracy','Declaration → Articles → Constitution','Checks and balances','Federalism'],flow:['Colonial self-government','Declaration of Independence','Articles of Confederation','Constitutional Convention','Constitution & Bill of Rights','Federalism'],fact:'Start with the founding story, then connect each event to a principle of government.'},
@@ -199,6 +203,13 @@ function renderJourney() {
   `).join('');
 }
 
+function navigateFounding(key){
+  const y=window.scrollY;
+  openFoundingPage(key,false);
+  requestAnimationFrame(()=>window.scrollTo({top:y,behavior:'instant'}));
+}
+window.navigateFounding=navigateFounding;
+
 function renderDeclaration() {
   const target = document.getElementById('declarationContent');
   if (!target) return;
@@ -221,11 +232,11 @@ function renderDeclaration() {
       </section>
 
       <nav class="decl-timeline" aria-label="Founding journey">
-        <button onclick="openFoundingPage('colonies',true)"><span>1607–1775</span><b>British Colonies</b></button>
+        <button onclick="navigateFounding('colonies')"><span>1607–1775</span><b>British Colonies</b></button>
         <button class="active"><span>1776</span><b>Declaration of Independence</b></button>
-        <button onclick="openFoundingPage('articles',true)"><span>1781–1789</span><b>Articles of Confederation</b></button>
-        <button onclick="openFoundingPage('convention',true)"><span>1787</span><b>Constitutional Convention</b></button>
-        <button onclick="openFoundingPage('constitution-rights',true)"><span>1788–1791</span><b>Constitution + Bill of Rights</b></button>
+        <button onclick="navigateFounding('articles')"><span>1781–1789</span><b>Articles of Confederation</b></button>
+        <button onclick="navigateFounding('convention')"><span>1787</span><b>Constitutional Convention</b></button>
+        <button onclick="navigateFounding('constitution-rights')"><span>1788–1791</span><b>Constitution + Bill of Rights</b></button>
       </nav>
 
       <div class="decl-body">
