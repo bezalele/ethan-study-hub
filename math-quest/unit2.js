@@ -25,7 +25,7 @@ function u2Overview() {
     .join("")}</div>`;
 }
 function u2Steps(q) {
-  return `<ol class="worked-steps">${q.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol><div class="answer-box"><strong>Answer:</strong> ${q.kind === "expression" ? esc(q.target) + " = " : ""}${esc(q.answer)}</div>`;
+  return `<ol class="worked-steps">${q.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol><div class="answer-box"><strong>Answer:</strong> ${q.kind === "expression" && q.target !== "expression" ? esc(q.target) + " = " : ""}${esc(q.answer)}</div>`;
 }
 function u2Lesson(id) {
   const t = U2_TOPICS.find((t) => t.id === id);
@@ -34,6 +34,7 @@ function u2Lesson(id) {
     return;
   }
   progress.u2Last = id;
+  progress.lastLessonRoute = "#u2lesson/" + id;
   progress.lessonStarted = true;
   save();
   const next = U2_TOPICS[U2_TOPICS.indexOf(t) + 1];
@@ -127,14 +128,15 @@ function u2QuestionUI(q, container, onNext, check = false) {
     assisted = false,
     done = false,
     result = null;
-  container.innerHTML = `<h3>${esc(q.prompt)}</h3>${q.assumption ? `<p class="muted">Assume ${esc(q.assumption)}.</p>` : ""}<form class="u2-answer-form"><label>${q.kind === "pair" ? "Your ordered pair (x, y)" : q.kind === "inequality" ? "Your inequality (for example, x <= 3)" : q.kind === "choice" ? "Choose your answer" : `Your answer: ${esc(q.target)} =`}${q.kind === "choice" ? `<select class="answer-input" required><option value="">Choose…</option>${q.choices.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}</select>` : '<input class="answer-input" autocomplete="off" spellcheck="false" required>'}</label>${q.kind === "expression" ? '<p class="input-help">Use / for fractions and parentheses around a numerator: (y-b)/m. Letters are case-sensitive.</p>' : ""}<button class="primary" type="submit">${check ? "Save answer" : "Check answer"}</button></form><div class="feedback" role="status" aria-live="polite"></div><div class="controls">${check ? "" : '<button class="ghost" data-help="hint">Hint</button><button class="ghost" data-help="solution">Show solution</button>'}${onNext ? '<button class="ghost" data-next>Skip for now →</button>' : ""}</div><div class="u2-help"></div>`;
+  container.innerHTML = `<h3>${esc(q.prompt)}</h3>${q.assumption ? `<p class="muted">Assume ${esc(q.assumption)}.</p>` : ""}<form class="u2-answer-form"><label>${q.kind === "pair" ? "Your ordered pair (x, y)" : q.kind === "inequality" ? "Your inequality (for example, x <= 3)" : q.kind === "choice" ? "Choose your answer" : q.unit ? "Your answer" : `Your answer: ${esc(q.target)} =`}${q.kind === "choice" ? `<select class="answer-input" required><option value="">Choose…</option>${q.choices.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}</select>` : '<input class="answer-input" autocomplete="off" spellcheck="false" required>'}</label>${q.kind === "expression" ? '<p class="input-help">Use / for fractions. Write multiplication as 2x or 2*x. Letters are case-sensitive.</p>' : ""}<button class="primary" type="submit">${check ? "Save answer" : "Check answer"}</button></form><div class="feedback" role="status" aria-live="polite"></div><div class="controls">${check ? "" : '<button class="ghost" data-help="hint">Hint</button><button class="ghost" data-help="solution">Show solution</button>'}${onNext ? '<button class="ghost" data-next>Skip for now →</button>' : ""}</div><div class="u2-help"></div>`;
   const input = container.querySelector(".answer-input"),
     feedback = container.querySelector(".feedback");
   const record = (ok) => {
     result = {
       id: q.id,
-      topic: "equations",
-      unit2: true,
+      topic: q.unit || "equations",
+      unit2: !q.unit,
+      ...(q.unit ? {courseUnit:q.unit} : {}),
       skill: q.topic,
       correct: ok,
       assisted,
@@ -150,7 +152,9 @@ function u2QuestionUI(q, container, onNext, check = false) {
   container.querySelector("form").onsubmit = (e) => {
     e.preventDefault();
     if (done) return;
-    const judged = U2Math.check(input.value, q);
+    const judged = q.unit && q.topic === "distribute" && q.kind === "expression" && /[()]/.test(input.value)
+      ? {ok:false, message:"Expand the expression: multiply through and write your answer without parentheses."}
+      : U2Math.check(input.value, q);
     if (judged.message) {
       feedback.className = "feedback error";
       feedback.textContent = judged.message;
@@ -162,7 +166,7 @@ function u2QuestionUI(q, container, onNext, check = false) {
       ? "Answer saved. Continue to the next question."
       : judged.ok
         ? "Correct. Your answer is equivalent to the expected result."
-        : "Not quite. Check the operation and the signs. Use a hint or study the worked solution, then try again.";
+        : "Not quite. Recheck the question and your steps. Use a hint or study the worked solution, then try again.";
     if (judged.ok || check) {
       done = true;
       container.querySelector("form button").disabled = true;
