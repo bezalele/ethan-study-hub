@@ -95,16 +95,19 @@
 
 /* --- Footer -------------------------------------------------------------- */
 
+/* Fixed height: the home page sizes itself to 100dvh minus the header and
+   this, so a variable footer would reintroduce a scrollbar. */
 #app-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--s-4);
-  flex-wrap: wrap;
-  padding: var(--s-5) var(--gutter);
+  height: var(--footer-h);
+  padding-inline: var(--gutter);
   background: var(--c-forest-deep);
   color: var(--c-on-dark-soft);
-  font-size: var(--t-small);
+  font-size: 12px;
+  overflow: hidden;
 }
 #app-footer a { color: var(--c-gold); }
 

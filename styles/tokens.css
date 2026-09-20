@@ -74,6 +74,7 @@
   --measure-text: 68ch;  /* max width for running prose */
   --gutter:     max(5vw, 20px);
   --header-h:   56px;
+  --footer-h:   44px;   /* fixed so the home page can fill exactly one screen */
 
   /* --- Motion ------------------------------------------------------------ */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);

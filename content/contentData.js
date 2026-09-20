@@ -16,11 +16,11 @@ window.EthanStudyHubContent = {
     { id: 5, label: 'UNIT 05 · 20–27%', title: 'Political Participation', summary: 'Voting · Parties · Elections · Media · Groups', focus: 'Democracy does not run itself. It depends on participation, representation, and contested political choice.', topics: ['Voting', 'Voter behavior', 'Political parties', 'Elections', 'Campaigns', 'Interest groups', 'Media'] }
   ],
   journeyChapters: [
-    { id: 'declaration', title: 'Declaration of Independence', kicker: 'Chapter 01', summary: 'The colonies explain why they are leaving Britain and make a case for self-government.', image: 'assets/journey-icons/declaration.jpg', accent: 'The argument for independence' },
-    { id: 'articles', title: 'Articles of Confederation', kicker: 'Chapter 02', summary: 'The first national system is intentionally weak and reveals the problem it was designed to solve.', image: 'assets/journey-icons/articles.jpg', accent: 'A union without enough power' },
+    { id: 'declaration', title: 'Declaration of Independence', kicker: 'Chapter 01', summary: 'The colonies explain why they are leaving Britain and make a case for self-government.', image: 'assets/journey/declaration.png', accent: 'The argument for independence' },
+    { id: 'articles', title: 'Articles of Confederation', kicker: 'Chapter 02', summary: 'The first national system is intentionally weak and reveals the problem it was designed to solve.', image: 'assets/journey/articles.png', accent: 'A union without enough power' },
     { id: 'convention', title: 'Constitutional Convention', kicker: 'Chapter 03', summary: 'Delegates redesign the government around power, divided authority, and liberty.', image: 'assets/home/hero-signing.jpg', accent: 'Designing a more durable government' },
-    { id: 'constitution', title: 'Constitution', kicker: 'Chapter 04', summary: 'The framework of federalism, separation of powers, and amendment keeps the system alive.', image: 'assets/journey-icons/constitution-rights.jpg', accent: 'The living structure' },
-    { id: 'bill-of-rights', title: 'Bill of Rights', kicker: 'Chapter 05', summary: 'The first amendments answer a central question: how is liberty protected in practice?', image: 'assets/journey-icons/constitution-rights.jpg', accent: 'Rights in the constitutional settlement' }
+    { id: 'constitution', title: 'Constitution', kicker: 'Chapter 04', summary: 'The framework of federalism, separation of powers, and amendment keeps the system alive.', image: 'assets/journey/constitution-rights.png', accent: 'The living structure' },
+    { id: 'bill-of-rights', title: 'Bill of Rights', kicker: 'Chapter 05', summary: 'The first amendments answer a central question: how is liberty protected in practice?', image: 'assets/journey/constitution-rights.png', accent: 'Rights in the constitutional settlement' }
   ],
   declarationChapter: {
     chapter: 'Declaration of Independence',
@@ -49,9 +49,9 @@ window.EthanStudyHubContent = {
     ],
     miniGallery: [
       { src: 'assets/home/hero-signing.jpg', caption: 'Drafting the Declaration', credit: 'John Trumbull · public domain' },
-      { src: 'assets/journey-icons/declaration.jpg', caption: 'The Document', credit: 'Library of Congress · public domain' },
+      { src: 'assets/journey/declaration.png', caption: 'The Document', credit: 'Library of Congress · public domain' },
       { src: 'assets/home/hero-signing.jpg', caption: 'Public Reading', credit: 'Historical interpretation · public domain' },
-      { src: 'assets/journey-icons/articles.jpg', caption: 'Spreading the News', credit: 'Public domain' },
+      { src: 'assets/journey/articles.png', caption: 'Spreading the News', credit: 'Public domain' },
       { src: 'assets/home/hero-signing.jpg', caption: 'A New Nation', credit: 'Yale University Art Gallery · public domain' }
     ],
     knowledgeCheck: [
