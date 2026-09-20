@@ -24,18 +24,31 @@
   </header>
 
   <main>
-    <section id="home" class="page active exact-reference-home" aria-label="Ethan Study Hub home">
-      <div class="home-reference-canvas" role="img" aria-label="The Story of America — Ethan Study Hub">
-        <button class="hotspot hs-start" onclick="show('declaration')" aria-label="Start the Story"></button>
-        <button class="hotspot hs-map" onclick="show('map')" aria-label="View Course Map"></button>
-        <button class="hotspot hs-colonies" onclick="show('story')" aria-label="British Colonies"></button>
-        <button class="hotspot hs-declaration" onclick="show('declaration')" aria-label="Declaration of Independence"></button>
-        <button class="hotspot hs-articles" onclick="show('story')" aria-label="Articles of Confederation"></button>
-        <button class="hotspot hs-convention" onclick="show('story')" aria-label="Constitutional Convention"></button>
-        <button class="hotspot hs-constitution" onclick="show('constitution')" aria-label="Constitution and Bill of Rights"></button>
-        <button class="hotspot hs-begin" onclick="show('declaration')" aria-label="Begin the Journey"></button>
-        <button class="hotspot hs-course" onclick="show('map')" aria-label="Open Course Map"></button>
+    <section id="home" class="page active exact-home" aria-label="Ethan Study Hub home">
+      <div class="exact-hero">
+        <div class="exact-copy">
+          <p class="exact-kicker">PEOPLE. IDEAS. A MORE PERFECT UNION.</p>
+          <h1>The story of<br>America.</h1>
+          <p class="exact-deck">Explore how a group of colonies became a nation —<br>and what their story teaches us about government,<br>freedom, and our responsibilities today.</p>
+          <div class="exact-actions"><button onclick="show('story')">Start the Story →</button><button class="outline" onclick="show('map')">View Course Map</button></div>
+          <blockquote>“The experiment, sir, is not over.”<small>— Benjamin Franklin, 1787</small></blockquote>
+        </div>
+        <div class="exact-hero-right"><blockquote>“We hold these truths to be self-evident,<br>that all men are created equal…”<small>— Declaration of Independence, 1776</small></blockquote></div>
       </div>
+      <div class="exact-journey">
+        <div class="exact-journey-label"><b>EXPLORE<br>THE JOURNEY</b><p>Five chapters. One big<br>story. Click any chapter<br>to dive in.</p></div>
+        <button onclick="show('story')"><i class="j1"></i><span class="num">01</span><span class="date">1607–1775</span><strong>British Colonies</strong><small>Foundations and frustrations</small></button>
+        <button class="active" onclick="show('declaration')"><i class="j2"></i><span class="num">02</span><span class="date">1776</span><strong>Declaration of Independence</strong><small>A new nation</small></button>
+        <button onclick="show('story')"><i class="j3"></i><span class="num">03</span><span class="date">1781–1789</span><strong>Articles of Confederation</strong><small>A government in practice</small></button>
+        <button onclick="show('story')"><i class="j4"></i><span class="num">04</span><span class="date">1787</span><strong>Constitutional Convention</strong><small>Designing a better system</small></button>
+        <button onclick="show('constitution')"><i class="j5"></i><span class="num">05</span><span class="date">1788–1791</span><strong>Constitution + Bill of Rights</strong><small>Rights, balance, and a lasting union</small></button>
+      </div>
+      <div class="exact-cards">
+        <article class="exact-history"><p class="label">START WITH THE STORY</p><h2>History first.<br>AP Government<br>underneath.</h2><p>Understand what happened, why it mattered,<br>and how it connects to the government we have<br>today.</p><button onclick="show('story')">Begin the Journey →</button></article>
+        <article class="exact-question"><p class="label">THE BIG QUESTION</p><h2>How do you give<br>government enough<br>power to protect people —<br>without giving it so much<br>power that it threatens<br>their liberty?</h2><i></i><b>EXPLORE. THINK. DISCUSS. PRACTICE.</b><span>Built for Ethan — and any curious learner.</span></article>
+        <article class="exact-course"><p class="label">AP SUCCESS</p><h2>Need the full<br>course view?</h2><p>See all units, topics, and practice<br>— connected to the historical<br>story.</p><button onclick="show('map')">Open Course Map →</button></article>
+      </div>
+      <div class="exact-footer">“A well-instructed people alone can be permanently a free people.” <span>— James Madison</span><b>PAST INFORMS THE FUTURE &nbsp; ──</b></div>
     </section>
 
     <section id="map" class="page" aria-label="Course map overview">
