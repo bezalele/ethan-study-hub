@@ -134,7 +134,7 @@ function openFoundingPage(key,preserveScroll=false){
  const keys=['colonies','declaration','articles','convention','constitution-rights'], labels=['British Colonies','Declaration of Independence','Articles of Confederation','Constitutional Convention','Constitution + Bill of Rights'], dates=['1607–1775','1776','1781–1789','1787','1787–1791'], current=keys.indexOf(key);
  const gallery=foundingGallery[key];
  const timeline=keys.map((k,i)=>'<button class="'+(i===current?'active':'')+'" onclick="'+("openFoundingPage('"+k+"',true)")+'"><span>'+dates[i]+'</span><b>'+labels[i]+'</b></button>').join('');
- target.innerHTML=`<article class="decl founding-decl">
+ target.innerHTML=`<article class="decl founding-decl ${key}-chapter">
   <section class="decl-hero founding-decl-hero" style="background-image:linear-gradient(90deg,rgba(7,14,12,.91),rgba(7,14,12,.32)),url('${visuals.img}')">
    <div class="decl-hero-copy"><p class="eyebrow">UNIT 1 · THE STORY &nbsp;&nbsp;&nbsp; ${x.chapter}</p><h1><span class="fd-hero-year">${x.date}</span><span class="fd-hero-title">${x.title}</span></h1><h2>${x.subtitle}</h2><p>${x.intro}</p></div>
    <div class="fd-hero-side"><blockquote>“${x.question}”<small>— The big question</small></blockquote></div>
