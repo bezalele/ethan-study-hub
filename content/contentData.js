@@ -48,9 +48,11 @@ window.EthanStudyHubContent = {
       'The founding story begins with principle, then moves into design.'
     ],
     miniGallery: [
-      { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Declaration_of_Independence.jpg/800px-Declaration_of_Independence.jpg', caption: 'The manuscript on display in the National Archives', credit: 'National Archives' },
-      { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Independence_Hall_Manhattan.jpg/800px-Independence_Hall_Manhattan.jpg', caption: 'The political setting of revolutionary debate', credit: 'Public domain' },
-      { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/John_Trumbull%2C_Declaration_of_Independence.jpg/800px-John_Trumbull%2C_Declaration_of_Independence.jpg', caption: 'Artistic memory of the founding moment', credit: 'Library of Congress' }
+      { src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20independence.jpg?width=1400', caption: 'Drafting the Declaration', credit: 'John Trumbull · public domain' },
+      { src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20of%20Independence%20%28USA%29.jpg?width=1000', caption: 'The Document', credit: 'Library of Congress · public domain' },
+      { src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration.independence.1776.jpg?width=1400', caption: 'Public Reading', credit: 'Historical interpretation · public domain' },
+      { src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Independence%20Hall%202.jpg?width=1200', caption: 'Spreading the News', credit: 'Wikimedia Commons' },
+      { src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/The%20Declaration%20of%20Independence%2C%20July%204%2C%201776%2C%20by%20John%20Trumbull.jpg?width=1400', caption: 'A New Nation', credit: 'Yale University Art Gallery · public domain' }
     ],
     knowledgeCheck: [
       { question: 'Why is the Declaration different from the Constitution?', answer: 'The Declaration explains why separation is justified; the Constitution sets up the government that follows.' },
