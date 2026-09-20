@@ -14,6 +14,7 @@
       <span>AP U.S. Government & Politics · 2026–27</span>
     </div>
     <nav aria-label="Main navigation">
+      <button type="button" onclick="show('home')">Home</button>
       <button type="button" onclick="show('map')">Course Map</button>
       <button type="button" onclick="show('story')">Founding Story</button>
       <button type="button" onclick="show('declaration')">Declaration</button>
@@ -23,7 +24,34 @@
   </header>
 
   <main>
-    <section id="map" class="page active" aria-label="Course map overview">
+    <section id="home" class="page active" aria-label="Ethan Study Hub home">
+      <div class="home-cinematic">
+        <div class="home-hero" style="background-image:linear-gradient(90deg,rgba(8,18,15,.92) 0%,rgba(8,18,15,.60) 48%,rgba(8,18,15,.25) 100%),url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/John_Trumbull%2C_Declaration_of_Independence.jpg/1280px-John_Trumbull%2C_Declaration_of_Independence.jpg')">
+          <div class="home-copy">
+            <p class="eyebrow">THE AMERICAN FOUNDING · AN INTERACTIVE STORY</p>
+            <h1>How did America<br>get <em>here?</em></h1>
+            <p class="home-deck">A story about power, freedom, failure — and the attempt to build a government strong enough to work without becoming too powerful.</p>
+            <div class="home-actions"><button class="home-primary" type="button" onclick="show('declaration')">Start the story →</button><button class="home-secondary" type="button" onclick="show('constitution')">Explore the Constitution</button></div>
+          </div>
+          <div class="home-question"><span>THE BIG QUESTION</span><blockquote>How do you give government enough power to protect people — without giving it so much power that it threatens their liberty?</blockquote></div>
+        </div>
+        <div class="home-story-strip">
+          <div class="home-story-intro"><span>THE JOURNEY</span><strong>Follow the problem as it changes.</strong></div>
+          <button onclick="show('story')"><b>01</b><span>Before 1776</span><strong>British Colonies</strong><small>Who should govern?</small></button>
+          <button class="current" onclick="show('declaration')"><b>02</b><span>1776</span><strong>Declaration</strong><small>Why leave Britain?</small></button>
+          <button onclick="show('story')"><b>03</b><span>1781–1789</span><strong>Articles</strong><small>Too little power?</small></button>
+          <button onclick="show('story')"><b>04</b><span>1787</span><strong>Convention</strong><small>Design it again.</small></button>
+          <button onclick="show('constitution')"><b>05</b><span>1788–1791</span><strong>Constitution</strong><small>Balance power.</small></button>
+        </div>
+        <div class="home-bottom">
+          <section><p class="eyebrow">START WITH THE STORY</p><h2>History first.<br>AP Government underneath.</h2><p>Explore what happened, why people made the choices they did, and how each decision created the next problem. When Ethan needs school details, the AP course map is always one click away.</p></section>
+          <section class="home-continue"><span>CONTINUE EXPLORING</span><h3>1776 — Declaration of Independence</h3><p>Rights. Consent. Grievances. Independence. Then the difficult question: what kind of government comes next?</p><button type="button" onclick="show('declaration')">Enter chapter →</button></section>
+          <section class="home-school"><span>SCHOOL VIEW</span><h3>Need the AP structure?</h3><p>See units, topics, and practice without interrupting the historical journey.</p><button type="button" onclick="show('map')">Open Course Map →</button></section>
+        </div>
+      </div>
+    </section>
+
+    <section id="map" class="page" aria-label="Course map overview">
       <div class="hero">
         <p class="eyebrow">MAP FIRST · ZOOM SECOND</p>
         <h1>See the whole government.<br><em>Then zoom in.</em></h1>
