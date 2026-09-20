@@ -15,76 +15,48 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download colorful public institutional artwork into the repo
+      - name: Download colorful public artwork into the repo
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import html, os, re, time, urllib.request
+          mkdir -p assets/chapters/{colonies,declaration,articles,convention,constitution-rights}
 
-          items = [
-            ("https://www.aoc.gov/explore-capitol-campus/art/embarkation-pilgrims",
-             "assets/chapters/colonies/embarkation-pilgrims.webp"),
-            ("https://www.aoc.gov/explore-capitol-campus/art/baptism-pocahontas",
-             "assets/chapters/colonies/baptism-pocahontas.webp"),
-            ("https://www.aoc.gov/explore-capitol-campus/art/declaration-independence",
-             "assets/chapters/declaration/declaration-aoc.webp"),
-            ("https://www.aoc.gov/explore-capitol-campus/art/surrender-general-burgoyne",
-             "assets/chapters/declaration/surrender-burgoyne.webp"),
-            ("https://www.aoc.gov/explore-capitol-campus/art/surrender-lord-cornwallis",
-             "assets/chapters/articles/surrender-cornwallis.webp"),
-            ("https://www.aoc.gov/explore-capitol-campus/art/general-george-washington-resigning-his-commission",
-             "assets/chapters/articles/washington-resigns.webp"),
-            ("https://www.aoc.gov/explore-capitol-campus/art/signing-constitution",
-             "assets/chapters/convention/signing-aoc.webp"),
-            ("https://www.aoc.gov/explore-capitol-campus/art/first-federal-congress-1789",
-             "assets/chapters/constitution-rights/first-federal-congress.webp"),
-            ("https://www.aoc.gov/explore-capitol-campus/art/washingtons-inauguration-1789",
-             "assets/chapters/constitution-rights/washington-inauguration.webp"),
-          ]
+          get() {
+            local out="$1"; shift
+            for url in "$@"; do
+              echo "Trying $url"
+              if curl -L --fail --retry 2 --retry-delay 1 --user-agent "Mozilla/5.0 EthanStudyHub/1.0" "$url" -o "$out.tmp"; then
+                if [ "$(wc -c < "$out.tmp")" -gt 50000 ]; then
+                  mv "$out.tmp" "$out"
+                  file "$out"
+                  return 0
+                fi
+              fi
+            done
+            rm -f "$out.tmp"
+            echo "Could not download $out"
+            return 1
+          }
 
-          headers = {"User-Agent": "Mozilla/5.0 EthanStudyHub/1.0"}
+          base="https://www.aoc.gov/sites/default/files/styles/social_standard/public/2026-01"
+          popup="https://www.aoc.gov/sites/default/files/styles/popup_image/public/2026-01"
 
-          def fetch(url):
-            req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=60) as r:
-              return r.read()
+          # Vivid historical paintings from the Architect of the Capitol.
+          get assets/chapters/colonies/embarkation-pilgrims.webp             "$base/Embarkation_of_the_Pilgrims-2000w.jpg.webp"
+          get assets/chapters/colonies/baptism-pocahontas.webp             "$base/Baptism_of_Pocahontas-2000w.jpg.webp"
 
-          def og_image(page):
-            text = fetch(page).decode("utf-8", "ignore")
-            patterns = [
-              r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']',
-              r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']',
-            ]
-            for p in patterns:
-              m = re.search(p, text, re.I)
-              if m:
-                return html.unescape(m.group(1))
-            # AOC sometimes omits social meta for automated requests. The
-            # actual artwork is still present in the responsive image markup.
-            m = re.search(r"(https://www\\.aoc\\.gov)?(/sites/default/files/[^\\\"'<> ]+?\\.webp(?:\\?[^\\\"'<> ]*)?)", text, re.I)
-            if m:
-              return html.unescape((m.group(1) or 'https://www.aoc.gov') + m.group(2))
-            raise RuntimeError(f"No artwork image found on {page}")
+          get assets/chapters/declaration/declaration-aoc.webp             "$base/070222-2000w-us-capitol-rotunda-painting-trumbull-declaration-independence.jpg.webp"
+          get assets/chapters/declaration/surrender-burgoyne.webp             "$base/Surrender_of_General_Burgoyne-2000w.jpg.webp"             "$popup/Surrender_of_General_Burgoyne-2000w.jpg.webp"
 
-          for page, out in items:
-            os.makedirs(os.path.dirname(out), exist_ok=True)
-            img = og_image(page)
-            print(f"{page}\n  -> {img}\n  -> {out}")
-            time.sleep(1.2)
-            data = fetch(img)
-            if len(data) < 50000:
-              raise RuntimeError(f"Downloaded image too small ({len(data)} bytes): {img}")
-            with open(out, "wb") as fh:
-              fh.write(data)
-            time.sleep(1.2)
-          PY
+          get assets/chapters/articles/surrender-cornwallis.webp             "$base/Surrender_of_Lord_Cornwallis-2000w.jpg.webp"             "$popup/Surrender_of_Lord_Cornwallis-2000w.jpg.webp"
+          get assets/chapters/articles/washington-resigns.webp             "$base/General_George_Washington_Resigning_His_Commission-2000w.jpg.webp"             "$popup/General_George_Washington_Resigning_His_Commission-2000w.jpg.webp"
 
-          file assets/chapters/colonies/*.webp
-          file assets/chapters/declaration/*.webp
-          file assets/chapters/articles/*.webp
-          file assets/chapters/convention/*.webp
-          file assets/chapters/constitution-rights/*.webp
+          get assets/chapters/convention/signing-aoc.webp             "$base/Signing_of_the_Constitution-2000w.jpg.webp"             "$popup/Signing_of_the_Constitution-2000w.jpg.webp"
+
+          # These two are useful for the final chapter. They are optional
+          # because historical AOC filenames sometimes change.
+          get assets/chapters/constitution-rights/first-federal-congress.webp             "$base/The_First_Federal_Congress_1789-2000w.jpg.webp"             "$base/First_Federal_Congress_1789-2000w.jpg.webp" || true
+          get assets/chapters/constitution-rights/washington-inauguration.webp             "$base/Washingtons_Inauguration_1789-2000w.jpg.webp"             "$base/Washington_Inauguration_1789-2000w.jpg.webp" || true
 
       - name: Commit vivid local art
         shell: bash
@@ -92,5 +64,7 @@ jobs:
           git config user.name "Ethan Study Hub"
           git config user.email "actions@users.noreply.github.com"
           git add assets/chapters
+          git diff --cached --quiet && exit 0
           git commit -m "Add colorful Capitol artwork for founding chapter pages"
+          git pull --rebase
           git push
