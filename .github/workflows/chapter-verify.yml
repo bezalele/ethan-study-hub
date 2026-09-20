@@ -1,0 +1,23 @@
+name: Verify chapter content build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/chapter-verify.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source smoke checks
+        run: node tests/smoke.cjs
+      - name: Rendered layout checks
+        run: |
+          python3 -m http.server 8080 >/tmp/ethan-study-hub.log 2>&1 &
+          sleep 2
+          node tests/layout-check.cjs http://127.0.0.1:8080
