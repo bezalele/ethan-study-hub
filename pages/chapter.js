@@ -55,6 +55,7 @@ function hero(ch) {
           <p class="eyebrow eyebrow--on-dark">
             Unit 1 · The Story <span class="ch-hero__sep">·</span> Chapter ${pos} of ${CHAPTERS.length}
           </p>
+          <p class="ch-hero__year">${esc(ch.years)}</p>
           <h1 class="ch-hero__title">${esc(ch.title)}</h1>
           ${ch.deck ? `<p class="ch-hero__deck">${esc(ch.deck)}</p>` : ''}
           ${ch.intro ? `<p class="ch-hero__intro">${esc(ch.intro)}</p>` : ''}

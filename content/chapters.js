@@ -124,7 +124,7 @@ const DATA = [
     n: '02',
     years: '1776',
     short: 'Declaration of Independence',
-    title: '1776 — Declaration of Independence',
+    title: 'Declaration of Independence',
     tagline: 'A new nation',
     summary:
       'The colonies turned a political dispute into a principle: governments derive their just powers from the consent of the governed.',
