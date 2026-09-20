@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ethan Math Quest | Grade 9 Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bungee:wght@400&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-shape bg-shape-a"></div>
+    <div class="bg-shape bg-shape-b"></div>
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="tag">Grade 9 Adventure Learning</p>
+        <h1>Ethan Math Quest</h1>
+        <p>
+          Learn math through stories, real-life missions, and smart practice.
+          Build confidence step-by-step and see the big picture.
+        </p>
+      </div>
+      <div class="hero-actions">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty">
+          <option value="easy">Explorer (Easy)</option>
+          <option value="medium" selected>Builder (Medium)</option>
+          <option value="hard">Strategist (Hard)</option>
+        </select>
+        <button id="resetProgress" class="ghost">Reset Math Progress</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="dashboard card">
+        <h2>Progress Dashboard</h2>
+        <div class="dashboard-grid">
+          <div class="metric">
+            <span class="metric-label">Exercises Completed</span>
+            <span id="completedCount" class="metric-value">0</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Current Streak</span>
+            <span id="streakCount" class="metric-value">0 days</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Confidence Level</span>
+            <span id="confidenceLevel" class="metric-value">Growing</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Overall Mastery</span>
+            <span id="overallMastery" class="metric-value">0%</span>
+          </div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label">Overall Progress</div>
+          <div class="progress-track">
+            <div id="overallProgressBar" class="progress-fill"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Study Guide + Exercise Arena</h2>
+        <p class="section-subtitle">
+          Pick a topic, switch between study mode and exercise mode, and unlock
+          bonus story challenges.
+        </p>
+        <div id="topicGrid" class="topic-grid"></div>
+      </section>
+
+      <section id="focusPanel" class="card focus-panel hidden">
+        <div class="focus-header">
+          <h2 id="focusTitle"></h2>
+          <div class="mode-toggle" role="tablist" aria-label="Mode toggle">
+            <button id="studyModeBtn" class="active">Study Mode</button>
+            <button id="exerciseModeBtn">Exercise Mode</button>
+          </div>
+        </div>
+
+        <div id="studyMode" class="mode-view"></div>
+        <div id="exerciseMode" class="mode-view hidden"></div>
+      </section>
+    </main>
+
+    <template id="questionTemplate">
+      <article class="question-card">
+        <h4 class="question-title"></h4>
+        <p class="question-story"></p>
+        <p class="question-prompt"></p>
+        <label>
+          Your answer
+          <input type="text" class="answer-input" placeholder="Type your answer" />
+        </label>
+        <div class="question-actions">
+          <button class="check-btn">Check</button>
+          <button class="hint-btn ghost">Hint</button>
+          <button class="solution-btn ghost">Show steps</button>
+        </div>
+        <p class="feedback"></p>
+        <div class="hint hidden"></div>
+        <div class="solution hidden"></div>
+      </article>
+    </template>
+
+    <footer>
+      <p>
+        Built for Ethan with curiosity-first math learning. Real stories, clear
+        reasoning, and steady progress.
+      </p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
