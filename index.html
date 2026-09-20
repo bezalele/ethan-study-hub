@@ -22,27 +22,31 @@
   </header>
 
   <main>
-    <section id="home" class="page active study-home" aria-label="AP Government course home">
-      <div class="study-home-hero">
-        <p class="eyebrow">AP U.S. GOVERNMENT & POLITICS · 2026–27</p>
-        <h1>See the whole course.<br><em>Then learn it one piece at a time.</em></h1>
-        <p>Five areas make up the course. Start with the map below. Pick an area, understand the big idea, then zoom in only when you need more.</p>
-      </div>
-      <div class="home-course-map">
-        <header><p class="eyebrow">THE COURSE</p><h2>Everything Ethan needs to learn</h2><p>Five areas. Each card opens one clear learning path.</p></header>
-        <div class="home-units">
-          <button class="hu1" onclick="openLearn(1)"><b>01</b><div><small>FOUNDATIONS OF AMERICAN DEMOCRACY</small><h3>Why was government designed this way?</h3><p>The Constitution · checks and balances · federal vs. state powers</p></div><span>Start here →</span></button>
-          <button class="hu2" onclick="openLearn(2)"><b>02</b><div><small>BRANCHES OF GOVERNMENT</small><h3>Who does what — and how do they influence each other?</h3><p>Congress · president · courts · federal agencies</p></div><span>Explore →</span></button>
-          <button class="hu3" onclick="openLearn(3)"><b>03</b><div><small>CIVIL LIBERTIES & CIVIL RIGHTS</small><h3>What freedoms and protections do people have?</h3><p>Individual freedoms · equal protection · Bill of Rights · Supreme Court</p></div><span>Explore →</span></button>
-          <button class="hu4" onclick="openLearn(4)"><b>04</b><div><small>POLITICAL BELIEFS</small><h3>Why do people think differently about government?</h3><p>Political opinions · ideologies · public opinion</p></div><span>Explore →</span></button>
-          <button class="hu5" onclick="openLearn(5)"><b>05</b><div><small>POLITICAL PARTICIPATION</small><h3>How do people influence government?</h3><p>Voting · elections · parties · interest groups · campaign finance · media</p></div><span>Explore →</span></button>
+    <section id="home" class="page active exact-home" aria-label="Ethan Study Hub home">
+      <div class="exact-hero">
+        <div class="exact-copy">
+          <p class="exact-kicker">PEOPLE. IDEAS. A MORE PERFECT UNION.</p>
+          <h1>The story of<br>America.</h1>
+          <p class="exact-deck">Explore how a group of colonies became a nation —<br>and what their story teaches us about government,<br>freedom, and our responsibilities today.</p>
+          <div class="exact-actions"><button onclick="openLearn(1)">Start the Story →</button><button class="outline" onclick="show('map')">View Course Map</button></div>
+          <blockquote>“The experiment, sir, is not over.”<small>— Benjamin Franklin, 1787</small></blockquote>
         </div>
+        <div class="exact-hero-right"><blockquote>“We hold these truths to be self-evident,<br>that all men are created equal…”<small>— Declaration of Independence, 1776</small></blockquote></div>
       </div>
-      <section class="home-foundation-preview">
-        <div><p class="eyebrow">CHAPTER 1 · WHERE THE STORY BEGINS</p><h2>Before government makes sense,<br>see why it was built.</h2><p>American history is the doorway into the first course area — not a separate course.</p><button onclick="openLearn(1)">Begin Foundations →</button></div>
-        <div class="mini-history"><span>Colonies</span><i>→</i><span>Declaration</span><i>→</i><span>Articles</span><i>→</i><span>Constitution</span><i>→</i><span>Federalism</span></div>
-      </section>
-      <div class="home-how"><b>One simple study flow</b><span>① Pick a course area</span><i>→</i><span>② Understand the big idea</span><i>→</i><span>③ Explore the topics</span><i>→</i><span>④ Practice</span></div>
+      <div class="exact-journey">
+        <div class="exact-journey-label"><b>EXPLORE<br>THE JOURNEY</b><p>Five chapters. One big<br>story. Click any chapter<br>to dive in.</p></div>
+        <button onclick="openLearn(1)"><i class="j1"></i><span class="num">01</span><span class="date">1607–1775</span><strong>British Colonies</strong><small>Foundations and frustrations</small></button>
+        <button class="active" onclick="openLearn(1)"><i class="j2"></i><span class="num">02</span><span class="date">1776</span><strong>Declaration of Independence</strong><small>A new nation</small></button>
+        <button onclick="openLearn(1)"><i class="j3"></i><span class="num">03</span><span class="date">1781–1789</span><strong>Articles of Confederation</strong><small>A government in practice</small></button>
+        <button onclick="openLearn(1)"><i class="j4"></i><span class="num">04</span><span class="date">1787</span><strong>Constitutional Convention</strong><small>Designing a better system</small></button>
+        <button onclick="openLearn(1)"><i class="j5"></i><span class="num">05</span><span class="date">1788–1791</span><strong>Constitution + Bill of Rights</strong><small>Rights, balance, and a lasting union</small></button>
+      </div>
+      <div class="exact-cards">
+        <article class="exact-history"><p class="label">START WITH THE STORY</p><h2>History first.<br>AP Government<br>underneath.</h2><p>Understand what happened, why it mattered,<br>and how it connects to the government we have<br>today.</p><button onclick="openLearn(1)">Begin the Journey →</button></article>
+        <article class="exact-question"><p class="label">THE BIG QUESTION</p><h2>How do you give<br>government enough<br>power to protect people —<br>without giving it so much<br>power that it threatens<br>their liberty?</h2><i></i><b>EXPLORE. THINK. DISCUSS. PRACTICE.</b><span>Built for Ethan — and any curious learner.</span></article>
+        <article class="exact-course"><p class="label">AP SUCCESS</p><h2>Need the full<br>course view?</h2><p>See all units, topics, and practice<br>— connected to the historical<br>story.</p><button onclick="show('map')">Open Course Map →</button></article>
+      </div>
+      <div class="exact-footer">“A well-instructed people alone can be permanently a free people.” <span>— James Madison</span><b>PAST INFORMS THE FUTURE &nbsp; ──</b></div>
     </section>
 
     <section id="map" class="page guided-map" aria-label="Start learning AP Government">
