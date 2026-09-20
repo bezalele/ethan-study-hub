@@ -59,20 +59,37 @@ const learnChapters = {
 
 function openLearn(n=1){
  const c=learnChapters[n]||learnChapters[1], target=document.getElementById('learnContent');
- const history=c.story?'<div class="history-line"><span>COLONIES</span><i>→</i><span>DECLARATION</span><i>→</i><span>ARTICLES</span><i>→</i><span>CONVENTION</span><i>→</i><span>CONSTITUTION</span><i>→</i><span>FEDERALISM</span></div>':'';
- const evidence=n===1?'<button onclick="show(\'declaration\')">Open the Declaration →</button><button onclick="show(\'constitution\')">Explore the Constitution →</button>':'<button onclick="show(\'library\')">Documents & Cases for this chapter →</button>';
+ const topicNames={
+  1:['Why government?','Colonial America','Declaration of Independence','Articles of Confederation','Constitutional Convention','Constitution + Bill of Rights','Checks & Balances','Federalism'],
+  2:['Congress','President','Courts','Federal Agencies','Checks & Balances','Policymaking'],
+  3:['Bill of Rights','First Amendment','Due Process','Equal Protection','Civil Rights','Supreme Court Cases'],
+  4:['Political Socialization','Political Opinions','Public Opinion','Ideology','Economic Policy','Social Policy'],
+  5:['Voting','Elections','Political Parties','Interest Groups','Campaign Finance','Media']
+ };
+ const names=topicNames[n];
+ const history=n===1?'<div class="history-strip"><small>THE HISTORY BEHIND THIS UNIT</small><div>'+['Colonies','Declaration','Articles','Convention','Constitution','Federalism'].map((x,i)=>'<span>'+x+'</span>'+(i<5?'<i>→</i>':'')).join('')+'</div></div>':'';
  if(target) target.innerHTML=`
+ <div class="unit-breadcrumb"><button onclick="show('home')">Home</button><i>›</i><span>${c.kicker.replace('CHAPTER','AREA')}</span></div>
  <div class="chapter-heading"><p class="eyebrow">${c.kicker}</p><h1>${c.title}</h1><p>${c.intro}</p></div>
+ <div class="mental-model"><small>THE BIG IDEA</small><strong>${c.model}</strong></div>
  ${history}
- <div class="mental-model"><small>REMEMBER THIS FIRST</small><strong>${c.model}</strong></div>
- <div class="lesson-guide"><p class="eyebrow">FOLLOW THE STORY</p><p>Open each step in order. Keep the others closed so the page stays simple.</p></div>
- <div class="guided-steps">${c.steps.map((x,i)=>`<details ${i===0?'open':''}><summary><b>${i+1}</b><span>${x[0]}</span><i>+</i></summary><div><p>${x[1]}</p>${n===1&&i===2?'<button onclick="show(\'declaration\')">See the Declaration →</button>':''}${n===1&&i===6?'<button onclick="show(\'constitution\')">See the Constitution →</button>':''}</div></details>`).join('')}</div>
- <div class="lesson-evidence"><p class="eyebrow">WHEN YOU UNDERSTAND THE STORY</p><h2>Connect the evidence</h2><div>${evidence}</div></div>
- <div class="lesson-next">${n>1?`<button onclick="openLearn(${n-1})">← Chapter ${n-1}</button>`:'<button onclick="show(\'map\')">← Course Map</button>'}<span>${n} / 5</span>${n<5?`<button class="primary" onclick="openLearn(${n+1})">Chapter ${n+1} →</button>`:'<button class="primary" onclick="show(\'practice\')">Practice →</button>'}</div>`;
- const p=document.getElementById('lessonProgress'); if(p)p.textContent='Chapter '+n+' of 5';
+ <section class="topic-map"><div><p class="eyebrow">WHAT YOU WILL LEARN</p><h2>Choose a topic to explore</h2><p>You can follow them in order or open the one Ethan is studying at school.</p></div>
+ <div class="topic-grid">${c.steps.map((x,i)=>`<button onclick="openTopic(${n},${i})"><b>${String(i+1).padStart(2,'0')}</b><span><strong>${names[i]||x[0]}</strong><small>${x[1]}</small></span><i>→</i></button>`).join('')}</div></section>
+ <section id="topicDetail" class="topic-detail" hidden></section>
+ <div class="unit-bottom"><button onclick="show('home')">← All 5 course areas</button><button onclick="show('practice')">Practice this course →</button></div>`;
+ const p=document.getElementById('lessonProgress'); if(p)p.textContent='Course Area '+n+' of 5';
+ state.currentLearn=n;
  show('story');
 }
 
+function openTopic(n,i){
+ const c=learnChapters[n], x=c.steps[i], d=document.getElementById('topicDetail');
+ if(!d)return;
+ d.hidden=false;
+ const extra=n===1&&i===2?'<button onclick="show(\'declaration\')">Explore the Declaration →</button>':n===1&&i===5?'<button onclick="show(\'constitution\')">Explore the Constitution →</button>':'';
+ d.innerHTML='<button class="topic-close" onclick="this.parentElement.hidden=true">Close ×</button><p class="eyebrow">TOPIC '+(i+1)+'</p><h2>'+x[0]+'</h2><p>'+x[1]+'</p>'+extra;
+ d.scrollIntoView({behavior:'smooth',block:'center'});
+}
 function openLibraryNote(title,text){
  const d=document.getElementById('libraryDetail');
  if(d)d.innerHTML='<p class="eyebrow">WHY IT MATTERS</p><h3>'+title+'</h3><p>'+text+'</p><button onclick="history.back()">← Go back</button>';
