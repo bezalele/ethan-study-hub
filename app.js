@@ -65,17 +65,40 @@ const foundingPages={
  'constitution-rights':{chapter:'CHAPTER 5 OF 5',date:'1787–1791',title:'Constitution + Bill of Rights',subtitle:'Build the government. Then protect individual liberty.',intro:'The Constitution established the federal framework of government. Ratification debates helped lead to the addition of the Bill of Rights — the first ten amendments.',question:'How does the American system balance government power with individual liberty?',hero:'A NEW FRAMEWORK',takeaways:['The Constitution establishes the national government and its branches.','Federalism divides authority between national and state governments.','Ratification triggered a major debate over national power and individual liberty.','Congress proposed twelve amendments in 1789.','Ten were ratified in 1791 and became the Bill of Rights.'],cards:[['Constitution','Creates the basic structure and powers of the federal government.'],['Three branches','Legislative, executive, and judicial institutions have distinct constitutional roles.'],['Federalism','Power is divided between the national government and the states.'],['Bill of Rights','The first ten amendments protect specific liberties and place limits on government action.']],fact:'The Constitution was signed in 1787. The Bill of Rights came later: Congress proposed amendments in 1789, and ten were ratified in 1791.',next:'Foundations Course Area',nextAction:'openLearn(1)'}
 };
 function openFoundingPage(key){
- const x=foundingPages[key], el=document.getElementById('foundingDetailContent'); if(!x||!el)return;
- const keys=['colonies','declaration','articles','convention','constitution-rights'];
- const current=keys.indexOf(key);
- const timeline=keys.map((k,i)=>{const labels=['British Colonies','Declaration','Articles','Convention','Constitution + Bill of Rights'];const dates=['1607–1775','1776','1781–1789','1787','1787–1791'];const act=i===current?' active':'';const click=k==='declaration'?"show('declaration')":"openFoundingPage('"+k+"')";return '<button class="'+act+'" onclick="'+click+'"><b>'+dates[i]+'</b><span>'+labels[i]+'</span></button>';}).join('<i>→</i>');
- el.innerHTML='<div class="fd-hero fd-hero-'+key+'"><div class="fd-top"><button onclick="show(\'home\')">← Founding Journey</button><small>'+x.chapter+'</small></div><div class="fd-date">'+x.date+'</div><p class="fd-kicker">'+x.hero+'</p><h1>'+x.title+'</h1><h2>'+x.subtitle+'</h2><p>'+x.intro+'</p></div>'+
- '<div class="fd-timeline">'+timeline+'</div>'+
- '<div class="fd-body"><main><p class="eyebrow">THE BIG PICTURE</p><h2>'+x.question+'</h2><p class="fd-lead">'+x.intro+'</p><div class="fd-visual"><div><small>STUDY THIS AS A STORY</small><strong>'+x.title+'</strong><span>'+x.date+'</span></div></div><div class="fd-study-cards">'+x.cards.map((c,i)=>'<article><b>0'+(i+1)+'</b><h3>'+c[0]+'</h3><p>'+c[1]+'</p></article>').join('')+'</div></main>'+
- '<aside><section><p class="eyebrow">KEY TAKEAWAYS</p>'+x.takeaways.map((p,i)=>'<div class="fd-take"><b>'+(i+1)+'</b><span>'+p+'</span></div>').join('')+'</section><section class="fd-fact"><p class="eyebrow">INTERESTING FACT</p><p>'+x.fact+'</p></section><section class="fd-check"><p class="eyebrow">QUICK CHECK</p><h3>Can you explain this in one sentence?</h3><p>'+x.question+'</p><button onclick="this.nextElementSibling.hidden=false">Show study answer</button><div hidden>'+x.takeaways.slice(0,2).join(' ')+'</div></section></aside></div>'+
- '<div class="fd-next"><button onclick="show(\'home\')">← Back to journey</button><span>'+x.chapter+'</span><button onclick="'+x.nextAction+'">Next: '+x.next+' →</button></div>';
+ const x=foundingPages[key], target=document.getElementById('foundingDetailContent'); if(!x||!target)return;
+ const meta={
+  colonies:{big:'Why did colonial government matter?',matter:'Colonial experience with assemblies, representation, and British authority shaped the political arguments that followed.',nextText:'Tensions with Britain eventually turned into a decision to declare independence.'},
+  articles:{big:'Why did the Articles struggle?',matter:'The Articles reveal the central problem the founders faced: how to preserve state independence while creating a national government capable of acting.',nextText:'Concern about the Confederation system led delegates to meet in Philadelphia in 1787.'},
+  convention:{big:'Why redesign the government?',matter:'The Convention produced a new framework built around separated institutions, checks and balances, and a stronger national government.',nextText:'The proposed Constitution then faced ratification — and demands for explicit protections of individual liberty.'},
+  'constitution-rights':{big:'Why the Constitution and Bill of Rights?',matter:'Together they establish the federal framework and protect specific liberties, creating the foundation for many questions studied throughout AP Government.',nextText:'Now connect the founding story to the full Foundations of American Democracy course area.'}
+ }[key];
+ const keys=['colonies','declaration','articles','convention','constitution-rights'], labels=['British Colonies','Declaration of Independence','Articles of Confederation','Constitutional Convention','Constitution + Bill of Rights'], dates=['1607–1775','1776','1781–1789','1787','1787–1791'], current=keys.indexOf(key);
+ const timeline=keys.map((k,i)=>'<button class="'+(i===current?'active':'')+'" onclick="'+(k==='declaration'?"show('declaration')":"openFoundingPage('"+k+"')")+'"><span>'+dates[i]+'</span><b>'+labels[i]+'</b></button>').join('');
+ target.innerHTML=`<article class="decl founding-decl">
+  <section class="decl-hero founding-decl-hero">
+   <div class="decl-hero-copy"><p class="eyebrow">UNIT 1 · THE STORY &nbsp;&nbsp;&nbsp; ${x.chapter}</p><h1>${x.date} — ${x.title}</h1><h2>${x.subtitle}</h2><p>${x.intro}</p><div class="decl-actions"><button onclick="document.getElementById('founding-big').scrollIntoView({behavior:'smooth'})">▶ &nbsp; Start the overview</button><button class="outline" onclick="document.getElementById('founding-learn').scrollIntoView({behavior:'smooth'})">Explore the ideas →</button></div></div>
+   <blockquote>“${x.question}”<small>— The big question</small></blockquote>
+  </section>
+  <nav class="decl-timeline">${timeline}</nav>
+  <div class="decl-body">
+   <section id="founding-big" class="decl-big"><p class="eyebrow">THE BIG PICTURE</p><h2>${meta.big}</h2><p>${x.intro}</p><div class="decl-quote">${x.question}<small>Keep this question in mind as you study.</small></div></section>
+   <section id="founding-learn" class="founding-gallery"><div class="founding-stage"><div><span>${x.date}</span><h2>${x.title}</h2><p>${x.cards[0][1]}</p></div></div><div class="founding-thumbs">${x.cards.map((c,i)=>'<button onclick="selectFoundingIdea(this,\''+key+'\','+i+')"><b>0'+(i+1)+'</b><span>'+c[0]+'</span></button>').join('')}</div></section>
+   <aside class="decl-side"><section><h3>🔑 &nbsp; Key Takeaways</h3><ol>${x.takeaways.map((p,i)=>'<li><b>'+(i+1)+'</b><span>'+p+'</span></li>').join('')}</ol></section><section><h3>💡 &nbsp; Interesting Fact</h3><p>${x.fact}</p></section></aside>
+   <section class="decl-document founding-ideas"><div><p class="eyebrow">A CLOSER LOOK</p><h2>Key Ideas</h2><p>Open each idea and explain it in your own words.</p></div><div class="founding-idea-main"><h3>${x.cards[0][0]}</h3><p>${x.cards[0][1]}</p></div><div class="decl-doc-tabs"><h3>Explore by Topic</h3>${x.cards.map((c,i)=>'<button onclick="selectFoundingIdea(this,\''+key+'\','+i+')">'+c[0]+' <span>›</span></button>').join('')}</div></section>
+   <section class="decl-card"><h3>🌎 &nbsp; Why It Matters</h3><p>${meta.matter}</p></section>
+   <section class="decl-card decl-check"><h3>✅ &nbsp; Quick Check</h3><p><b>${x.question}</b></p><button onclick="this.nextElementSibling.hidden=false">Show study answer</button><p hidden>${x.takeaways.slice(0,2).join(' ')}</p></section>
+   <section class="decl-card decl-next"><h3>➡️ &nbsp; What’s Next?</h3><p>${meta.nextText}</p><button onclick="${x.nextAction}">Continue the Story →</button></section>
+  </div>
+ </article>`;
  show('foundingDetail');
 }
+function selectFoundingIdea(btn,key,i){
+ const x=foundingPages[key], box=document.querySelector('#foundingDetail .founding-idea-main'), stage=document.querySelector('#foundingDetail .founding-stage>div'); if(!x)return;
+ if(box)box.innerHTML='<h3>'+x.cards[i][0]+'</h3><p>'+x.cards[i][1]+'</p>';
+ if(stage)stage.innerHTML='<span>'+x.date+'</span><h2>'+x.cards[i][0]+'</h2><p>'+x.cards[i][1]+'</p>';
+ document.querySelectorAll('#foundingDetail .founding-thumbs button').forEach((b,n)=>b.classList.toggle('active',n===i));
+}
+
 const learnChapters = {
 1:{kicker:'CHAPTER 1 OF 5 · FOUNDATIONS',title:'Why was American government designed this way?',intro:'Before memorizing government, follow the problem that created it.',model:'Britain felt too powerful → the Articles were too weak → the Constitution tried to find balance.',story:true,steps:[
 ['Why do people need government?','Shared rules, protection, public needs and a way to settle disputes require some form of government. The hard question is how much power it should have.'],
