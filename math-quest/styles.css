@@ -211,10 +211,13 @@ button:disabled {
   display: block;
 }
 .brand span {
-  font:
-    10px/2.8 Arial,
-    sans-serif;
-  letter-spacing: 4px;
+  font: 400 13px/2.4 Arial, sans-serif;
+  letter-spacing: 2.5px;
+  color: #174f53;
+}
+.side-bottom [aria-disabled="true"] {
+  color: #6b787d;
+  cursor: default;
 }
 .shell {
   margin-left: 224px;
