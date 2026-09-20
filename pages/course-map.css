@@ -56,7 +56,7 @@
 
 .page--course-map .cm-explorer {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
+  grid-template-columns: 340px minmax(0, 1fr);
   gap: var(--s-5);
   min-height: 0;
   padding-block: var(--s-5);
@@ -69,7 +69,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
-  padding: var(--s-5) var(--s-4);
+  padding: var(--s-4);
   background: var(--c-parchment-dim);
   border: 1px solid var(--c-line);
   border-radius: var(--r-lg);
@@ -87,16 +87,16 @@
 
 .page--course-map .cm-rail__list {
   display: grid;
-  gap: var(--s-2);
+  gap: 6px;
   list-style: none;
 }
 
 .page--course-map .cm-unit {
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) 14px;
+  grid-template-columns: 34px minmax(0, 1fr) 12px;
   gap: var(--s-3);
-  align-items: center;
-  padding: var(--s-3) var(--s-4);
+  align-items: start;
+  padding: clamp(8px, 1.3vh, 14px) var(--s-4);
   border: 1px solid transparent;
   border-radius: var(--r-md);
   color: var(--c-ink);
@@ -117,8 +117,9 @@
 
 .page--course-map .cm-unit__n {
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: clamp(17px, min(1.2vw, 2.2vh), 21px);
   font-weight: 700;
+  line-height: 1.15;
   color: var(--c-brick);
 }
 
@@ -134,13 +135,47 @@
 
 .page--course-map .cm-unit__name {
   display: block;
-  margin-top: 1px;
+  margin-top: 2px;
   font-family: var(--font-display);
-  font-size: 20px;
-  line-height: 1.15;
+  font-size: clamp(14px, min(1.05vw, 1.85vh), 17px);
+  line-height: 1.22;
 }
 
-.page--course-map .cm-unit__chev { font-size: 20px; color: var(--c-ink-faint); }
+/* How much is behind each area, so the menu says something before you click. */
+.page--course-map .cm-unit__count {
+  display: block;
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--c-ink-faint);
+}
+
+.page--course-map .cm-unit__chev {
+  font-size: 20px;
+  line-height: 1.1;
+  color: var(--c-ink-faint);
+}
+
+.page--course-map .cm-rail__foot {
+  margin-top: auto;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--c-line);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--c-ink-faint);
+}
+
+/* Below ~950px tall the rail drops its extras so all five units still fit.
+   A course menu that hides its fifth unit is the bug this page started with. */
+@media (max-height: 950px) and (min-width: 901px) {
+  .page--course-map .cm-unit__count { display: none; }
+  .page--course-map .cm-rail__foot { display: none; }
+  .page--course-map .cm-rail__list { gap: 4px; }
+}
+
+@media (max-height: 820px) and (min-width: 901px) {
+  .page--course-map .cm-rail__head { display: none; }
+  .page--course-map .cm-rail { padding: var(--s-3); }
+}
 
 /* ===== Summary panel ====================================================== */
 
@@ -159,9 +194,12 @@
   height: 100%;
   overflow-y: auto;
   padding: var(--s-6);
-  display: grid;
+  /* A column, not a grid packed to the top: the study-guide footer takes the
+     slack so a short unit does not leave a large empty area beneath it. When
+     the content is long the auto margin collapses and the panel scrolls. */
+  display: flex;
+  flex-direction: column;
   gap: var(--s-5);
-  align-content: start;
   scrollbar-width: thin;
   scrollbar-color: var(--c-line) transparent;
 }
@@ -292,6 +330,7 @@
 /* --- Go to the full guide ------------------------------------------------- */
 
 .page--course-map .cm-go {
+  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -95,9 +95,10 @@ Order them so they build.
 |---|---|
 | `closerLook.title` | What is being examined, e.g. `The Document`. |
 | `closerLook.body` | Why it is worth examining. 25–40 words. |
-| `closerLook.cta` | Button label. The arrow is added automatically. |
+| `closerLook.href` | Where the button goes. **Omit it and no button is shown** — currently omitted on all five chapters. |
+| `closerLook.cta` | Button label, used only when `href` is set. The arrow is added automatically. |
 | `closerLook.image` | Optional image path. |
-| `closerLook.sections` | **Four** `{ label, note }` pairs. `label` 1–3 words, `note` 2–5 words. |
+| `closerLook.sections` | **Four** `{ label, note }` pairs. Add `href` to a pair to make that row a link; without one it is a plain row. |
 
 ### Why it matters
 

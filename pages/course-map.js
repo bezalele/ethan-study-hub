@@ -12,8 +12,8 @@
    from the top of the panel alone.
    --------------------------------------------------------------------------- */
 
-import { AREAS, getArea } from '../content/course.js?v=6';
-import { el, html, esc } from '../layout/dom.js?v=6';
+import { AREAS, getArea } from '../content/course.js?v=8';
+import { el, html, esc } from '../layout/dom.js?v=8';
 
 function header() {
   return `
@@ -38,7 +38,8 @@ function rail(selected) {
         <span class="cm-unit__n">0${a.n}</span>
         <span class="cm-unit__text">
           <span class="cm-unit__meta">Unit ${a.n} · ${esc(a.weight)}</span>
-          <span class="cm-unit__name">${esc(a.short)}</span>
+          <span class="cm-unit__name">${esc(a.title)}</span>
+          <span class="cm-unit__count">${a.topics.length} topics${a.detail ? ' · guide ready' : ''}</span>
         </span>
         <span class="cm-unit__chev" aria-hidden="true">›</span>
       </a>
@@ -48,6 +49,7 @@ function rail(selected) {
     <nav class="cm-rail" aria-label="Course areas">
       <p class="cm-rail__head">The course · five areas</p>
       <ol class="cm-rail__list">${items}</ol>
+      <p class="cm-rail__foot">Exam weights are College Board multiple-choice weightings.</p>
     </nav>`;
 }
 

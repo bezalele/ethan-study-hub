@@ -188,7 +188,7 @@
   max-width: 520px;
   margin-top: 4px;
   font-family: var(--font-display);
-  font-size: clamp(12px, .9vw, 15px);
+  font-size: clamp(14px, .95vw, 16px);
   font-weight: 700;
   line-height: 1.2;
   color: var(--c-forest);
@@ -196,14 +196,14 @@
 .page--home .home-storyline b {
   color: var(--c-brick);
   font-family: var(--font-ui);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
 }
 .page--home .home-card__insight {
   max-width: 34ch;
   margin-top: 2px;
-  font-size: 12px;
-  line-height: 1.4;
+  font-size: 13px;
+  line-height: 1.45;
   color: var(--c-ink-soft);
   font-style: italic;
 }

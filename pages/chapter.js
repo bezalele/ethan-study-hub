@@ -18,9 +18,9 @@
 
 import {
   CHAPTERS, getChapter, nextChapter, prevChapter, chapterPosition,
-} from '../content/chapters.js?v=6';
-import { renderTimeline } from '../components/timeline.js?v=6';
-import { el, html, esc } from '../layout/dom.js?v=6';
+} from '../content/chapters.js?v=8';
+import { renderTimeline } from '../components/timeline.js?v=8';
+import { el, html, esc } from '../layout/dom.js?v=8';
 
 /* --- Small shared pieces -------------------------------------------------- */
 
@@ -260,7 +260,11 @@ function closerArt(cl) {
     </div>`;
 }
 
-/* --- A closer look -------------------------------------------------------- */
+/* --- A closer look --------------------------------------------------------
+   The call to action appears only when closerLook.href names a destination.
+   Without one the button is left off rather than pointed at a page that does
+   not answer it — the same rule the section rows follow.
+   --------------------------------------------------------------------------- */
 
 function closerLook(ch) {
   const cl = ch.closerLook;
@@ -285,7 +289,9 @@ function closerLook(ch) {
         <p class="eyebrow">A closer look</p>
         <h2>${esc(cl.title)}</h2>
         <p class="ch-closer__body">${prose(cl.body)}</p>
-        <a class="btn btn--primary" href="#/study/documents">${esc(cl.cta || 'Read the documents')} →</a>
+        ${cl.href
+          ? `<a class="btn btn--primary" href="${esc(cl.href)}">${esc(cl.cta || 'Read the documents')} →</a>`
+          : ''}
       </div>
       <div class="ch-closer__art">${closerArt(cl)}</div>
       <div class="ch-closer__sections">
@@ -346,7 +352,14 @@ function whatsNext(ch) {
             <strong>${esc(next.short)}</strong>
           </span>
         </a>`
-      : '<a class="btn btn--ghost" href="#/study/practice">Practice what you read →</a>'}
+      : `
+        <a class="ch-next ch-next--compact" href="#/study/practice">
+          <span class="ch-next__mark" aria-hidden="true">✓</span>
+          <span>
+            <small>End of the founding story</small>
+            <strong>Practice what you read</strong>
+          </span>
+        </a>`}
     </section>`;
 }
 
