@@ -37,6 +37,10 @@ jobs:
              "assets/chapters/articles/washington-resigns.webp"),
             ("https://www.aoc.gov/explore-capitol-campus/art/signing-constitution",
              "assets/chapters/convention/signing-aoc.webp"),
+            ("https://www.aoc.gov/explore-capitol-campus/art/first-federal-congress-1789",
+             "assets/chapters/constitution-rights/first-federal-congress.webp"),
+            ("https://www.aoc.gov/explore-capitol-campus/art/washingtons-inauguration-1789",
+             "assets/chapters/constitution-rights/washington-inauguration.webp"),
           ]
 
           headers = {"User-Agent": "Mozilla/5.0 EthanStudyHub/1.0"}
@@ -80,6 +84,7 @@ jobs:
           file assets/chapters/declaration/*.webp
           file assets/chapters/articles/*.webp
           file assets/chapters/convention/*.webp
+          file assets/chapters/constitution-rights/*.webp
 
       - name: Commit vivid local art
         shell: bash
