@@ -6,7 +6,7 @@
   <meta name="description" content="Ethan Study Hub — interactive AP U.S. Government discovery experience.">
   <title>Ethan Study Hub · AP U.S. Government</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="home-override.css?v=20260920-landscapefooter">
+  <link rel="stylesheet" href="home-override.css?v=20260920-galleries">
 </head>
 <body>
   <header>
@@ -34,6 +34,14 @@
         </div>
         <div class="exact-hero-right"><blockquote>“We hold these truths to be self-evident,<br>that all men are created equal…”<small>— Declaration of Independence, 1776</small></blockquote></div>
       </div>
+      <section class="home-story-slider" aria-label="Founding story visual overview">
+        <div class="home-story-slide" style="background-image:linear-gradient(90deg,rgba(5,18,15,.84),rgba(5,18,15,.18)),url('https://commons.wikimedia.org/wiki/Special:Redirect/file/Patrick%20Henry%20before%20the%20Virginia%20House%20of%20Burgesses%20May%2030%2C%201765%20LCCN2006691555.jpg?width=1200')">
+          <button class="home-slide-prev" onclick="moveHomeSlide(-1)" aria-label="Previous story">‹</button>
+          <div><small>THE FOUNDING STORY · IN FIVE SCENES</small><h3>Before independence</h3><p>Americans already had experience with assemblies, representation, and local self-government.</p><span class="home-slide-count">1 / 5</span></div>
+          <button class="home-slide-next" onclick="moveHomeSlide(1)" aria-label="Next story">›</button>
+        </div>
+        <div class="home-slide-dots"><button class="active" onclick="setHomeSlide(0)" aria-label="Story scene 1"></button><button class="" onclick="setHomeSlide(1)" aria-label="Story scene 2"></button><button class="" onclick="setHomeSlide(2)" aria-label="Story scene 3"></button><button class="" onclick="setHomeSlide(3)" aria-label="Story scene 4"></button><button class="" onclick="setHomeSlide(4)" aria-label="Story scene 5"></button></div>
+      </section>
       <div class="exact-journey">
         <div class="exact-journey-label"><b>EXPLORE<br>THE JOURNEY</b><p>Five chapters. One big<br>story. Click any chapter<br>to dive in.</p></div>
         <button onclick="openFoundingPage('colonies')" onmouseenter="showJourneyFact(1,this)" onmouseleave="hideJourneyFact()" onfocus="showJourneyFact(1,this)" onblur="hideJourneyFact()"><i class="j1"></i><span class="num">01</span><span class="date">1607–1775</span><strong>British Colonies</strong><small>Foundations and frustrations</small></button>
@@ -112,6 +120,6 @@
   </footer>
 
   <script src="content/contentData.js"></script>
-  <script src="app.js?v=20260920-orientation"></script>
+  <script src="app.js?v=20260920-galleries"></script>
 </body>
 </html>
