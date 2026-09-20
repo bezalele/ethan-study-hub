@@ -60,7 +60,7 @@ const DATA = [
 
     deck: 'Before there was a United States, there were thirteen separate British colonies.',
     intro:
-      'Before the United States existed, the thirteen colonies were part of the British Empire. Many colonies had elected assemblies that handled local laws and taxes, so generations of colonists grew used to having a voice in government. After the Seven Years’ War ended in 1763, Britain tried to raise more revenue and tighten imperial control. The argument quickly became bigger than money: could Parliament tax the colonies when colonists elected no members to Parliament?',
+      'Before the United States existed, the thirteen colonies were part of the British Empire. Many colonies had elected assemblies that handled local laws and taxes, so generations of colonists grew used to having a voice in government. The Seven Years’ War ended in 1763 after leaving Britain with heavy war costs and debt, so Parliament sought more revenue from the colonies and tightened imperial control. The argument quickly became bigger than money: could Parliament tax the colonies when colonists elected no members to Parliament?',
     heroQuote: {
       text: 'No taxation without representation.',
       source: 'Colonial political slogan, 1760s',
@@ -232,7 +232,7 @@ const DATA = [
     bigPicture: {
       heading: 'The Declaration is a three-part argument',
       body:
-        '<strong>1. The principle:</strong> people possess natural rights, and legitimate government depends on their consent. <strong>2. The evidence:</strong> the Declaration lists grievances meant to show a pattern of British abuses. <strong>3. The conclusion:</strong> because that political relationship had broken down, the colonies declared themselves free and independent states. This is why the Declaration matters in AP Government: it connects <strong>natural rights, popular sovereignty, and limited government</strong>.',
+        '<strong>1. The principle:</strong> people possess natural rights, and legitimate government depends on their consent. This reflects the idea of a <strong>social contract</strong>: people accept government authority so government will protect their rights. <strong>2. The evidence:</strong> the Declaration lists grievances meant to show a pattern of British abuses. <strong>3. The conclusion:</strong> because that political relationship had broken down, the colonies declared themselves free and independent states. This connects <strong>natural rights, popular sovereignty, limited government, and the social contract</strong>.',
     },
     takeaways: [
       'Natural rights are rights people possess simply because they are human; the Declaration names life, liberty, and the pursuit of happiness.',
@@ -348,15 +348,15 @@ const DATA = [
         why: 'The grievance list is the evidence for the larger argument that British rule had repeatedly violated colonial rights.',
       },
       {
-        question: 'What did the Declaration NOT do?',
+        question: 'In the Declaration’s argument, what does the idea of a social contract mean?',
         options: [
-          'Declare the colonies free and independent states',
-          'State principles about rights and consent',
-          'Create the structure of the new national government',
-          'List complaints about British rule',
+          'People accept government authority in exchange for government protecting their rights',
+          'Parliament may govern the colonies without their consent',
+          'A king receives political power directly from God',
+          'States may ignore any law they dislike',
         ],
-        answer: 2,
-        why: 'It explains principles and separation; the structure of government came later with the Articles and Constitution.',
+        answer: 0,
+        why: 'The social-contract idea links political authority to the people and to government’s responsibility to protect their rights.',
       },
     ],
     whatsNext: {
@@ -391,12 +391,12 @@ const DATA = [
     bigPicture: {
       heading: 'Why was the first national government so weak?',
       body:
-        'The weakness was partly intentional. States feared replacing British rule with another distant, powerful government. Under the Articles, each state had <strong>one vote in Congress</strong>. Congress could conduct diplomacy and war, but it could not <strong>levy direct federal taxes</strong> or <strong>regulate interstate commerce</strong>. There was no separate national executive and no national court system like today’s. Even changing the Articles required <strong>all thirteen states</strong> to agree.',
+        'The weakness was partly intentional. States feared replacing British rule with another distant, powerful government. Under the Articles, each state had <strong>one vote in Congress</strong>. Congress could conduct diplomacy and war, but it could not <strong>levy direct federal taxes</strong> or <strong>regulate interstate commerce</strong>. There was <strong>no separate executive branch</strong>, <strong>no national court system</strong>, and the national government did not have exclusive control over coining money. Even changing the Articles required <strong>all thirteen states</strong> to agree.',
     },
     takeaways: [
       'Maryland became the final state to ratify the Articles on March 1, 1781, allowing the Confederation government formally to begin.',
       'Each state had one vote in Congress, whether it was large or small.',
-      'Congress could make treaties and declare war, but it could not impose direct federal taxes or regulate commerce among the states.',
+      'Congress could make treaties and declare war, but it could not impose direct federal taxes or regulate interstate commerce, and it lacked a separate executive and national court system.',
       'The Confederation had real successes, especially the Treaty of Paris and the Northwest Ordinance, but it struggled with debt, trade disputes, and enforcement.',
       'Shays’ Rebellion in 1786–1787 increased fears that the national government was too weak to respond effectively to serious domestic problems.',
     ],
@@ -504,7 +504,7 @@ const DATA = [
           'It showed that Congress was collecting too many taxes',
         ],
         answer: 1,
-        why: 'The unrest strengthened arguments that the Confederation government lacked enough power to respond to national problems.',
+        why: 'The unrest strengthened arguments that the Confederation lacked enough centralized military and enforcement power to respond effectively to serious domestic disorder.',
       },
       {
         question: 'Why was changing the Articles so difficult?',
@@ -557,7 +557,7 @@ const DATA = [
       'The Great Compromise created a House based on population and a Senate with equal representation for each state.',
       'Separation of powers gives the legislative, executive, and judicial branches different responsibilities.',
       'Checks and balances give each branch tools to limit the others, while federalism divides authority between national and state governments.',
-      'The Constitution also included compromises protecting slavery, including the Three-Fifths Clause; 39 delegates signed the final document on September 17.',
+      'The Electoral College was another compromise over how to choose the president; the Constitution also protected slavery through compromises including the Three-Fifths Clause.',
     ],
     facts: [
       {
@@ -611,7 +611,7 @@ const DATA = [
         },
         {
           label: 'Slavery',
-          note: 'Three-Fifths Clause counted enslaved people as three-fifths for representation and direct taxation, increasing slaveholding states’ representation while denying enslaved people political rights.',
+          note: 'Three-Fifths Clause — three-fifths of a state’s enslaved population was counted when apportioning House representation and direct taxes, increasing slaveholding states’ political power while enslaved people had no political rights.',
         },
       ],
     },
@@ -633,15 +633,15 @@ const DATA = [
         why: 'It combined representation by population in the House with equal state representation in the Senate.',
       },
       {
-        question: 'What did delegates actually do at the Convention?',
+        question: 'What problem was the Electoral College designed to address at the Convention?',
         options: [
-          'Made small amendments to the Articles',
-          'Created an entirely new framework of government',
-          'Dissolved the union',
-          'Drafted the Bill of Rights',
+          'How the president would be selected',
+          'How Supreme Court justices would be removed',
+          'How states would collect local taxes',
+          'How amendments would be ratified',
         ],
-        answer: 1,
-        why: 'They were sent to revise the Articles but ultimately proposed a new Constitution.',
+        answer: 0,
+        why: 'The Electoral College was the Convention’s compromise system for selecting the president through state-appointed electors rather than direct national popular vote or congressional selection.',
       },
       {
         question: 'What does separation of powers mean?',
@@ -712,11 +712,11 @@ const DATA = [
         'The Constitution limits power mainly by <strong>designing the government</strong>: three branches, checks and balances, federalism, elections, and a written list of powers and procedures. The Bill of Rights adds <strong>specific protections</strong> such as freedoms of religion, speech, press, assembly, due process, and protection from unreasonable searches. The <strong>Tenth Amendment</strong> also reinforces federalism by reserving powers not delegated to the United States — and not prohibited to the states — to the states or the people.',
     },
     takeaways: [
+      'The original Constitution — not the Bill of Rights — creates the three branches: Article I Congress, Article II the presidency, and Article III the federal judiciary.',
       'Article VII required nine states to ratify the Constitution; New Hampshire became the ninth state in June 1788.',
-      'The new federal government began operating in 1789 with George Washington as the first president and Congress meeting under the new Constitution.',
       'Federalists supported ratification; Anti-Federalists feared excessive national power and pushed strongly for a bill of rights.',
       'Congress proposed twelve amendments in 1789; ten were ratified on December 15, 1791 and became the Bill of Rights.',
-      'The Bill of Rights protects individual liberties, while the Tenth Amendment also reinforces the federal system by reserving undelegated powers to states or the people.',
+      'The Bill of Rights is the first ten amendments: it adds explicit protections for liberties and also reserves undelegated powers to the states or the people through the Tenth Amendment.',
     ],
     facts: [
       {
@@ -739,38 +739,44 @@ const DATA = [
       },
       {
         text:
+          'The three branches are NOT created by the Bill of Rights. They are in the original Constitution: Article I creates Congress, Article II establishes the presidency, and Article III establishes the federal judiciary.',
+        name: 'Easy distinction',
+        dates: 'Constitution = structure',
+      },
+      {
+        text:
           'One of the two amendments that failed in 1791 was finally ratified more than 200 years later, in 1992, and became the Twenty-Seventh Amendment.',
         name: 'A 203-year wait',
         dates: '1789 → 1992',
       },
     ],
     closerLook: {
-      title: 'How does the system protect liberty?',
+      title: 'Two layers: build the government, then protect rights',
       body:
-        'The Constitution does not rely on one single safeguard. It spreads power among institutions and levels of government, then the Bill of Rights adds explicit rules about freedoms and legal protections. Ethan should be able to recognize both kinds of limits: <strong>structural limits</strong> and <strong>rights-based limits</strong>.',
+        '<strong>The original Constitution (1787)</strong> builds the federal government: Articles I–III establish Congress, the presidency, and the federal judiciary; the Constitution also divides and checks political power. <strong>The Bill of Rights (1791)</strong> is the first ten amendments added afterward. It does not create the branches. It adds explicit protections for liberties and reinforces limits on government power.',
       cta: 'Explore the protections',
       images: [
         {
-          src: 'assets/chapters/constitution-rights/closer/bill-of-rights.jpg',
-          alt: 'The Bill of Rights laid out on a desk with all ten amendments legible, delegates conferring behind it',
+          src: 'assets/chapters/convention/closer/we-the-people.jpg',
+          alt: 'The opening of the Constitution showing “We the People” and the beginning of Article I',
         },
       ],
       sections: [
         {
-          label: 'Three branches',
-          note: 'Articles I–III create Congress, the presidency, and the federal judiciary, each with different jobs.',
+          label: 'CONSTITUTION · Articles I–III',
+          note: 'Creates Congress, the presidency, and the federal judiciary. This is where the three branches come from.',
         },
         {
-          label: 'Checks & balances',
-          note: 'Branches share and limit power so no single institution can easily control the entire national government.',
+          label: 'CONSTITUTION · Checks & balances',
+          note: 'Power is divided and shared so each branch has ways to limit the others.',
         },
         {
-          label: 'First Amendment',
-          note: 'Protects religion, speech, press, assembly, and petition — core freedoms used throughout American public life.',
+          label: 'BILL OF RIGHTS · First Amendment',
+          note: 'Protects religion, speech, press, assembly, and petition from federal government infringement.',
         },
         {
-          label: 'Tenth Amendment',
-          note: 'Powers not delegated to the United States, and not prohibited to the states, are reserved to the states or the people.',
+          label: 'BILL OF RIGHTS · Tenth Amendment',
+          note: 'Reserves powers not delegated to the United States, and not prohibited to the states, to the states or the people.',
         },
       ],
     },
@@ -792,15 +798,15 @@ const DATA = [
         why: 'Anti-Federalist criticism and ratifying-state demands helped produce explicit protections for individual liberty.',
       },
       {
-        question: 'How many states had to ratify before the Constitution could take effect under Article VII?',
+        question: 'Which document created the three branches of the federal government?',
         options: [
-          'Seven',
-          'Nine',
-          'Eleven',
-          'All thirteen',
+          'The Declaration of Independence',
+          'The original Constitution in Articles I–III',
+          'The Bill of Rights',
+          'The Articles of Confederation',
         ],
         answer: 1,
-        why: 'Nine states were required. New Hampshire became the ninth in 1788.',
+        why: 'Articles I–III of the original Constitution establish Congress, the presidency, and the federal judiciary. The Bill of Rights came later as amendments.',
       },
       {
         question: 'What separated Federalists from Anti-Federalists during ratification?',
