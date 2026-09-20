@@ -49,14 +49,14 @@ body:has(#home.active) .exact-cards article{
 body:has(#home.active) .exact-history{
   background:
     linear-gradient(90deg,#e7efda 0 48%,rgba(231,239,218,.92) 56%,rgba(231,239,218,.10) 80%),
-    url("https://cdn11.bigcommerce.com/s-yzgoj/images/stencil/1280x1280/products/1545395/4912470/apik3ov7g__13954.1626743790.jpg?c=2")
+    url("assets/home/07-colonial-soldier.png")
     right 36% center/48% auto no-repeat!important;
 }
 body:has(#home.active) .exact-question{background:#fffaf3!important;text-align:center!important}
 body:has(#home.active) .exact-course{
   background:
     linear-gradient(90deg,#faf6ed 0 43%,rgba(250,246,237,.88) 52%,rgba(250,246,237,.08) 78%),
-    url("https://commons.wikimedia.org/wiki/Special:Redirect/file/United%20States%20Capitol%20west%20front%20edit2.jpg?width=950")
+    url("assets/home/08-capitol-cherry-blossoms.png")
     right center/57% 100% no-repeat!important;
 }
 
@@ -67,7 +67,7 @@ body:has(#home.active) .exact-footer{
   padding:28px 6vw!important;
   background:
     linear-gradient(180deg,rgba(250,231,191,.24),rgba(220,167,92,.12)),
-    url("https://commons.wikimedia.org/wiki/Special:Redirect/file/Blue%20Ridge%20Mountains%20Shenandoah%20National%20Park%20Virginia.jpg?width=2000")
+    url("assets/home/09-mountain-footer.png")
     center 55%/cover no-repeat!important;
   color:#17211e!important;
   text-align:center!important;
@@ -82,3 +82,20 @@ body:has(#home.active) .exact-footer b{color:#17211e!important}
  body:has(#home.active) .exact-cards{height:auto!important;grid-template-columns:1fr!important;padding:14px!important}
  body:has(#home.active) .exact-cards article{height:auto!important;min-height:280px!important}
 }
+/* Exact user-supplied Home images — local repo assets */
+body:has(#home.active) .exact-history{
+  background:
+    linear-gradient(90deg,#e7efda 0 47%,rgba(231,239,218,.94) 56%,rgba(231,239,218,.08) 79%,rgba(231,239,218,0) 100%),
+    url("assets/home/07-colonial-soldier.png") right bottom/auto 100% no-repeat!important;
+}
+body:has(#home.active) .exact-course{
+  background:
+    linear-gradient(90deg,#faf6ed 0 42%,rgba(250,246,237,.94) 50%,rgba(250,246,237,.08) 73%,rgba(250,246,237,0) 100%),
+    url("assets/home/08-capitol-cherry-blossoms.png") right center/auto 100% no-repeat!important;
+}
+body:has(#home.active) .exact-footer{
+  height:102px!important;
+  padding:0!important;
+  background:url("assets/home/09-mountain-footer.png") center center/cover no-repeat!important;
+}
+body:has(#home.active) .exact-footer > *{display:none!important}
