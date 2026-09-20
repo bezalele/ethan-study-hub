@@ -8,7 +8,7 @@
    `aria-current`. It never touches the header or footer markup.
    --------------------------------------------------------------------------- */
 
-import { setActive, setTitle } from './layout.js?v=5';
+import { setActive, setTitle } from './layout.js?v=6';
 
 /**
  * Route table. `path` segments beginning with ':' capture into params.
@@ -31,7 +31,7 @@ const moduleCache = new Map();
 
 async function loadPage(name) {
   if (!moduleCache.has(name)) {
-    moduleCache.set(name, import(`../pages/${name}.js?v=5`).then((m) => m.default));
+    moduleCache.set(name, import(`../pages/${name}.js?v=6`).then((m) => m.default));
   }
   return moduleCache.get(name);
 }
