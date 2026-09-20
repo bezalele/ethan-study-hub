@@ -1,0 +1,134 @@
+/* ---------------------------------------------------------------------------
+   base.css — reset plus the small set of primitives shared by every page.
+   Page stylesheets compose these. They never redefine them.
+   --------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--c-parchment);
+  color: var(--c-ink);
+  font: var(--t-body)/var(--lh-body) var(--font-ui);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: var(--lh-snug);
+  margin: 0;
+}
+h1 { font-size: var(--t-h1); line-height: var(--lh-tight); }
+h2 { font-size: var(--t-h2); }
+h3 { font-size: var(--t-h3); }
+
+p  { margin: 0; }
+ul, ol { margin: 0; padding: 0; }
+
+img { max-width: 100%; display: block; }
+
+a { color: var(--c-brick); text-decoration: none; }
+a:hover { color: var(--c-brick-deep); }
+
+button { font: inherit; cursor: pointer; }
+
+:focus-visible {
+  outline: 2px solid var(--c-brick);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+/* --- Primitives ---------------------------------------------------------- */
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: var(--t-eyebrow);
+  font-weight: 800;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--c-brick);
+  margin: 0;
+}
+.eyebrow--on-dark { color: var(--c-gold); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  padding: 11px 18px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              transform var(--dur) var(--ease);
+}
+.btn:hover { transform: translateY(-1px); }
+
+.btn--primary {
+  background: var(--c-forest);
+  border-color: var(--c-forest);
+  color: var(--c-on-dark);
+}
+.btn--primary:hover { background: var(--c-forest-deep); color: var(--c-on-dark); }
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--c-forest);
+  color: var(--c-forest);
+}
+.btn--ghost:hover { background: var(--c-forest); color: var(--c-on-dark); }
+
+.btn--on-dark {
+  background: var(--c-paper);
+  border-color: var(--c-paper);
+  color: var(--c-forest);
+}
+.btn--on-dark:hover { background: #fff; color: var(--c-forest); }
+
+.btn--outline-light {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.55);
+  color: var(--c-on-dark);
+}
+.btn--outline-light:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #fff;
+  color: var(--c-on-dark);
+}
+
+.card {
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.prose {
+  max-width: var(--measure-text);
+  color: var(--c-ink-soft);
+  line-height: var(--lh-body);
+}
+.prose > * + * { margin-top: var(--s-4); }
+
+.shell {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

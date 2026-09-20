@@ -1,0 +1,97 @@
+/* ---------------------------------------------------------------------------
+   practice.css
+   INVARIANT: every selector begins with .page--practice.
+   --------------------------------------------------------------------------- */
+
+.page--practice .pr-banner {
+  background: linear-gradient(115deg, var(--c-forest), var(--c-forest-soft));
+  color: var(--c-on-dark);
+}
+.page--practice .pr-banner__inner { padding-block: var(--s-7); }
+.page--practice .pr-banner h1 { margin-top: var(--s-3); }
+.page--practice .pr-banner__deck {
+  max-width: 56ch;
+  margin-top: var(--s-4);
+  font-family: var(--font-display);
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--c-on-dark-soft);
+}
+
+.page--practice .pr-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: var(--s-6);
+  align-items: start;
+  padding-block: var(--s-7);
+}
+
+.page--practice .pr-list { list-style: none; display: grid; gap: var(--s-3); }
+
+.page--practice .pr-card {
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.page--practice .pr-card__q {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: baseline;
+  padding: var(--s-4) var(--s-5);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.35;
+  list-style: none;
+}
+.page--practice .pr-card__q::-webkit-details-marker { display: none; }
+.page--practice .pr-card__q:hover { background: var(--c-parchment); }
+
+.page--practice .pr-card__n {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--c-brick);
+}
+
+.page--practice .pr-card__a {
+  padding: 0 var(--s-5) var(--s-5) calc(var(--s-5) + 34px + var(--s-3));
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--c-ink-soft);
+}
+
+.page--practice .pr-card[open] { border-color: var(--c-forest); }
+
+.page--practice .pr-empty { color: var(--c-ink-soft); }
+
+.page--practice .pr-plan {
+  display: grid;
+  gap: var(--s-3);
+  justify-items: start;
+  padding: var(--s-5);
+  background: var(--c-sage);
+  border: 1px solid #c6d3bd;
+  border-radius: var(--r-md);
+}
+.page--practice .pr-plan__steps {
+  display: grid;
+  gap: var(--s-2);
+  padding-left: var(--s-5);
+  font-size: var(--t-small);
+  line-height: 1.5;
+  color: var(--c-ink-soft);
+}
+
+@media (max-width: 920px) {
+  .page--practice .pr-body { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .page--practice .pr-card__a {
+    padding-left: var(--s-5);
+  }
+}

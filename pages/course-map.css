@@ -1,0 +1,320 @@
+/* ---------------------------------------------------------------------------
+   course-map.css
+   INVARIANT: every selector begins with .page--course-map.
+   No body scroll locking: the explorer is a normal scrolling document.
+   --------------------------------------------------------------------------- */
+
+/* ===== Hero =============================================================== */
+
+.page--course-map .cm-hero {
+  background: linear-gradient(115deg, var(--c-forest), var(--c-forest-soft));
+  color: var(--c-on-dark);
+}
+
+/* Grid, not wrapping flex: as flex the note dropped to its own line and left
+   a large gap under the title whenever the two were within ~20px of fitting. */
+.page--course-map .cm-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+  align-items: end;
+  gap: var(--s-7);
+  padding-block: var(--s-7);
+}
+
+.page--course-map .cm-hero__title {
+  margin-top: var(--s-3);
+  line-height: var(--lh-tight);
+}
+
+.page--course-map .cm-hero__note {
+  max-width: 42ch;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--c-on-dark-soft);
+}
+
+/* ===== Explorer shell ===================================================== */
+
+.page--course-map .cm-explorer {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: var(--s-5);
+  align-items: start;
+  padding-block: var(--s-7);
+}
+
+/* ===== Left rail ========================================================== */
+
+.page--course-map .cm-rail {
+  position: sticky;
+  top: calc(var(--header-h) + var(--s-4));
+  padding: var(--s-5);
+  background: var(--c-parchment-dim);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+}
+
+.page--course-map .cm-rail__list {
+  list-style: none;
+  margin-top: var(--s-4);
+  display: grid;
+  gap: var(--s-2);
+}
+
+.page--course-map .cm-rail__item {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 14px;
+  gap: var(--s-3);
+  align-items: center;
+  padding: var(--s-3);
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  color: var(--c-ink);
+  transition: background var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+.page--course-map .cm-rail__item:hover {
+  background: var(--c-paper);
+  border-color: var(--c-line);
+  color: var(--c-ink);
+}
+.page--course-map .cm-rail__item[aria-current="true"] {
+  background: var(--c-paper);
+  border-color: var(--c-forest);
+  box-shadow: var(--shadow-sm);
+}
+
+.page--course-map .cm-rail__n {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--c-brick);
+}
+
+.page--course-map .cm-rail__text { min-width: 0; display: block; }
+
+.page--course-map .cm-rail__weight {
+  display: block;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-brick);
+}
+
+.page--course-map .cm-rail__short {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.15;
+  margin-top: 2px;
+}
+
+.page--course-map .cm-rail__title {
+  display: block;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--c-ink-faint);
+}
+
+.page--course-map .cm-rail__chev {
+  font-size: 18px;
+  color: var(--c-ink-faint);
+}
+
+/* ===== Right panel ======================================================== */
+
+.page--course-map .cm-panel {
+  min-width: 0;
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.page--course-map .cm-panel__head {
+  padding: var(--s-6);
+  background: var(--c-forest);
+  color: var(--c-on-dark);
+}
+
+.page--course-map .cm-panel__kicker {
+  font-size: var(--t-eyebrow);
+  font-weight: 800;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--c-gold);
+}
+
+.page--course-map .cm-panel__title {
+  margin-top: var(--s-2);
+  font-size: var(--t-h2);
+  line-height: var(--lh-snug);
+}
+
+.page--course-map .cm-panel__why {
+  margin-top: var(--s-3);
+  max-width: 54ch;
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--c-on-dark-soft);
+}
+
+.page--course-map .cm-panel__body {
+  display: grid;
+  gap: var(--s-6);
+  padding: var(--s-6);
+}
+
+/* --- What it is about ----------------------------------------------------- */
+
+.page--course-map .cm-about {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: var(--s-5);
+  padding: var(--s-5);
+  background: var(--c-parchment);
+  border-radius: var(--r-md);
+}
+
+.page--course-map .cm-about__know {
+  margin-top: var(--s-3);
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--c-ink);
+}
+
+.page--course-map .cm-about__aside {
+  padding-left: var(--s-5);
+  border-left: 3px solid var(--c-brick);
+}
+.page--course-map .cm-about__aside p:last-child {
+  margin-top: var(--s-3);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--c-ink-soft);
+}
+
+/* --- The idea chain ------------------------------------------------------- */
+
+.page--course-map .cm-chain {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-top: var(--s-3);
+  list-style: none;
+}
+
+.page--course-map .cm-chain__step {
+  padding: 10px var(--s-4);
+  background: var(--c-sage);
+  border: 1px solid #c6d3bd;
+  border-radius: var(--r-sm);
+  font-size: var(--t-small);
+  font-weight: 700;
+  color: var(--c-forest);
+}
+
+.page--course-map .cm-chain__arrow {
+  color: var(--c-brick);
+  font-weight: 700;
+}
+
+/* --- Topics + CTA --------------------------------------------------------- */
+
+.page--course-map .cm-next {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: var(--s-5);
+  align-items: start;
+}
+
+.page--course-map .cm-topics {
+  list-style: none;
+  margin-top: var(--s-3);
+  display: grid;
+  gap: var(--s-2);
+}
+
+.page--course-map .cm-topic {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) 18px;
+  gap: var(--s-3);
+  align-items: center;
+  padding: 13px var(--s-4);
+  background: var(--c-parchment);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-sm);
+  color: var(--c-ink);
+  transition: border-color var(--dur) var(--ease),
+              background var(--dur) var(--ease);
+}
+.page--course-map .cm-topic:hover {
+  background: var(--c-paper);
+  border-color: var(--c-forest);
+  color: var(--c-ink);
+}
+
+.page--course-map .cm-topic__n {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--c-brick);
+}
+.page--course-map .cm-topic__label { font-size: 14px; font-weight: 600; }
+.page--course-map .cm-topic__chev { color: var(--c-forest); }
+
+.page--course-map .cm-next__cta {
+  padding: var(--s-5);
+  background: var(--c-sage);
+  border: 1px solid #c6d3bd;
+  border-radius: var(--r-md);
+}
+.page--course-map .cm-next__text {
+  margin: var(--s-3) 0 var(--s-4);
+  font-size: var(--t-small);
+  line-height: 1.55;
+  color: var(--c-ink-soft);
+}
+.page--course-map .cm-next__lens {
+  margin-top: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid #c6d3bd;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--c-ink-soft);
+}
+
+/* ===== Responsive ========================================================= */
+
+@media (max-width: 1000px) {
+  .page--course-map .cm-hero__inner { grid-template-columns: 1fr; }
+  .page--course-map .cm-explorer { grid-template-columns: 1fr; }
+  .page--course-map .cm-rail { position: static; }
+  .page--course-map .cm-rail__list {
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(190px, 1fr);
+    overflow-x: auto;
+  }
+  .page--course-map .cm-about,
+  .page--course-map .cm-next { grid-template-columns: 1fr; }
+  .page--course-map .cm-about__aside {
+    padding-left: 0;
+    padding-top: var(--s-4);
+    border-left: 0;
+    border-top: 3px solid var(--c-brick);
+  }
+}
+
+@media (max-width: 620px) {
+  .page--course-map .cm-panel__head,
+  .page--course-map .cm-panel__body { padding: var(--s-5); }
+  .page--course-map .cm-rail__list { grid-auto-flow: row; grid-auto-columns: auto; }
+}

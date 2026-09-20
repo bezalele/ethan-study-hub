@@ -1,0 +1,369 @@
+/* ---------------------------------------------------------------------------
+   home.css
+   INVARIANT: every selector begins with .page--home. Nothing here can reach
+   another page, the header or the footer.
+   --------------------------------------------------------------------------- */
+
+/* ===== Hero =============================================================== */
+
+.page--home .home-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: clamp(420px, 56vh, 560px);
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+}
+
+.page--home .home-hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 38%;
+  z-index: -2;
+}
+
+/* Left-weighted scrim: keeps the copy legible without flattening the art. */
+.page--home .home-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg,
+      rgba(8, 20, 16, 0.92) 0%,
+      rgba(8, 20, 16, 0.72) 38%,
+      rgba(8, 20, 16, 0.28) 70%,
+      rgba(8, 20, 16, 0.45) 100%);
+}
+
+.page--home .home-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: var(--s-7);
+  align-items: end;
+  width: 100%;
+  padding-block: var(--s-8);
+  color: var(--c-on-dark);
+}
+
+.page--home .home-hero__title {
+  font-size: var(--t-hero);
+  line-height: var(--lh-tight);
+  margin: var(--s-3) 0 var(--s-4);
+  text-shadow: 0 3px 24px rgba(0, 0, 0, 0.45);
+}
+
+.page--home .home-hero__deck {
+  max-width: 46ch;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--c-on-dark-soft);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+
+.page--home .home-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-6);
+}
+
+.page--home .home-hero__quote {
+  margin: var(--s-6) 0 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--c-on-dark);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+.page--home .home-hero__quote cite {
+  display: block;
+  margin-top: var(--s-2);
+  font-family: var(--font-ui);
+  font-size: var(--t-small);
+  font-style: normal;
+  color: var(--c-on-dark-soft);
+}
+
+.page--home .home-hero__quote--aside {
+  margin: 0;
+  text-align: right;
+  font-size: 19px;
+  max-width: 40ch;
+  justify-self: end;
+}
+
+/* ===== Journey rail ======================================================= */
+
+.page--home .home-journey {
+  background: var(--c-parchment-dim);
+  border-bottom: 1px solid var(--c-line);
+}
+
+/* The lede sits above the rail, not beside it. Beside it, the five cards were
+   left ~130px of text width each, which clipped "Declaration of Independence"
+   and "Articles of Confederation". Above, each card gets ~225px. */
+.page--home .home-journey__inner {
+  display: grid;
+  gap: var(--s-4);
+  padding-block: var(--s-5);
+}
+
+.page--home .home-journey__lede {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+}
+.page--home .home-journey__lede p:last-child {
+  font-size: var(--t-small);
+  line-height: 1.45;
+  color: var(--c-ink-soft);
+}
+
+.page--home .home-journey__list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--s-3);
+  list-style: none;
+}
+
+.page--home .home-journey__item { min-width: 0; }
+
+.page--home .home-journey__card {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  column-gap: var(--s-3);
+  row-gap: 2px;
+  align-content: center;
+  overflow-wrap: anywhere;
+  height: 100%;
+  padding: var(--s-3);
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  color: var(--c-ink);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease),
+              transform var(--dur) var(--ease);
+}
+.page--home .home-journey__card:hover {
+  color: var(--c-ink);
+  border-color: var(--c-forest);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.page--home .home-journey__thumb {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  align-self: center;
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--c-line);
+}
+
+.page--home .home-journey__meta {
+  grid-column: 2;
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+.page--home .home-journey__n {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--c-brick);
+}
+.page--home .home-journey__years {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--c-brick);
+  white-space: nowrap;
+}
+
+.page--home .home-journey__title {
+  grid-column: 2;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1.22;
+}
+
+.page--home .home-journey__tagline {
+  grid-column: 2;
+  font-size: 11px;
+  color: var(--c-ink-faint);
+  line-height: 1.3;
+}
+
+/* ===== Three cards ======================================================== */
+
+.page--home .home-cards {
+  display: grid;
+  grid-template-columns: 1.15fr 0.95fr 1fr;
+  gap: var(--s-4);
+  padding-block: var(--s-7);
+  align-items: stretch;
+}
+
+.page--home .home-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--s-3);
+  min-height: 300px;
+  padding: var(--s-6);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.page--home .home-card h2 {
+  font-size: 30px;
+  line-height: 1.12;
+}
+
+.page--home .home-card__text {
+  max-width: 34ch;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--c-ink-soft);
+}
+
+.page--home .home-card__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+  max-width: 100%;
+}
+
+/* Art sits behind the copy, bled to the right edge of the card. */
+.page--home .home-card__art {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: auto;
+  max-width: 44%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.9;
+  pointer-events: none;
+  /* The mask must clear the copy: the body occupies the left 54%, so the art
+     stays fully transparent across its own first 45%. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 45%);
+          mask-image: linear-gradient(90deg, transparent, #000 45%);
+}
+
+/* Cards carrying art reserve room for it with padding rather than a
+   percentage max-width on the copy: the two cards are different widths, so a
+   single percentage cleared one and clipped the other. The art is 44% wide
+   and its mask hides the left 45% of that, leaving ~24% visible at the right;
+   32% of padding clears it on any card width. */
+.page--home .home-card--story,
+.page--home .home-card--course {
+  padding-right: 32%;
+}
+
+.page--home .home-card--story {
+  background: var(--c-sage);
+  border-color: #c6d3bd;
+}
+
+.page--home .home-card--course {
+  background: linear-gradient(120deg, #eef2f6, #e6edf3);
+  border-color: #cdd8e0;
+}
+
+.page--home .home-card--question {
+  align-items: center;
+  text-align: center;
+  background: var(--c-paper);
+}
+.page--home .home-card__question {
+  font-size: 26px;
+  line-height: 1.25;
+  color: var(--c-forest);
+  max-width: 24ch;
+}
+.page--home .home-card__rule {
+  width: 56px;
+  height: 2px;
+  border: 0;
+  margin: var(--s-2) 0;
+  background: var(--c-brick);
+  opacity: 0.55;
+}
+.page--home .home-card--question .home-card__text { text-align: center; }
+
+/* ===== Closing band ======================================================= */
+
+.page--home .home-closing {
+  background: linear-gradient(100deg, #f3e3c6, #e8c89a 55%, #dcb98c);
+  border-top: 1px solid var(--c-line);
+}
+
+.page--home .home-closing__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-6);
+  flex-wrap: wrap;
+  padding-block: var(--s-6);
+}
+
+.page--home .home-closing__quote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-style: italic;
+  color: #4a3a22;
+}
+.page--home .home-closing__quote cite {
+  font-family: var(--font-ui);
+  font-size: var(--t-small);
+  font-style: normal;
+  color: #6b5735;
+}
+
+.page--home .home-closing__tag {
+  font-size: var(--t-eyebrow);
+  font-weight: 800;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: #7a6238;
+}
+
+/* ===== Responsive ========================================================= */
+
+@media (max-width: 1080px) {
+  .page--home .home-cards { grid-template-columns: 1fr 1fr; }
+  .page--home .home-card--question { grid-column: 1 / -1; order: -1; min-height: 0; }
+  .page--home .home-journey__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .page--home .home-journey__inner { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 860px) {
+  .page--home .home-hero__inner { grid-template-columns: 1fr; }
+  .page--home .home-hero__quote--aside { display: none; }
+}
+
+@media (max-width: 640px) {
+  .page--home .home-cards { grid-template-columns: 1fr; }
+  .page--home .home-journey__list { grid-template-columns: 1fr; }
+  .page--home .home-card__body { max-width: 100%; }
+  .page--home .home-card__art { opacity: 0.25; max-width: 70%; }
+  .page--home .home-closing__inner { justify-content: flex-start; }
+}
