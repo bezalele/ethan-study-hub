@@ -48,6 +48,15 @@ function factsOf(ch) {
   return ch.fact ? [ch.fact] : [];
 }
 
+/* Prose fields may carry <strong> and <em> for key terms. Everything is
+   escaped first and only those two tags are let back through, so the content
+   file cannot inject markup by accident — and a stray <strong> no longer
+   prints as literal text, which is what happened when some fields were
+   escaped and others were not. */
+function prose(text) {
+  return esc(text || '').replace(/&lt;(\/?)(strong|em)&gt;/g, '<$1$2>');
+}
+
 /* --- Hero ----------------------------------------------------------------- */
 
 function hero(ch) {
@@ -257,21 +266,25 @@ function closerLook(ch) {
   const cl = ch.closerLook;
   if (!cl) return '';
 
-  const sections = (cl.sections || []).map((s) => `
-    <li>
-      <a class="ch-section" href="#/study/documents">
-        <strong>${esc(s.label)}</strong>
-        <span>${esc(s.note)}</span>
-        <i aria-hidden="true">›</i>
-      </a>
-    </li>`).join('');
+  /* A section is a link only when it has somewhere of its own to go. Without
+     an href it is a plain row: four chevrons all leading to the same shelf
+     promised four destinations that did not exist. */
+  const sections = (cl.sections || []).map((s) => {
+    const body = `
+      <strong>${esc(s.label)}</strong>
+      <span>${prose(s.note)}</span>
+      ${s.href ? '<i aria-hidden="true">›</i>' : ''}`;
+    return s.href
+      ? `<li><a class="ch-section ch-section--link" href="${esc(s.href)}">${body}</a></li>`
+      : `<li><div class="ch-section">${body}</div></li>`;
+  }).join('');
 
   return `
     <section class="ch-closer">
       <div class="ch-closer__copy">
         <p class="eyebrow">A closer look</p>
         <h2>${esc(cl.title)}</h2>
-        <p class="ch-closer__body">${esc(cl.body)}</p>
+        <p class="ch-closer__body">${prose(cl.body)}</p>
         <a class="btn btn--primary" href="#/study/documents">${esc(cl.cta || 'Read the documents')} →</a>
       </div>
       <div class="ch-closer__art">${closerArt(cl)}</div>
@@ -294,7 +307,7 @@ function whyItMatters(ch) {
   return `
     <section class="ch-card ch-card--matters">
       <h2 class="ch-card__head"><span class="ch-card__icon" aria-hidden="true">🌎</span> Why It Matters</h2>
-      <p class="ch-card__text">${esc(w.body)}</p>
+      <p class="ch-card__text">${prose(w.body)}</p>
       ${steps ? `<ol class="ch-flow">${steps}</ol>` : ''}
     </section>`;
 }
@@ -306,7 +319,7 @@ function whatsNext(ch) {
   return `
     <section class="ch-card ch-card--next">
       <h2 class="ch-card__head"><span class="ch-card__icon" aria-hidden="true">➡️</span> What’s Next?</h2>
-      ${body ? `<p class="ch-card__text">${esc(body)}</p>` : ''}
+      ${body ? `<p class="ch-card__text">${prose(body)}</p>` : ''}
       ${next ? `
         <a class="ch-next" href="#/study/${next.id}">
           <img class="ch-next__thumb" src="${next.image.src}" alt="" loading="lazy">
@@ -530,7 +543,7 @@ export default {
           ${ch.bigPicture ? `
             <div class="ch-lede">
               <h2 class="ch-lede__head">${esc(ch.bigPicture.heading)}</h2>
-              <p class="ch-lede__body">${ch.bigPicture.body}</p>
+              <p class="ch-lede__body">${prose(ch.bigPicture.body)}</p>
             </div>` : ''}
           ${gallery(ch)}
         </div>

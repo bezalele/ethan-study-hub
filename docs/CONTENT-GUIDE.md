@@ -52,7 +52,13 @@ them alone unless you also want the URL to change.
 | field | what it is | length |
 |---|---|---|
 | `bigPicture.heading` | A question the chapter answers. Not a label. | under 60 characters |
-| `bigPicture.body` | The core explanation. May wrap key terms in `<strong>` — nothing else, no other HTML. | 45–70 words |
+| `bigPicture.body` | The core explanation. May wrap key terms in `<strong>` or `<em>` — see below. | 45–70 words |
+
+> **Where HTML is allowed.** Four prose fields accept `<strong>` and `<em>` and
+> nothing else: `bigPicture.body`, `closerLook.body`, `closerLook.sections[].note`,
+> `whyItMatters.body` and `whatsNext.body`. Everything else is escaped, so a tag
+> typed into any other field will print as literal text. Any other tag, even in
+> the fields above, is escaped too.
 
 ### Gallery
 
