@@ -16,15 +16,15 @@ window.EthanStudyHubContent = {
     { id: 5, label: 'UNIT 05 · 20–27%', title: 'Political Participation', summary: 'Voting · Parties · Elections · Media · Groups', focus: 'Democracy does not run itself. It depends on participation, representation, and contested political choice.', topics: ['Voting', 'Voter behavior', 'Political parties', 'Elections', 'Campaigns', 'Interest groups', 'Media'] }
   ],
   journeyChapters: [
-    { id: 'declaration', title: 'Declaration of Independence', kicker: 'Chapter 01', summary: 'The colonies explain why they are leaving Britain and make a case for self-government.', image: 'https://upload.wikimedia.org/wikipedia/commons/4/4f/Declaration_of_Independence_%28cropped%29.jpg', accent: 'The argument for independence' },
-    { id: 'articles', title: 'Articles of Confederation', kicker: 'Chapter 02', summary: 'The first national system is intentionally weak and reveals the problem it was designed to solve.', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Articles_of_Confederation.jpg/800px-Articles_of_Confederation.jpg', accent: 'A union without enough power' },
-    { id: 'convention', title: 'Constitutional Convention', kicker: 'Chapter 03', summary: 'Delegates redesign the government around power, divided authority, and liberty.', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Independence_Hall_2.jpg/800px-Independence_Hall_2.jpg', accent: 'Designing a more durable government' },
-    { id: 'constitution', title: 'Constitution', kicker: 'Chapter 04', summary: 'The framework of federalism, separation of powers, and amendment keeps the system alive.', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Constitution_Convent_Seal.JPG/800px-Constitution_Convent_Seal.JPG', accent: 'The living structure' },
-    { id: 'bill-of-rights', title: 'Bill of Rights', kicker: 'Chapter 05', summary: 'The first amendments answer a central question: how is liberty protected in practice?', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/First_Amendment_Acts_of_Congress.jpg/800px-First_Amendment_Acts_of_Congress.jpg', accent: 'Rights in the constitutional settlement' }
+    { id: 'declaration', title: 'Declaration of Independence', kicker: 'Chapter 01', summary: 'The colonies explain why they are leaving Britain and make a case for self-government.', image: 'assets/journey-icons/declaration.jpg', accent: 'The argument for independence' },
+    { id: 'articles', title: 'Articles of Confederation', kicker: 'Chapter 02', summary: 'The first national system is intentionally weak and reveals the problem it was designed to solve.', image: 'assets/journey-icons/articles.jpg', accent: 'A union without enough power' },
+    { id: 'convention', title: 'Constitutional Convention', kicker: 'Chapter 03', summary: 'Delegates redesign the government around power, divided authority, and liberty.', image: 'assets/journey-icons/convention.jpg', accent: 'Designing a more durable government' },
+    { id: 'constitution', title: 'Constitution', kicker: 'Chapter 04', summary: 'The framework of federalism, separation of powers, and amendment keeps the system alive.', image: 'assets/journey-icons/constitution-rights.jpg', accent: 'The living structure' },
+    { id: 'bill-of-rights', title: 'Bill of Rights', kicker: 'Chapter 05', summary: 'The first amendments answer a central question: how is liberty protected in practice?', image: 'assets/journey-icons/constitution-rights.jpg', accent: 'Rights in the constitutional settlement' }
   ],
   declarationChapter: {
     chapter: 'Declaration of Independence',
-    banner: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/John_Trumbull%2C_Declaration_of_Independence.jpg/1280px-John_Trumbull%2C_Declaration_of_Independence.jpg',
+    banner: 'assets/home/hero-signing.jpg',
     kicker: 'UNIT 1 · THE STORY     ·     CHAPTER 2 OF 5',
     title: '1776 — Declaration of Independence',
     deck: 'A bold statement. A new nation. A big question: now what?',
@@ -48,11 +48,11 @@ window.EthanStudyHubContent = {
       'The founding story begins with principle, then moves into design.'
     ],
     miniGallery: [
-      { src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20independence.jpg?width=1400', caption: 'Drafting the Declaration', credit: 'John Trumbull · public domain' },
-      { src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration%20of%20Independence%20%28USA%29.jpg?width=1000', caption: 'The Document', credit: 'Library of Congress · public domain' },
-      { src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Declaration.independence.1776.jpg?width=1400', caption: 'Public Reading', credit: 'Historical interpretation · public domain' },
-      { src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Independence%20Hall%202.jpg?width=1200', caption: 'Spreading the News', credit: 'Wikimedia Commons' },
-      { src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/The%20Declaration%20of%20Independence%2C%20July%204%2C%201776%2C%20by%20John%20Trumbull.jpg?width=1400', caption: 'A New Nation', credit: 'Yale University Art Gallery · public domain' }
+      { src: 'assets/home/hero-signing.jpg', caption: 'Drafting the Declaration', credit: 'John Trumbull · public domain' },
+      { src: 'assets/journey-icons/declaration.jpg', caption: 'The Document', credit: 'Library of Congress · public domain' },
+      { src: 'assets/home/hero-signing.jpg', caption: 'Public Reading', credit: 'Historical interpretation · public domain' },
+      { src: 'assets/journey-icons/convention.jpg', caption: 'Spreading the News', credit: 'Wikimedia Commons' },
+      { src: 'assets/home/hero-signing.jpg', caption: 'A New Nation', credit: 'Yale University Art Gallery · public domain' }
     ],
     knowledgeCheck: [
       { question: 'Why is the Declaration different from the Constitution?', answer: 'The Declaration explains why separation is justified; the Constitution sets up the government that follows.' },
