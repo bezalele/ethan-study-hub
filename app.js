@@ -26,7 +26,8 @@ function mark(x) {
   updateProgress();
 }
 
-function show(id) {
+function show(id, preserveScroll=false) {
+  const previousScroll = window.scrollY;
   document.querySelectorAll('.page').forEach((page) => page.classList.remove('active'));
   const target = document.getElementById(id);
   if (!target) return;
@@ -36,7 +37,8 @@ function show(id) {
   const navKey = id === 'story' || id === 'declaration' ? 'learn' : id === 'constitution' || id === 'library' ? 'library' : id;
   const nav = document.querySelector('header nav [data-nav="'+navKey+'"]');
   if (nav) nav.classList.add('active-nav');
-  window.scrollTo({top:0,behavior:'instant'});
+  if (preserveScroll) requestAnimationFrame(()=>window.scrollTo({top:previousScroll,behavior:'instant'}));
+  else window.scrollTo({top:0,behavior:'instant'});
   mark(navKey);
 }
 
@@ -64,7 +66,7 @@ const foundingPages={
  convention:{chapter:'CHAPTER 4 OF 5',date:'1787',title:'Constitutional Convention',subtitle:'Fix the old government — or design a new one?',intro:'Delegates gathered in Philadelphia to revise the Articles of Confederation. They ultimately proposed an entirely new constitutional system with stronger national institutions and divided powers.',question:'How do you make government strong enough to work without making it too powerful?',hero:'PHILADELPHIA · 1787',takeaways:['The Convention met in Philadelphia in 1787.','Delegates moved beyond revising the Articles and drafted a new Constitution.','Representation in Congress was one of the major disputes.','The new design separated legislative, executive, and judicial power.','The proposed Constitution still had to be ratified by the states.'],cards:[['The problem','Many leaders believed the Confederation government lacked sufficient power to address national problems.'],['Representation','Delegates debated how states and populations should be represented in the new Congress.'],['Dividing power','The Constitution distributed authority across branches and between national and state governments.'],['Checks and balances','Institutions received different powers so that no single part of the national government controlled everything.']],fact:'The Convention originally assembled to revise the Articles. The Constitution that emerged was signed on September 17, 1787.',next:'Constitution + Bill of Rights',nextAction:"openFoundingPage('constitution-rights')"},
  'constitution-rights':{chapter:'CHAPTER 5 OF 5',date:'1787–1791',title:'Constitution + Bill of Rights',subtitle:'Build the government. Then protect individual liberty.',intro:'The Constitution established the federal framework of government. Ratification debates helped lead to the addition of the Bill of Rights — the first ten amendments.',question:'How does the American system balance government power with individual liberty?',hero:'A NEW FRAMEWORK',takeaways:['The Constitution establishes the national government and its branches.','Federalism divides authority between national and state governments.','Ratification triggered a major debate over national power and individual liberty.','Congress proposed twelve amendments in 1789.','Ten were ratified in 1791 and became the Bill of Rights.'],cards:[['Constitution','Creates the basic structure and powers of the federal government.'],['Three branches','Legislative, executive, and judicial institutions have distinct constitutional roles.'],['Federalism','Power is divided between the national government and the states.'],['Bill of Rights','The first ten amendments protect specific liberties and place limits on government action.']],fact:'The Constitution was signed in 1787. The Bill of Rights came later: Congress proposed amendments in 1789, and ten were ratified in 1791.',next:'Foundations Course Area',nextAction:'openLearn(1)'}
 };
-function openFoundingPage(key){
+function openFoundingPage(key,preserveScroll=false){
  const x=foundingPages[key], target=document.getElementById('foundingDetailContent'); if(!x||!target)return;
  const meta={
   colonies:{big:'Why did colonial government matter?',matter:'Colonial experience with assemblies, representation, and British authority shaped the political arguments that followed.',nextText:'Tensions with Britain eventually turned into a decision to declare independence.'},
@@ -73,7 +75,7 @@ function openFoundingPage(key){
   'constitution-rights':{big:'Why the Constitution and Bill of Rights?',matter:'Together they establish the federal framework and protect specific liberties, creating the foundation for many questions studied throughout AP Government.',nextText:'Now connect the founding story to the full Foundations of American Democracy course area.'}
  }[key];
  const keys=['colonies','declaration','articles','convention','constitution-rights'], labels=['British Colonies','Declaration of Independence','Articles of Confederation','Constitutional Convention','Constitution + Bill of Rights'], dates=['1607–1775','1776','1781–1789','1787','1787–1791'], current=keys.indexOf(key);
- const timeline=keys.map((k,i)=>'<button class="'+(i===current?'active':'')+'" onclick="'+(k==='declaration'?"show('declaration')":"openFoundingPage('"+k+"')")+'"><span>'+dates[i]+'</span><b>'+labels[i]+'</b></button>').join('');
+ const timeline=keys.map((k,i)=>'<button class="'+(i===current?'active':'')+'" onclick="'+(k==='declaration'?"show('declaration',true)":"openFoundingPage('"+k+"',true)")+'"><span>'+dates[i]+'</span><b>'+labels[i]+'</b></button>').join('');
  target.innerHTML=`<article class="decl founding-decl">
   <section class="decl-hero founding-decl-hero">
    <div class="decl-hero-copy"><p class="eyebrow">UNIT 1 · THE STORY &nbsp;&nbsp;&nbsp; ${x.chapter}</p><h1>${x.date} — ${x.title}</h1><h2>${x.subtitle}</h2><p>${x.intro}</p><div class="decl-actions"><button onclick="document.getElementById('founding-big').scrollIntoView({behavior:'smooth'})">▶ &nbsp; Start the overview</button><button class="outline" onclick="document.getElementById('founding-learn').scrollIntoView({behavior:'smooth'})">Explore the ideas →</button></div></div>
@@ -90,7 +92,7 @@ function openFoundingPage(key){
    <section class="decl-card decl-next"><h3>➡️ &nbsp; What’s Next?</h3><p>${meta.nextText}</p><button onclick="${x.nextAction}">Continue the Story →</button></section>
   </div>
  </article>`;
- show('foundingDetail');
+ show('foundingDetail',preserveScroll);
 }
 function selectFoundingIdea(btn,key,i){
  const x=foundingPages[key], box=document.querySelector('#foundingDetail .founding-idea-main'), stage=document.querySelector('#foundingDetail .founding-stage>div'); if(!x)return;
@@ -113,11 +115,11 @@ function renderCourseMap(){
 function showCoursePreview(n,el){let p=document.getElementById('coursePreview');if(!p){p=document.createElement('div');p.id='coursePreview';p.className='course-preview';document.body.appendChild(p)}const u=courseAreas[n-1];p.innerHTML='<small>QUICK PREVIEW</small><h3>'+u.short+'</h3><p>'+u.fact+'</p><b>'+u.q+'</b>';const r=el.getBoundingClientRect();p.style.left=Math.min(innerWidth-350,Math.max(12,r.right-330))+'px';p.style.top=(r.top+scrollY+20)+'px';p.classList.add('show')}
 function hideCoursePreview(){const p=document.getElementById('coursePreview');if(p)p.classList.remove('show')}
 function toggleCourseArea(n,btn){const x=document.getElementById('cmExpand'+n);if(!x)return;const open=x.classList.toggle('open');btn.textContent=open?'Hide details ↑':'See what you’ll learn ↓'}
-function openUnitStudy(n){
+function openUnitStudy(n,preserveScroll=false){
  const u=courseAreas[n-1],el=document.getElementById('unitStudyContent');if(!u||!el)return;
- const tabs=courseAreas.map(x=>'<button class="'+(x.n===n?'active':'')+'" onclick="openUnitStudy('+x.n+')"><span>0'+x.n+'</span><b>'+x.short+'</b></button>').join('');
+ const tabs=courseAreas.map(x=>'<button class="'+(x.n===n?'active':'')+'" onclick="openUnitStudy('+x.n+',true)"><span>0'+x.n+'</span><b>'+x.short+'</b></button>').join('');
  el.innerHTML='<article class="decl unit-study"><section class="decl-hero unit-study-hero u'+n+'"><div class="decl-hero-copy"><p class="eyebrow">AP U.S. GOVERNMENT · UNIT '+n+' OF 5</p><h1>'+u.title+'</h1><h2>'+u.q+'</h2><p>'+u.summary+'</p><div class="decl-actions"><button onclick="document.getElementById(\'unit-big\').scrollIntoView({behavior:\'smooth\'})">▶ &nbsp; Start the overview</button><button class="outline" onclick="document.getElementById(\'unit-flow\').scrollIntoView({behavior:\'smooth\'})">See the learning path →</button></div></div><blockquote>'+u.weight+'<small>Multiple-choice exam weighting</small></blockquote></section><nav class="unit-tabs">'+tabs+'</nav><div class="decl-body"><section id="unit-big" class="decl-big"><p class="eyebrow">THE BIG PICTURE</p><h2>'+u.q+'</h2><p>'+u.summary+'</p><div class="decl-quote">'+u.fact+'<small>Study lens</small></div></section><section id="unit-flow" class="unit-flow"><p class="eyebrow">LEARN IT IN ORDER</p><h2>The path through this unit</h2><div>'+u.flow.map((x,i)=>'<button onclick="this.classList.toggle(\'open\')"><b>0'+(i+1)+'</b><span>'+x+'</span><i>+</i><p>'+unitTopicDetail(n,i)+'</p></button>').join('')+'</div></section><aside class="decl-side"><section><h3>🔑 &nbsp; What Ethan should know</h3><ol>'+u.topics.map((x,i)=>'<li><b>'+(i+1)+'</b><span>'+x+'</span></li>').join('')+'</ol></section><section><h3>🧠 &nbsp; Study Strategy</h3><p>First understand the big idea. Then learn the sequence. Finally, explain how the pieces connect without looking at the page.</p></section></aside><section class="unit-chart"><p class="eyebrow">SEE THE CONNECTION</p><h2>One visual mental model</h2><div class="unit-flowchart">'+u.flow.map((x,i)=>'<span>'+x+'</span>'+(i<u.flow.length-1?'<i>→</i>':'')).join('')+'</div></section><section class="decl-card"><h3>🌎 &nbsp; Why It Matters</h3><p>'+u.fact+'</p></section><section class="decl-card decl-check"><h3>✅ &nbsp; Quick Check</h3><p><b>'+u.q+'</b></p><button onclick="this.nextElementSibling.hidden=false">Show study prompt</button><p hidden>Use at least two of these ideas in your answer: '+u.topics.slice(0,3).join(', ')+'.</p></section><section class="decl-card decl-next"><h3>✏️ &nbsp; Practice</h3><p>Test the unit with short recall questions and AP-style practice.</p><button onclick="show(\'practice\')">Practice this material →</button></section></div></article>';
- show('unitStudy');
+ show('unitStudy',preserveScroll);
 }
 function unitTopicDetail(n,i){const d={
 1:['Why people create governments and how democratic ideals shaped the founding.','Trace the problem from independence to the first national framework.','See why weaknesses in the Articles led to a new design.','Understand the debates and compromises behind the Constitution.','Connect constitutional structure to rights and limits on power.','See how national and state authority are divided.'],
@@ -219,11 +221,11 @@ function renderDeclaration() {
       </section>
 
       <nav class="decl-timeline" aria-label="Founding journey">
-        <button onclick="show('story')"><span>1607–1775</span><b>British Colonies</b></button>
+        <button onclick="openFoundingPage('colonies',true)"><span>1607–1775</span><b>British Colonies</b></button>
         <button class="active"><span>1776</span><b>Declaration of Independence</b></button>
-        <button onclick="show('story')"><span>1781–1789</span><b>Articles of Confederation</b></button>
-        <button onclick="show('story')"><span>1787</span><b>Constitutional Convention</b></button>
-        <button onclick="show('constitution')"><span>1788–1791</span><b>Constitution + Bill of Rights</b></button>
+        <button onclick="openFoundingPage('articles',true)"><span>1781–1789</span><b>Articles of Confederation</b></button>
+        <button onclick="openFoundingPage('convention',true)"><span>1787</span><b>Constitutional Convention</b></button>
+        <button onclick="openFoundingPage('constitution-rights',true)"><span>1788–1791</span><b>Constitution + Bill of Rights</b></button>
       </nav>
 
       <div class="decl-body">
