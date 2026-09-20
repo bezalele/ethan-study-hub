@@ -35,6 +35,25 @@ Avoid changes to shared/global CSS and shared route behavior unless absolutely n
 
 ---
 
+## 1A. Current implementation baseline — preserve what already works
+
+The existing Course Map is already close to the required shell. Do **not** rebuild it unnecessarily.
+
+Current behavior to preserve:
+- `pages/course-map.js` already uses `#/course` and `#/course/:unit`; keep this deep-linking pattern unless there is a concrete reason to change it.
+- `pages/course-map.css` already keeps the Course page fixed to the viewport on normal desktop and makes `.cm-panel__scroll` the internal scrolling region.
+- The current left rail and right panel structure are good foundations.
+- The work in this phase is primarily to turn the right panel from a short static outline into a richer visual/interactive unit summary.
+
+One specific responsive issue to revisit:
+- the current `@media (max-height: 620px), (max-width: 900px)` rule falls back to normal page scrolling by setting the Course page to `height: auto; overflow: visible`;
+- for this new design, prefer keeping the Course experience self-contained, using a compact unit selector and an internally scrollable detail region rather than turning the entire Course page into one long document;
+- if a very small viewport makes that impossible without harming usability, document the exception and keep the smallest practical fallback narrow in scope.
+
+Do not replace the existing route structure with a framework or a large state-management layer.
+
+---
+
 ## 2. Product goal
 
 The Course page is the **map of the entire AP U.S. Government course**.
