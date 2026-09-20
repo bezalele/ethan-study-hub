@@ -12,9 +12,9 @@
      render (params) -> HTMLElement
    --------------------------------------------------------------------------- */
 
-import { IMAGES } from '../content/assets.js?v=4';
-import { renderTimeline } from '../components/timeline.js?v=4';
-import { el, html } from '../layout/dom.js?v=4';
+import { IMAGES } from '../content/assets.js?v=5';
+import { renderTimeline } from '../components/timeline.js?v=5';
+import { el, html } from '../layout/dom.js?v=5';
 
 function hero() {
   return html(`
