@@ -32,7 +32,7 @@ function show(id, preserveScroll=false) {
   const target = document.getElementById(id);
   if (!target) return;
   target.classList.add('active');
-  document.body.classList.remove('no-scroll');
+  document.body.classList.toggle('no-scroll', id === 'map');
   document.querySelectorAll('header nav button').forEach(b => b.classList.remove('active-nav'));
   const navKey = id === 'story' || id === 'declaration' ? 'learn' : id === 'constitution' || id === 'library' ? 'library' : id;
   const nav = document.querySelector('header nav [data-nav="'+navKey+'"]');
