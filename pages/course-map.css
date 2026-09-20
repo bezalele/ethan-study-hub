@@ -56,7 +56,7 @@
 
 .page--course-map .cm-explorer {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
+  grid-template-columns: 340px minmax(0, 1fr);
   gap: var(--s-5);
   min-height: 0;
   padding-block: var(--s-5);
@@ -69,7 +69,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
-  padding: var(--s-5) var(--s-4);
+  padding: var(--s-4);
   background: var(--c-parchment-dim);
   border: 1px solid var(--c-line);
   border-radius: var(--r-lg);
@@ -87,16 +87,16 @@
 
 .page--course-map .cm-rail__list {
   display: grid;
-  gap: var(--s-2);
+  gap: 6px;
   list-style: none;
 }
 
 .page--course-map .cm-unit {
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) 14px;
+  grid-template-columns: 34px minmax(0, 1fr) 12px;
   gap: var(--s-3);
-  align-items: center;
-  padding: var(--s-3) var(--s-4);
+  align-items: start;
+  padding: clamp(8px, 1.3vh, 14px) var(--s-4);
   border: 1px solid transparent;
   border-radius: var(--r-md);
   color: var(--c-ink);
@@ -117,8 +117,9 @@
 
 .page--course-map .cm-unit__n {
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: clamp(17px, min(1.2vw, 2.2vh), 21px);
   font-weight: 700;
+  line-height: 1.15;
   color: var(--c-brick);
 }
 
@@ -134,13 +135,47 @@
 
 .page--course-map .cm-unit__name {
   display: block;
-  margin-top: 1px;
+  margin-top: 2px;
   font-family: var(--font-display);
-  font-size: 20px;
-  line-height: 1.15;
+  font-size: clamp(14px, min(1.05vw, 1.85vh), 17px);
+  line-height: 1.22;
 }
 
-.page--course-map .cm-unit__chev { font-size: 20px; color: var(--c-ink-faint); }
+/* How much is behind each area, so the menu says something before you click. */
+.page--course-map .cm-unit__count {
+  display: block;
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--c-ink-faint);
+}
+
+.page--course-map .cm-unit__chev {
+  font-size: 20px;
+  line-height: 1.1;
+  color: var(--c-ink-faint);
+}
+
+.page--course-map .cm-rail__foot {
+  margin-top: auto;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--c-line);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--c-ink-faint);
+}
+
+/* Below ~950px tall the rail drops its extras so all five units still fit.
+   A course menu that hides its fifth unit is the bug this page started with. */
+@media (max-height: 950px) and (min-width: 901px) {
+  .page--course-map .cm-unit__count { display: none; }
+  .page--course-map .cm-rail__foot { display: none; }
+  .page--course-map .cm-rail__list { gap: 4px; }
+}
+
+@media (max-height: 820px) and (min-width: 901px) {
+  .page--course-map .cm-rail__head { display: none; }
+  .page--course-map .cm-rail { padding: var(--s-3); }
+}
 
 /* ===== Summary panel ====================================================== */
 
@@ -159,9 +194,12 @@
   height: 100%;
   overflow-y: auto;
   padding: var(--s-6);
-  display: grid;
+  /* A column, not a grid packed to the top: the study-guide footer takes the
+     slack so a short unit does not leave a large empty area beneath it. When
+     the content is long the auto margin collapses and the panel scrolls. */
+  display: flex;
+  flex-direction: column;
   gap: var(--s-5);
-  align-content: start;
   scrollbar-width: thin;
   scrollbar-color: var(--c-line) transparent;
 }
@@ -175,7 +213,11 @@
   background: var(--c-ink-faint);
 }
 
-.page--course-map .cm-panel__kicker {
+/* ===== Detail panel sections ============================================= */
+
+.page--course-map .cm-sec { display: grid; gap: var(--s-3); }
+
+.page--course-map .cm-sec__label {
   font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 800;
@@ -184,93 +226,155 @@
   color: var(--c-brick);
 }
 
-.page--course-map .cm-panel__title {
-  margin-top: var(--s-2);
+/* A section with no content yet. Neutral on purpose: it should read as
+   unwritten rather than as a broken component. */
+.page--course-map .cm-todo {
+  display: grid;
+  gap: 3px;
+  padding: var(--s-4);
+  border: 1px dashed var(--c-line);
+  border-radius: var(--r-sm);
+  background:
+    repeating-linear-gradient(135deg,
+      var(--c-parchment) 0 10px, var(--c-paper) 10px 20px);
+}
+.page--course-map .cm-todo__label {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--c-ink-soft);
+}
+.page--course-map .cm-todo__note { font-size: 13px; color: var(--c-ink-faint); }
+
+/* --- Unit header ---------------------------------------------------------- */
+
+.page--course-map .cm-unit-head { display: grid; gap: var(--s-3); }
+
+.page--course-map .cm-unit-head__kicker {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-brick);
+}
+
+.page--course-map .cm-unit-head__title {
   font-size: clamp(26px, min(2.5vw, 4.2vh), 40px);
   line-height: 1.12;
 }
 
-/* The one sentence that says what the unit is. Sits above everything else. */
-.page--course-map .cm-lede {
-  max-width: 68ch;
+.page--course-map .cm-unit-head__hook {
   font-family: var(--font-display);
   font-size: clamp(17px, min(1.4vw, 2.4vh), 22px);
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--c-ink);
 }
 
-.page--course-map .cm-points {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--s-4);
-}
-
-.page--course-map .cm-point {
-  padding: var(--s-4) var(--s-5);
-  background: var(--c-parchment);
-  border-radius: var(--r-md);
-  border-left: 3px solid var(--c-forest);
-}
-.page--course-map .cm-point--why { border-left-color: var(--c-brick); }
-
-.page--course-map .cm-point__head {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--c-brick);
-}
-
-.page--course-map .cm-point__body {
-  margin-top: var(--s-2);
+.page--course-map .cm-unit-head__summary {
+  max-width: 70ch;
   font-size: 15px;
-  line-height: 1.55;
+  line-height: 1.6;
   color: var(--c-ink-soft);
 }
 
-.page--course-map .cm-sub {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--c-brick);
-  margin-bottom: var(--s-3);
+/* --- Big question --------------------------------------------------------- */
+
+.page--course-map .cm-question {
+  padding: var(--s-4) var(--s-5);
+  background: var(--c-sage);
+  border-left: 3px solid var(--c-forest);
+  border-radius: var(--r-sm);
+  font-family: var(--font-display);
+  font-size: clamp(17px, 1.35vw, 21px);
+  line-height: 1.4;
+  color: var(--c-forest);
 }
 
-/* --- The idea chain ------------------------------------------------------- */
+/* --- Visual story --------------------------------------------------------- */
 
-.page--course-map .cm-chain {
+.page--course-map .cm-visual {
+  margin: 0;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--c-parchment);
+}
+.page--course-map .cm-visual img {
+  width: 100%;
+  aspect-ratio: 5 / 2;
+  object-fit: cover;
+  display: block;
+}
+.page--course-map .cm-visual figcaption {
+  display: grid;
+  gap: 2px;
+  padding: var(--s-3) var(--s-4);
+  font-size: 14px;
+  color: var(--c-ink-soft);
+}
+.page--course-map .cm-visual figcaption small {
+  font-size: 13px;
+  color: var(--c-ink-faint);
+}
+.page--course-map .cm-visual--empty { border: 0; background: none; }
+
+/* --- Interactive concept model -------------------------------------------- */
+
+.page--course-map .cm-model__intro { font-size: 14px; color: var(--c-ink-soft); }
+
+.page--course-map .cm-model {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: var(--s-2);
   list-style: none;
 }
-
-.page--course-map .cm-chain__step {
-  padding: 9px var(--s-4);
-  background: var(--c-sage);
-  border: 1px solid #c6d3bd;
-  border-radius: var(--r-sm);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--c-forest);
+.page--course-map .cm-model__link {
+  width: 18px;
+  height: 1px;
+  background: var(--c-brick);
+  opacity: 0.45;
 }
 
-.page--course-map .cm-chain__arrow { color: var(--c-brick); font-weight: 700; }
+.page--course-map .cm-node {
+  padding: 10px var(--s-4);
+  background: var(--c-parchment);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-sm);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--c-ink);
+  transition: background var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+.page--course-map .cm-node:hover { border-color: var(--c-forest); }
+.page--course-map .cm-node[aria-expanded="true"] {
+  background: var(--c-forest);
+  border-color: var(--c-forest);
+  color: var(--c-on-dark);
+}
 
-/* --- What you will learn — the detail, so it sits last -------------------- */
+.page--course-map .cm-node__body {
+  padding: var(--s-4);
+  background: var(--c-sage);
+  border-radius: var(--r-sm);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--c-ink);
+}
+.page--course-map .cm-node__body:empty { display: none; }
 
-.page--course-map .cm-topics {
+/* --- Core ideas ----------------------------------------------------------- */
+
+.page--course-map .cm-ideas {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: var(--s-2);
   list-style: none;
 }
 
-.page--course-map .cm-topic {
+.page--course-map .cm-idea {
   display: grid;
   grid-template-columns: 26px minmax(0, 1fr);
   gap: var(--s-3);
@@ -280,18 +384,107 @@
   border: 1px solid var(--c-line);
   border-radius: var(--r-sm);
 }
-
-.page--course-map .cm-topic__n {
+.page--course-map .cm-idea__n {
   font-family: var(--font-display);
   font-size: 14px;
   font-weight: 700;
   color: var(--c-brick);
 }
-.page--course-map .cm-topic__label { font-size: 15px; line-height: 1.35; }
+.page--course-map .cm-idea__text strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+}
+.page--course-map .cm-idea__text span {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--c-ink-soft);
+}
 
-/* --- Go to the full guide ------------------------------------------------- */
+/* --- One-minute summary ---------------------------------------------------- */
+
+.page--course-map .cm-remember {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-4) var(--s-5) var(--s-4) calc(var(--s-5) + 18px);
+  background: var(--c-parchment-dim);
+  border-radius: var(--r-md);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--c-ink);
+}
+.page--course-map .cm-remember li::marker {
+  color: var(--c-brick);
+  font-weight: 700;
+}
+
+/* --- Quick check ----------------------------------------------------------- */
+
+.page--course-map .cm-check__q {
+  font-family: var(--font-display);
+  font-size: 17px;
+  line-height: 1.4;
+}
+.page--course-map .cm-opts { display: grid; gap: 6px; list-style: none; }
+.page--course-map .cm-opt {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: start;
+  padding: 10px var(--s-3);
+  background: var(--c-parchment);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  line-height: 1.45;
+  cursor: pointer;
+}
+.page--course-map .cm-opt:hover { border-color: var(--c-forest); }
+.page--course-map .cm-opt input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.page--course-map .cm-opt__marker {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  border: 1px solid var(--c-ink-faint);
+  border-radius: 50%;
+}
+.page--course-map .cm-opt input:checked + .cm-opt__marker {
+  border-color: var(--c-forest);
+  border-width: 5px;
+}
+.page--course-map .cm-opt.is-right {
+  background: var(--c-sage);
+  border-color: var(--c-forest);
+}
+.page--course-map .cm-opt.is-wrong {
+  background: #f7ece8;
+  border-color: var(--c-brick);
+}
+
+.page--course-map .cm-check__result {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--c-ink-faint);
+}
+.page--course-map .cm-check__result.is-right { color: var(--c-forest); }
+.page--course-map .cm-check__result.is-wrong { color: var(--c-brick); }
+.page--course-map .cm-check__why {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--c-ink-soft);
+}
+
+/* --- Full unit guide slot --------------------------------------------------- */
 
 .page--course-map .cm-go {
+  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -300,7 +493,6 @@
   padding-top: var(--s-5);
   border-top: 1px solid var(--c-line);
 }
-
 .page--course-map .cm-go__lens {
   max-width: 54ch;
   font-size: 14px;
@@ -309,32 +501,96 @@
 }
 .page--course-map .cm-go__lens strong { color: var(--c-ink); }
 
-.page--course-map .cm-soon {
-  max-width: 40ch;
+/* Not a link: the Unit Detail routes do not exist yet. */
+.page--course-map .cm-go__soon {
+  padding: 10px var(--s-4);
+  border: 1px dashed var(--c-line);
+  border-radius: var(--r-sm);
   font-size: 14px;
-  line-height: 1.5;
+  font-weight: 700;
   color: var(--c-ink-faint);
+  white-space: nowrap;
 }
 
-/* ===== Fall back to normal flow when one screen is not enough ============= */
+/* ===== Narrow screens: chips, not a long document ========================
+   Spec section 3: keep the Course experience self-contained rather than
+   turning the page into one long scroll. Below 900px the unit rail becomes a
+   row of horizontally scrollable chips above the detail, and the detail panel
+   stays the single scrolling region.
+   ========================================================================= */
 
-@media (max-height: 620px), (max-width: 900px) {
+/* The global header wraps to two rows below 860px and becomes 79px tall, but
+   the shared --header-h token stays 56px, so the page height calc
+   under-subtracts by 23px and the page scrolls. Redefining the token on this
+   page keeps the fix inside Course Map scope; the real fix belongs in
+   styles/tokens.css, which is shared, so it is flagged rather than changed
+   here (spec section 1). */
+@media (max-width: 860px) {
+  .page--course-map { --header-h: 79px; }
+}
+
+@media (max-width: 900px) {
+  .page--course-map .cm-explorer {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: var(--s-3);
+    /* Tighter than desktop: at tablet width the default block padding pushed
+       the page 23px past the viewport. */
+    padding-block: var(--s-3);
+  }
+
+  .page--course-map .cm-rail {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-2) var(--s-3);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-line) transparent;
+  }
+  .page--course-map .cm-rail__head,
+  .page--course-map .cm-rail__foot { display: none; }
+
+  .page--course-map .cm-rail__list {
+    display: flex;
+    gap: var(--s-2);
+  }
+  .page--course-map .cm-rail__list > li { flex: 0 0 auto; }
+
+  /* Each unit collapses to a chip: number, short weighting, short name. */
+  .page--course-map .cm-unit {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--s-2);
+    align-items: center;
+    padding: 9px var(--s-3);
+    white-space: nowrap;
+    background: var(--c-paper);
+    border-color: var(--c-line);
+  }
+  .page--course-map .cm-unit__n { font-size: 16px; }
+  .page--course-map .cm-unit__meta { font-size: 13px; }
+  .page--course-map .cm-unit__name {
+    margin-top: 0;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .page--course-map .cm-unit__count,
+  .page--course-map .cm-unit__chev { display: none; }
+}
+
+/* Very small or very short viewports: one column, normal flow. Compressing
+   further hurts more than the scrolling it avoids, so this stays narrow in
+   scope and is the documented exception to the no-page-scroll rule. */
+@media (max-height: 560px), (max-width: 620px) {
   .page--course-map { height: auto; overflow: visible; }
   .page--course-map .cm-shell { display: block; height: auto; }
   .page--course-map .cm-panel { overflow: visible; }
   .page--course-map .cm-panel__scroll { height: auto; overflow: visible; }
-  .page--course-map .cm-rail { overflow: visible; }
 }
 
-@media (max-width: 900px) {
-  .page--course-map .cm-explorer { grid-template-columns: 1fr; }
-  .page--course-map .cm-rail__list {
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  }
-}
-
-@media (max-width: 560px) {
-  .page--course-map .cm-rail__list { grid-template-columns: 1fr; }
+@media (max-width: 620px) {
   .page--course-map .cm-panel__scroll { padding: var(--s-5); }
   .page--course-map .cm-go { flex-direction: column; align-items: flex-start; }
+  .page--course-map .cm-ideas { grid-template-columns: 1fr; }
 }
