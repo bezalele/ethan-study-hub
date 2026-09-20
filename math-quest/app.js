@@ -559,8 +559,26 @@ function route() {
         `<a href="#${id}" ${page === id || (id === "course" && ["unit", "lesson", "u2lesson", "u2practice", "u2check"].includes(page)) ? 'class="active" aria-current="page"' : ""}>${icon(id)}${label}</a>`,
     )
     .join("");
-  document.getElementById("breadcrumb").innerHTML =
-    `Algebra 1 <span>/</span> ${esc(nav.find((n) => n[0] === page)?.[1] || { unit: "Course", lesson: "Lesson", settings: "Settings", search: "Search", u2lesson: "Unit 2 / Study", u2practice: "Unit 2 / Practice", u2check: "Unit 2 / Self-check" }[page] || "Home")}`;
+  const crumbs = [["Algebra 1", "#home"]];
+  const unit2Page = ["lesson", "u2lesson", "u2practice", "u2check"].includes(page);
+  if (unit2Page || page === "unit") {
+    crumbs.push(["Course", "#course"]);
+    if (unit2Page) {
+      crumbs.push(["Unit 2", "#unit/equations"]);
+      crumbs.push([{ lesson: "Study", u2lesson: "Study", u2practice: "Practice", u2check: "Self-check" }[page]]);
+    } else {
+      crumbs.push([units.find((u) => u.id === arg)?.title || "Unit"]);
+    }
+  } else {
+    crumbs.push([nav.find((n) => n[0] === page)?.[1] || { settings: "Settings", search: "Search" }[page] || "Home"]);
+  }
+  const breadcrumb = document.getElementById("breadcrumb");
+  breadcrumb.setAttribute("role", "navigation");
+  breadcrumb.setAttribute("aria-label", "Breadcrumb");
+  breadcrumb.innerHTML = crumbs.map(([label, href], index) =>
+    href ? `<a class="text-link" href="${href}">${esc(label)}</a>`
+      : `<a aria-current="page" href="${esc(location.hash || "#home")}">${esc(label)}</a>`
+  ).join(' <span aria-hidden="true">/</span> ');
   (
     ({
       home,
