@@ -33,6 +33,116 @@ function show(id) {
   mark(id);
 }
 
+function renderJourney() {
+  const grid = document.getElementById('journeyGrid');
+  if (!grid) return;
+
+  grid.innerHTML = content.journeyChapters.map((chapter) => `
+    <article class="journey-card" style="background-image: linear-gradient(180deg, rgba(10,18,16,0.25), rgba(10,18,16,0.7)), url('${chapter.image}')">
+      <div class="journey-card-inner">
+        <span>${chapter.kicker}</span>
+        <h3>${chapter.title}</h3>
+        <p>${chapter.summary}</p>
+        <button type="button" class="journey-link" onclick="openChapter('${chapter.id}')">Enter chapter →</button>
+      </div>
+    </article>
+  `).join('');
+}
+
+function renderDeclaration() {
+  const target = document.getElementById('declarationContent');
+  if (!target) return;
+
+  const chapter = content.declarationChapter;
+  target.innerHTML = `
+    <article class="document-hero" style="background-image: linear-gradient(90deg, rgba(9,18,15,0.72), rgba(9,18,15,0.28)), url('${chapter.banner}')">
+      <div class="document-hero-copy">
+        <p class="eyebrow">${chapter.kicker}</p>
+        <h1>${chapter.title}</h1>
+        <p class="deck">${chapter.deck}</p>
+        <blockquote>“${chapter.quote}”</blockquote>
+      </div>
+    </article>
+
+    <div class="chapter-shell">
+      <div class="story-intro block">
+        <p>${chapter.intro}</p>
+      </div>
+
+      <div class="fact-strip">
+        ${chapter.factStrip.map((fact) => `
+          <div class="fact-box">
+            <span>${fact.label}</span>
+            <strong>${fact.value}</strong>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="chapter-grid">
+        ${chapter.sections.map((section) => `
+          <article class="chapter-panel block">
+            <h3>${section.heading}</h3>
+            <p>${section.body}</p>
+          </article>
+        `).join('')}
+      </div>
+
+      <div class="takeaway-panel block">
+        <p class="eyebrow">KEY TAKEAWAYS</p>
+        <ul>
+          ${chapter.takeaways.map((item) => `<li>${item}</li>`).join('')}
+        </ul>
+      </div>
+
+      <div class="gallery-block block">
+        <p class="eyebrow">VISUAL CONTEXT</p>
+        <div class="gallery-grid">
+          ${chapter.miniGallery.map((image) => `
+            <figure>
+              <img src="${image.src}" alt="${image.caption}">
+              <figcaption>${image.caption} · ${image.credit}</figcaption>
+            </figure>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="knowledge-panel block">
+        <p class="eyebrow">KNOWLEDGE CHECK</p>
+        ${chapter.knowledgeCheck.map((pair) => `
+          <div class="check-item">
+            <strong>${pair.question}</strong>
+            <p>${pair.answer}</p>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="chapter-cta">
+        <span>What happened next?</span>
+        <button type="button" class="primary" onclick="openChapter('${chapter.next.id}')">${chapter.next.label}</button>
+      </div>
+    </div>
+  `;
+}
+
+function openChapter(id) {
+  if (id === 'declaration') {
+    show('declaration');
+    return;
+  }
+
+  if (id === 'articles') {
+    show('story');
+    return;
+  }
+
+  if (id === 'constitution') {
+    show('constitution');
+    return;
+  }
+
+  show('journey');
+}
+
 function renderMap() {
   const unitGrid = document.getElementById('unitGrid');
   if (!unitGrid) return;
@@ -163,6 +273,8 @@ function nextQ() {
 }
 
 function bootstrap() {
+  renderJourney();
+  renderDeclaration();
   renderMap();
   renderStory();
   renderConstitution();

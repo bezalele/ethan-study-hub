@@ -16,6 +16,7 @@
     <nav aria-label="Main navigation">
       <button type="button" onclick="show('map')">Course Map</button>
       <button type="button" onclick="show('story')">Founding Story</button>
+      <button type="button" onclick="show('declaration')">Declaration</button>
       <button type="button" onclick="show('constitution')">Constitution</button>
       <button type="button" onclick="show('practice')">Practice</button>
     </nav>
@@ -52,12 +53,17 @@
       <div class="callout">
         <h3>🧠 Ethan's mental model</h3>
         <p><strong>Britain felt too powerful → Articles were too weak → Constitution seeks balance.</strong></p>
-        <button type="button" class="primary" onclick="show('constitution')">Zoom into the Constitution →</button>
+        <button type="button" class="primary" onclick="show('declaration')">Read the Declaration →</button>
       </div>
     </section>
 
+    <section id="declaration" class="page" aria-label="Declaration of Independence chapter">
+      <button class="back" type="button" onclick="show('map')">← Course map</button>
+      <div id="declarationContent"></div>
+    </section>
+
     <section id="constitution" class="page" aria-label="Constitution explorer">
-      <button class="back" type="button" onclick="show('story')">← Founding story</button>
+      <button class="back" type="button" onclick="show('map')">← Course map</button>
       <div class="page-intro">
         <p class="eyebrow">CONSTITUTION EXPLORER</p>
         <h1>The Constitution as a machine.</h1>
