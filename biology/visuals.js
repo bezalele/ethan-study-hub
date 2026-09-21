@@ -75,9 +75,12 @@ function galleryBody(d){
 const SS_CHEV='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5 16.5 12 9 19.5"/></svg>';
 function slideshowBody(d){
  const n=d.slides.length;
- const frames=d.slides.map((x,i)=>`<figure class="ss-slide" data-slide="${i}"${i?' hidden':''}>${x.todo
+ // Picture, then title and words beneath it, the way the catalogue lays
+ // its tiles out. Side by side spent half the panel on two lines of text.
+ // The slide number lives in the controls, so it is not repeated here.
+ const frames=d.slides.map((x,i)=>`<figure class="ss-slide" data-slide="${i}"${i?' hidden':''}><div class="ss-media"${x.todo?'':` style="--shot:url('${x.src}')"`}>${x.todo
    ?`<div class="ss-todo"><strong>Artwork still to come</strong><span>Add the picture as <code>biology/${x.src}</code>, then delete <code>todo:true</code> on this slide.</span></div>`
-   :`<img src="${x.src}" alt="${x.heading}" loading="${i?'lazy':'eager'}">`}<figcaption><p class="ss-kicker">${x.kicker}</p><h3>${x.heading}</h3><p class="ss-body">${x.body}</p>${x.labels?`<p class="ss-labels">${x.labels}</p>`:''}</figcaption></figure>`).join('');
+   :`<img src="${x.src}" alt="${x.heading}" loading="${i?'lazy':'eager'}">`}</div><figcaption class="ss-bot"><h3>${x.heading}</h3><p class="ss-body">${x.body}</p>${x.labels?`<p class="ss-labels">${x.labels}</p>`:''}</figcaption></figure>`).join('');
  const dots=d.slides.map((x,i)=>`<button type="button" class="ss-dot${i?'':' is-on'}" data-go="${i}" aria-label="Go to slide ${i+1}"></button>`).join('');
  return `<div class="ss" data-slideshow><div class="ss-stage">${frames}</div><div class="ss-controls"><button type="button" class="ss-arrow" data-step="-1" aria-label="Previous slide">${SS_CHEV}</button><div class="ss-dots">${dots}</div><button type="button" class="ss-arrow" data-step="1" aria-label="Next slide">${SS_CHEV}</button><p class="ss-count" data-count>1 of ${n}</p></div><p class="small muted real-life-credit">Illustrations, not photographs. Colours and shapes are simplified so the parts stand out.</p></div>`;
 }
