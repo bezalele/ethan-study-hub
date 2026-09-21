@@ -34,9 +34,10 @@
                        image: { src, alt, credit } | null, does, powers, why }],
                        checks: [{ id, from, to, label, body }],
                        flow: { label, steps: [string] } }
-                   A branch with image: null falls back to the drawn
-                   silhouette the component keeps for that branch, at the same
-                   size as a photograph, so adding art later is a data change.
+                   Branch art is square and full-bleed: the label, article
+                   and role sit on the picture, so the image wants its subject
+                   in the upper half. A branch with image: null simply draws
+                   the scrim with no picture behind it.
                    A check names the two branches it runs between, so
                    selecting it can highlight that edge. `flow` is an optional
                    secondary strip and stays subordinate to the triangle.
@@ -195,11 +196,17 @@ export const COURSE_DETAILS = {
           label: 'President',
           article: 'Article II',
           role: 'Carries out the law',
-          // NEEDS-ART: the repo has no White House photograph, so this card
-          // falls back to the drawn silhouette in components/power-triangle.js.
-          // To use a photograph, drop one in assets/course-map/ and replace
-          // this null with { src, alt, credit } — nothing else changes.
-          image: null,
+          // NEEDS-ART: the other two cards are crops of the constitution
+          // chapter's painted sunset. Nothing in the repo shows the White
+          // House, so this one is a flat illustration set against a stretch
+          // of that same sky — close enough in palette to sit beside them,
+          // but not the painting the others are. Replace the file when a
+          // proper illustration exists; nothing else has to change.
+          image: {
+            src: 'assets/course-map/branch-president.jpg',
+            alt: 'Illustration of the White House at sunset',
+            credit: 'The White House',
+          },
           does:
             'Heads the executive branch and is responsible for enforcing the laws Congress passes, directing federal agencies and foreign policy.',
           powers:

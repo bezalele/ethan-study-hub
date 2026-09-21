@@ -17,11 +17,17 @@
    ="none" and every angle in it was a lie. Cards and labels are HTML
    positioned in percentages over the same box.
 
+   Each direction gets its own arrow, not a shared double-headed one: a
+   double head cannot say that impeachment runs only one way, and a reader
+   who clicks it has no way to tell. A pair with checks both ways therefore
+   gets two parallel single-headed arrows, and selecting a check lights only
+   the one it travels along.
+
    Checks are grouped by direction rather than shown one per arrow: Congress
    and the president have four checks between them, and four labels strung
    along one short diagonal overlap no matter how they are spread. Each
-   direction gets one small cluster beside its arrow, and every label in it
-   is still individually clickable.
+   direction gets one small cluster beside its own arrow, and every label in
+   it is still individually clickable.
    --------------------------------------------------------------------------- */
 
 /* The box is 11:5, so the viewBox is 220 x 100 and units are square. */
@@ -36,7 +42,10 @@ const POS = {
 
 /* Half a branch card, in SVG units, used to stop each arrow at the card edge
    instead of running under it. */
-const CARD_HALF = { w: 19, h: 18 };
+const CARD_HALF = { w: 18.5, h: 18.5 };
+
+/* How far the two directions of one pair sit either side of the centreline. */
+const LINE_OFFSET = 2.4;
 
 /* How far a label cluster sits off its arrow, and how far along the arrow it
    slides toward the branch it belongs to. Both grow with the number of
@@ -44,50 +53,11 @@ const CARD_HALF = { w: 19, h: 18 };
 const CLUSTER_OFFSET = 13;
 const CLUSTER_STAGGER = 0.15;
 
-/* Drawn stand-ins, used only for a branch whose `image` is null.
-
-   The repo has photographs of the Capitol and of the Supreme Court, but none
-   of the White House. Rather than leave that card empty — or borrow a
-   building that is not the right one — the executive branch gets a drawn
-   silhouette in the same warm palette and the same band size as the photos,
-   so the three cards read as one set. Supplying a photograph later replaces
-   it and needs no change here. */
-const SKETCH = {
-  president: `
-    <svg class="cm-br__sketch" viewBox="0 0 160 70" preserveAspectRatio="xMidYMax slice"
-         role="img" aria-label="Illustration of the White House">
-      <defs>
-        <linearGradient id="cm-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#f7dcb0"/>
-          <stop offset="1" stop-color="#e2a171"/>
-        </linearGradient>
-      </defs>
-      <rect width="160" height="70" fill="url(#cm-sky)"/>
-      <g fill="#fffaf2">
-        <rect x="6" y="45" width="42" height="18"/>
-        <rect x="112" y="45" width="42" height="18"/>
-        <rect x="46" y="35" width="68" height="28"/>
-        <rect x="44" y="31" width="72" height="4"/>
-        <rect x="62" y="24" width="36" height="3"/>
-        <polygon points="80,14 100,25 60,25"/>
-        <rect x="64" y="27" width="4" height="36"/>
-        <rect x="74" y="27" width="4" height="36"/>
-        <rect x="84" y="27" width="4" height="36"/>
-        <rect x="94" y="27" width="4" height="36"/>
-      </g>
-      <rect y="63" width="160" height="7" fill="#c98b5e"/>
-    </svg>`,
-};
-
 const PAIRS = [
   ['congress', 'president'],
   ['congress', 'courts'],
   ['president', 'courts'],
 ];
-
-function edgeKey(a, b) {
-  return [a, b].sort().join('|');
-}
 
 function lerp(a, b, t) {
   return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
@@ -102,7 +72,9 @@ function cardInset(a, b) {
   return Math.min(tx, ty) + 0.03;
 }
 
-/** Percentages for positioning an HTML overlay at an SVG-unit point. */
+/** Percentages for positioning an HTML overlay at an SVG-unit point.
+    They travel as custom properties rather than as left/top, so the
+    narrow-screen list can drop the positioning without !important. */
 function pct(p) {
   return { left: (p.x / VB_W) * 100, top: (p.y / VB_H) * 100 };
 }
@@ -124,10 +96,10 @@ export function renderTriangle(m, esc) {
     const p = pct(POS[n.id] || { x: VB_W / 2, y: VB_H / 2 });
     const art = n.image && n.image.src
       ? `<img src="${esc(n.image.src)}" alt="${esc(n.image.alt || '')}" loading="lazy">`
-      : (SKETCH[n.id] || '');
+      : '';
     return `
       <button class="cm-br" type="button" data-branch="${esc(n.id)}"
-              aria-pressed="false" style="left:${p.left}%; top:${p.top}%">
+              aria-pressed="false" style="--x:${p.left}%; --y:${p.top}%">
         <span class="cm-br__art">${art}</span>
         <span class="cm-br__name">${esc(n.label)}</span>
         <span class="cm-br__article">${esc(n.article)}</span>
@@ -142,40 +114,47 @@ export function renderTriangle(m, esc) {
     (byDir[k] = byDir[k] || { from: c.from, to: c.to, list: [] }).list.push(c);
   });
 
-  /* --- one arrow per pair; a head on each end that has checks ------------ */
-  const lines = PAIRS.map(([a, b]) => {
-    const p = POS[a]; const q = POS[b];
-    const s = lerp(p, q, cardInset(p, q));
-    const e = lerp(p, q, 1 - cardInset(q, p));
-    const toA = byDir[`${b}>${a}`] ? ' marker-start="url(#cm-arrow)"' : '';
-    const toB = byDir[`${a}>${b}`] ? ' marker-end="url(#cm-arrow)"' : '';
-    return `<line class="cm-edge" data-edge="${edgeKey(a, b)}"
-                  x1="${s.x}" y1="${s.y}" x2="${e.x}" y2="${e.y}"${toA}${toB} />`;
-  }).join('');
-
-  /* --- a label cluster per direction, set off to one side of its arrow --- */
-  const clusters = PAIRS.flatMap(([a, b]) => {
-    const ab = byDir[`${a}>${b}`];
-    const ba = byDir[`${b}>${a}`];
-    const present = [ab, ba].filter(Boolean);
-    if (!present.length) return [];
-
+  /* --- each pair, with its directions ordered and a side assigned -------- */
+  const pairs = PAIRS.map(([a, b]) => {
+    const dirs = [byDir[`${a}>${b}`], byDir[`${b}>${a}`]].filter(Boolean);
+    // The busier direction takes the outward side, where there is more room.
+    dirs.sort((x, y) => y.list.length - x.list.length);
     const mid = lerp(POS[a], POS[b], 0.5);
     let nx = mid.x - centroid.x;
     let ny = mid.y - centroid.y;
     const len = Math.hypot(nx, ny) || 1;
-    nx /= len; ny /= len;
+    return { a, b, dirs, nx: nx / len, ny: ny / len };
+  }).filter((p) => p.dirs.length);
 
-    const tallest = Math.max(...present.map((d) => d.list.length));
+  /* --- one single-headed arrow per direction ----------------------------- */
+  const lines = pairs.flatMap(({ a, b, dirs, nx, ny }) => {
+    // A pair with only one direction keeps the centreline; two directions
+    // part either side of it so each arrowhead belongs to one of them.
+    const apart = dirs.length > 1 ? LINE_OFFSET : 0;
+    return dirs.map((dir, i) => {
+      const sign = i === 0 ? 1 : -1;
+      const p = POS[dir.from]; const q = POS[dir.to];
+      const s0 = lerp(p, q, cardInset(p, q));
+      const e0 = lerp(p, q, 1 - cardInset(q, p));
+      const dx = nx * apart * sign; const dy = ny * apart * sign;
+      return `<line class="cm-edge" data-dir="${esc(dir.from)}>${esc(dir.to)}"
+                    x1="${s0.x + dx}" y1="${s0.y + dy}"
+                    x2="${e0.x + dx}" y2="${e0.y + dy}"
+                    marker-end="url(#cm-arrow)" />`;
+    });
+  }).join('');
+
+  /* --- a label cluster per direction, set off beside its own arrow ------- */
+  const clusters = pairs.flatMap(({ a, b, dirs, nx, ny }) => {
+    const tallest = Math.max(...dirs.map((d) => d.list.length));
     const off = CLUSTER_OFFSET + (tallest - 1) * 4;
-    // Two directions sharing one arrow have to slide apart along it as well
+    // Two directions sharing one pair have to slide apart along it as well
     // as across it, or both land on the middle of the same line.
-    const slide = present.length > 1 ? CLUSTER_STAGGER : 0;
+    const slide = dirs.length > 1 ? CLUSTER_STAGGER : 0;
 
-    present.sort((x, y) => y.list.length - x.list.length);
-    return present.map((dir, i) => {
-      // The busier direction takes the outward side; each sits nearer the
-      // branch whose powers it lists.
+    return dirs.map((dir, i) => {
+      // Same side as this direction's arrow, and nearer the branch whose
+      // powers it lists.
       const sign = i === 0 ? 1 : -1;
       const base = lerp(POS[a], POS[b], 0.5 - slide * (dir.from === a ? 1 : -1));
       const at = {
@@ -190,7 +169,7 @@ export function renderTriangle(m, esc) {
           ${esc(c.label)}
         </button>`).join('');
       return `
-        <div class="cm-cluster" style="left:${p.left}%; top:${p.top}%">
+        <div class="cm-cluster" style="--x:${p.left}%; --y:${p.top}%">
           <p class="cm-cluster__dir">${esc(label)}</p>
           ${pills}
         </div>`;
@@ -274,7 +253,7 @@ export function wireTriangle(root, model, esc) {
       const card = cards.find((x) => x.dataset.branch === b);
       if (card) card.classList.add('is-related');
     });
-    const match = edges.find((e) => e.dataset.edge === edgeKey(c.from, c.to));
+    const match = edges.find((e) => e.dataset.dir === `${c.from}>${c.to}`);
     if (match) match.classList.add('is-active');
 
     const from = model.nodes.find((x) => x.id === c.from);

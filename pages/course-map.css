@@ -509,33 +509,42 @@
 
 .page--course-map .cm-br {
   position: absolute;
+  left: var(--x);
+  top: var(--y);
   translate: -50% -50%;
   display: grid;
+  align-content: end;
   justify-items: center;
   gap: 1px;
-  width: clamp(132px, 17vw, 158px);
-  padding: 0 0 var(--s-3);
-  background: var(--c-paper);
-  border: 1px solid var(--c-line);
+  width: clamp(140px, 15vw, 168px);
+  aspect-ratio: 1;
+  padding: var(--s-3) var(--s-2);
+  border: 0;
   border-radius: var(--r-md);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
   text-align: center;
-  transition: border-color var(--dur) var(--ease),
-              box-shadow var(--dur) var(--ease);
+  transition: box-shadow var(--dur) var(--ease), scale var(--dur) var(--ease);
 }
-.page--course-map .cm-br:hover {
-  border-color: var(--c-forest);
-  box-shadow: var(--shadow-md);
-}
+.page--course-map .cm-br:hover { box-shadow: var(--shadow-md); scale: 1.02; }
 
+/* The photograph is the card; the wording sits on it, over a scrim dark
+   enough to hold text at any brightness the picture happens to have. */
 .page--course-map .cm-br__art {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 7;
-  margin-bottom: var(--s-3);
+  position: absolute;
+  inset: 0;
   background: var(--c-parchment-dim);
-  overflow: hidden;
+}
+.page--course-map .cm-br__art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top,
+    rgba(11, 38, 32, 0.90) 0%,
+    rgba(11, 38, 32, 0.78) 20%,
+    rgba(11, 38, 32, 0.40) 40%,
+    rgba(11, 38, 32, 0.10) 58%,
+    rgba(11, 38, 32, 0) 72%);
 }
 .page--course-map .cm-br__art img {
   width: 100%;
@@ -547,44 +556,38 @@
   display: block;
 }
 
-/* Drawn stand-in for a branch with no photograph. Same band as the images,
-   so the three cards stay one set. */
-.page--course-map .cm-br__sketch {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
+/* Every text span has to out-paint the absolutely positioned art. */
+.page--course-map .cm-br__name,
+.page--course-map .cm-br__article,
+.page--course-map .cm-br__role { position: relative; }
 
 .page--course-map .cm-br__name {
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   line-height: 1.15;
-  color: var(--c-ink);
+  color: var(--c-on-dark);
 }
 .page--course-map .cm-br__article {
   font-size: 13px;
-  color: var(--c-ink-faint);
+  color: var(--c-on-dark-soft);
 }
 .page--course-map .cm-br__role {
   margin-top: 3px;
-  padding-inline: var(--s-3);
   font-size: 13px;
   line-height: 1.3;
-  color: var(--c-brick);
+  color: var(--c-gold);
 }
 
+/* A ring rather than a border: a border would crop the picture as it
+   thickens, and the cards would jump. */
 .page--course-map .cm-br[aria-pressed="true"] {
-  border-color: var(--c-forest);
-  border-width: 2px;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 0 0 3px var(--c-forest), var(--shadow-md);
 }
-.page--course-map .cm-br[aria-pressed="true"] .cm-br__name { color: var(--c-forest); }
 
 /* The two branches a selected check runs between. */
 .page--course-map .cm-br.is-related {
-  border-color: var(--c-brick);
-  border-width: 2px;
+  box-shadow: 0 0 0 3px var(--c-brick), var(--shadow-md);
 }
 
 /* --- Check labels, clustered beside their arrow ------------------------------
@@ -594,6 +597,8 @@
 
 .page--course-map .cm-cluster {
   position: absolute;
+  left: var(--x);
+  top: var(--y);
   translate: -50% -50%;
   z-index: 2;
   display: grid;
@@ -740,28 +745,30 @@
     gap: var(--s-2);
   }
   .page--course-map .cm-map__lines { display: none; }
+  /* Still relative, so each card's art stays inside that card. Static
+     would resolve it against the map and stack all three on top of
+     each other. */
   .page--course-map .cm-br {
-    position: static;
+    position: relative;
+    left: auto;
+    top: auto;
     translate: none;
     width: 100%;
-    grid-template-columns: 96px minmax(0, 1fr);
+    aspect-ratio: auto;
+    min-height: 124px;
     justify-items: start;
-    align-items: center;
     text-align: left;
-    padding: 0 var(--s-3) 0 0;
-    gap: 0 var(--s-3);
+    padding: var(--s-4);
   }
-  .page--course-map .cm-br__art {
-    grid-row: 1 / span 3;
-    aspect-ratio: 1;
-    margin-bottom: 0;
-  }
-  .page--course-map .cm-br__role { padding-inline: 0; }
+  /* A wide band off a square picture: hold the buildings, not the sky. */
+  .page--course-map .cm-br__art img { object-position: center 58%; }
   /* The diagram becomes a list, so the clusters fall under it in reading
      order rather than floating beside arrows that are no longer drawn. Each
      one reads as a sentence: direction first, then its checks. */
   .page--course-map .cm-cluster {
     position: static;
+    left: auto;
+    top: auto;
     translate: none;
     display: flex;
     flex-wrap: wrap;
