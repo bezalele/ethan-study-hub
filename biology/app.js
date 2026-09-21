@@ -18,42 +18,93 @@ function unitLessonNav(unitId,activeLessonId){const lessons=BIO_LESSONS.filter(l
 function adjacentUnitNav(activeId){const i=BIO_UNITS.findIndex(u=>u.id===activeId);if(i<0)return '';const prev=BIO_UNITS[i-1],next=BIO_UNITS[i+1];return `<nav class="adjacent-unit-nav" aria-label="Previous and next course section">${prev?`<a href="#unit/${prev.id}">← ${prev.n}: ${prev.title}</a>`:'<span></span>'}${next?`<a href="#unit/${next.id}">${next.n}: ${next.title} →</a>`:'<span></span>'}</nav>`;}
 
 const SCIENCE_LINKS={
+ investigations:[
+  {icon:'⚗',label:'Real biology experiments',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=biology%20laboratory%20experiment&sort=best&suppressfamilycorrection=true'}
+ ],
+ evidence:[
+  {icon:'⌁',label:'Biology data in the real world',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=scientist%20biology%20data%20graph&sort=best&suppressfamilycorrection=true'}
+ ],
+ molecules:[
+  {icon:'◌',label:'Molecules & enzymes up close',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=enzyme%20molecule%20biology&sort=best&suppressfamilycorrection=true'},
+  {icon:'◌',label:'Water molecules & life',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=water%20molecule%20biology&sort=best&suppressfamilycorrection=true'}
+ ],
+ interactions:[
+  {icon:'◎',label:'Predator, prey & symbiosis',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=predator%20prey%20symbiosis%20wildlife&sort=best&suppressfamilycorrection=true'}
+ ],
+ populations:[
+  {icon:'◎',label:'Populations in the wild',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=animal%20population%20herd%20migration&sort=best&suppressfamilycorrection=true'}
+ ],
+ biodiversity:[
+  {icon:'◎',label:'Biodiversity you can see',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=biodiversity%20coral%20reef%20rainforest&sort=best&suppressfamilycorrection=true'}
+ ],
+ 'human-impacts':[
+  {icon:'◎',label:'Human impact — before & after',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=coral%20bleaching%20deforestation%20pollution%20wildlife&sort=best&suppressfamilycorrection=true'},
+  {icon:'◎',label:'Conservation in action',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=wildlife%20conservation%20restoration&sort=best&suppressfamilycorrection=true'}
+ ],
+ photosynthesis:[
+  {icon:'☀',label:'Chloroplasts & photosynthesis',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=chloroplast%20photosynthesis%20microscopic&sort=best&suppressfamilycorrection=true'},
+  {icon:'☀',label:'Leaf stomata under a microscope',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=leaf%20stomata%20microscopic&sort=best&suppressfamilycorrection=true'}
+ ],
+ respiration:[
+  {icon:'◉',label:'Mitochondria — the real structures',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=mitochondria%20microscopic&sort=best&suppressfamilycorrection=true'},
+  {icon:'◉',label:'Cells using oxygen & energy',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=cellular%20respiration%20ATP%20mitochondria&sort=best&suppressfamilycorrection=true'}
+ ],
+ 'food-energy':[
+  {icon:'↗',label:'Food webs happening in nature',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=predator%20prey%20food%20web%20ecosystem&sort=best&suppressfamilycorrection=true'}
+ ],
+ 'carbon-cycle':[
+  {icon:'↻',label:'Carbon moving through Earth',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=carbon%20cycle%20forest%20ocean%20plankton&sort=best&suppressfamilycorrection=true'}
+ ],
  cells:[
-  {icon:'▣',label:'Animal cell images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=animal%20cell%20microscopic&sort=best&suppressfamilycorrection=true'},
-  {icon:'▣',label:'Plant cell images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=plant%20cell%20microscopic&sort=best&suppressfamilycorrection=true'}
+  {icon:'◉',label:'Animal cells — images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=animal%20cell%20microscopic&sort=best&suppressfamilycorrection=true'},
+  {icon:'◉',label:'Plant cells — images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=plant%20cell%20microscopic&sort=best&suppressfamilycorrection=true'}
  ],
  transport:[
-  {icon:'▣',label:'Cell membrane & osmosis',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=cell%20membrane%20osmosis&sort=best&suppressfamilycorrection=true'}
+  {icon:'⇄',label:'Cell membrane & osmosis',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=cell%20membrane%20osmosis&sort=best&suppressfamilycorrection=true'}
+ ],
+ 'body-systems':[
+  {icon:'⚽',label:'What happens inside a sprint',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=athlete%20sprint%20muscle%20heart%20lungs%20physiology&sort=best&suppressfamilycorrection=true'},
+  {icon:'❤',label:'Blood, lungs & muscle up close',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=blood%20oxygen%20muscle%20lungs%20medical%20illustration&sort=best&suppressfamilycorrection=true'}
+ ],
+ homeostasis:[
+  {icon:'≈',label:'How the body cools itself',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=sweating%20thermoregulation%20athlete%20thermal&sort=best&suppressfamilycorrection=true'}
  ],
  dna:[
-  {icon:'▣',label:'DNA images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=DNA%20molecule&sort=best&suppressfamilycorrection=true'},
-  {icon:'▣',label:'Chromosome images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=chromosome%20microscopic&sort=best&suppressfamilycorrection=true'}
+  {icon:'⌁',label:'DNA — images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=DNA%20molecule&sort=best&suppressfamilycorrection=true'},
+  {icon:'⌁',label:'Chromosomes up close',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=chromosome%20microscopic&sort=best&suppressfamilycorrection=true'}
  ],
  proteins:[
-  {icon:'▣',label:'DNA → protein visuals',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=DNA%20protein%20synthesis&sort=best&suppressfamilycorrection=true'}
+  {icon:'→',label:'Watch DNA become protein',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=DNA%20protein%20synthesis%20ribosome&sort=best&suppressfamilycorrection=true'},
+  {icon:'◌',label:'Proteins in 3D',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=protein%20molecule%203D%20biology&sort=best&suppressfamilycorrection=true'}
  ],
  mutations:[
-  {icon:'▣',label:'DNA mutation visuals',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=DNA%20mutation&sort=best&suppressfamilycorrection=true'}
+  {icon:'✧',label:'DNA mutations visualized',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=DNA%20mutation%20genetic%20variation&sort=best&suppressfamilycorrection=true'}
  ],
  mitosis:[
-  {icon:'▣',label:'Mitosis images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=mitosis%20microscopic&sort=best&suppressfamilycorrection=true'}
+  {icon:'✣',label:'Cells actually dividing',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=mitosis%20cell%20division%20microscopic&sort=best&suppressfamilycorrection=true'}
  ],
  meiosis:[
-  {icon:'▣',label:'Meiosis images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=meiosis%20microscopic&sort=best&suppressfamilycorrection=true'}
+  {icon:'✣',label:'Meiosis & chromosomes',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=meiosis%20chromosome%20cell%20division&sort=best&suppressfamilycorrection=true'}
+ ],
+ genetics:[
+  {icon:'◫',label:'Inheritance in real families & traits',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=genetics%20inheritance%20traits%20family%20biology&sort=best&suppressfamilycorrection=true'},
+  {icon:'◫',label:'Mendel, peas & genetic patterns',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=Mendel%20pea%20genetics&sort=best&suppressfamilycorrection=true'}
  ],
  'evolution-evidence':[
-  {icon:'▣',label:'Fossils & evolution images',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=evolution%20fossil%20biology&sort=best&suppressfamilycorrection=true'}
+  {icon:'◆',label:'Fossils & transitional forms',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=transitional%20fossil%20evolution%20biology&sort=best&suppressfamilycorrection=true'},
+  {icon:'◆',label:'Bones that reveal relationships',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=homologous%20structures%20skeleton%20evolution&sort=best&suppressfamilycorrection=true'}
  ],
  'natural-selection':[
-  {icon:'▣',label:'Natural selection visuals',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=natural%20selection%20biology&sort=best&suppressfamilycorrection=true'}
+  {icon:'◈',label:'Camouflage & natural selection',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=animal%20camouflage%20natural%20selection&sort=best&suppressfamilycorrection=true'}
  ],
  speciation:[
-  {icon:'▣',label:'Species evolution visuals',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=species%20evolution%20biology&sort=best&suppressfamilycorrection=true'}
+  {icon:'⑂',label:'How populations become different',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=Darwin%20finches%20speciation%20island&sort=best&suppressfamilycorrection=true'},
+  {icon:'⑂',label:'Geographic isolation in nature',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=geographic%20isolation%20species%20evolution&sort=best&suppressfamilycorrection=true'}
  ]
 };
 function scienceLinks(lessonId){
  const links=SCIENCE_LINKS[lessonId];if(!links?.length)return '';
- return `<aside class="science-links" aria-label="See more biology"><div class="science-links-title"><span aria-hidden="true">✦</span><span><strong>See more biology</strong><small>Images & short clips — just browse.</small></span></div><div class="science-link-list">${links.map(x=>`<a href="${x.url}" target="_blank" rel="noopener noreferrer"><span class="science-link-icon" aria-hidden="true">${x.icon}</span><span><strong>${esc(x.label)}</strong></span><span class="science-link-arrow" aria-hidden="true">↗</span></a>`).join('')}</div></aside>`;
+ return `<aside class="science-links" aria-label="See it for real"><div class="science-links-title"><span class="science-spark" aria-hidden="true">✦</span><span><strong>See it for real</strong><small>Pictures & short clips that make this lesson real.</small></span></div><div class="science-link-list">${links.map(x=>`<a href="${x.url}" target="_blank" rel="noopener noreferrer"><span class="science-link-icon" aria-hidden="true">${x.icon}</span><span><span class="science-link-kicker">LOOK CLOSER</span><strong>${esc(x.label)}</strong></span><span class="science-link-arrow" aria-hidden="true">↗</span></a>`).join('')}</div></aside>`;
 }
 function home(){crumbs([['Home']]);return `<section class="hero"><div class="hero-copy"><p class="eyebrow">ETHAN’S BIOLOGY FIELD GUIDE</p><h1>Life makes more sense up close.</h1><p>See the idea. Try it yourself. Connect the dots.</p><div class="controls">${btn('Start exploring','lesson/'+(lesson(state.last)?state.last:'investigations'))}${btn('Explore the course','course',true)}</div><span class="small">Grade 9 · Honors Biology · MCPS topic sequence</span></div><div class="hero-art">${svg('<circle cx="300" cy="140" r="125" fill="#edf0df"/><path d="M240 240Q180 130 320 40Q420 200 240 240" fill="#8ca67d"/><path d="M230 262 320 66M262 198 233 132M286 150l57-22" fill="none" stroke="#42664d" stroke-width="4"/><circle cx="413" cy="206" r="57" fill="#e5d8b8"/><circle cx="413" cy="206" r="34" fill="#b6c9ab"/><circle cx="408" cy="201" r="13" fill="#8c869f"/><circle cx="179" cy="78" r="22" fill="#d8b76d"/>','Illustration of a leaf, sunlight, and a cell')}</div></section><nav class="home-shortcuts" aria-label="Quick study links"><span>15 minutes, one idea.</span><a href="#practice">Practice questions →</a><a href="#flashcards/all">Vocabulary cards →</a></nav><div class="section-top"><h2>Your biology course</h2><a href="#about">About this guide →</a></div>${unitCards()}`;}
 function course(id){const u=unit(id);crumbs(u?[['Course','course'],[u.n]]:[['Course']]);if(!u)return heading('THE COURSE','From living systems to living cells','Begin with foundations, or jump to your class topic.')+unitCards();return heading(u.n.toUpperCase(),u.title,u.desc)+`<div class="controls">${btn('Practice this unit','practice/'+u.id)}${btn('Unit check','check/'+u.id,true)}${btn('Vocabulary','flashcards/'+u.id,true)}</div><div class="grid">${BIO_LESSONS.filter(l=>l.unit===u.id).map(lessonCard).join('')}</div>${adjacentUnitNav(u.id)}`;}
