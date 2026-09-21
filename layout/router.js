@@ -18,6 +18,7 @@ const ROUTES = [
   { path: '/',                  page: 'home' },
   { path: '/course',            page: 'course-map' },
   { path: '/course/:unit',      page: 'course-map' },
+  { path: '/journal',           page: 'journal' },
   { path: '/study',             page: 'study' },
   { path: '/study/practice',    page: 'practice' },
   { path: '/study/documents',   page: 'study', params: { view: 'documents' } },

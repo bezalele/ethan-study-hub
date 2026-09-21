@@ -43,7 +43,10 @@ export function renderLayout() {
     </a>
     <nav id="app-nav" aria-label="Main">
       ${NAV.map((item) => `<a class="nav__link" data-nav="${item.id}" href="${item.href}">${item.label}</a>`).join('')}
-    </nav>`;
+    </nav>
+    <span id="log-mount"></span>`;
+
+  mountLog();
 
   footer.innerHTML = `
     <span>Ethan Study Hub &middot; AP U.S. Government &amp; Politics</span>
@@ -51,10 +54,28 @@ export function renderLayout() {
 }
 
 /**
+ * The daily-note button in the header. Mounted with the chrome and again on
+ * every navigation, because its badge counts replies that may have been
+ * written since — and because the log component redraws the button rather
+ * than watching for changes.
+ */
+export function mountLog() {
+  const slot = document.getElementById('log-mount');
+  if (!slot || !window.LearningLog) return;
+  window.LearningLog.mountButton(slot, {
+    subject: 'apgov',
+    label: 'AP U.S. Government',
+    learner: 'Ethan',
+    historyHref: '#/journal',
+  });
+}
+
+/**
  * Move `aria-current` to the nav item for `navId`. This is the complete set of
  * changes the chrome undergoes on navigation.
  */
 export function setActive(navId) {
+  mountLog();
   document.querySelectorAll('#app-nav .nav__link').forEach((link) => {
     if (link.dataset.nav === navId) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');

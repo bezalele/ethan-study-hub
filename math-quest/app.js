@@ -193,6 +193,7 @@ const units = [
   },
 ];
 const paths = {
+  journal: "M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1ZM9 3v18M12 8h4M12 12h4",
   home: "M3 10 12 3l9 7v11h-6v-7H9v7H3z",
   course:
     "M12 5v16M12 5C8 2 4 3 2 4v15c4-1 7-1 10 2 3-3 6-3 10-2V4c-4-1-7-1-10 1z",
@@ -211,6 +212,7 @@ const nav = [
   ["review", "Review mistakes"],
   ["progress", "Progress"],
   ["parent", "Parent guide"],
+  ["journal", "Journal"],
 ];
 const main = document.getElementById("main");
 let session = null;
@@ -550,6 +552,18 @@ function settings() {
     }
   };
 }
+function journal() {
+  main.innerHTML = `<section class="hero"><div class="hero-copy">
+    <p class="eyebrow">AFTER SCHOOL</p>
+    <h1>What you learned, Ethan</h1>
+    <p>One short note a day. Your dad can comment on any of them, and you can reply.</p>
+  </div></section><div data-learning-history></div>`;
+  if (window.LearningLog) {
+    LearningLog.mountHistory(main.querySelector("[data-learning-history]"), {
+      subject: "math", label: "Algebra 1", learner: "Ethan",
+    });
+  }
+}
 function route() {
   const [page = "home", arg = ""] = (location.hash.slice(1) || "home").split(
     "/",
@@ -603,6 +617,7 @@ function route() {
       review,
       progress: stats,
       parent,
+      journal,
       settings,
       search: () => {
         let q;
@@ -615,6 +630,12 @@ function route() {
       },
     })[page] || home
   )();
+  const logSlot = document.getElementById("log-mount");
+  if (logSlot && window.LearningLog) {
+    LearningLog.mountButton(logSlot, {
+      subject: "math", label: "Algebra 1", learner: "Ethan", historyHref: "#journal",
+    });
+  }
   window.scrollTo(0, 0);
 }
 document.getElementById("menu").onclick = () => {

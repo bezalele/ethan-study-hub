@@ -1,0 +1,38 @@
+/* ---------------------------------------------------------------------------
+   journal.css — the daily notes page.
+
+   Only the page's own frame lives here. Everything inside the list comes
+   from shared/learning-log.css, which the other two subjects use as well.
+   --------------------------------------------------------------------------- */
+
+.page--journal .jr-shell {
+  display: grid;
+  gap: var(--s-6);
+  padding-block: var(--s-7) var(--s-9);
+}
+
+.page--journal .jr-head {
+  display: grid;
+  gap: var(--s-2);
+  max-width: 60ch;
+}
+
+.page--journal .jr-title {
+  font-size: clamp(28px, min(2.6vw, 4vh), 40px);
+  line-height: 1.12;
+}
+
+.page--journal .jr-intro {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--c-ink-soft);
+}
+
+/* The shared component takes its accent from a variable, so it arrives in
+   this subject's colours rather than Biology's green. */
+.page--journal .ll-history {
+  --ll-accent: var(--c-forest);
+  --ll-accent-soft: var(--c-sage);
+  --ll-edge: var(--c-line);
+  --ll-muted: var(--c-ink-soft);
+}
