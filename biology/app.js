@@ -12,7 +12,33 @@ function heading(k,t,p=''){return `<p class="eyebrow">${k}</p><h1>${t}</h1><p cl
 function crumbs(items){$('#crumb').innerHTML=[['Honors Biology','home'],...items].map(([name,url])=>url?`<a href="#${url}">${esc(name)}</a>`:`<span aria-current="page">${esc(name)}</span>`).join('<span class="sep">/</span>');}
 function art(type){const pics={experiment:'<path d="M70 28v38L40 120q-8 18 12 18h66q20 0 12-18L100 66V28M64 28h42" fill="none" stroke="#496850" stroke-width="5"/><path d="m57 102-12 22q-5 10 10 10h60q15 0 10-10l-12-22Z" fill="#86a98a"/><circle cx="83" cy="91" r="6" fill="#d4b56e"/>',web:'<path d="M85 144V60M85 92 55 70M85 109l35-34" stroke="#53775a" stroke-width="5"/><ellipse cx="56" cy="61" rx="24" ry="14" fill="#7a9c6e" transform="rotate(30 56 61)"/><ellipse cx="114" cy="66" rx="27" ry="15" fill="#a6bb87" transform="rotate(-30 114 66)"/><ellipse cx="85" cy="41" rx="16" ry="28" fill="#547c58"/>',energy:'<circle cx="85" cy="80" r="29" fill="#dbb458"/><g stroke="#ac8439" stroke-width="4"><path d="M85 29V12M85 131v17M34 80H17M136 80h17M49 44 37 32M121 116l12 12M49 116l-12 12M121 44l12-12"/></g>',cell:'<ellipse cx="85" cy="80" rx=" sixty"/><ellipse cx="85" cy="80" rx="62" ry="48" fill="#b7d1c2" stroke="#547766" stroke-width="3"/><circle cx="76" cy="74" r="23" fill="#a49cbd"/><circle cx="77" cy="74" r="9" fill="#6f6d92"/><ellipse cx="119" cy="92" rx="14" ry="7" fill="#d6ab74"/>',dna:'<path d="M55 15c80 30-20 100 60 130M115 15c-80 30 20 100-60 130" fill="none" stroke="#817594" stroke-width="6"/><path d="M60 25h50M73 47h24M67 70h36M65 94h40M76 118h19M60 138h50" stroke="#b09b6f" stroke-width="4"/>',selection:'<path d="M85 143V90M85 90 43 48M85 90l42-42M43 48V20M127 48V20" fill="none" stroke="#856e56" stroke-width="4"/><circle cx="43" cy="25" r="16" fill="#a9b990"/><circle cx="127" cy="25" r="16" fill="#729479"/>'};return `<svg viewBox="0 0 170 160" aria-hidden="true">${(pics[type]||pics.web).replace('<ellipse cx="85" cy="80" rx=" sixty"/>','')}</svg>`;}
 function unitCards(){return `<div class="grid">${BIO_UNITS.map(u=>`<a class="card unit-card" href="#unit/${u.id}"><div class="unit-art" style="background:${u.color}">${art(u.visual)}</div><div class="unit-copy"><span class="small">${u.n}</span><h3>${u.title}</h3><p>${u.desc}</p><p>${BIO_LESSONS.filter(l=>l.unit===u.id).length} lessons · Explore →</p></div></a>`).join('')}</div>`;}
-function lessonCard(l){return `<article class="card lesson-card"><span class="tag">${state.explored.includes(l.id)?'Explored':'Visual lesson'}</span><h3><a href="#lesson/${l.id}">${l.title}</a></h3><p>${l.goal}</p><a href="#lesson/${l.id}">Open lesson →</a></article>`;}
+const CARD_IMAGES={
+ investigations:'assets/cards/investigations.jpg',
+ evidence:'assets/cards/evidence.png',
+ molecules:'assets/cards/molecules.jpg',
+ interactions:'assets/cards/interactions.jpg',
+ populations:'assets/cards/populations.jpg',
+ biodiversity:'assets/cards/biodiversity.jpg',
+ 'human-impacts':'assets/cards/human-impacts.jpg',
+ photosynthesis:'assets/cards/photosynthesis.jpg',
+ respiration:'assets/cards/respiration.jpg',
+ 'food-energy':'assets/cards/food-energy.png',
+ 'carbon-cycle':'assets/cards/carbon-cycle.png',
+ cells:'assets/real-life/animal-cell-electron-micrograph.jpg',
+ transport:'assets/real-life/osmosis-paramecium-micrograph.jpg',
+ 'body-systems':'assets/cards/body-systems.jpg',
+ homeostasis:'assets/cards/homeostasis.jpg',
+ dna:'assets/cards/dna.jpg',
+ proteins:'assets/cards/molecules.jpg',
+ mutations:'assets/cards/mutations.jpg',
+ mitosis:'assets/real-life/mitosis-fluorescence.png',
+ meiosis:'assets/real-life/human-chromosomes-fluorescence.jpg',
+ genetics:'assets/cards/dna.jpg',
+ 'evolution-evidence':'assets/real-life/archaeopteryx-fossil.jpg',
+ 'natural-selection':'assets/cards/natural-selection.png',
+ speciation:'assets/cards/speciation.jpg'
+};
+function lessonCard(l){const img=CARD_IMAGES[l.id];return `<article class="card lesson-card lesson-card-photo">${img?`<a class="lesson-card-image" href="#lesson/${l.id}" aria-hidden="true" tabindex="-1"><img src="${img}" alt="" loading="lazy"></a>`:''}<div class="lesson-card-copy"><span class="tag">${state.explored.includes(l.id)?'Explored':'Visual lesson'}</span><h3><a href="#lesson/${l.id}">${l.title}</a></h3><p>${l.goal}</p><a class="lesson-open" href="#lesson/${l.id}">Open lesson →</a></div></article>`;}
 
 function unitLessonNav(unitId,activeLessonId){const lessons=BIO_LESSONS.filter(l=>l.unit===unitId);return `<nav class="lesson-section-nav" aria-label="Lessons in this course section"><div class="lesson-section-links">${lessons.map(l=>`<a href="#lesson/${l.id}" class="${l.id===activeLessonId?'active':''}" ${l.id===activeLessonId?'aria-current="page"':''}>${l.title}</a>`).join('')}</div></nav>`;}
 function adjacentUnitNav(activeId){const i=BIO_UNITS.findIndex(u=>u.id===activeId);if(i<0)return '';const prev=BIO_UNITS[i-1],next=BIO_UNITS[i+1];return `<nav class="adjacent-unit-nav" aria-label="Previous and next course section">${prev?`<a href="#unit/${prev.id}">← ${prev.n}: ${prev.title}</a>`:'<span></span>'}${next?`<a href="#unit/${next.id}">${next.n}: ${next.title} →</a>`:'<span></span>'}</nav>`;}
