@@ -15,9 +15,10 @@
    the content lands.
    --------------------------------------------------------------------------- */
 
-import { AREAS, getArea } from '../content/course.js';
-import { getDetail } from '../content/courseDetails.js';
-import { el, html, esc } from '../layout/dom.js';
+import { AREAS, getArea } from '../content/course.js?v=6';
+import { getDetail } from '../content/courseDetails.js?v=6';
+import { renderTriangle, wireTriangle } from '../components/power-triangle.js?v=6';
+import { el, html, esc } from '../layout/dom.js?v=6';
 
 /* --- Shared pieces -------------------------------------------------------- */
 
@@ -99,6 +100,12 @@ function sectionBigQuestion(d) {
 /* The visual story and the concept model are one component: a sequence the
    student clicks through. Four tiny decorative thumbnails would not teach the
    progression; a stage that changes with the step does. */
+function sectionModel(d) {
+  const m = d.model;
+  if (m && m.type === 'triangle') return renderTriangle(m, esc);
+  return sectionDocumentWalk(d);
+}
+
 function sectionDocumentWalk(d) {
   const m = d.model;
   if (!m || !m.nodes || !m.nodes.length) {
@@ -222,7 +229,7 @@ function panel(area) {
       <div class="cm-panel__scroll" data-panel tabindex="-1">
         ${sectionUnitHeader(area, d)}
         ${sectionBigQuestion(d)}
-        ${sectionDocumentWalk(d)}
+        ${sectionModel(d)}
         ${sectionCoreIdeas(area, d)}
         ${sectionRemember(d)}
         ${sectionQuickCheck(d)}
@@ -286,6 +293,7 @@ export default {
   render(params) {
     // Unknown or missing unit falls back to the first unit rather than blank.
     const area = getArea(params.unit) || AREAS[0];
+    const d0 = getDetail(area.n);
     const page = el('div', 'page page--course-map');
     page.append(html(`
       <div class="cm-shell">
@@ -296,6 +304,7 @@ export default {
         </div>
       </div>`));
     wireWalk(page);
+    if (d0.model && d0.model.type === 'triangle') wireTriangle(page, d0.model, esc);
     wireQuickCheck(page);
     return page;
   },

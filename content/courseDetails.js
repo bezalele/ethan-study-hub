@@ -11,21 +11,31 @@
    ===========================================================================
    STATUS
    ===========================================================================
-   Unit 1 is complete (Checkpoint B). Units 2–5 are empty and render neutral
-   labelled placeholders until Checkpoint C.
+   Units 1 and 2 are complete. Units 3–5 are empty and render neutral
+   labelled placeholders until the next checkpoint.
 
    Fields per unit (all optional):
 
      hook          One line. The human question the unit answers.
      summary       2–3 plain-English sentences.
      bigQuestion   One sentence. The question the unit is trying to answer.
-     model         The interactive centrepiece. `type: 'documents'` renders a
-                   sequence the student clicks through:
+     model         The interactive centrepiece. Two types so far:
+
+                   `type: 'documents'` — a sequence the student clicks through:
                      { type, intro, nodes: [{ id, step, label, thumb, image,
                        alt, credit, did, next }] }
                    `did`  — what this document actually did.
                    `next` — why the following step became necessary. Omit on
                             the last node.
+
+                   `type: 'triangle'` — three branches and the checks between
+                   them:
+                     { type, intro, nodes: [{ id, label, article, role, does,
+                       powers, why }], checks: [{ id, from, to, label, body }],
+                       flow: { label, steps: [string] } }
+                   A check names the two branches it runs between, so
+                   selecting it can highlight that edge. `flow` is an optional
+                   secondary strip and stays subordinate to the triangle.
      coreIdeas     [{ title, note }] — 4 to 6 orientation items.
      remember      [string] — exactly 3 statements.
      quickCheck    { question, options: [string], answer: <index>, why }
@@ -148,7 +158,125 @@ export const COURSE_DETAILS = {
     fullGuideRoute: null,
   },
 
-  2: { ...EMPTY },
+  2: {
+    hook: 'Who does what in Washington — and who can stop whom?',
+    summary:
+      'Congress, the president, the federal courts, and the bureaucracy have different jobs. Government policy emerges from how those institutions share power, compete, cooperate, and check one another.',
+    bigQuestion: 'How do the branches use power and influence one another?',
+
+    model: {
+      type: 'triangle',
+      intro:
+        'Three branches, and the checks that run between them. Click a branch to see what it does — or click a check to see how one branch can stop another.',
+      nodes: [
+        {
+          id: 'congress',
+          label: 'Congress',
+          article: 'Article I',
+          role: 'Makes federal law',
+          does:
+            'Writes and passes federal legislation. The House and Senate must both agree on a bill before it can become law.',
+          powers:
+            'Taxing and spending, regulating commerce, declaring war, confirming appointments (Senate), and impeachment.',
+          why:
+            'Control of money and law-making makes Congress central to almost any major federal policy.',
+        },
+        {
+          id: 'president',
+          label: 'President',
+          article: 'Article II',
+          role: 'Carries out the law',
+          does:
+            'Heads the executive branch and is responsible for enforcing the laws Congress passes, directing federal agencies and foreign policy.',
+          powers:
+            'Veto, appointments, commander in chief, executive orders directing how the executive branch operates.',
+          why:
+            'The president acts faster than Congress can, which is why so much conflict is about the limits of executive power.',
+        },
+        {
+          id: 'courts',
+          label: 'Federal Courts',
+          article: 'Article III',
+          role: 'Interprets the law',
+          does:
+            'Decides cases brought before them, including whether a law or an executive action conflicts with the Constitution.',
+          powers:
+            'Judicial review, lifetime appointments on good behaviour, and final say on constitutional meaning in the cases they hear.',
+          why:
+            'Courts do not act on their own — someone has to bring a case — but when they rule, the ruling binds the other branches.',
+        },
+      ],
+      checks: [
+        {
+          id: 'veto', from: 'president', to: 'congress', label: 'Veto',
+          body: 'The president can refuse to sign a bill Congress has passed, which stops it from becoming law.',
+        },
+        {
+          id: 'override', from: 'congress', to: 'president', label: 'Override',
+          body: 'Congress can pass a vetoed bill anyway with a two-thirds vote in both chambers. It is difficult, which is why most vetoes hold.',
+        },
+        {
+          id: 'appoint', from: 'president', to: 'courts', label: 'Appoints judges',
+          body: 'The president nominates federal judges and justices — a lasting influence, because those appointments are for life on good behaviour.',
+        },
+        {
+          id: 'confirm', from: 'congress', to: 'president', label: 'Senate confirms',
+          body: 'The Senate votes on judicial nominees and major executive appointments. No confirmation, no appointment.',
+        },
+        {
+          id: 'review-law', from: 'courts', to: 'congress', label: 'Strikes down laws',
+          body: 'In a case before them, the courts can rule that a law passed by Congress conflicts with the Constitution and cannot be enforced.',
+        },
+        {
+          id: 'review-exec', from: 'courts', to: 'president', label: 'Strikes down actions',
+          body: 'The courts can also rule that an executive action exceeds the president’s constitutional or statutory authority.',
+        },
+        {
+          id: 'impeach', from: 'congress', to: 'president', label: 'Impeachment',
+          body: 'The House can impeach a president, other officials, or federal judges; the Senate then holds the trial and can remove them.',
+        },
+      ],
+      flow: {
+        label: 'How one law actually moves',
+        steps: [
+          'Congress passes a bill',
+          'President signs or vetoes',
+          'Agencies carry it out',
+          'Courts review disputes',
+        ],
+      },
+    },
+
+    coreIdeas: [
+      { title: 'House and Senate', note: 'Two chambers, different rules and terms.' },
+      { title: 'Presidential powers', note: 'Enforcement, veto, appointments, foreign policy.' },
+      { title: 'Federal courts', note: 'Decide cases and interpret the Constitution.' },
+      { title: 'Checks and balances', note: 'Each branch holds tools against the others.' },
+      { title: 'Federal bureaucracy', note: 'Agencies turn law into day-to-day rules.' },
+      { title: 'Policymaking', note: 'Major action usually needs more than one branch.' },
+    ],
+
+    remember: [
+      'The branches have different constitutional roles.',
+      'Their powers overlap enough that major action often requires interaction.',
+      'Checks and balances make concentrated power harder, and can also create conflict or delay.',
+    ],
+
+    quickCheck: {
+      question: 'Which idea best explains why a president cannot normally make a federal statute alone?',
+      options: [
+        'The president may only act during a declared emergency',
+        'Federal lawmaking ordinarily runs through Congress, with the president signing or vetoing',
+        'Only the Supreme Court may write federal law',
+        'Statutes must first be approved by the states',
+      ],
+      answer: 1,
+      why:
+        'Making a statute is Congress’s job. The president takes part by signing or vetoing, and can direct the executive branch — but that is not the same as writing law.',
+    },
+
+    fullGuideRoute: null,
+  },
   3: { ...EMPTY },
   4: { ...EMPTY },
   5: { ...EMPTY },

@@ -55,7 +55,7 @@ const ALL_CSS = [
 ];
 const ALL_JS = [
   'layout/layout.js', 'layout/router.js', 'layout/dom.js',
-  'components/timeline.js',
+  'components/timeline.js', 'components/power-triangle.js',
   'content/assets.js', 'content/chapters.js', 'content/course.js',
   'pages/home.js', 'pages/course-map.js', 'pages/study.js',
   'pages/practice.js', 'pages/chapter.js',
