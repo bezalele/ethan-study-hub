@@ -67,7 +67,7 @@ const REAL_LIFE={
    comparing a clean model against messy real tissue. */
 function realLifePanel(lessonId){
  const d=REAL_LIFE[lessonId];if(!d)return '';
- return `<dialog class="real-life-dialog${d.slides?' is-tour':''}" id="real-life-dialog" aria-labelledby="real-life-title"><div class="real-life-shell"><div class="real-life-head"><div><p class="eyebrow">${d.slides?'PICTURE TOUR · ILLUSTRATIONS, NOT PHOTOGRAPHS':'REAL BIOLOGY'}</p><h2 id="real-life-title">${d.title}</h2></div><button type="button" class="soft real-life-close" id="real-life-close" aria-label="Close">Close</button></div>${d.slides?'':`<p class="real-life-intro">${d.intro}</p>`}${d.slides?slideshowBody(d):galleryBody(d)}</div></dialog>`;
+ return `<dialog class="real-life-dialog${d.slides?' is-tour':''}" id="real-life-dialog" aria-labelledby="real-life-title"><div class="real-life-shell"><div class="real-life-head"><div><p class="eyebrow">${d.slides?'ILLUSTRATED TOUR':'REAL BIOLOGY'}</p><h2 id="real-life-title">${d.title}</h2></div><div class="real-life-acts">${d.slides?`<span class="ss-count" data-count>1 of ${d.slides.length}</span>`:''}<button type="button" class="soft real-life-close" id="real-life-close" aria-label="Close">Close</button></div></div>${d.slides?'':`<p class="real-life-intro">${d.intro}</p>`}${d.slides?slideshowBody(d):galleryBody(d)}</div></dialog>`;
 }
 function galleryBody(d){
  return `<div class="real-life-gallery">${d.images.map(x=>`<figure class="real-life-figure"><img src="${x.src}" alt="${x.alt}" loading="lazy"><figcaption><strong>${x.label}</strong><span>${x.note}</span></figcaption></figure>`).join('')}</div><aside class="real-life-exam"><strong>Exam tip</strong><p>${d.exam}</p></aside><p class="small muted real-life-credit">These image files are stored inside Ethan Study Hub. Source and license details are recorded in <code>assets/real-life/SOURCES.md</code>.</p>`;
@@ -80,9 +80,9 @@ function slideshowBody(d){
  // The slide number lives in the controls, so it is not repeated here.
  const frames=d.slides.map((x,i)=>`<figure class="ss-slide" data-slide="${i}"${i?' hidden':''}><div class="ss-media"${x.todo?'':` style="--shot:url('${x.src}')"`}>${x.todo
    ?`<div class="ss-todo"><strong>Artwork still to come</strong><span>Add the picture as <code>biology/${x.src}</code>, then delete <code>todo:true</code> on this slide.</span></div>`
-   :`<img src="${x.src}" alt="${x.heading}" loading="${i?'lazy':'eager'}">`}</div><figcaption class="ss-bot"><h3>${x.heading}</h3><p class="ss-body">${x.body}</p>${x.labels?`<p class="ss-labels">${x.labels}</p>`:''}</figcaption></figure>`).join('');
+   :`<img src="${x.src}" alt="${x.heading}" loading="${i?'lazy':'eager'}">`}</div><figcaption class="ss-bot"><h3>${x.heading}</h3><p class="ss-body">${x.body}</p>${x.labels?`<p class="ss-labels">${x.labels.split('·').map(w=>`<span class="ss-chip">${w.trim()}</span>`).join('')}</p>`:''}</figcaption></figure>`).join('');
  const dots=d.slides.map((x,i)=>`<button type="button" class="ss-dot${i?'':' is-on'}" data-go="${i}" aria-label="Go to slide ${i+1}"></button>`).join('');
- return `<div class="ss" data-slideshow><div class="ss-stage">${frames}</div><div class="ss-controls"><button type="button" class="ss-arrow" data-step="-1" aria-label="Previous slide">${SS_CHEV}</button><div class="ss-dots">${dots}</div><button type="button" class="ss-arrow" data-step="1" aria-label="Next slide">${SS_CHEV}</button><p class="ss-count" data-count>1 of ${n}</p></div></div>`;
+ return `<div class="ss" data-slideshow><div class="ss-stage">${frames}</div><div class="ss-controls"><button type="button" class="ss-arrow ss-arrow--prev" data-step="-1" aria-label="Previous slide">${SS_CHEV}</button><button type="button" class="ss-arrow ss-arrow--next" data-step="1" aria-label="Next slide">${SS_CHEV}</button><div class="ss-dots">${dots}</div></div></div>`;
 }
 function bindRealLife(lessonId){
  const dialog=document.getElementById('real-life-dialog'),open=document.getElementById('real-life-open');if(!dialog||!open||!REAL_LIFE[lessonId])return;
@@ -93,7 +93,7 @@ function bindRealLife(lessonId){
  dialog.addEventListener('click',e=>{if(e.target===dialog)shut();});
 
  const ss=dialog.querySelector('[data-slideshow]');if(!ss)return;
- const slides=[...ss.querySelectorAll('[data-slide]')],dots=[...ss.querySelectorAll('[data-go]')],count=ss.querySelector('[data-count]');
+ const slides=[...ss.querySelectorAll('[data-slide]')],dots=[...ss.querySelectorAll('[data-go]')],count=dialog.querySelector('[data-count]');
  let at=0;
  const show=i=>{at=(i+slides.length)%slides.length;
   slides.forEach((f,n)=>{f.hidden=n!==at;});
