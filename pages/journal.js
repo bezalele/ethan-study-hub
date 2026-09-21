@@ -1,10 +1,10 @@
 /* ---------------------------------------------------------------------------
    journal.js — Ethan's daily notes for this subject.
 
-   The record behind the "Today's note" button in the header. There is no nav
-   item for it, because this page's nav is three items and adding a fourth
-   would change the chrome on every page; the way in is the header button and
-   the link inside its editor.
+   Reached from "Today's note" in the main nav. Writing the day's note and
+   reading the record are the same page rather than a modal over whatever
+   page you happened to be on: one place to go, and the history is in front
+   of you while you write.
 
    The list, the editing and the comment threads all come from
    shared/learning-log.js, which Biology and Math Quest mount the same way.
@@ -16,7 +16,7 @@ import { el, html } from '../layout/dom.js?v=9';
 
 export default {
   id: 'journal',
-  nav: '',
+  nav: 'journal',
   title: 'Your notes',
   render() {
     const page = el('div', 'page page--journal');
@@ -26,8 +26,8 @@ export default {
           <p class="eyebrow">After school</p>
           <h1 class="jr-title">What you learned, Ethan</h1>
           <p class="jr-intro">
-            One short note a day. Your dad can comment on any of them, and you
-            can reply.
+            Write one short note a day. Your dad can comment on any of them,
+            and you can reply.
           </p>
         </header>
         <div data-learning-history></div>
