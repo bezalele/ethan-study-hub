@@ -29,7 +29,7 @@ const CARD_IMAGES={
  biodiversity:'assets/cards/approved/biodiversity.jpg',
  'human-impacts':'assets/cards/approved/human-impacts.jpg',
  photosynthesis:'assets/cards/energy/photosynthesis.jpg',
- respiration:'assets/cards/energy/respiration.jpg',
+ respiration:'assets/cards/energy/respiration.jpg?v=2',
  'food-energy':'assets/cards/energy/food-energy.jpg',
  'carbon-cycle':'assets/cards/energy/carbon-cycle.jpg',
  cells:'assets/cards/approved/cells.jpg',
