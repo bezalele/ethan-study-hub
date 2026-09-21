@@ -4,6 +4,23 @@ const textSVG=(x,y,t,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" fon
 const box=(x,y,w,h,t,fill='#e4eee5')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${fill}" stroke="#789787"/>${textSVG(x+w/2,y+h/2+6,t)}`;
 const line=(x,y,a,b)=>`<path d="M${x} ${y}L${a} ${b}" fill="none" stroke="#446d61" stroke-width="2" marker-end="url(#arrow)"/>`;
 const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life'};
+const LESSON_VISUAL_NAMES={
+ investigations:'Build a fair investigation',
+ evidence:'Read data and build an explanation',
+ biodiversity:'Watch an ecosystem respond to disturbance',
+ 'human-impacts':'Trace runoff from cause to consequence',
+ photosynthesis:'Follow carbon into a plant',
+ respiration:'Follow energy through a mitochondrion',
+ 'food-energy':'Build an energy pyramid',
+ 'carbon-cycle':'Trace carbon through Earth systems',
+ dna:'Zoom from a cell to DNA',
+ proteins:'Follow DNA → RNA → protein',
+ mutations:'See how a sequence change can matter',
+ mitosis:'Step through mitosis',
+ meiosis:'Step through meiosis',
+ 'evolution-evidence':'Combine evidence for common ancestry',
+ speciation:'Watch populations diverge'
+};
 const REAL_LIFE={
  cells:{
   title:"Cells under real microscopes",
@@ -59,10 +76,94 @@ function bindRealLife(lessonId){
  close.onclick=shut;
  dialog.addEventListener('click',e=>{if(e.target===dialog)shut();});
 }
-function visualPanel(type,lessonId){const real=REAL_LIFE[lessonId];return `<section class="visual card"><div class="section-top"><div><p class="eyebrow">SEE IT · CHANGE IT · EXPLAIN IT</p><h2>${VISUAL_NAMES[type]}</h2></div><div class="visual-head-actions"><span class="tag">Interactive</span>${real?'<button type="button" class="soft real-life-trigger" id="real-life-open" title="Compare this diagram with real biology">📷 Real image</button>':''}</div></div><div id="visual-controls" class="controls"></div><div id="visual-drawing" class="drawing"></div><p id="visual-caption" class="visual-caption" role="status" aria-live="polite"></p><p class="small muted">Simplified learning model. Read the explanation and assumptions below the image.</p></section>${realLifePanel(lessonId)}`;}
+function visualPanel(type,lessonId){const real=REAL_LIFE[lessonId],title=LESSON_VISUAL_NAMES[lessonId]||VISUAL_NAMES[type];return `<section class="visual card"><div class="section-top"><div><p class="eyebrow">SEE IT · CHANGE IT · EXPLAIN IT</p><h2>${title}</h2></div><div class="visual-head-actions"><span class="tag">Interactive</span>${real?'<button type="button" class="soft real-life-trigger" id="real-life-open" title="Compare this diagram with real biology">📷 Real image</button>':''}</div></div><div id="visual-controls" class="controls"></div><div id="visual-drawing" class="drawing"></div><p id="visual-caption" class="visual-caption" role="status" aria-live="polite"></p><p class="small muted">Simplified learning model. Read the explanation and assumptions below the image.</p></section>${realLifePanel(lessonId)}`;}
 function mountVisual(type,lessonId){
  const controls=document.getElementById('visual-controls'),drawing=document.getElementById('visual-drawing'),caption=document.getElementById('visual-caption');if(!controls)return;bindRealLife(lessonId);
  const buttons=(items,fn)=>{controls.innerHTML=items.map(([value,label])=>`<button class="soft" data-value="${value}">${label}</button>`).join('');controls.querySelectorAll('button').forEach(b=>b.onclick=()=>{controls.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));fn(b.dataset.value);});controls.querySelector('button').click();};
+
+ // Lesson-specific models prevent different concepts from feeling like the same page.
+ if(lessonId==='investigations')return buttons([['fair','Fair test'],['confounded','Confounded test']],mode=>{
+  const bad=mode==='confounded';
+  drawing.innerHTML=svg(`${box(35,48,220,62,'Group A · 8 h light','#e6eedf')}${box(345,48,220,62,'Group B · 2 h light','#efe3c8')}${textSVG(300,28,'Question: Does light affect seedling growth?',17)}${textSVG(145,145,'Water: 100 mL',14)}${textSVG(455,145,bad?'Water: 50 mL':'Water: 100 mL',14)}${textSVG(145,174,'Same soil · same species',14)}${textSVG(455,174,'Same soil · same species',14)}${line(145,188,145,235)}${line(455,188,455,235)}${box(65,235,160,48,'Measure height','#d8e8e5')}${box(375,235,160,48,'Measure height','#d8e8e5')}`,bad?'Two plant groups differ in both light and water, so the test is confounded.':'Two plant groups differ in light while relevant conditions are kept comparable.',310);
+  caption.textContent=bad?'This is not a fair test: both light and water changed, so either could help explain a growth difference.':'Independent variable: light exposure. Dependent variable: height gained. Water, soil, species, timing, and measurement method are controlled as closely as practical.';
+ });
+ if(lessonId==='biodiversity')return buttons([['before','Before disturbance'],['after','After disturbance'],['recover','Recovery']],mode=>{
+  const species=['#547c58','#7f6c9a','#c99355','#6c95a0'];
+  const dots=(count,y,offset=0)=>Array.from({length:count},(_,i)=>`<circle cx="${75+(i%8)*58}" cy="${y+Math.floor(i/8)*48}" r="15" fill="${species[(i+offset)%species.length]}" opacity=".9"/>`).join('');
+  const body=mode==='before'?dots(24,65):mode==='after'?dots(9,85,1):dots(18,70,2);
+  drawing.innerHTML=svg(`<rect x="45" y="35" width="510" height="205" rx="24" fill="#edf2e8"/>${body}${textSVG(300,275,mode==='before'?'Many species and roles before disturbance':mode==='after'?'Disturbance reduces populations and changes composition':'Some populations return; the community may reorganize',16)}`,'Schematic community before, immediately after, and during recovery from a disturbance.',300);
+  caption.textContent=mode==='before'?'Biodiversity includes genetic, species, and ecosystem variation. More kinds of organisms can create alternate pathways, but resilience is not guaranteed.':mode==='after'?'A disturbance can remove organisms and resources unevenly. The ecosystem is changed, not simply paused.':'Recovery can restore functions without recreating the exact original community. Starting conditions, surviving organisms, and later conditions matter.';
+ });
+ if(lessonId==='human-impacts')return buttons([['runoff','Nutrient runoff'],['buffer','Vegetated buffer']],mode=>{
+  const buffered=mode==='buffer';
+  drawing.innerHTML=svg(`${box(25,45,145,62,'Farm / lawn','#ead9b8')}${line(170,76,270,76)}${box(270,45,150,62,buffered?'Vegetated buffer':'Nutrients enter stream',buffered?'#d6e8ce':'#efd0ba')}${line(420,76,520,76)}${box(450,135,125,60,buffered?'Clearer water':'Algal growth',buffered?'#d9eaeb':'#d9df9c')}${line(510,195,395,235)}${box(245,225,190,55,buffered?'More stable O₂':'Decomposition uses O₂',buffered?'#d9eaeb':'#e8d1c8')}${textSVG(300,315,buffered?'A buffer can reduce runoff before it reaches water':'Extra nutrients can trigger a chain of effects',16)}`,'Simplified nutrient-runoff pathway and one possible conservation intervention.',340);
+  caption.textContent=buffered?'A vegetated buffer can slow runoff and trap some sediment and nutrients. Effectiveness depends on width, plants, slope, weather, and maintenance; monitoring is still needed.':'Nutrient enrichment can increase algal biomass. When organic material is decomposed, microbial respiration can lower dissolved oxygen and stress aquatic organisms.';
+ });
+ if(lessonId==='food-energy'){
+  controls.innerHTML='<label>Transfer efficiency <input id="efficiency" type="range" min="5" max="20" value="10"><output id="efficiency-value"></output></label>';
+  const draw=()=>{const e=+document.getElementById('efficiency').value/100;document.getElementById('efficiency-value').textContent=Math.round(e*100)+'%';const vals=[10000,10000*e,10000*e*e,10000*e*e*e].map(v=>Math.round(v));drawing.innerHTML=svg(`<polygon points="300,25 75,245 525,245" fill="#edf1df" stroke="#69806e"/><path d="M125 195H475M185 135H415M245 75H355" stroke="#fff" stroke-width="5"/>${textSVG(300,225,`Producers · ${vals[0]} units`,16)}${textSVG(300,175,`Primary consumers · ${vals[1]}`,15)}${textSVG(300,116,`Secondary · ${vals[2]}`,15)}${textSVG(300,58,`Tertiary · ${vals[3]}`,14)}`,'Energy pyramid with a user-selected transfer efficiency.',275);caption.textContent=`At ${Math.round(e*100)}% transfer, only part of one trophic level's stored chemical energy becomes biomass available to the next. The familiar 10% value is a rough teaching approximation, not a universal law.`;};document.getElementById('efficiency').oninput=draw;draw();return;
+ }
+ if(lessonId==='photosynthesis')return buttons([['carbon','Trace carbon'],['oxygen','Trace oxygen']],mode=>{
+  const carbon=mode==='carbon';
+  drawing.innerHTML=svg(`${box(25,35,150,58,carbon?'CO₂ from air':'H₂O from roots','#d8e8e5')}${line(175,64,280,115)}${box(220,105,165,78,'Chloroplast','#dbe8c7')}${textSVG(302,138,'light energy',15)}${line(385,145,500,80)}${box(430,40,140,58,carbon?'Sugar carbon':'O₂ released','#efe3c8')}${textSVG(300,225,carbon?'Carbon atoms become part of organic molecules':'Water contributes electrons; oxygen gas is released',16)}`,'Simplified photosynthesis showing different matter pathways through a chloroplast.',255);
+  caption.textContent=carbon?'The carbon in plant dry mass comes largely from CO₂. Light supplies energy; it is not a source of carbon atoms.':'In the full photosynthetic process, the oxygen released as O₂ comes from water. This model focuses on inputs and outputs rather than the detailed reactions.';
+ });
+ if(lessonId==='respiration')return buttons([['rest','Resting cell'],['sprint','Working muscle']],mode=>{
+  const sprint=mode==='sprint';
+  drawing.innerHTML=svg(`${box(25,70,145,60,'Glucose / fuel','#efe3c8')}${box(25,160,145,60,'O₂','#d8e8e5')}${line(170,100,275,135)}${line(170,190,275,155)}<ellipse cx="355" cy="145" rx="92" ry="58" fill="#efd1a9" stroke="#9d7448"/><path d="M290 145q25-35 50 0t50 0t50 0" fill="none" stroke="#a66f3e" stroke-width="4"/>${textSVG(355,150,'Mitochondrion',16)}${line(447,120,540,75)}${line(447,165,540,205)}${textSVG(535,62,sprint?'More ATP demand':'ATP for cell work',15)}${textSVG(535,225,'CO₂ + H₂O + heat',14)}${textSVG(300,270,sprint?'During a sprint, ATP use rises rapidly':'Cells need ATP even at rest',16)}`,'Simplified cellular respiration connecting fuel and oxygen to ATP, carbon dioxide, water, and heat.',295);
+  caption.textContent=sprint?'Muscle contraction uses ATP quickly. Respiration helps replenish ATP, while breathing and circulation support oxygen delivery and carbon-dioxide removal.':'Cellular respiration transfers chemical energy from fuels into ATP and heat. Mitochondria do not create energy; they participate in energy transformations.';
+ });
+ if(lessonId==='carbon-cycle')return buttons([['natural','Natural transfers'],['human','Add fossil-fuel combustion']],mode=>{
+  const human=mode==='human';
+  drawing.innerHTML=svg(`${box(205,20,190,52,'Atmosphere CO₂','#d4e8ed')}${box(25,135,145,58,'Plants','#dce8d3')}${box(225,135,145,58,'Animals','#eadcc6')}${box(430,135,145,58,'Ocean','#d7e7ef')}${box(90,245,155,55,'Soils / decomposers','#e5dcc9')}${box(360,245,155,55,'Fossil carbon','#ddd6ca')}${line(220,72,140,134)}${line(170,164,225,164)}${line(298,135,285,74)}${line(475,135,365,73)}${line(160,194,170,244)}${line(305,194,205,245)}${human?line(438,245,330,75):''}${human?textSVG(440,225,'combustion',13):''}${textSVG(300,330,human?'Rapid transfer from long-term stores can raise atmospheric CO₂':'Carbon continually moves among reservoirs at different rates',15)}`,'Carbon reservoirs and selected transfer pathways.',350);
+  caption.textContent=human?'Combustion transfers carbon from long-term geological stores into the atmosphere relatively quickly. Carbon is conserved, but the amount stored in each reservoir can change.':'Photosynthesis, feeding, respiration, decomposition, and ocean exchange move carbon among reservoirs. The arrows represent transfers, not equal rates.';
+ });
+ if(lessonId==='dna')return buttons([['cell','Cell'],['nucleus','Nucleus'],['chromosome','Chromosome'],['dna','DNA']],mode=>{
+  const order=['cell','nucleus','chromosome','dna'],idx=order.indexOf(mode),fills=['#d8e8e5','#d9cce8','#c9c4e8','#ead39c'];
+  drawing.innerHTML=svg(order.map((x,i)=>`${box(25+i*145,105,120,70,x[0].toUpperCase()+x.slice(1),i===idx?fills[i]:'#f4f5ef')}${i<3?line(145+i*145,140,170+i*145,140):''}`).join('')+`${textSVG(300,225,'cell → nucleus → chromosome → DNA',18)}`,'Hierarchy from a cell to its nucleus, chromosome, and DNA.',250);
+  caption.textContent={cell:'A human body cell contains a nucleus and many other structures.',nucleus:'The nucleus contains most of the cell’s DNA packaged with proteins.',chromosome:'A chromosome is one long DNA molecule packaged with proteins; chromosomes are most visibly condensed during cell division.',dna:'DNA is the information-carrying molecule. A gene is a DNA sequence with a biological function, not a separate object floating beside DNA.'}[mode];
+ });
+ if(lessonId==='proteins')return buttons([['transcription','1 · Transcription'],['translation','2 · Translation']],mode=>{
+  const trans=mode==='transcription';
+  drawing.innerHTML=svg(`${box(25,80,145,65,'DNA','#d8cde5')}${line(170,112,275,112)}${box(275,80,145,65,'mRNA',trans?'#e6d9ef':'#d9e8e5')}${line(420,112,520,112)}${box(455,185,120,60,'Protein','#ead9aa')}${trans?textSVG(220,90,'transcribe',14):textSVG(470,160,'ribosome translates',14)}${!trans?'<circle cx="510" cy="112" r="28" fill="#bdd7cf" stroke="#648678"/>'+textSVG(510,118,'ribosome',12):''}${textSVG(300,270,trans?'DNA information is copied into RNA':'mRNA codons guide amino-acid order',16)}`,'Simplified path from DNA to mRNA to protein.',295);
+  caption.textContent=trans?'In a typical eukaryotic cell, transcription makes RNA from a DNA template in the nucleus. RNA processing can produce mRNA for export.':'A ribosome reads mRNA codons and tRNAs help deliver amino acids. The polypeptide then folds and may be modified before becoming functional.';
+ });
+ if(lessonId==='mutations')return buttons([['sub','Substitution'],['ins','Insertion'],['del','Deletion']],mode=>{
+  const original='ATG CCA GTT',changed=mode==='sub'?'ATG CTA GTT':mode==='ins'?'ATG ACC AGT T':'ATG CAG TT';
+  drawing.innerHTML=svg(`${box(55,55,490,60,'Original · '+original,'#e9e4f0')}${line(300,118,300,165)}${box(55,165,490,60,(mode==='sub'?'Substitution':mode==='ins'?'Insertion':'Deletion')+' · '+changed,mode==='sub'?'#e7e3c7':'#efd5cc')}${textSVG(300,270,mode==='sub'?'One base changes; protein effect may be none or substantial':'Reading groups can shift if bases are added or removed outside multiples of three',15)}`,'Comparison of an original sequence and a simplified mutated sequence.',295);
+  caption.textContent=mode==='sub'?'A substitution replaces one base. Because the genetic code is redundant, some substitutions do not change the amino acid; others can change function or regulation.':mode==='ins'?'An insertion can shift the reading frame if the number of inserted bases is not divisible by three. Effects depend on location and context.':'A deletion can shift the reading frame if the number removed is not divisible by three. Mutations are changes in sequence; their biological effects vary.';
+ });
+ if(lessonId==='mitosis')return buttons([['interphase','Before mitosis'],['metaphase','Metaphase'],['anaphase','Anaphase'],['cytokinesis','Cytokinesis']],mode=>{
+  const chromosomes=(xs,y)=>xs.map(x=>`<path d="M${x-8} ${y-18}l16 36m0-36-16 36" stroke="#7d6293" stroke-width="6"/>`).join('');
+  let body='';
+  if(mode==='interphase')body=`<circle cx="300" cy="145" r="95" fill="#e3eee9" stroke="#6d8b7d"/><circle cx="300" cy="145" r="48" fill="#d9cce7"/>${textSVG(300,151,'DNA copied in S phase',15)}`;
+  if(mode==='metaphase')body=`<circle cx="300" cy="145" r="95" fill="#e3eee9" stroke="#6d8b7d"/>${chromosomes([260,285,315,340],145)}<path d="M205 145H255M345 145H395" stroke="#b88b48" stroke-width="2"/>`;
+  if(mode==='anaphase')body=`<circle cx="300" cy="145" r="95" fill="#e3eee9" stroke="#6d8b7d"/>${chromosomes([235,255],145)}${chromosomes([345,365],145)}${line(285,145,220,145)}${line(315,145,380,145)}`;
+  if(mode==='cytokinesis')body=`<circle cx="245" cy="145" r="72" fill="#e3eee9" stroke="#6d8b7d"/><circle cx="355" cy="145" r="72" fill="#e3eee9" stroke="#6d8b7d"/>${textSVG(245,150,'same set',14)}${textSVG(355,150,'same set',14)}`;
+  drawing.innerHTML=svg(body+`${textSVG(300,275,mode==='interphase'?'DNA replication prepares the chromosomes':mode==='metaphase'?'Duplicated chromosomes line up':mode==='anaphase'?'Sister chromatids separate':'Two daughter cells form',16)}`,'Simplified sequence of mitosis and cytokinesis.',300);
+  caption.textContent={interphase:'DNA is copied before mitosis during the cell cycle.',metaphase:'Duplicated chromosomes align so spindle attachments can organize separation.',anaphase:'Sister chromatids move toward opposite sides of the cell.',cytokinesis:'Cytokinesis divides the cytoplasm. Normal mitosis preserves chromosome number in the daughter cells.'}[mode];
+ });
+ if(lessonId==='meiosis')return buttons([['pair','Homologous pairs'],['cross','Crossing over'],['first','Meiosis I'],['second','Meiosis II']],mode=>{
+  let body='';
+  if(mode==='pair')body=`${box(65,85,205,90,'Maternal homolog','#e8d6e8')}${box(330,85,205,90,'Paternal homolog','#d7e7e1')}${textSVG(300,225,'same genes · possibly different alleles',16)}`;
+  if(mode==='cross')body=`<path d="M190 65L270 215M270 65L190 215" stroke="#8f6ba0" stroke-width="9"/><path d="M330 65L410 215M410 65L330 215" stroke="#5e8b7a" stroke-width="9"/><path d="M255 120L345 160M345 120L255 160" stroke="#c48c55" stroke-width="5"/>${textSVG(300,250,'homologs can exchange DNA',16)}`;
+  if(mode==='first')body=`<circle cx="210" cy="145" r="72" fill="#e7deee" stroke="#70877c"/><circle cx="390" cy="145" r="72" fill="#e1ece5" stroke="#70877c"/>${textSVG(210,150,'one homolog/set',14)}${textSVG(390,150,'other homolog/set',14)}`;
+  if(mode==='second')body=[120,240,360,480].map(x=>`<circle cx="${x}" cy="145" r="48" fill="#e5eee2" stroke="#70877c"/>`).join('')+`${textSVG(300,230,'four haploid products',17)}`;
+  drawing.innerHTML=svg(body,'Simplified sequence showing homolog pairing, crossing over, meiosis I, and meiosis II.',270);
+  caption.textContent={pair:'Homologous chromosomes carry corresponding genes but can have different alleles.',cross:'Crossing over exchanges DNA between homologous chromosomes, creating new combinations along chromosomes.',first:'Meiosis I separates homologous chromosomes and reduces the chromosome-set number.',second:'Meiosis II separates sister chromatids, producing four haploid products in this simplified model.'}[mode];
+ });
+ if(lessonId==='evolution-evidence')return buttons([['fossil','Fossils'],['anatomy','Anatomy'],['dna','DNA'],['tree','Combine evidence']],mode=>{
+  const content=mode==='fossil'?[`Past organism`,`dated rock layer`,`changes through time`]:mode==='anatomy'?[`same bone pattern`,`different functions`,`homology`]:mode==='dna'?[`sequence A · 96%`,`sequence B · 95%`,`compare many sites`]:[`fossils`,`anatomy`,`DNA`];
+  drawing.innerHTML=svg(`${box(55,60,150,70,content[0],mode==='fossil'?'#e6d5bd':'#e4eee5')}${box(225,60,150,70,content[1],mode==='anatomy'?'#ddd5ea':'#e4eee5')}${box(395,60,150,70,content[2],mode==='dna'?'#d5e3ee':'#e4eee5')}${line(130,132,255,210)}${line(300,132,300,210)}${line(470,132,345,210)}${box(215,210,170,55,'Common ancestry','#dce9d4')}`,`Evidence source: ${mode}`,285);
+  caption.textContent=mode==='tree'?'Confidence is strongest when independent evidence sources agree. A phylogenetic tree is a model built from evidence, not a photograph of ancestry.':mode==='fossil'?'Fossils document past organisms and can reveal sequences of structural change through time.':mode==='anatomy'?'Homologous structures can retain a shared underlying pattern even when their functions differ.':'DNA sequence comparisons provide molecular evidence of relationships; use appropriate genes and broader evidence, not one superficial similarity.';
+ });
+ if(lessonId==='speciation')return buttons([['connected','Gene flow'],['isolated','Barrier appears'],['later','Generations later']],mode=>{
+  const barrier=mode!=='connected'?'<path d="M295 35L275 245H325L305 35Z" fill="#c8b9a0" stroke="#8f795e"/>':'';
+  const left=Array.from({length:12},(_,i)=>`<circle cx="${85+(i%4)*42}" cy="${75+Math.floor(i/4)*55}" r="13" fill="${i%3===0?'#8b719e':'#6f9477'}"/>`).join('');
+  const right=Array.from({length:12},(_,i)=>`<circle cx="${385+(i%4)*42}" cy="${75+Math.floor(i/4)*55}" r="13" fill="${mode==='later'?(i%4===0?'#c18c55':'#7093a0'):(i%3===0?'#8b719e':'#6f9477')}"/>`).join('');
+  drawing.innerHTML=svg(`${left}${right}${barrier}${mode==='connected'?'<path d="M250 145H350" stroke="#446d61" stroke-width="3" marker-end="url(#arrow)"/><path d="M350 175H250" stroke="#446d61" stroke-width="3" marker-end="url(#arrow)"/>':''}${textSVG(150,260,'Population A',15)}${textSVG(450,260,'Population B',15)}`,'Two populations shown with gene flow, geographic isolation, and divergence over generations.',285);
+  caption.textContent=mode==='connected'?'Gene flow moves alleles between reproducing populations and can keep them genetically similar.':mode==='isolated'?'A barrier can reduce gene flow, but isolation alone does not instantly create a new species.':'With reduced gene flow, mutation, drift, and selection can make populations diverge. Speciation requires the evolution of reproductive isolation or other evidence appropriate to the species concept.';
+ });
  if(type==='cell'){
  let plant=false,part='nucleus';const descriptions={nucleus:'Nucleus: contains most DNA in a eukaryotic cell and is a site of transcription.',mitochondrion:'Mitochondrion: participates in aerobic respiration. Both plant and animal cells have mitochondria.',membrane:'Cell membrane: selectively regulates exchange. Plant cells also have a wall outside the membrane.',ribosome:'Ribosomes: assemble proteins. They occur in plant, animal, and prokaryotic cells.',chloroplast:'Chloroplast: uses light in photosynthesis. This is a typical photosynthetic plant cell; not all plant cells contain chloroplasts.',vacuole:'Large central vacuole: stores material and helps support a plant cell through water pressure.'};
  controls.innerHTML='<label>Cell type <select id="cell-type"><option value="animal">Animal cell</option><option value="plant">Photosynthetic plant cell</option></select></label><div id="cell-parts" class="controls"></div>';
