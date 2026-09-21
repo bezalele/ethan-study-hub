@@ -41,10 +41,10 @@ export function renderLayout() {
       </span>
       <span class="brand__sub">AP U.S. Government &amp; Politics &middot; 2026&ndash;27</span>
     </a>
+    <span id="log-mount"></span>
     <nav id="app-nav" aria-label="Main">
       ${NAV.map((item) => `<a class="nav__link" data-nav="${item.id}" href="${item.href}">${item.label}</a>`).join('')}
-    </nav>
-    <span id="log-mount"></span>`;
+    </nav>`;
 
   mountLog();
 

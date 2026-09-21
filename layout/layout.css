@@ -130,3 +130,29 @@
   }
   #app-nav::-webkit-scrollbar { display: none; }
 }
+
+/* --- Daily note button -------------------------------------------------------
+   It sits in the chrome, so it is dressed here rather than in the shared
+   component's stylesheet — that file is used by three subjects and should
+   not carry one subject's colours. Green like the banner but a lighter
+   shade, and the display serif so it reads as its own thing beside the
+   sans-serif nav.
+   --------------------------------------------------------------------------- */
+
+#app-header .ll-trigger {
+  min-height: 34px;
+  padding: 0 15px;
+  background: #2c705a;
+  border-color: #59967d;
+  color: var(--c-on-dark);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+#app-header .ll-trigger:hover {
+  background: #36866c;
+  border-color: #7fb69c;
+}
+#app-header .ll-trigger.is-done { background: #2c705a; }
+#app-header .ll-trigger__tick { color: var(--c-gold); }

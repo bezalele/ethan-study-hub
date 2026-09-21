@@ -8,21 +8,21 @@
   <title>Ethan Study Hub · AP U.S. Government</title>
 
   <!-- Order matters: tokens define the variables everything else consumes. -->
-  <link rel="stylesheet" href="styles/tokens.css?v=8">
-  <link rel="stylesheet" href="styles/base.css?v=8">
-  <link rel="stylesheet" href="layout/layout.css?v=8">
+  <link rel="stylesheet" href="styles/tokens.css?v=9">
+  <link rel="stylesheet" href="styles/base.css?v=9">
+  <link rel="stylesheet" href="layout/layout.css?v=9">
 
   <!-- Shared components. Each owns a .c-NAME class namespace. -->
-  <link rel="stylesheet" href="components/timeline.css?v=8">
+  <link rel="stylesheet" href="components/timeline.css?v=9">
 
   <!-- Page stylesheets. Each is scoped to its own .page--NAME root. -->
-  <link rel="stylesheet" href="pages/home.css?v=8">
-  <link rel="stylesheet" href="pages/course-map.css?v=8">
-  <link rel="stylesheet" href="pages/study.css?v=8">
-  <link rel="stylesheet" href="pages/chapter.css?v=8">
-  <link rel="stylesheet" href="pages/practice.css?v=8">
-  <link rel="stylesheet" href="pages/journal.css?v=8">
-  <link rel="stylesheet" href="shared/learning-log.css?v=8">
+  <link rel="stylesheet" href="pages/home.css?v=9">
+  <link rel="stylesheet" href="pages/course-map.css?v=9">
+  <link rel="stylesheet" href="pages/study.css?v=9">
+  <link rel="stylesheet" href="pages/chapter.css?v=9">
+  <link rel="stylesheet" href="pages/practice.css?v=9">
+  <link rel="stylesheet" href="pages/journal.css?v=9">
+  <link rel="stylesheet" href="shared/learning-log.css?v=9">
 </head>
 <body>
   <a class="visually-hidden" href="#app-main">Skip to content</a>
@@ -32,18 +32,18 @@
   <footer id="app-footer"></footer>
 
   <!-- Classic script: runs before deferred modules, so the global is ready. -->
-  <script src="content/contentData.js?v=8"></script>
+  <script src="content/contentData.js?v=9"></script>
 
   <!-- Shared across all three subjects. Classic script, so it is on window
        before the deferred modules run. -->
-  <script src="shared/learning-log.js?v=8"></script>
+  <script src="shared/learning-log.js?v=9"></script>
 
   <!-- Every module URL carries the same ?v= as the stylesheets. They must match
        across the whole graph: a differing query string would load a second,
        separate instance of that module. tests/smoke.cjs enforces it. -->
   <script type="module">
-    import { renderLayout } from './layout/layout.js?v=8';
-    import { startRouter } from './layout/router.js?v=8';
+    import { renderLayout } from './layout/layout.js?v=9';
+    import { startRouter } from './layout/router.js?v=9';
 
     renderLayout();   // once, and only once
     startRouter();

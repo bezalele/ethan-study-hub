@@ -12,7 +12,7 @@
    deferred module runs.
    --------------------------------------------------------------------------- */
 
-import { el, html } from '../layout/dom.js?v=8';
+import { el, html } from '../layout/dom.js?v=9';
 
 export default {
   id: 'journal',
