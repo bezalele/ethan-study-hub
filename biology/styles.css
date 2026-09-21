@@ -111,3 +111,16 @@ main:focus{outline:none}
 .science-link-kicker{display:block;margin-bottom:2px;font-size:9px;line-height:1;letter-spacing:.12em;color:#7a765e}
 .science-link-icon{background:#e7efe4;color:#355f4e}
 @media(max-width:900px){.science-links-title small{max-width:none}}
+
+
+/* Approved Unit 2 Matter & Energy card design only. */
+.energy-lesson-card{padding:0;overflow:hidden;display:flex;flex-direction:column;min-height:257px;border-radius:12px}
+.energy-card-image{display:block;height:118px;overflow:hidden;background:#e9eee3;text-decoration:none}
+.energy-card-image:hover{text-decoration:none}
+.energy-card-image img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.energy-card-copy{display:flex;flex-direction:column;flex:1;padding:12px 20px 17px}
+.energy-card-copy .tag{align-self:flex-start;margin:0 0 4px}
+.energy-card-copy h3{font-size:18px;margin:0 0 7px}
+.energy-card-copy p{font-size:14px;line-height:1.45;margin:0 0 10px;color:var(--muted)}
+.energy-card-open{margin-top:auto;align-self:flex-start}
+@media(max-width:760px){.energy-lesson-card{min-height:0}.energy-card-image{height:132px}.energy-card-copy{padding:13px 17px 16px}}
