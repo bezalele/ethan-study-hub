@@ -30,9 +30,13 @@
 
                    `type: 'triangle'` — three branches and the checks between
                    them:
-                     { type, intro, nodes: [{ id, label, article, role, does,
-                       powers, why }], checks: [{ id, from, to, label, body }],
+                     { type, intro, nodes: [{ id, label, article, role,
+                       image: { src, alt, credit } | null, does, powers, why }],
+                       checks: [{ id, from, to, label, body }],
                        flow: { label, steps: [string] } }
+                   A branch with image: null falls back to the drawn
+                   silhouette the component keeps for that branch, at the same
+                   size as a photograph, so adding art later is a data change.
                    A check names the two branches it runs between, so
                    selecting it can highlight that edge. `flow` is an optional
                    secondary strip and stays subordinate to the triangle.
@@ -167,13 +171,18 @@ export const COURSE_DETAILS = {
     model: {
       type: 'triangle',
       intro:
-        'Three branches, and the checks that run between them. Click a branch to see what it does — or click a check to see how one branch can stop another.',
+        'Three branches, joined by the checks that run between them. Click a branch card, or click a check on one of the arrows — one at a time.',
       nodes: [
         {
           id: 'congress',
           label: 'Congress',
           article: 'Article I',
           role: 'Makes federal law',
+          image: {
+            src: 'assets/course-map/branch-congress.jpg',
+            alt: 'The dome of the United States Capitol at sunset',
+            credit: 'United States Capitol',
+          },
           does:
             'Writes and passes federal legislation. The House and Senate must both agree on a bill before it can become law.',
           powers:
@@ -186,6 +195,11 @@ export const COURSE_DETAILS = {
           label: 'President',
           article: 'Article II',
           role: 'Carries out the law',
+          // NEEDS-ART: the repo has no White House photograph, so this card
+          // falls back to the drawn silhouette in components/power-triangle.js.
+          // To use a photograph, drop one in assets/course-map/ and replace
+          // this null with { src, alt, credit } — nothing else changes.
+          image: null,
           does:
             'Heads the executive branch and is responsible for enforcing the laws Congress passes, directing federal agencies and foreign policy.',
           powers:
@@ -198,6 +212,11 @@ export const COURSE_DETAILS = {
           label: 'Federal Courts',
           article: 'Article III',
           role: 'Interprets the law',
+          image: {
+            src: 'assets/course-map/branch-courts.jpg',
+            alt: 'Columns of the Supreme Court beside the Contemplation of Justice statue',
+            credit: 'Supreme Court of the United States',
+          },
           does:
             'Decides cases brought before them, including whether a law or an executive action conflicts with the Constitution.',
           powers:
