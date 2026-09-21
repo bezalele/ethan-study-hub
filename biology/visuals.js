@@ -6,12 +6,16 @@ const line=(x,y,a,b)=>`<path d="M${x} ${y}L${a} ${b}" fill="none" stroke="#446d6
 const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life'};
 const REAL_LIFE={
  cells:{
-  title:"Cells under real microscopes",
-  intro:"Compare the clean teaching model with real biological tissue. Real microscope images are messier because cells overlap, stain differently, and rarely show every organelle at once.",
-  exam:"Start with the large clues: cell boundary, nucleus, and tissue pattern. Do not expect a real cell to look as clean or complete as a textbook diagram.",
-  images:[
-   {src:"assets/real-life/animal-cell-electron-micrograph.jpg",alt:"Transmission electron micrograph of an animal pancreatic cell showing internal structures",label:"Animal cell · electron micrograph",note:"The nucleus is the most obvious structure. Rough endoplasmic reticulum surrounds it, and a mitochondrion is also visible."},
-   {src:"assets/real-life/plant-cells-light-micrograph.jpg",alt:"Light micrograph of plant collenchyma tissue showing many cells and thickened cell walls",label:"Plant cells · light micrograph",note:"Look for repeated cell boundaries and the thicker cell walls. Real plant tissue is a packed group of cells, not one isolated diagram."}
+  title:"Cells: The Building Blocks of Life",
+  intro:"Explore different cells and their amazing parts.",
+  slides:[
+   {src:'assets/slides/animal-cell.jpg',kicker:"Slide 1",heading:"Inside an Animal Cell",body:"A cell is a tiny living factory. Different parts inside it have different jobs, but they work together to keep the cell alive.",labels:"membrane · cytoplasm · nucleus · mitochondria · ER · Golgi · ribosomes"},
+   {src:'assets/slides/human-cells.jpg',kicker:"Slide 2",heading:"Human Cells Come in Different Shapes",body:"A nerve cell, muscle cell and white blood cell can look very different because each is built for a different job.",labels:"nerve · muscle · white blood cell · red blood cell"},
+   {src:'assets/slides/nucleus.jpg',kicker:"Slide 3",heading:"The Nucleus: The Library",body:"The nucleus protects the cell’s DNA — the master library of instructions for building and running the cell."},
+   {src:'assets/slides/ribosome-protein.jpg',kicker:"Slide 4",heading:"Ribosomes Build the Workers",body:"Ribosomes read copied instructions and join amino acids together to build proteins — many of the cell’s workers and tools.",labels:"ribosome · mRNA · amino-acid chain · protein"},
+   {src:'assets/slides/mitochondria.jpg',kicker:"Slide 5",heading:"Mitochondria Release Usable Energy",body:"Mitochondria help turn energy from food into a form the cell can use to power its work."},
+   {src:'assets/slides/er-golgi.jpg',kicker:"Slide 6",heading:"Build, Process, Package, Ship",body:"The ER helps make and process cell products. The Golgi sorts and packages many of them for delivery.",labels:"rough ER · smooth ER · Golgi · transport vesicles"},
+   {src:'assets/slides/same-dna-different-cells.jpg',todo:true,kicker:"Slide 7",heading:"Same Library. Different Pages.",body:"Most of your cells contain essentially the same DNA, but different cell types use different genes. That helps create different structures and jobs."}
   ]
  },
  transport:{
@@ -23,11 +27,21 @@ const REAL_LIFE={
   ]
  },
  dna:{
-  title:"DNA when it is packaged into chromosomes",
-  intro:"The familiar double helix is a molecular model. In cells, long DNA molecules are wrapped around proteins and can condense into chromosomes.",
-  exam:"On microscope questions, DNA usually appears as chromatin or condensed chromosomes—not as a giant visible double helix. Chromosome shape and number are the clues.",
-  images:[
-   {src:"assets/real-life/human-chromosomes-fluorescence.jpg",alt:"Fluorescence image of human chromosomes stained in different colors",label:"Human chromosomes · fluorescence imaging",note:"These are condensed human chromosomes marked with fluorescent stains. Each chromosome contains one long DNA molecule packaged with proteins."}
+  title:"From Cell to DNA to Protein",
+  intro:"Follow the journey from one cell all the way to a working protein.",
+  slides:[
+   {src:'assets/slides/animal-cell.jpg',kicker:"Zoom 1",heading:"Start With One Cell",body:"Almost every nucleated cell in your body carries a copy of your genetic instruction library."},
+   {src:'assets/slides/nucleus.jpg',kicker:"Zoom 2",heading:"Zoom In: Nucleus",body:"Inside the cell, the nucleus is where most of your DNA is stored and protected."},
+   {src:'assets/slides/chromosome.jpg',kicker:"Zoom 3",heading:"Zoom In: Chromosome",body:"DNA is packaged into chromosomes. Most human body cells have 46 chromosomes — 23 pairs, with one member of each pair inherited from each parent."},
+   {src:'assets/slides/dna-double-helix.jpg',kicker:"Zoom 4",heading:"Zoom In: DNA",body:"Unpack a chromosome and you reach DNA: an extremely long molecule shaped like a twisted ladder."},
+   {src:'assets/slides/gene.jpg',todo:true,kicker:"Zoom 5",heading:"Zoom In: Gene",body:"A gene is a particular stretch of DNA containing information the cell can use. Many genes provide instructions for making proteins."},
+   {src:'assets/slides/atcg.jpg',todo:true,kicker:"Slide 6",heading:"DNA Has a Four-Letter Alphabet",body:"DNA information is written using four chemical bases: A, T, C and G. Their order carries information.",labels:"A pairs with T · C pairs with G"},
+   {src:'assets/slides/dna-to-rna.jpg',todo:true,kicker:"Slide 7",heading:"Copy the Recipe",body:"When a protein recipe is needed, the cell makes a temporary RNA copy instead of taking the original DNA out of the nucleus."},
+   {src:'assets/slides/ribosome-protein.jpg',kicker:"Slide 8",heading:"Take the Copy to a Ribosome",body:"The RNA message reaches a ribosome, the molecular machine that translates the message."},
+   {src:'assets/slides/amino-acids-protein.jpg',kicker:"Slide 9",heading:"Build a Protein",body:"The ribosome connects amino acids in the instructed order. The chain folds into a protein with a particular shape and job."},
+   {src:'assets/slides/protein-workers.jpg',todo:true,kicker:"Slide 10",heading:"Instructions Become Action",body:"Proteins become structures, enzymes, receptors, transporters, antibodies and many other working parts of the body.",labels:"DNA → RNA → protein → job"},
+   {src:'assets/slides/inheritance.jpg',todo:true,kicker:"Slide 11",heading:"One Set From Each Parent",body:"An egg contributes 23 chromosomes and a sperm contributes 23. Together they form a new combination of 46 chromosomes."},
+   {src:'assets/slides/mutation.jpg',todo:true,kicker:"Slide 12",heading:"DNA Can Change",body:"A mutation is a change in the DNA sequence. Many have little effect, while some can change how a gene works."}
   ]
  },
  mitosis:{
@@ -47,9 +61,25 @@ const REAL_LIFE={
   ]
  }
 };
+/* Two shapes here. `slides` is a paged picture story, one frame at a time,
+   for lessons where the point is to follow a sequence. `images` is the older
+   side-by-side gallery of real micrographs, still right where the point is
+   comparing a clean model against messy real tissue. */
 function realLifePanel(lessonId){
  const d=REAL_LIFE[lessonId];if(!d)return '';
- return `<dialog class="real-life-dialog" id="real-life-dialog" aria-labelledby="real-life-title"><div class="real-life-shell"><div class="real-life-head"><div><p class="eyebrow">REAL BIOLOGY · EXAM RECOGNITION</p><h2 id="real-life-title">${d.title}</h2></div><button type="button" class="soft real-life-close" id="real-life-close" aria-label="Close real-life images">Close</button></div><p class="real-life-intro">${d.intro}</p><div class="real-life-gallery">${d.images.map(x=>`<figure class="real-life-figure"><img src="${x.src}" alt="${x.alt}" loading="lazy"><figcaption><strong>${x.label}</strong><span>${x.note}</span></figcaption></figure>`).join('')}</div><aside class="real-life-exam"><strong>Exam tip</strong><p>${d.exam}</p></aside><p class="small muted real-life-credit">These image files are stored inside Ethan Study Hub. Source and license details are recorded in <code>assets/real-life/SOURCES.md</code>.</p></div></dialog>`;
+ return `<dialog class="real-life-dialog" id="real-life-dialog" aria-labelledby="real-life-title"><div class="real-life-shell"><div class="real-life-head"><div><p class="eyebrow">${d.slides?'PICTURE TOUR':'REAL BIOLOGY'}</p><h2 id="real-life-title">${d.title}</h2></div><button type="button" class="soft real-life-close" id="real-life-close" aria-label="Close">Close</button></div><p class="real-life-intro">${d.intro}</p>${d.slides?slideshowBody(d):galleryBody(d)}</div></dialog>`;
+}
+function galleryBody(d){
+ return `<div class="real-life-gallery">${d.images.map(x=>`<figure class="real-life-figure"><img src="${x.src}" alt="${x.alt}" loading="lazy"><figcaption><strong>${x.label}</strong><span>${x.note}</span></figcaption></figure>`).join('')}</div><aside class="real-life-exam"><strong>Exam tip</strong><p>${d.exam}</p></aside><p class="small muted real-life-credit">These image files are stored inside Ethan Study Hub. Source and license details are recorded in <code>assets/real-life/SOURCES.md</code>.</p>`;
+}
+const SS_CHEV='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5 16.5 12 9 19.5"/></svg>';
+function slideshowBody(d){
+ const n=d.slides.length;
+ const frames=d.slides.map((x,i)=>`<figure class="ss-slide" data-slide="${i}"${i?' hidden':''}>${x.todo
+   ?`<div class="ss-todo"><strong>Artwork still to come</strong><span>Add the picture as <code>biology/${x.src}</code>, then delete <code>todo:true</code> on this slide.</span></div>`
+   :`<img src="${x.src}" alt="${x.heading}" loading="${i?'lazy':'eager'}">`}<figcaption><p class="ss-kicker">${x.kicker}</p><h3>${x.heading}</h3><p class="ss-body">${x.body}</p>${x.labels?`<p class="ss-labels">${x.labels}</p>`:''}</figcaption></figure>`).join('');
+ const dots=d.slides.map((x,i)=>`<button type="button" class="ss-dot${i?'':' is-on'}" data-go="${i}" aria-label="Go to slide ${i+1}"></button>`).join('');
+ return `<div class="ss" data-slideshow><div class="ss-stage">${frames}</div><div class="ss-controls"><button type="button" class="ss-arrow" data-step="-1" aria-label="Previous slide">${SS_CHEV}</button><div class="ss-dots">${dots}</div><button type="button" class="ss-arrow" data-step="1" aria-label="Next slide">${SS_CHEV}</button><p class="ss-count" data-count>1 of ${n}</p></div><p class="small muted real-life-credit">Illustrations, not photographs. Colours and shapes are simplified so the parts stand out.</p></div>`;
 }
 function bindRealLife(lessonId){
  const dialog=document.getElementById('real-life-dialog'),open=document.getElementById('real-life-open');if(!dialog||!open||!REAL_LIFE[lessonId])return;
@@ -58,8 +88,22 @@ function bindRealLife(lessonId){
  open.onclick=()=>{if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');};
  close.onclick=shut;
  dialog.addEventListener('click',e=>{if(e.target===dialog)shut();});
+
+ const ss=dialog.querySelector('[data-slideshow]');if(!ss)return;
+ const slides=[...ss.querySelectorAll('[data-slide]')],dots=[...ss.querySelectorAll('[data-go]')],count=ss.querySelector('[data-count]');
+ let at=0;
+ const show=i=>{at=(i+slides.length)%slides.length;
+  slides.forEach((f,n)=>{f.hidden=n!==at;});
+  dots.forEach((b,n)=>b.classList.toggle('is-on',n===at));
+  count.textContent=`${at+1} of ${slides.length}`;};
+ ss.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>show(at+Number(b.dataset.step)));
+ dots.forEach(b=>b.onclick=()=>show(Number(b.dataset.go)));
+ // Arrow keys page the story without hunting for the button.
+ dialog.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'){e.preventDefault();show(at+1);}
+  if(e.key==='ArrowLeft'){e.preventDefault();show(at-1);}});
 }
-function visualPanel(type,lessonId){const real=REAL_LIFE[lessonId];return `<section class="visual card"><div class="section-top"><div><p class="eyebrow">SEE IT · CHANGE IT · EXPLAIN IT</p><h2>${VISUAL_NAMES[type]}</h2></div><div class="visual-head-actions"><span class="tag">Interactive</span>${real?'<button type="button" class="soft real-life-trigger" id="real-life-open" title="Compare this diagram with real biology">📷 Real image</button>':''}</div></div><div id="visual-controls" class="controls"></div><div id="visual-drawing" class="drawing"></div><p id="visual-caption" class="visual-caption" role="status" aria-live="polite"></p><p class="small muted">Simplified learning model. Read the explanation and assumptions below the image.</p></section>${realLifePanel(lessonId)}`;}
+function visualPanel(type,lessonId){const real=REAL_LIFE[lessonId];return `<section class="visual card"><div class="section-top"><div><p class="eyebrow">SEE IT · CHANGE IT · EXPLAIN IT</p><h2>${VISUAL_NAMES[type]}</h2></div><div class="visual-head-actions"><span class="tag">Interactive</span>${real?`<button type="button" class="soft real-life-trigger" id="real-life-open" title="Compare this diagram with real biology">📷 ${real.slides?'Picture tour':'Real image'}</button>`:''}</div></div><div id="visual-controls" class="controls"></div><div id="visual-drawing" class="drawing"></div><p id="visual-caption" class="visual-caption" role="status" aria-live="polite"></p><p class="small muted">Simplified learning model. Read the explanation and assumptions below the image.</p></section>${realLifePanel(lessonId)}`;}
 function mountVisual(type,lessonId){
  const controls=document.getElementById('visual-controls'),drawing=document.getElementById('visual-drawing'),caption=document.getElementById('visual-caption');if(!controls)return;bindRealLife(lessonId);
  const buttons=(items,fn)=>{controls.innerHTML=items.map(([value,label])=>`<button class="soft" data-value="${value}">${label}</button>`).join('');controls.querySelectorAll('button').forEach(b=>b.onclick=()=>{controls.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));fn(b.dataset.value);});controls.querySelector('button').click();};
