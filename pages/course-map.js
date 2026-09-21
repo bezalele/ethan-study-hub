@@ -208,14 +208,23 @@ function sectionQuickCheck(d) {
           <span>${esc(o)}</span>
         </label>
       </li>`).join('');
+    // Every card is laid into the same grid cell, so the panel is as tall as
+    // its tallest question from the first paint and never resizes as you page.
     return `
-      <div class="cm-check__card" data-q="${n}" data-answer="${q.answer}" ${n ? 'hidden' : ''}>
+      <div class="cm-check__card${n ? '' : ' is-on'}" data-q="${n}" data-answer="${q.answer}">
         <p class="cm-check__q">${esc(q.question)}</p>
         <ol class="cm-opts">${options}</ol>
-        <p class="cm-check__result" data-result hidden></p>
-        ${q.why ? `<p class="cm-check__why" data-why hidden>${esc(q.why)}</p>` : ''}
       </div>`;
   }).join('');
+
+  /* The verdicts sit below the buttons, where you are already looking once
+     you have clicked, and are stacked the same way. Their space is held
+     from the start so revealing one does not move anything. */
+  const verdicts = qs.map((q, n) => `
+    <div class="cm-check__verdict${n ? '' : ' is-on'}" data-v="${n}" aria-hidden="true">
+      <p class="cm-check__result" data-result></p>
+      ${q.why ? `<p class="cm-check__why">${esc(q.why)}</p>` : ''}
+    </div>`).join('');
 
   return `
     <section class="cm-sec cm-sec--check" aria-labelledby="cm-qc" data-quiz>
@@ -229,7 +238,11 @@ function sectionQuickCheck(d) {
         <button class="btn btn--primary" type="button" data-check>Check answer</button>
         <button class="cm-check__step" type="button" data-next>Next →</button>
       </div>
-      <p class="cm-check__score" data-score hidden></p>
+      <div class="cm-check__verdicts">
+        <p class="cm-check__hint" data-hint>Pick an option, then check it.</p>
+        ${verdicts}
+      </div>
+      <p class="cm-check__score" data-score>Answer all ${qs.length} to see your score.</p>
     </section>`;
 }
 
@@ -284,11 +297,13 @@ function wireQuickCheck(root) {
   if (!box) return;
 
   const cards = [...box.querySelectorAll('[data-q]')];
+  const verdicts = [...box.querySelectorAll('[data-v]')];
   const count = box.querySelector('[data-count]');
   const score = box.querySelector('[data-score]');
   const prev = box.querySelector('[data-prev]');
   const next = box.querySelector('[data-next]');
   const check = box.querySelector('[data-check]');
+  const hint = box.querySelector('[data-hint]');
   // One entry per question: true, false, or undefined while unanswered. A
   // question is scored on its first answer, so a second guess cannot lift
   // the total.
@@ -297,7 +312,9 @@ function wireQuickCheck(root) {
 
   function show(i) {
     at = Math.max(0, Math.min(cards.length - 1, i));
-    cards.forEach((c, n) => { c.hidden = n !== at; });
+    cards.forEach((c, n) => c.classList.toggle('is-on', n === at));
+    verdicts.forEach((v, n) => v.classList.toggle('is-on', n === at));
+    hint.classList.toggle('is-off', verdicts[at].classList.contains('is-shown'));
     count.textContent = `${at + 1} of ${cards.length}`;
     prev.disabled = at === 0;
     next.disabled = at === cards.length - 1;
@@ -309,29 +326,33 @@ function wireQuickCheck(root) {
     const done = marks.filter((m) => m !== undefined).length;
     if (done < cards.length) return;
     const right = marks.filter(Boolean).length;
-    score.hidden = false;
+    score.classList.add('is-done');
     score.textContent = `You scored ${right} out of ${cards.length}.`;
+  }
+
+  function reveal() {
+    verdicts[at].classList.add('is-shown');
+    verdicts[at].setAttribute('aria-hidden', 'false');
+    hint.classList.add('is-off');
   }
 
   check.addEventListener('click', () => {
     const card = cards[at];
-    const result = card.querySelector('[data-result]');
-    const why = card.querySelector('[data-why]');
+    const result = verdicts[at].querySelector('[data-result]');
     const picked = card.querySelector('input:checked');
     if (!picked) {
-      result.hidden = false;
       result.className = 'cm-check__result';
       result.textContent = 'Choose an answer first.';
+      reveal();
       return;
     }
     const right = Number(picked.value) === Number(card.dataset.answer);
     marks[at] = right;
-    result.hidden = false;
     result.className = `cm-check__result ${right ? 'is-right' : 'is-wrong'}`;
     result.textContent = right ? 'Correct.' : 'Not quite.';
     picked.closest('.cm-opt').classList.add(right ? 'is-right' : 'is-wrong');
     card.querySelectorAll('input').forEach((i) => { i.disabled = true; });
-    if (why) why.hidden = false;
+    reveal();
     check.disabled = true;
     check.textContent = 'Answered';
     report();

@@ -904,6 +904,9 @@
 
 .page--course-map .cm-sec--remember,
 .page--course-map .cm-sec--check {
+  /* Both cards stretch to the taller of the two. Without this the spare
+     height is handed to the grid rows and the content drifts apart. */
+  align-content: start;
   padding: var(--s-4) var(--s-5) var(--s-5);
   background: var(--c-paper);
   border: 1px solid var(--c-line);
@@ -949,11 +952,20 @@
 }
 .page--course-map .cm-check__step:disabled { opacity: 0.4; }
 
+/* Says what it is waiting for rather than appearing out of nowhere and
+   pushing the panel down. */
 .page--course-map .cm-check__score {
   margin-top: var(--s-3);
   padding-top: var(--s-3);
   border-top: 1px solid var(--c-line);
   font-family: var(--font-ui);
+  font-size: 14px;
+  /* Fixed, so growing the type on completion does not move the panel. */
+  line-height: 22px;
+  font-weight: 700;
+  color: var(--c-ink-faint);
+}
+.page--course-map .cm-check__score.is-done {
   font-size: 15px;
   font-weight: 800;
   color: var(--c-forest);
@@ -1005,10 +1017,12 @@
 /* The panel around it is the card now, so the list itself is plain. */
 .page--course-map .cm-remember {
   display: grid;
-  gap: var(--s-3);
-  padding-left: 18px;
-  font-size: 15px;
-  line-height: 1.55;
+  align-content: start;
+  gap: var(--s-4);
+  margin-top: var(--s-3);
+  padding-left: 20px;
+  font-size: 16px;
+  line-height: 1.6;
   color: var(--c-ink);
 }
 .page--course-map .cm-remember li::marker {
@@ -1018,11 +1032,50 @@
 
 /* --- Quick check ----------------------------------------------------------- */
 
+/* All the question cards share one grid cell, so the panel is as tall as
+   its tallest question from the first paint and never resizes. */
+.page--course-map .cm-check__cards { display: grid; }
+
+.page--course-map .cm-check__card {
+  grid-area: 1 / 1;
+  display: grid;
+  align-content: start;
+  gap: var(--s-4);
+  visibility: hidden;
+}
+.page--course-map .cm-check__card.is-on { visibility: visible; }
+
 .page--course-map .cm-check__q {
   font-family: var(--font-display);
-  font-size: 17px;
-  line-height: 1.4;
+  font-size: 16px;
+  line-height: 1.45;
 }
+
+/* Stacked the same way as the questions, and their space is held from the
+   start, so answering does not move the buttons or the score. Opacity
+   rather than visibility, because a hidden verdict's descendants must stay
+   hidden and visibility: visible on a child would override that. */
+.page--course-map .cm-check__verdicts { display: grid; }
+
+.page--course-map .cm-check__verdict {
+  grid-area: 1 / 1;
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  visibility: hidden;
+}
+.page--course-map .cm-check__verdict.is-on { visibility: visible; }
+.page--course-map .cm-check__verdict:not(.is-shown) { opacity: 0; }
+
+/* Shares the cell, and is shorter than any verdict, so it fills the head of
+   the reserved space without setting its height. */
+.page--course-map .cm-check__hint {
+  grid-area: 1 / 1;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--c-ink-faint);
+}
+.page--course-map .cm-check__hint.is-off { visibility: hidden; }
 .page--course-map .cm-opts { display: grid; gap: 6px; list-style: none; }
 .page--course-map .cm-opt {
   display: grid;
@@ -1063,8 +1116,12 @@
   border-color: var(--c-brick);
 }
 
+/* One line is reserved whether or not there is a verdict yet, so revealing
+   it does not lengthen the card. */
 .page--course-map .cm-check__result {
+  min-height: 20px;
   font-size: 14px;
+  line-height: 20px;
   font-weight: 700;
   color: var(--c-ink-faint);
 }
