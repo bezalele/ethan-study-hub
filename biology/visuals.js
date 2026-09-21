@@ -9,13 +9,13 @@ const REAL_LIFE={
   title:"Cells: The Building Blocks of Life",
   intro:"Explore different cells and their amazing parts.",
   slides:[
-   {src:'assets/slides/animal-cell.jpg',kicker:"Slide 1",heading:"Inside an Animal Cell",body:"A cell is a tiny living factory. Different parts inside it have different jobs, but they work together to keep the cell alive.",labels:"membrane · cytoplasm · nucleus · mitochondria · ER · Golgi · ribosomes"},
-   {src:'assets/slides/human-cells.jpg',kicker:"Slide 2",heading:"Human Cells Come in Different Shapes",body:"A nerve cell, muscle cell and white blood cell can look very different because each is built for a different job.",labels:"nerve · muscle · white blood cell · red blood cell"},
-   {src:'assets/slides/nucleus.jpg',kicker:"Slide 3",heading:"The Nucleus: The Library",body:"The nucleus protects the cell’s DNA — the master library of instructions for building and running the cell."},
-   {src:'assets/slides/ribosome-protein.jpg',kicker:"Slide 4",heading:"Ribosomes Build the Workers",body:"Ribosomes read copied instructions and join amino acids together to build proteins — many of the cell’s workers and tools.",labels:"ribosome · mRNA · amino-acid chain · protein"},
-   {src:'assets/slides/mitochondria.jpg',kicker:"Slide 5",heading:"Mitochondria Release Usable Energy",body:"Mitochondria help turn energy from food into a form the cell can use to power its work."},
-   {src:'assets/slides/er-golgi.jpg',kicker:"Slide 6",heading:"Build, Process, Package, Ship",body:"The ER helps make and process cell products. The Golgi sorts and packages many of them for delivery.",labels:"rough ER · smooth ER · Golgi · transport vesicles"},
-   {src:'assets/slides/same-dna-different-cells.jpg',todo:true,kicker:"Slide 7",heading:"Same Library. Different Pages.",body:"Most of your cells contain essentially the same DNA, but different cell types use different genes. That helps create different structures and jobs."}
+   {src:'assets/slides/animal-cell.jpg',kicker:"Slide 1",heading:"Animal Cell",body:"A typical animal cell with all the main organelles working together.",labels:"membrane · cytoplasm · nucleus · mitochondria · ER · Golgi · ribosomes"},
+   {src:'assets/slides/plant-cell.jpg',kicker:"Slide 2",heading:"Plant Cell",body:"Plant cells have a cell wall, chloroplasts, and a large central vacuole."},
+   {src:'assets/slides/human-cells.jpg',kicker:"Slide 3",heading:"Different Human Cells",body:"Same DNA, different shapes and jobs. Cells are specialized for what they do.",labels:"nerve · muscle · white blood cell · red blood cell"},
+   {src:'assets/slides/nucleus.jpg',kicker:"Slide 4",heading:"Nucleus",body:"The control center that holds your DNA."},
+   {src:'assets/slides/mitochondria.jpg',kicker:"Slide 5",heading:"Mitochondria",body:"Turns food into energy (ATP) for the cell."},
+   {src:'assets/slides/er-golgi.jpg',kicker:"Slide 6",heading:"ER and Golgi Apparatus",body:"Rough ER makes proteins. Golgi modifies and packages them.",labels:"rough ER · smooth ER · Golgi · transport vesicles"},
+   {src:'assets/slides/ribosome-protein.jpg',kicker:"Slide 7",heading:"Ribosomes",body:"Tiny machines that read instructions and build proteins."}
   ]
  },
  transport:{
@@ -28,20 +28,20 @@ const REAL_LIFE={
  },
  dna:{
   title:"From Cell to DNA to Protein",
-  intro:"Follow the journey from one cell all the way to a working protein.",
+  intro:"Follow the incredible journey from a cell to a protein.",
   slides:[
-   {src:'assets/slides/animal-cell.jpg',kicker:"Zoom 1",heading:"Start With One Cell",body:"Almost every nucleated cell in your body carries a copy of your genetic instruction library."},
-   {src:'assets/slides/nucleus.jpg',kicker:"Zoom 2",heading:"Zoom In: Nucleus",body:"Inside the cell, the nucleus is where most of your DNA is stored and protected."},
-   {src:'assets/slides/chromosome.jpg',kicker:"Zoom 3",heading:"Zoom In: Chromosome",body:"DNA is packaged into chromosomes. Most human body cells have 46 chromosomes — 23 pairs, with one member of each pair inherited from each parent."},
-   {src:'assets/slides/dna-double-helix.jpg',kicker:"Zoom 4",heading:"Zoom In: DNA",body:"Unpack a chromosome and you reach DNA: an extremely long molecule shaped like a twisted ladder."},
-   {src:'assets/slides/gene.jpg',todo:true,kicker:"Zoom 5",heading:"Zoom In: Gene",body:"A gene is a particular stretch of DNA containing information the cell can use. Many genes provide instructions for making proteins."},
-   {src:'assets/slides/atcg.jpg',todo:true,kicker:"Slide 6",heading:"DNA Has a Four-Letter Alphabet",body:"DNA information is written using four chemical bases: A, T, C and G. Their order carries information.",labels:"A pairs with T · C pairs with G"},
-   {src:'assets/slides/dna-to-rna.jpg',todo:true,kicker:"Slide 7",heading:"Copy the Recipe",body:"When a protein recipe is needed, the cell makes a temporary RNA copy instead of taking the original DNA out of the nucleus."},
-   {src:'assets/slides/ribosome-protein.jpg',kicker:"Slide 8",heading:"Take the Copy to a Ribosome",body:"The RNA message reaches a ribosome, the molecular machine that translates the message."},
-   {src:'assets/slides/amino-acids-protein.jpg',kicker:"Slide 9",heading:"Build a Protein",body:"The ribosome connects amino acids in the instructed order. The chain folds into a protein with a particular shape and job."},
-   {src:'assets/slides/protein-workers.jpg',todo:true,kicker:"Slide 10",heading:"Instructions Become Action",body:"Proteins become structures, enzymes, receptors, transporters, antibodies and many other working parts of the body.",labels:"DNA → RNA → protein → job"},
-   {src:'assets/slides/inheritance.jpg',todo:true,kicker:"Slide 11",heading:"One Set From Each Parent",body:"An egg contributes 23 chromosomes and a sperm contributes 23. Together they form a new combination of 46 chromosomes."},
-   {src:'assets/slides/mutation.jpg',todo:true,kicker:"Slide 12",heading:"DNA Can Change",body:"A mutation is a change in the DNA sequence. Many have little effect, while some can change how a gene works."}
+   {src:'assets/slides/animal-cell.jpg',kicker:"Slide 1",heading:"Cell",body:"Everything starts with a cell."},
+   {src:'assets/slides/nucleus.jpg',kicker:"Slide 2",heading:"Nucleus",body:"The nucleus holds your DNA."},
+   {src:'assets/slides/chromosome.jpg',kicker:"Slide 3",heading:"Chromosome",body:"DNA is tightly coiled into chromosomes."},
+   {src:'assets/slides/dna-double-helix.jpg',kicker:"Slide 4",heading:"DNA Double Helix",body:"DNA is a long molecule shaped like a twisted ladder."},
+   {src:'assets/slides/gene.jpg',todo:true,kicker:"Slide 5",heading:"Gene",body:"A gene is a specific segment of DNA with instructions."},
+   {src:'assets/slides/dna-letters.jpg',todo:true,kicker:"Slide 6",heading:"The 4 DNA Letters",body:"DNA uses four chemical letters: A, T, C, and G.",labels:"A pairs with T · C pairs with G"},
+   {src:'assets/slides/rna-copy.jpg',todo:true,kicker:"Slide 7",heading:"RNA Copy (mRNA)",body:"The gene is copied into messenger RNA (mRNA)."},
+   {src:'assets/slides/ribosome-protein.jpg',kicker:"Slide 8",heading:"Ribosome",body:"A ribosome reads the mRNA instructions."},
+   {src:'assets/slides/amino-acids-protein.jpg',kicker:"Slide 9",heading:"Amino Acids",body:"Amino acids are linked together in the right order."},
+   {src:'assets/slides/protein.jpg',todo:true,kicker:"Slide 10",heading:"Protein",body:"The amino acid chain folds into a protein."},
+   {src:'assets/slides/protein-at-work.jpg',todo:true,kicker:"Slide 11",heading:"Protein at Work",body:"Proteins do the work inside and outside the cell."},
+   {src:'assets/slides/human-cells.jpg',kicker:"Slide 12",heading:"Same DNA, Different Cells",body:"All your cells have the same DNA, but they use different genes."}
   ]
  },
  mitosis:{
