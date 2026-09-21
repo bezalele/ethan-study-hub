@@ -89,3 +89,12 @@ main:focus{outline:none}
 .science-link-arrow{font-size:14px;color:var(--muted)}
 @media(max-width:900px){.science-links{align-items:flex-start;flex-direction:column}.science-links-title{min-width:0}.science-link-list{width:100%}}
 @media(max-width:650px){.science-link-list{flex-direction:column}.science-link-list>a{width:100%}}
+
+/* Keep visual discovery links compact and image-first. */
+.science-links{padding:10px 12px;gap:10px}
+.science-links-title{min-width:155px}
+.science-links-title small{font-size:10.5px}
+.science-link-list>a{padding:8px 10px}
+.science-link-list small{display:none}
+.science-link-list strong{font-size:12.5px}
+.science-link-icon{width:24px;height:24px;font-size:11px}
