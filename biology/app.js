@@ -11,32 +11,40 @@ function btn(label,url,soft=false){return `<a class="button ${soft?'soft':''}" h
 function heading(k,t,p=''){return `<p class="eyebrow">${k}</p><h1>${t}</h1><p class="intro">${p}</p>`;}
 function crumbs(items){$('#crumb').innerHTML=[['Honors Biology','home'],...items].map(([name,url])=>url?`<a href="#${url}">${esc(name)}</a>`:`<span aria-current="page">${esc(name)}</span>`).join('<span class="sep">/</span>');}
 function art(type){const pics={experiment:'<path d="M70 28v38L40 120q-8 18 12 18h66q20 0 12-18L100 66V28M64 28h42" fill="none" stroke="#496850" stroke-width="5"/><path d="m57 102-12 22q-5 10 10 10h60q15 0 10-10l-12-22Z" fill="#86a98a"/><circle cx="83" cy="91" r="6" fill="#d4b56e"/>',web:'<path d="M85 144V60M85 92 55 70M85 109l35-34" stroke="#53775a" stroke-width="5"/><ellipse cx="56" cy="61" rx="24" ry="14" fill="#7a9c6e" transform="rotate(30 56 61)"/><ellipse cx="114" cy="66" rx="27" ry="15" fill="#a6bb87" transform="rotate(-30 114 66)"/><ellipse cx="85" cy="41" rx="16" ry="28" fill="#547c58"/>',energy:'<circle cx="85" cy="80" r="29" fill="#dbb458"/><g stroke="#ac8439" stroke-width="4"><path d="M85 29V12M85 131v17M34 80H17M136 80h17M49 44 37 32M121 116l12 12M49 116l-12 12M121 44l12-12"/></g>',cell:'<ellipse cx="85" cy="80" rx=" sixty"/><ellipse cx="85" cy="80" rx="62" ry="48" fill="#b7d1c2" stroke="#547766" stroke-width="3"/><circle cx="76" cy="74" r="23" fill="#a49cbd"/><circle cx="77" cy="74" r="9" fill="#6f6d92"/><ellipse cx="119" cy="92" rx="14" ry="7" fill="#d6ab74"/>',dna:'<path d="M55 15c80 30-20 100 60 130M115 15c-80 30 20 100-60 130" fill="none" stroke="#817594" stroke-width="6"/><path d="M60 25h50M73 47h24M67 70h36M65 94h40M76 118h19M60 138h50" stroke="#b09b6f" stroke-width="4"/>',selection:'<path d="M85 143V90M85 90 43 48M85 90l42-42M43 48V20M127 48V20" fill="none" stroke="#856e56" stroke-width="4"/><circle cx="43" cy="25" r="16" fill="#a9b990"/><circle cx="127" cy="25" r="16" fill="#729479"/>'};return `<svg viewBox="0 0 170 160" aria-hidden="true">${(pics[type]||pics.web).replace('<ellipse cx="85" cy="80" rx=" sixty"/>','')}</svg>`;}
-function unitCards(){return `<div class="grid">${BIO_UNITS.map(u=>`<a class="card unit-card" href="#unit/${u.id}"><div class="unit-art" style="background:${u.color}">${art(u.visual)}</div><div class="unit-copy"><span class="small">${u.n}</span><h3>${u.title}</h3><p>${u.desc}</p><p>${BIO_LESSONS.filter(l=>l.unit===u.id).length} lessons · Explore →</p></div></a>`).join('')}</div>`;}
+const UNIT_CARD_IMAGES={
+ foundations:'assets/cards/approved/home/foundations.jpg',
+ ecosystems:'assets/cards/approved/home/ecosystems.jpg',
+ energy:'assets/cards/approved/home/energy.jpg',
+ structure:'assets/cards/approved/home/structure.jpg',
+ inheritance:'assets/cards/approved/home/inheritance.jpg',
+ evolution:'assets/cards/approved/home/evolution.jpg'
+};
+function unitCards(useApprovedPhotos=false){return `<div class="grid">${BIO_UNITS.map(u=>`<a class="card unit-card" href="#unit/${u.id}"><div class="unit-art" style="background:${u.color}">${useApprovedPhotos?`<img src="${UNIT_CARD_IMAGES[u.id]}" alt="" loading="lazy">`:art(u.visual)}</div><div class="unit-copy"><span class="small">${u.n}</span><h3>${u.title}</h3><p>${u.desc}</p><p>${BIO_LESSONS.filter(l=>l.unit===u.id).length} lessons · Explore →</p></div></a>`).join('')}</div>`;}
 const CARD_IMAGES={
- investigations:'assets/cards/investigations.jpg',
- evidence:'assets/cards/evidence.png',
- molecules:'assets/cards/molecules.jpg',
- interactions:'assets/cards/interactions.jpg',
- populations:'assets/cards/populations.jpg',
- biodiversity:'assets/cards/biodiversity.jpg',
- 'human-impacts':'assets/cards/human-impacts.jpg',
+ investigations:'assets/cards/approved/investigations.jpg',
+ evidence:'assets/cards/approved/evidence.jpg',
+ molecules:'assets/cards/approved/molecules.jpg',
+ interactions:'assets/cards/approved/interactions.jpg',
+ populations:'assets/cards/approved/populations.jpg',
+ biodiversity:'assets/cards/approved/biodiversity.jpg',
+ 'human-impacts':'assets/cards/approved/human-impacts.jpg',
  photosynthesis:'assets/cards/energy/photosynthesis.jpg',
  respiration:'assets/cards/energy/respiration.jpg',
  'food-energy':'assets/cards/energy/food-energy.jpg',
  'carbon-cycle':'assets/cards/energy/carbon-cycle.jpg',
- cells:'assets/real-life/animal-cell-electron-micrograph.jpg',
- transport:'assets/real-life/osmosis-paramecium-micrograph.jpg',
- 'body-systems':'assets/cards/body-systems.jpg',
- homeostasis:'assets/cards/homeostasis.jpg',
- dna:'assets/cards/dna.jpg',
- proteins:'assets/cards/molecules.jpg',
- mutations:'assets/cards/mutations.jpg',
- mitosis:'assets/real-life/mitosis-fluorescence.png',
- meiosis:'assets/real-life/human-chromosomes-fluorescence.jpg',
- genetics:'assets/cards/dna.jpg',
- 'evolution-evidence':'assets/real-life/archaeopteryx-fossil.jpg',
- 'natural-selection':'assets/cards/natural-selection.png',
- speciation:'assets/cards/speciation.jpg'
+ cells:'assets/cards/approved/cells.jpg',
+ transport:'assets/cards/approved/transport.jpg',
+ 'body-systems':'assets/cards/approved/body-systems.jpg',
+ homeostasis:'assets/cards/approved/homeostasis.jpg',
+ dna:'assets/cards/approved/dna.jpg',
+ proteins:'assets/cards/approved/proteins.jpg',
+ mutations:'assets/cards/approved/mutations.jpg',
+ mitosis:'assets/cards/approved/mitosis.jpg',
+ meiosis:'assets/cards/approved/meiosis.jpg',
+ genetics:'assets/cards/approved/genetics.jpg',
+ 'evolution-evidence':'assets/cards/approved/evolution-evidence.jpg',
+ 'natural-selection':'assets/cards/approved/natural-selection.jpg',
+ speciation:'assets/cards/approved/speciation.jpg'
 };
 function lessonCard(l){const img=CARD_IMAGES[l.id];return `<article class="card lesson-card lesson-card-photo">${img?`<a class="lesson-card-image" href="#lesson/${l.id}" aria-hidden="true" tabindex="-1"><img src="${img}" alt="" loading="lazy"></a>`:''}<div class="lesson-card-copy"><span class="tag">${state.explored.includes(l.id)?'Explored':'Visual lesson'}</span><h3><a href="#lesson/${l.id}">${l.title}</a></h3><p>${l.goal}</p><a class="lesson-open" href="#lesson/${l.id}">Open lesson →</a></div></article>`;}
 
@@ -132,7 +140,7 @@ function scienceLinks(lessonId){
  const links=SCIENCE_LINKS[lessonId];if(!links?.length)return '';
  return `<aside class="science-links" aria-label="See it for real"><div class="science-links-title"><span class="science-spark" aria-hidden="true">✦</span><span><strong>See it for real</strong><small>Pictures & short clips that make this lesson real.</small></span></div><div class="science-link-list">${links.map(x=>`<a href="${x.url}" target="_blank" rel="noopener noreferrer"><span class="science-link-icon" aria-hidden="true">${x.icon}</span><span><span class="science-link-kicker">LOOK CLOSER</span><strong>${esc(x.label)}</strong></span><span class="science-link-arrow" aria-hidden="true">↗</span></a>`).join('')}</div></aside>`;
 }
-function home(){crumbs([['Home']]);return `<section class="hero"><div class="hero-copy"><p class="eyebrow">ETHAN’S BIOLOGY FIELD GUIDE</p><h1>Life makes more sense up close.</h1><p>See the idea. Try it yourself. Connect the dots.</p><div class="controls">${btn('Start exploring','lesson/'+(lesson(state.last)?state.last:'investigations'))}${btn('Explore the course','course',true)}</div><span class="small">Grade 9 · Honors Biology · MCPS topic sequence</span></div><div class="hero-art">${svg('<circle cx="300" cy="140" r="125" fill="#edf0df"/><path d="M240 240Q180 130 320 40Q420 200 240 240" fill="#8ca67d"/><path d="M230 262 320 66M262 198 233 132M286 150l57-22" fill="none" stroke="#42664d" stroke-width="4"/><circle cx="413" cy="206" r="57" fill="#e5d8b8"/><circle cx="413" cy="206" r="34" fill="#b6c9ab"/><circle cx="408" cy="201" r="13" fill="#8c869f"/><circle cx="179" cy="78" r="22" fill="#d8b76d"/>','Illustration of a leaf, sunlight, and a cell')}</div></section><nav class="home-shortcuts" aria-label="Quick study links"><span>15 minutes, one idea.</span><a href="#practice">Practice questions →</a><a href="#flashcards/all">Vocabulary cards →</a></nav><div class="section-top"><h2>Your biology course</h2><a href="#about">About this guide →</a></div>${unitCards()}`;}
+function home(){crumbs([['Home']]);return `<section class="hero hero-photo"><div class="hero-copy"><p class="eyebrow">ETHAN’S BIOLOGY FIELD GUIDE</p><h1>Life makes more sense up close.</h1><p>See the idea. Try it yourself. Connect the dots.</p><div class="controls">${btn('Start exploring','lesson/'+(lesson(state.last)?state.last:'investigations'))}${btn('Explore the course','course',true)}</div><span class="small">Grade 9 · Honors Biology · MCPS topic sequence</span></div><div class="hero-art" aria-hidden="true"></div></section><nav class="home-shortcuts" aria-label="Quick study links"><span>15 minutes, one idea.</span><a href="#practice">Practice questions →</a><a href="#flashcards/all">Vocabulary cards →</a></nav><div class="section-top"><h2>Your biology course</h2><a href="#about">About this guide →</a></div>${unitCards(true)}`;}
 function course(id){const u=unit(id);crumbs(u?[['Course','course'],[u.n]]:[['Course']]);if(!u)return heading('THE COURSE','From living systems to living cells','Begin with foundations, or jump to your class topic.')+unitCards();return heading(u.n.toUpperCase(),u.title,u.desc)+`<div class="controls">${btn('Practice this unit','practice/'+u.id)}${btn('Unit check','check/'+u.id,true)}${btn('Vocabulary','flashcards/'+u.id,true)}</div><div class="grid">${BIO_LESSONS.filter(l=>l.unit===u.id).map(lessonCard).join('')}</div>${adjacentUnitNav(u.id)}`;}
 function showLesson(id){const l=lesson(id);if(!l)return missing();state.last=id;save();crumbs([['Course','course'],[unit(l.unit).n,'unit/'+l.unit],[l.title]]);let i=BIO_LESSONS.indexOf(l);return `${unitLessonNav(l.unit,l.id)}<div class="lesson-shell">${heading(unit(l.unit).n.toUpperCase(),l.title,l.goal)}<div class="lesson-tabs"><a href="#" data-scroll="ideas">Key ideas</a><a href="#" data-scroll="examples">Worked examples</a><a href="#" data-scroll="words">Vocabulary</a><a href="#" data-scroll="honors">Honors challenge</a></div>${visualPanel(l.visual,l.id)}${scienceLinks(l.id)}<section id="ideas"><h2>Three ideas to keep</h2><div class="learn-grid">${l.ideas.map(([t,p],i)=>`<article class="card"><span class="number">0${i+1}</span><h3>${t}</h3><p>${p}</p></article>`).join('')}</div></section><p class="callout">Common mistake: ${l.mistake}</p><section id="examples"><h2>See it worked out</h2><div class="two">${l.examples.map(([t,steps])=>`<article class="card worked"><h3>${t}</h3><ol>${steps.map(s=>`<li>${s}</li>`).join('')}</ol></article>`).join('')}</div></section><section class="card honors" id="honors"><p class="eyebrow">HONORS • EXPLAIN YOUR THINKING</p><h2>Go one step deeper</h2><p>${l.honors[0]}</p><label for="thinking">Your explanation (saved on this device)</label><textarea id="thinking" placeholder="My claim is… The evidence shows… This makes sense because…">${esc(state.notes[id]||'')}</textarea><details><summary>Compare with a strong response</summary><ul>${l.honors[1].map(s=>`<li>${s}</li>`).join('')}</ul><p class="small">Self-check: did you make a claim, use evidence, and explain the biology? This response is not automatically graded.</p></details></section><section id="words"><h2>Words worth knowing</h2><p class="muted">Tap a term to reveal its meaning.</p><div class="vocab-grid">${l.terms.map(([t,d])=>`<details class="vocab"><summary>${t}</summary><p>${d}</p></details>`).join('')}</div></section><div class="controls">${btn('Practice • 5 questions','practice/'+id)}<button class="soft" id="explored">${state.explored.includes(id)?'✓ Lesson explored':'Mark as explored'}</button></div><p class="small muted">Explored means you have studied the lesson; practice shows what you can recall.</p><div class="section-top">${i?`<a href="#lesson/${BIO_LESSONS[i-1].id}">← Previous lesson</a>`:'<span></span>'}${i<23?`<a href="#lesson/${BIO_LESSONS[i+1].id}">Next: ${BIO_LESSONS[i+1].title} →</a>`:''}</div></div>`;}
 function pool(id){return BIO_QUESTIONS.filter(q=>id==='all'||!id||q.unit===id||q.lesson===id);}

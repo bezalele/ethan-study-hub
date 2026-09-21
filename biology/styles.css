@@ -124,3 +124,10 @@ main:focus{outline:none}
 .lesson-card-copy p{font-size:14px;line-height:1.45;margin:0 0 10px;color:var(--muted)}
 .lesson-card-copy .lesson-open{margin-top:auto;align-self:flex-start}
 @media(max-width:760px){.lesson-card-photo{min-height:0}.lesson-card-image{height:132px}.lesson-card-copy{padding:13px 17px 16px}}
+
+/* Exact approved photo set from the Biology page mockups. */
+.unit-art img{display:block;width:100%;height:100%;object-fit:cover}
+.home-page .hero-photo{background-image:linear-gradient(90deg,#e5edd9 0%,#e5edd9e8 31%,#e5edd900 64%),url('assets/cards/approved/home/hero.jpg');background-position:center,right center;background-repeat:no-repeat;background-size:100% 100%,auto 100%}
+.home-page .hero-photo .hero-art{min-height:238px}
+@media(min-width:1101px){.home-page .unit-art{height:98px}}
+@media(max-width:760px){.home-page .hero-photo{background-image:linear-gradient(90deg,#e5edd9f5,#e5edd9c7),url('assets/cards/approved/home/hero.jpg');background-size:100% 100%,auto 100%}.home-page .hero-photo .hero-art{display:none}}
