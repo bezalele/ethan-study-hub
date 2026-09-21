@@ -71,3 +71,21 @@ main:focus{outline:none}
 .real-life-exam p{margin:4px 0 0}
 .real-life-credit{margin:12px 0 0}
 @media(max-width:760px){.visual .section-top{align-items:flex-start}.visual-head-actions{justify-content:flex-start}.real-life-gallery{grid-template-columns:1fr}.real-life-shell{padding:17px}.real-life-head h2{font-size:23px}.real-life-figure img{height:auto;max-height:58vh}}
+
+
+/* Curiosity links: optional pathways from the lesson into authentic science. */
+.science-links{margin:14px 0 26px;padding:12px 14px;border:1px solid #d9e1d4;border-radius:10px;background:#fbfcf8;display:flex;align-items:center;gap:14px}
+.science-links-title{display:flex;align-items:center;gap:8px;min-width:175px;color:var(--ink)}
+.science-links-title>span:first-child{font-size:18px;color:#8b6a35}
+.science-links-title strong,.science-links-title small{display:block}
+.science-links-title small{margin-top:2px;color:var(--muted);font-size:11px;font-weight:400}
+.science-link-list{display:flex;gap:8px;flex:1;min-width:0}
+.science-link-list>a{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:9px;min-width:0;flex:1;padding:9px 11px;border:1px solid #dbe3d7;border-radius:8px;background:#fff;text-decoration:none}
+.science-link-list>a:hover{border-color:#8da48b;background:#f5f8f2}
+.science-link-list strong,.science-link-list small{display:block}
+.science-link-list strong{font-size:13px;line-height:1.25}
+.science-link-list small{margin-top:2px;color:var(--muted);font-size:11px;line-height:1.3}
+.science-link-icon{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#e8efe4;font-size:13px}
+.science-link-arrow{font-size:14px;color:var(--muted)}
+@media(max-width:900px){.science-links{align-items:flex-start;flex-direction:column}.science-links-title{min-width:0}.science-link-list{width:100%}}
+@media(max-width:650px){.science-link-list{flex-direction:column}.science-link-list>a{width:100%}}
