@@ -1,0 +1,238 @@
+/* ---------------------------------------------------------------------------
+   learning-log.css — the "what did you learn today?" button, its modal,
+   and the history page.
+
+   Deliberately neutral: it inherits the host page's fonts and takes its
+   accent from --ll-accent, so Biology, Math Quest and AP Gov can each set
+   one variable and have it look native to that subject.
+   --------------------------------------------------------------------------- */
+
+.ll-history {
+  --ll-accent: #315c48;
+  --ll-accent-soft: #eaf1e6;
+  --ll-edge: #cfd9c6;
+  --ll-muted: #62736b;
+}
+
+/* --- Header trigger ---------------------------------------------------------
+   Small enough to live in the app header, so the day's note is one click
+   away from any page and costs the page no space at all.
+   --------------------------------------------------------------------------- */
+
+.ll-trigger {
+  --ll-accent: #315c48;
+  --ll-accent-soft: #eaf1e6;
+  --ll-edge: #cfd9c6;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 11px;
+  background: #fff;
+  border: 1px solid var(--ll-edge);
+  border-radius: 999px;
+  color: var(--ll-accent);
+  font: 700 13px/1 inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ll-trigger:hover { border-color: var(--ll-accent); background: var(--ll-accent-soft); }
+.ll-trigger.is-done { background: var(--ll-accent-soft); }
+.ll-trigger__tick { color: var(--ll-accent); font-size: 13px; }
+.ll-trigger__dot {
+  display: grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: #b4552f;
+  border-radius: 999px;
+  font: 700 12px/1 inherit;
+  color: #fff;
+}
+
+/* --- Modal editor ------------------------------------------------------------ */
+
+.ll-modal {
+  width: min(560px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.ll-modal::backdrop { background: rgba(28, 44, 36, .45); }
+
+.ll-modal__card {
+  --ll-accent: #315c48;
+  --ll-accent-soft: #eaf1e6;
+  --ll-edge: #cfd9c6;
+  --ll-muted: #62736b;
+  position: relative;
+  display: grid;
+  gap: 12px;
+  padding: 24px 26px 22px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 18px 50px rgba(20, 38, 30, .28);
+}
+
+.ll-modal__x {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: 0;
+  background: none;
+  color: var(--ll-muted);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+.ll-modal__x:hover { color: var(--ll-accent); }
+
+.ll-modal__title { margin: 0; padding-right: 26px; font-size: 21px; line-height: 1.25; }
+.ll-modal__day {
+  margin: -6px 0 0;
+  font: 700 12.5px/1.4 inherit;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--ll-muted);
+}
+.ll-modal__row { margin-top: 2px; }
+.ll-modal__all { margin-left: auto; }
+
+@media (max-width: 760px) {
+  .ll-trigger__txt { display: none; }
+  .ll-modal__card { padding: 20px 18px 18px; }
+}
+
+/* --- Shared controls -------------------------------------------------------- */
+
+.ll__text {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 13px;
+  border: 1px solid var(--ll-edge);
+  border-radius: 10px;
+  background: #fcfdfb;
+  color: inherit;
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.6;
+  resize: vertical;
+}
+.ll__text:focus { outline: 2px solid var(--ll-accent); outline-offset: 1px; }
+
+.ll__row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.ll__save,
+.ll__quiet {
+  min-height: 38px;
+  padding: 0 15px;
+  border-radius: 9px;
+  font: 700 14px/1 inherit;
+  cursor: pointer;
+}
+.ll__save { background: var(--ll-accent); border: 1px solid var(--ll-accent); color: #fff; }
+.ll__save:hover { filter: brightness(1.12); }
+.ll__quiet { background: #fff; border: 1px solid var(--ll-edge); color: inherit; }
+.ll__quiet:hover { border-color: var(--ll-accent); }
+
+.ll__link { font: 700 14px/1 inherit; color: var(--ll-accent); }
+.ll__status { font-size: 13px; color: var(--ll-muted); }
+
+.ll-who { display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; color: var(--ll-muted); }
+.ll-who select {
+  min-height: 34px;
+  padding: 0 8px;
+  border: 1px solid var(--ll-edge);
+  border-radius: 8px;
+  background: #fff;
+  font: 700 13.5px/1 inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* --- History ---------------------------------------------------------------- */
+
+.ll-history__list { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
+
+.ll-note {
+  display: grid;
+  gap: 11px;
+  justify-items: start;
+  padding: 18px 20px;
+  background: #fff;
+  border: 1px solid var(--ll-edge);
+  border-left: 4px solid var(--ll-accent);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(35, 63, 53, .05);
+}
+
+.ll-note__head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.ll-note__when { margin: 0; font-size: 18px; line-height: 1.25; }
+.ll-note__meta { font: 600 12.5px/1.4 inherit; color: var(--ll-muted); }
+
+.ll-note__text {
+  margin: 0;
+  padding: 12px 14px;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--ll-accent-soft);
+  border-radius: 10px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.ll-note__thread { display: grid; gap: 9px; width: 100%; margin: 0; padding: 0; list-style: none; }
+
+/* Parent and Ethan sit on opposite sides, so a thread reads as a
+   conversation rather than as a pile of notes. */
+.ll-c {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: baseline;
+  gap: 4px 9px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+.ll-c--parent { background: #f3f1e6; border: 1px solid #e2dcc6; }
+.ll-c--ethan { background: #eaf1e6; border: 1px solid #d3e0cd; margin-left: 26px; }
+
+.ll-c__who {
+  font: 700 12.5px/1.5 inherit;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--ll-accent);
+}
+.ll-c--parent .ll-c__who { color: #8a6a35; }
+.ll-c__text { white-space: pre-wrap; }
+.ll-c__ts { font-size: 12.5px; color: var(--ll-muted); white-space: nowrap; }
+.ll-c__x {
+  border: 0;
+  background: none;
+  color: var(--ll-muted);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+}
+.ll-c__x:hover { color: #9c3b26; }
+
+.ll-note__reply { display: grid; gap: 10px; width: 100%; }
+.ll-note__add { font-size: 13.5px; min-height: 34px; }
+
+.ll-history__empty {
+  padding: 22px;
+  background: #fff;
+  border: 1px dashed var(--ll-edge);
+  border-radius: 12px;
+  color: var(--ll-muted);
+}
+
+@media (max-width: 760px) {
+  .ll-note { padding: 15px 16px; }
+  .ll-c { grid-template-columns: 1fr auto; }
+  .ll-c--ethan { margin-left: 14px; }
+}
