@@ -34,14 +34,15 @@ const REAL_LIFE={
    {src:'assets/slides/nucleus.jpg',kicker:"Slide 2",heading:"Nucleus",body:"The nucleus holds your DNA."},
    {src:'assets/slides/chromosome.jpg',kicker:"Slide 3",heading:"Chromosome",body:"DNA is tightly coiled into chromosomes."},
    {src:'assets/slides/dna-double-helix.jpg',kicker:"Slide 4",heading:"DNA Double Helix",body:"DNA is a long molecule shaped like a twisted ladder."},
-   {src:'assets/slides/gene.jpg',todo:true,kicker:"Slide 5",heading:"Gene",body:"A gene is a specific segment of DNA with instructions."},
-   {src:'assets/slides/dna-letters.jpg',todo:true,kicker:"Slide 6",heading:"The 4 DNA Letters",body:"DNA uses four chemical letters: A, T, C, and G.",labels:"A pairs with T · C pairs with G"},
-   {src:'assets/slides/rna-copy.jpg',todo:true,kicker:"Slide 7",heading:"RNA Copy (mRNA)",body:"The gene is copied into messenger RNA (mRNA)."},
+   {src:'assets/slides/gene.jpg',kicker:"Slide 5",heading:"Gene",body:"A gene is a specific segment of DNA with instructions."},
+   {src:'assets/slides/dna-letters.jpg',kicker:"Slide 6",heading:"The 4 DNA Letters",body:"DNA uses four chemical letters: A, T, C, and G.",labels:"A pairs with T · C pairs with G"},
+   {src:'assets/slides/rna-copy.jpg',kicker:"Slide 7",heading:"RNA Copy (mRNA)",body:"The gene is copied into messenger RNA (mRNA)."},
    {src:'assets/slides/ribosome-protein.jpg',kicker:"Slide 8",heading:"Ribosome",body:"A ribosome reads the mRNA instructions."},
-   {src:'assets/slides/amino-acids-protein.jpg',kicker:"Slide 9",heading:"Amino Acids",body:"Amino acids are linked together in the right order."},
-   {src:'assets/slides/protein.jpg',todo:true,kicker:"Slide 10",heading:"Protein",body:"The amino acid chain folds into a protein."},
-   {src:'assets/slides/protein-at-work.jpg',todo:true,kicker:"Slide 11",heading:"Protein at Work",body:"Proteins do the work inside and outside the cell."},
-   {src:'assets/slides/human-cells.jpg',kicker:"Slide 12",heading:"Same DNA, Different Cells",body:"All your cells have the same DNA, but they use different genes."}
+   {src:'assets/slides/amino-acids.jpg',kicker:"Slide 9",heading:"Amino Acids",body:"Amino acids are linked together in the right order."},
+   {src:'assets/slides/protein.jpg',kicker:"Slide 10",heading:"Protein",body:"The amino acid chain folds into a protein."},
+   {src:'assets/slides/protein-at-work-cell.jpg',kicker:"Slide 11",heading:"Protein at Work: Inside the Cell",body:"Proteins do the work inside the cell."},
+   {src:'assets/slides/protein-at-work-membrane.jpg',kicker:"Slide 12",heading:"Protein at Work: At the Membrane",body:"Others work in the cell membrane, controlling what gets in and out."},
+   {src:'assets/slides/human-cells.jpg',kicker:"Slide 13",heading:"Same DNA, Different Cells",body:"All your cells have the same DNA, but they use different genes."}
   ]
  },
  mitosis:{
