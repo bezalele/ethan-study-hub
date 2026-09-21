@@ -96,50 +96,48 @@ function sectionBigQuestion(d) {
     </section>`;
 }
 
-function sectionVisual(d) {
-  const v = d.visual;
-  return `
-    <section class="cm-sec" aria-labelledby="cm-vs">
-      <h3 class="cm-sec__label" id="cm-vs">Visual story</h3>
-      ${v && v.src
-        ? `<figure class="cm-visual">
-             <img src="${esc(v.src)}" alt="${esc(v.alt || '')}" loading="lazy">
-             <figcaption>
-               <span>${esc(v.caption || '')}</span>
-               ${v.credit ? `<small>${esc(v.credit)}</small>` : ''}
-             </figcaption>
-           </figure>`
-        : `<div class="cm-visual cm-visual--empty">
-             ${placeholder('Visual story', 'One strong image for this unit, from assets/course-map/.')}
-           </div>`}
-    </section>`;
-}
-
-function sectionModel(d) {
+/* The visual story and the concept model are one component: a sequence the
+   student clicks through. Four tiny decorative thumbnails would not teach the
+   progression; a stage that changes with the step does. */
+function sectionDocumentWalk(d) {
   const m = d.model;
   if (!m || !m.nodes || !m.nodes.length) {
     return `
       <section class="cm-sec" aria-labelledby="cm-md">
-        <h3 class="cm-sec__label" id="cm-md">How it fits together</h3>
-        ${placeholder('Interactive concept model',
-          'Click a step to see what it does. Built in the next checkpoint.')}
+        <h3 class="cm-sec__label" id="cm-md">The story in four documents</h3>
+        ${placeholder('Visual story and concept model',
+          'A sequence the student clicks through. Built per unit.')}
       </section>`;
   }
 
-  const nodes = m.nodes.map((n, i) => `
-    <li>
-      <button class="cm-node" type="button" data-node="${i}"
-              aria-expanded="${i === 0}" aria-controls="cm-node-body">
-        ${esc(n.label)}
+  const steps = m.nodes.map((n, i) => `
+    <li class="cm-step">
+      <button class="cm-step__btn" type="button" data-node="${i}"
+              aria-pressed="${i === 0}" aria-controls="cm-stage">
+        <img class="cm-step__thumb" src="${esc(n.thumb || n.image)}" alt="" loading="lazy">
+        <span class="cm-step__year">${esc(n.step)}</span>
+        <span class="cm-step__label">${esc(n.label)}</span>
       </button>
-    </li>`).join('<li class="cm-model__link" aria-hidden="true"></li>');
+    </li>`).join('<li class="cm-step__link" aria-hidden="true"></li>');
+
+  const stages = m.nodes.map((n, i) => `
+    <figure class="cm-stage" data-stage="${i}" ${i ? 'hidden' : ''}>
+      <img src="${esc(n.image)}" alt="${esc(n.alt || '')}" loading="${i ? 'lazy' : 'eager'}">
+      <figcaption>
+        <p class="cm-stage__did">${esc(n.did)}</p>
+        ${n.next
+          ? `<p class="cm-stage__next"><span>Why the next step followed</span>${esc(n.next)}</p>`
+          : '<p class="cm-stage__next cm-stage__next--end"><span>End of the sequence</span>This is the framework still in use today.</p>'}
+        <small class="cm-stage__credit">${esc(n.credit || '')}</small>
+      </figcaption>
+    </figure>`).join('');
 
   return `
-    <section class="cm-sec" aria-labelledby="cm-md" data-model>
-      <h3 class="cm-sec__label" id="cm-md">How it fits together</h3>
-      ${m.intro ? `<p class="cm-model__intro">${esc(m.intro)}</p>` : ''}
-      <ol class="cm-model">${nodes}</ol>
-      <p class="cm-node__body" id="cm-node-body" data-node-body></p>
+    <section class="cm-sec cm-walk" aria-labelledby="cm-md" data-walk>
+      <h3 class="cm-sec__label" id="cm-md">The story in four documents</h3>
+      ${m.intro ? `<p class="cm-walk__intro">${esc(m.intro)}</p>` : ''}
+      <ol class="cm-steps">${steps}</ol>
+      <div class="cm-stages" id="cm-stage" aria-live="polite">${stages}</div>
     </section>`;
 }
 
@@ -224,8 +222,7 @@ function panel(area) {
       <div class="cm-panel__scroll" data-panel tabindex="-1">
         ${sectionUnitHeader(area, d)}
         ${sectionBigQuestion(d)}
-        ${sectionVisual(d)}
-        ${sectionModel(d)}
+        ${sectionDocumentWalk(d)}
         ${sectionCoreIdeas(area, d)}
         ${sectionRemember(d)}
         ${sectionQuickCheck(d)}
@@ -236,23 +233,21 @@ function panel(area) {
 
 /* --- Behaviour ------------------------------------------------------------ */
 
-function wireModel(root, area) {
-  const box = root.querySelector('[data-model]');
+function wireWalk(root) {
+  const box = root.querySelector('[data-walk]');
   if (!box) return;
-  const nodes = (getDetail(area.n).model || {}).nodes || [];
   const buttons = [...box.querySelectorAll('[data-node]')];
-  const body = box.querySelector('[data-node-body]');
+  const stages = [...box.querySelectorAll('[data-stage]')];
 
   function show(i) {
-    buttons.forEach((b, n) => b.setAttribute('aria-expanded', String(n === i)));
-    body.textContent = (nodes[i] || {}).body || '';
+    buttons.forEach((b, n) => b.setAttribute('aria-pressed', String(n === i)));
+    stages.forEach((st, n) => { st.hidden = n !== i; });
   }
 
   box.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-node]');
     if (btn) show(buttons.indexOf(btn));
   });
-  show(0);
 }
 
 function wireQuickCheck(root) {
@@ -300,7 +295,7 @@ export default {
           ${panel(area)}
         </div>
       </div>`));
-    wireModel(page, area);
+    wireWalk(page);
     wireQuickCheck(page);
     return page;
   },

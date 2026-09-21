@@ -91,6 +91,9 @@ section('Stylesheets are scoped to their own root');
   const root = f.startsWith('components/') ? '.c-' + base : '.page--' + base;
   const css = read(f)
     .replace(/\/\*[\s\S]*?\*\//g, '')            // strip comments
+    // Drop @keyframes bodies whole: `from`/`to`/`50%` are keyframe selectors,
+    // not element selectors, so they cannot leak out of the component.
+    .replace(/@keyframes[^{]+\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, '')
     .replace(/@media[^{]+\{/g, '')               // unwrap media queries
     .replace(/\}\s*\}/g, '}');
 
