@@ -19,37 +19,41 @@ function adjacentUnitNav(activeId){const i=BIO_UNITS.findIndex(u=>u.id===activeI
 
 const SCIENCE_LINKS={
  cells:[
-  {icon:'◉',label:'Explore real 3D human cells',note:'Rotate and zoom real research-grade human cell images from the Allen Institute.',url:'https://www.allencell.org/visual-guide-to-human-cells.html'},
-  {icon:'⌕',label:'See a real microscope image',note:'NIH/NIGMS image of fibroblasts with nuclei, mitochondria, and actin visible.',url:'https://www.nigms.nih.gov/image-gallery/3624'}
+  {icon:'▣',label:'Animal cell images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=animal%20cell%20microscopic&sort=best&suppressfamilycorrection=true'},
+  {icon:'▣',label:'Plant cell images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=plant%20cell%20microscopic&sort=best&suppressfamilycorrection=true'}
  ],
  transport:[
-  {icon:'▶',label:'Try membrane transport',note:'Change concentrations and membrane proteins in an interactive high-school simulation.',url:'https://www.biointeractive.org/classroom-resources/membrane-transport'}
+  {icon:'▣',label:'Cell membrane & osmosis',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=cell%20membrane%20osmosis&sort=best&suppressfamilycorrection=true'}
  ],
  dna:[
-  {icon:'▶',label:'Watch DNA replicate',note:'A short HHMI BioInteractive animation showing how the double helix is copied.',url:'https://www.biointeractive.org/classroom-resources/dna-replication-schematic'},
-  {icon:'⌕',label:'Explore DNA at Genome.gov',note:'Connect DNA, genes, chromosomes, and proteins with the National Human Genome Research Institute.',url:'https://www.genome.gov/about-genomics/fact-sheets/Deoxyribonucleic-Acid-Fact-Sheet'}
+  {icon:'▣',label:'DNA images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=DNA%20molecule&sort=best&suppressfamilycorrection=true'},
+  {icon:'▣',label:'Chromosome images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=chromosome%20microscopic&sort=best&suppressfamilycorrection=true'}
  ],
  proteins:[
-  {icon:'⌕',label:'Follow DNA → protein',note:'Use the NHGRI DNA guide to connect genetic instructions to proteins.',url:'https://www.genome.gov/about-genomics/fact-sheets/Deoxyribonucleic-Acid-Fact-Sheet'},
-  {icon:'▶',label:'Watch DNA replicate',note:'See how base pairing lets a cell copy its DNA before division.',url:'https://www.biointeractive.org/classroom-resources/dna-replication-schematic'}
+  {icon:'▣',label:'DNA → protein visuals',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=DNA%20protein%20synthesis&sort=best&suppressfamilycorrection=true'}
  ],
  mutations:[
-  {icon:'⌕',label:'See real genomic variation',note:'Explore how DNA sequence differences are studied by genome scientists.',url:'https://www.genome.gov/about-genomics/fact-sheets/DNA-Sequencing-Fact-Sheet'}
+  {icon:'▣',label:'DNA mutation visuals',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=DNA%20mutation&sort=best&suppressfamilycorrection=true'}
  ],
  mitosis:[
-  {icon:'◉',label:'Explore dividing human cells',note:'Allen Institute 3D cell data lets you inspect real human cells, including cells preparing to divide.',url:'https://www.allencell.org/allen-integrated-cell.html'},
-  {icon:'▶',label:'Try the cell-cycle interactive',note:'Explore phases and checkpoints in a high-school HHMI BioInteractive.',url:'https://www.biointeractive.org/classroom-resources/eukaryotic-cell-cycle-and-cancer'}
+  {icon:'▣',label:'Mitosis images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=mitosis%20microscopic&sort=best&suppressfamilycorrection=true'}
+ ],
+ meiosis:[
+  {icon:'▣',label:'Meiosis images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=meiosis%20microscopic&sort=best&suppressfamilycorrection=true'}
  ],
  'evolution-evidence':[
-  {icon:'▶',label:'See evolution from real research',note:'A short film connects coat color, DNA changes, predators, and natural selection in wild mice.',url:'https://www.biointeractive.org/classroom-resources/making-fittest-natural-selection-and-adaptation'}
+  {icon:'▣',label:'Fossils & evolution images',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=evolution%20fossil%20biology&sort=best&suppressfamilycorrection=true'}
  ],
  'natural-selection':[
-  {icon:'▶',label:'Watch natural selection happen',note:'Follow real rock pocket mouse research from environment to genes and adaptation.',url:'https://www.biointeractive.org/classroom-resources/making-fittest-natural-selection-and-adaptation'}
+  {icon:'▣',label:'Natural selection visuals',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=natural%20selection%20biology&sort=best&suppressfamilycorrection=true'}
+ ],
+ speciation:[
+  {icon:'▣',label:'Species evolution visuals',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=species%20evolution%20biology&sort=best&suppressfamilycorrection=true'}
  ]
 };
 function scienceLinks(lessonId){
  const links=SCIENCE_LINKS[lessonId];if(!links?.length)return '';
- return `<aside class="science-links" aria-label="Explore real science"><div class="science-links-title"><span aria-hidden="true">✦</span><span><strong>Explore real science</strong><small>Optional — open when curiosity hits.</small></span></div><div class="science-link-list">${links.map(x=>`<a href="${x.url}" target="_blank" rel="noopener noreferrer" title="${esc(x.note)}"><span class="science-link-icon" aria-hidden="true">${x.icon}</span><span><strong>${esc(x.label)}</strong><small>${esc(x.note)}</small></span><span class="science-link-arrow" aria-hidden="true">↗</span></a>`).join('')}</div></aside>`;
+ return `<aside class="science-links" aria-label="See more biology"><div class="science-links-title"><span aria-hidden="true">✦</span><span><strong>See more biology</strong><small>Images & short clips — just browse.</small></span></div><div class="science-link-list">${links.map(x=>`<a href="${x.url}" target="_blank" rel="noopener noreferrer"><span class="science-link-icon" aria-hidden="true">${x.icon}</span><span><strong>${esc(x.label)}</strong></span><span class="science-link-arrow" aria-hidden="true">↗</span></a>`).join('')}</div></aside>`;
 }
 function home(){crumbs([['Home']]);return `<section class="hero"><div class="hero-copy"><p class="eyebrow">ETHAN’S BIOLOGY FIELD GUIDE</p><h1>Life makes more sense up close.</h1><p>See the idea. Try it yourself. Connect the dots.</p><div class="controls">${btn('Start exploring','lesson/'+(lesson(state.last)?state.last:'investigations'))}${btn('Explore the course','course',true)}</div><span class="small">Grade 9 · Honors Biology · MCPS topic sequence</span></div><div class="hero-art">${svg('<circle cx="300" cy="140" r="125" fill="#edf0df"/><path d="M240 240Q180 130 320 40Q420 200 240 240" fill="#8ca67d"/><path d="M230 262 320 66M262 198 233 132M286 150l57-22" fill="none" stroke="#42664d" stroke-width="4"/><circle cx="413" cy="206" r="57" fill="#e5d8b8"/><circle cx="413" cy="206" r="34" fill="#b6c9ab"/><circle cx="408" cy="201" r="13" fill="#8c869f"/><circle cx="179" cy="78" r="22" fill="#d8b76d"/>','Illustration of a leaf, sunlight, and a cell')}</div></section><nav class="home-shortcuts" aria-label="Quick study links"><span>15 minutes, one idea.</span><a href="#practice">Practice questions →</a><a href="#flashcards/all">Vocabulary cards →</a></nav><div class="section-top"><h2>Your biology course</h2><a href="#about">About this guide →</a></div>${unitCards()}`;}
 function course(id){const u=unit(id);crumbs(u?[['Course','course'],[u.n]]:[['Course']]);if(!u)return heading('THE COURSE','From living systems to living cells','Begin with foundations, or jump to your class topic.')+unitCards();return heading(u.n.toUpperCase(),u.title,u.desc)+`<div class="controls">${btn('Practice this unit','practice/'+u.id)}${btn('Unit check','check/'+u.id,true)}${btn('Vocabulary','flashcards/'+u.id,true)}</div><div class="grid">${BIO_LESSONS.filter(l=>l.unit===u.id).map(lessonCard).join('')}</div>${adjacentUnitNav(u.id)}`;}
