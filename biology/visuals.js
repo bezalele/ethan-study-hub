@@ -4,9 +4,64 @@ const textSVG=(x,y,t,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" fon
 const box=(x,y,w,h,t,fill='#e4eee5')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${fill}" stroke="#789787"/>${textSVG(x+w/2,y+h/2+6,t)}`;
 const line=(x,y,a,b)=>`<path d="M${x} ${y}L${a} ${b}" fill="none" stroke="#446d61" stroke-width="2" marker-end="url(#arrow)"/>`;
 const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life'};
-function visualPanel(type){return `<section class="visual card"><div class="section-top"><div><p class="eyebrow">SEE IT · CHANGE IT · EXPLAIN IT</p><h2>${VISUAL_NAMES[type]}</h2></div><span class="tag">Interactive</span></div><div id="visual-controls" class="controls"></div><div id="visual-drawing" class="drawing"></div><p id="visual-caption" class="visual-caption" role="status" aria-live="polite"></p><p class="small muted">Simplified learning model. Read the explanation and assumptions below the image.</p></section>`;}
-function mountVisual(type){
- const controls=document.getElementById('visual-controls'),drawing=document.getElementById('visual-drawing'),caption=document.getElementById('visual-caption');if(!controls)return;
+const REAL_LIFE={
+ cells:{
+  title:"Cells under real microscopes",
+  intro:"Compare the clean teaching model with real biological tissue. Real microscope images are messier because cells overlap, stain differently, and rarely show every organelle at once.",
+  exam:"Start with the large clues: cell boundary, nucleus, and tissue pattern. Do not expect a real cell to look as clean or complete as a textbook diagram.",
+  images:[
+   {src:"assets/real-life/animal-cell-electron-micrograph.jpg",alt:"Transmission electron micrograph of an animal pancreatic cell showing internal structures",label:"Animal cell · electron micrograph",note:"The nucleus is the most obvious structure. Rough endoplasmic reticulum surrounds it, and a mitochondrion is also visible."},
+   {src:"assets/real-life/plant-cells-light-micrograph.jpg",alt:"Light micrograph of plant collenchyma tissue showing many cells and thickened cell walls",label:"Plant cells · light micrograph",note:"Look for repeated cell boundaries and the thicker cell walls. Real plant tissue is a packed group of cells, not one isolated diagram."}
+  ]
+ },
+ transport:{
+  title:"Osmosis in a living cell",
+  intro:"This is a microscope view connected to the same water-balance idea shown in the membrane model.",
+  exam:"In a hypotonic environment, water tends to enter the cell. Connect what you see to the response that prevents too much water from accumulating.",
+  images:[
+   {src:"assets/real-life/osmosis-paramecium-micrograph.jpg",alt:"Bright-field microscope image of a Paramecium with a contractile vacuole",label:"Paramecium · bright-field microscope",note:"A contractile vacuole pumps excess water out. It is a real example of a cell managing water that enters by osmosis."}
+  ]
+ },
+ dna:{
+  title:"DNA when it is packaged into chromosomes",
+  intro:"The familiar double helix is a molecular model. In cells, long DNA molecules are wrapped around proteins and can condense into chromosomes.",
+  exam:"On microscope questions, DNA usually appears as chromatin or condensed chromosomes—not as a giant visible double helix. Chromosome shape and number are the clues.",
+  images:[
+   {src:"assets/real-life/human-chromosomes-fluorescence.jpg",alt:"Fluorescence image of human chromosomes stained in different colors",label:"Human chromosomes · fluorescence imaging",note:"These are condensed human chromosomes marked with fluorescent stains. Each chromosome contains one long DNA molecule packaged with proteins."}
+  ]
+ },
+ mitosis:{
+  title:"Mitosis under fluorescence microscopy",
+  intro:"The real microscope images in this reference show chromosomes and spindle structures during cell division.",
+  exam:"Identify the stage from chromosome position, not from the artificial colors: middle = metaphase; separating = anaphase; two groups at opposite ends = late mitosis.",
+  images:[
+   {src:"assets/real-life/mitosis-fluorescence.png",alt:"Reference image containing fluorescence micrographs of cells in stages of mitosis",label:"Mitosis · fluorescence microscopy",note:"Blue fluorescence marks DNA/chromosomes and green marks spindle microtubules. The colors come from fluorescent labels used by scientists."}
+  ]
+ },
+ "evolution-evidence":{
+  title:"Fossil evidence you can actually see",
+  intro:"Fossils are one physical line of evidence scientists combine with anatomy and DNA when reconstructing evolutionary relationships.",
+  exam:"A fossil alone does not draw the family tree. Use preserved structures together with homologous anatomy and molecular evidence to support common ancestry.",
+  images:[
+   {src:"assets/real-life/archaeopteryx-fossil.jpg",alt:"Archaeopteryx reference image including a fossil with preserved skeletal and feather structures",label:"Archaeopteryx · fossil evidence",note:"The fossil portion preserves skeletal and feather features. Fossils let scientists compare structures across organisms and through time."}
+  ]
+ }
+};
+function realLifePanel(lessonId){
+ const d=REAL_LIFE[lessonId];if(!d)return '';
+ return `<dialog class="real-life-dialog" id="real-life-dialog" aria-labelledby="real-life-title"><div class="real-life-shell"><div class="real-life-head"><div><p class="eyebrow">REAL BIOLOGY · EXAM RECOGNITION</p><h2 id="real-life-title">${d.title}</h2></div><button type="button" class="soft real-life-close" id="real-life-close" aria-label="Close real-life images">Close</button></div><p class="real-life-intro">${d.intro}</p><div class="real-life-gallery">${d.images.map(x=>`<figure class="real-life-figure"><img src="${x.src}" alt="${x.alt}" loading="lazy"><figcaption><strong>${x.label}</strong><span>${x.note}</span></figcaption></figure>`).join('')}</div><aside class="real-life-exam"><strong>Exam tip</strong><p>${d.exam}</p></aside><p class="small muted real-life-credit">These image files are stored inside Ethan Study Hub. Source and license details are recorded in <code>assets/real-life/SOURCES.md</code>.</p></div></dialog>`;
+}
+function bindRealLife(lessonId){
+ const dialog=document.getElementById('real-life-dialog'),open=document.getElementById('real-life-open');if(!dialog||!open||!REAL_LIFE[lessonId])return;
+ const close=document.getElementById('real-life-close');
+ const shut=()=>{if(typeof dialog.close==='function')dialog.close();else dialog.removeAttribute('open');};
+ open.onclick=()=>{if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');};
+ close.onclick=shut;
+ dialog.addEventListener('click',e=>{if(e.target===dialog)shut();});
+}
+function visualPanel(type,lessonId){const real=REAL_LIFE[lessonId];return `<section class="visual card"><div class="section-top"><div><p class="eyebrow">SEE IT · CHANGE IT · EXPLAIN IT</p><h2>${VISUAL_NAMES[type]}</h2></div><div class="visual-head-actions"><span class="tag">Interactive</span>${real?'<button type="button" class="soft real-life-trigger" id="real-life-open" title="Compare this diagram with real biology">📷 Real image</button>':''}</div></div><div id="visual-controls" class="controls"></div><div id="visual-drawing" class="drawing"></div><p id="visual-caption" class="visual-caption" role="status" aria-live="polite"></p><p class="small muted">Simplified learning model. Read the explanation and assumptions below the image.</p></section>${realLifePanel(lessonId)}`;}
+function mountVisual(type,lessonId){
+ const controls=document.getElementById('visual-controls'),drawing=document.getElementById('visual-drawing'),caption=document.getElementById('visual-caption');if(!controls)return;bindRealLife(lessonId);
  const buttons=(items,fn)=>{controls.innerHTML=items.map(([value,label])=>`<button class="soft" data-value="${value}">${label}</button>`).join('');controls.querySelectorAll('button').forEach(b=>b.onclick=()=>{controls.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));fn(b.dataset.value);});controls.querySelector('button').click();};
  if(type==='cell'){
  let plant=false,part='nucleus';const descriptions={nucleus:'Nucleus: contains most DNA in a eukaryotic cell and is a site of transcription.',mitochondrion:'Mitochondrion: participates in aerobic respiration. Both plant and animal cells have mitochondria.',membrane:'Cell membrane: selectively regulates exchange. Plant cells also have a wall outside the membrane.',ribosome:'Ribosomes: assemble proteins. They occur in plant, animal, and prokaryotic cells.',chloroplast:'Chloroplast: uses light in photosynthesis. This is a typical photosynthetic plant cell; not all plant cells contain chloroplasts.',vacuole:'Large central vacuole: stores material and helps support a plant cell through water pressure.'};
