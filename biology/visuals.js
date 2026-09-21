@@ -9,7 +9,7 @@ const REAL_LIFE={
   title:"Cells: The Building Blocks of Life",
   intro:"Explore different cells and their amazing parts.",
   slides:[
-   {src:'assets/slides/animal-cell.jpg',kicker:"Slide 1",heading:"Animal Cell",body:"A typical animal cell with all the main organelles working together.",labels:"membrane · cytoplasm · nucleus · mitochondria · ER · Golgi · ribosomes",spots:{'membrane':[{t:'c',x:49.5,y:62.5,r:46,ring:1}],'cytoplasm':[{t:'c',x:49.5,y:62.5,r:41}],'nucleus':[{t:'c',x:54,y:42.5,r:18.5}],'mitochondria':[{t:'e',x:27.7,y:24.5,rx:9.8,ry:5.6,rot:-18},{t:'e',x:78.5,y:27.3,rx:7.6,ry:4.6,rot:22},{t:'e',x:20.4,y:65,rx:9.2,ry:5.6,rot:16},{t:'e',x:83,y:77.5,rx:8.6,ry:5.2,rot:-22}],'er':[{t:'e',x:36,y:54,rx:16,ry:17,rot:-12},{t:'e',x:80,y:50,rx:8,ry:12,rot:8}],'golgi':[{t:'e',x:41.5,y:82.5,rx:16,ry:10,rot:-8}],'ribosomes':[{t:'c',x:28,y:39,r:2.1},{t:'c',x:36,y:47,r:2.1},{t:'c',x:30,y:58,r:2.1},{t:'c',x:47,y:64,r:2.1},{t:'c',x:56,y:68,r:2.1},{t:'c',x:64,y:58,r:2.1}]}},
+   {src:'assets/slides/animal-cell.jpg',kicker:"Slide 1",heading:"Animal Cell",body:"A typical animal cell with all the main organelles working together.",labels:"membrane · cytoplasm · nucleus · mitochondria · ER · Golgi · ribosomes"},
    {src:'assets/slides/plant-cell.jpg',kicker:"Slide 2",heading:"Plant Cell",body:"Plant cells have a cell wall, chloroplasts, and a large central vacuole."},
    {src:'assets/slides/human-cells.jpg',kicker:"Slide 3",heading:"Different Human Cells",body:"Same DNA, different shapes and jobs. Cells are specialized for what they do.",labels:"nerve · muscle · white blood cell · red blood cell"},
    {src:'assets/slides/nucleus.jpg',kicker:"Slide 4",heading:"Nucleus",body:"The control center that holds your DNA."},
@@ -72,17 +72,6 @@ function realLifePanel(lessonId){
 function galleryBody(d){
  return `<div class="real-life-gallery">${d.images.map(x=>`<figure class="real-life-figure"><img src="${x.src}" alt="${x.alt}" loading="lazy"><figcaption><strong>${x.label}</strong><span>${x.note}</span></figcaption></figure>`).join('')}</div><aside class="real-life-exam"><strong>Exam tip</strong><p>${d.exam}</p></aside><p class="small muted real-life-credit">These image files are stored inside Ethan Study Hub. Source and license details are recorded in <code>assets/real-life/SOURCES.md</code>.</p>`;
 }
-// Regions drawn over the picture, in a 100 x 125 box that matches the art's
-// 4:5 shape. The SVG letterboxes with the same rule as the image, so the
-// shapes stay on their parts without measuring anything.
-function ssSpots(spots){
- if(!spots)return '';
- const one=h=>h.t==='c'
-   ?`<circle cx="${h.x}" cy="${h.y}" r="${h.r}"${h.ring?' class="is-ring"':''}/>`
-   :`<ellipse cx="${h.x}" cy="${h.y}" rx="${h.rx}" ry="${h.ry}"${h.rot?` transform="rotate(${h.rot} ${h.x} ${h.y})"`:''}/>`;
- return `<svg class="ss-spot" viewBox="0 0 100 125" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect class="ss-spot__dim" width="100" height="125"/>${
-   Object.keys(spots).map(k=>`<g class="ss-spot__g" data-spot="${k}">${spots[k].map(one).join('')}</g>`).join('')}</svg>`;
-}
 const SS_CHEV='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5 16.5 12 9 19.5"/></svg>';
 function slideshowBody(d){
  const n=d.slides.length;
@@ -91,7 +80,7 @@ function slideshowBody(d){
  // The slide number lives in the controls, so it is not repeated here.
  const frames=d.slides.map((x,i)=>`<figure class="ss-slide" data-slide="${i}"${i?' hidden':''}><div class="ss-media"${x.todo?'':` style="--shot:url('${x.src}')"`}>${x.todo
    ?`<div class="ss-todo"><strong>Artwork still to come</strong><span>Add the picture as <code>biology/${x.src}</code>, then delete <code>todo:true</code> on this slide.</span></div>`
-   :`<img src="${x.src}" alt="${x.heading}" loading="${i?'lazy':'eager'}">${ssSpots(x.spots)}`}</div><figcaption class="ss-bot"><h3>${x.heading}</h3><p class="ss-body">${x.body}</p>${x.labels?`<p class="ss-labels">${x.labels.split('·').map(w=>`<span class="ss-chip" data-chip="${w.trim().toLowerCase()}" tabindex="0">${w.trim()}</span>`).join('')}</p>`:''}</figcaption></figure>`).join('');
+   :`<img src="${x.src}" alt="${x.heading}" loading="${i?'lazy':'eager'}">`}</div><figcaption class="ss-bot"><h3>${x.heading}</h3><p class="ss-body">${x.body}</p>${x.labels?`<p class="ss-labels">${x.labels.split('·').map(w=>`<span class="ss-chip">${w.trim()}</span>`).join('')}</p>`:''}</figcaption></figure>`).join('');
  const dots=d.slides.map((x,i)=>`<button type="button" class="ss-dot${i?'':' is-on'}" data-go="${i}" aria-label="Go to slide ${i+1}"></button>`).join('');
  return `<div class="ss" data-slideshow><div class="ss-stage">${frames}</div><div class="ss-controls"><button type="button" class="ss-arrow ss-arrow--prev" data-step="-1" aria-label="Previous slide">${SS_CHEV}</button><div class="ss-dots">${dots}</div><button type="button" class="ss-arrow ss-arrow--next" data-step="1" aria-label="Next slide">${SS_CHEV}</button></div></div>`;
 }
@@ -110,28 +99,6 @@ function bindRealLife(lessonId){
   slides.forEach((f,n)=>{f.hidden=n!==at;});
   dots.forEach((b,n)=>b.classList.toggle('is-on',n===at));
   count.textContent=`${at+1} of ${slides.length}`;};
- // Hovering a part name lights that part in the picture. Touch has no
- // hover, so a tap pins it and a second tap lets go.
- const lightUp=(slide,part)=>{
-  slide.querySelectorAll('[data-spot]').forEach(g=>g.classList.toggle('is-on',g.dataset.spot===part));
-  slide.querySelectorAll('[data-chip]').forEach(c=>c.classList.toggle('is-on',c.dataset.chip===part));
-  const m=slide.querySelector('.ss-media');if(m)m.classList.toggle('is-lit',!!part);};
- slides.forEach(slide=>{
-  if(!slide.querySelector('[data-spot]'))return;
-  let pinned=null;
-  slide.querySelectorAll('[data-chip]').forEach(chip=>{
-   const part=chip.dataset.chip;
-   const on=()=>{if(!pinned)lightUp(slide,part);};
-   const off=()=>{if(!pinned)lightUp(slide,null);};
-   chip.addEventListener('mouseenter',on);
-   chip.addEventListener('mouseleave',off);
-   chip.addEventListener('focus',on);
-   chip.addEventListener('blur',off);
-   chip.addEventListener('click',()=>{pinned=pinned===part?null:part;lightUp(slide,pinned);});
-   chip.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();chip.click();}});
-  });
- });
-
  ss.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>show(at+Number(b.dataset.step)));
  dots.forEach(b=>b.onclick=()=>show(Number(b.dataset.go)));
  // Arrow keys page the story without hunting for the button.
