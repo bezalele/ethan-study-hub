@@ -12,7 +12,7 @@
    module-based one can all use it the same way:
 
      <script src="../shared/learning-log.js"></script>
-     LearningLog.mountToday(el,   { subject: 'biology', label: 'Honors Biology',
+     LearningLog.mountButton(el,  { subject: 'biology', label: 'Honors Biology',
                                     learner: 'Ethan' });
      LearningLog.mountHistory(el, { subject: 'biology', label: 'Honors Biology',
                                     learner: 'Ethan' });
@@ -22,9 +22,9 @@
    neutral, so the component stays usable by anyone.
 
    Two surfaces, deliberately:
-     mountToday    a collapsed one-line strip for a subject's home page. It
-                   stays out of the way until it is clicked, and carries a
-                   badge when there are replies Ethan has not seen.
+     mountButton   a small trigger for the app header. Opens a modal editor,
+                   so writing the day's note costs no page space and moves
+                   nothing. Carries a badge when there are unseen replies.
      mountHistory  the full record — every note by date, each with its own
                    comment thread, so notes can be talked about rather than
                    only written.
@@ -204,63 +204,84 @@
     return t.length > max ? t.slice(0, max - 1).trimEnd() + '…' : t;
   }
 
-  /* --- the collapsed strip for a subject's home page ---------------------- */
+  /* --- header trigger + modal editor --------------------------------------
+     A button rather than a panel: writing one line a day should not cost the
+     home page a permanent block, and nothing on the page moves when it opens.
+     It lives in the app header, so the note can be written from any page.
+     --------------------------------------------------------------------------- */
 
-  function mountToday(root, opts) {
+  function mountButton(root, opts) {
     if (!root) return;
     var subject = opts.subject;
     var label = opts.label || 'this subject';
-    var historyHref = opts.historyHref || '';
     var learner = opts.learner || '';
-    var open = false;
+    var historyHref = opts.historyHref || '';
+    var dlg = null;
 
-    function draw() {
-      var day = today();
-      var entry = entryFor(subject, day);
-      var fresh = newCount(subject);
-      var writing = open && true;
-
-      root.className = 'll-strip' + (open ? ' is-open' : '');
-      root.innerHTML =
-        '<button type="button" class="ll-strip__bar" data-toggle aria-expanded="' + (open ? 'true' : 'false') + '">' +
-          '<span class="ll-strip__badge" aria-hidden="true">' + PENCIL + '</span>' +
-          '<span class="ll-strip__label">What did you learn today' +
-            (learner ? ', ' + esc(learner) : '') + '?</span>' +
-          (entry
-            ? '<span class="ll-strip__peek">' + esc(firstLine(entry.text, 64)) + '</span>'
-            : '<span class="ll-strip__peek ll-strip__peek--empty">Not written yet</span>') +
-          (fresh ? '<span class="ll-strip__new">' + fresh + ' new repl' + (fresh === 1 ? 'y' : 'ies') + '</span>' : '') +
-          '<span class="ll-strip__chev" aria-hidden="true"></span>' +
-        '</button>' +
-        (writing
-          ? '<div class="ll-strip__body">' +
-              '<p class="ll-strip__day">' + esc(prettyDate(day)) + ' &middot; ' + esc(label) + '</p>' +
-              '<label class="sr" for="ll-text">Today\'s note</label>' +
-              '<textarea id="ll-text" class="ll__text" rows="3" placeholder="In class today we&hellip;">' +
-                esc(entry ? entry.text : '') + '</textarea>' +
-              '<div class="ll__row">' +
-                '<button type="button" class="ll__save" data-save>Save today\'s note</button>' +
-                (historyHref ? '<a class="ll__link" href="' + esc(historyHref) + '">All notes &amp; replies &rarr;</a>' : '') +
-                '<span class="ll__status" role="status" data-status></span>' +
-              '</div>' +
-            '</div>'
-          : '');
-
-      root.querySelector('[data-toggle]').onclick = function () { open = !open; draw(); };
-
-      var save = root.querySelector('[data-save]');
-      if (save) {
-        save.onclick = function () {
-          var text = root.querySelector('#ll-text').value;
-          var okay = text.trim() ? put(subject, day, text) : remove(subject, day);
-          if (okay) { open = false; draw(); }
-          else root.querySelector('[data-status]').textContent =
-            'This browser will not let the note save right now.';
-        };
-      }
+    function prompt() {
+      return 'What did you learn today' + (learner ? ', ' + learner : '') + '?';
     }
 
-    draw();
+    function drawTrigger() {
+      var has = !!entryFor(subject, today());
+      var fresh = newCount(subject);
+      root.innerHTML =
+        '<button type="button" class="ll-trigger' + (has ? ' is-done' : '') + '" data-open ' +
+          'title="' + esc(prompt()) + '" aria-label="' + esc(prompt()) + '">' +
+          PENCIL +
+          '<span class="ll-trigger__txt">Today’s note</span>' +
+          (fresh ? '<span class="ll-trigger__dot" aria-label="' + fresh + ' new replies">' + fresh + '</span>'
+                 : (has ? '<span class="ll-trigger__tick" aria-hidden="true">✓</span>' : '')) +
+        '</button>';
+      root.querySelector('[data-open]').onclick = open;
+    }
+
+    function open() {
+      var day = today();
+      var entry = entryFor(subject, day);
+
+      if (!dlg) {
+        dlg = document.createElement('dialog');
+        dlg.className = 'll-modal';
+        document.body.appendChild(dlg);
+        // Clicking the backdrop closes it; clicking the card must not.
+        dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+        dlg.addEventListener('close', drawTrigger);
+      }
+
+      dlg.innerHTML =
+        '<div class="ll-modal__card">' +
+          '<button type="button" class="ll-modal__x" data-x aria-label="Close">&times;</button>' +
+          '<h2 class="ll-modal__title">' + esc(prompt()) + '</h2>' +
+          '<p class="ll-modal__day">' + esc(prettyDate(day)) + ' &middot; ' + esc(label) + '</p>' +
+          '<label class="sr" for="ll-m">Today’s note</label>' +
+          '<textarea id="ll-m" class="ll__text" rows="5" placeholder="In class today we&hellip;">' +
+            esc(entry ? entry.text : '') + '</textarea>' +
+          '<div class="ll__row ll-modal__row">' +
+            '<button type="button" class="ll__save" data-save>Save</button>' +
+            '<button type="button" class="ll__quiet" data-cancel>Cancel</button>' +
+            (historyHref ? '<a class="ll__link ll-modal__all" href="' + esc(historyHref) + '" data-all>All notes &amp; replies &rarr;</a>' : '') +
+            '<span class="ll__status" role="status" data-status></span>' +
+          '</div>' +
+        '</div>';
+
+      dlg.querySelector('[data-x]').onclick = function () { dlg.close(); };
+      dlg.querySelector('[data-cancel]').onclick = function () { dlg.close(); };
+      var all = dlg.querySelector('[data-all]');
+      if (all) all.onclick = function () { dlg.close(); };
+      dlg.querySelector('[data-save]').onclick = function () {
+        var text = dlg.querySelector('#ll-m').value;
+        var okay = text.trim() ? put(subject, day, text) : remove(subject, day);
+        if (okay) dlg.close();
+        else dlg.querySelector('[data-status]').textContent =
+          'This browser will not let the note save right now.';
+      };
+
+      dlg.showModal();
+      dlg.querySelector('#ll-m').focus();
+    }
+
+    drawTrigger();
   }
 
   /* --- the full record, with comment threads ------------------------------ */
@@ -394,9 +415,8 @@
   }
 
   global.LearningLog = {
-    mountToday: mountToday,
+    mountButton: mountButton,
     mountHistory: mountHistory,
-    mount: mountToday,        // previous name
     today: today,
     forSubject: forSubject,
     entryFor: entryFor,
