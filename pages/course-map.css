@@ -19,6 +19,8 @@
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* ===== Page header — deliberately compact ================================= */
@@ -34,12 +36,12 @@
   justify-content: space-between;
   gap: var(--s-6);
   flex-wrap: wrap;
-  padding-block: clamp(var(--s-4), 2.6vh, var(--s-5));
+  padding-block: clamp(var(--s-3), 1.7vh, var(--s-4));
 }
 
 .page--course-map .cm-head__title {
-  margin-top: var(--s-2);
-  font-size: clamp(24px, min(2.4vw, 4vh), 38px);
+  margin-top: 2px;
+  font-size: clamp(22px, min(1.9vw, 3.2vh), 30px);
   line-height: 1.1;
 }
 
@@ -56,9 +58,15 @@
 
 .page--course-map .cm-explorer {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
+  grid-template-columns: 340px minmax(0, 1fr);
+  /* The row must be declared. Without it the implicit row is `auto`, the
+     panel never gets a definite height, `height: 100%` on the scroller
+     resolves to auto, and the page scrolls instead of the panel. This only
+     looked correct while the placeholder content was short enough to fit. */
+  grid-template-rows: minmax(0, 1fr);
   gap: var(--s-5);
   min-height: 0;
+  overflow: hidden;
   padding-block: var(--s-5);
 }
 
@@ -69,7 +77,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
-  padding: var(--s-5) var(--s-4);
+  padding: var(--s-4);
   background: var(--c-parchment-dim);
   border: 1px solid var(--c-line);
   border-radius: var(--r-lg);
@@ -87,16 +95,16 @@
 
 .page--course-map .cm-rail__list {
   display: grid;
-  gap: var(--s-2);
+  gap: 6px;
   list-style: none;
 }
 
 .page--course-map .cm-unit {
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) 14px;
+  grid-template-columns: 34px minmax(0, 1fr) 12px;
   gap: var(--s-3);
-  align-items: center;
-  padding: var(--s-3) var(--s-4);
+  align-items: start;
+  padding: clamp(8px, 1.3vh, 14px) var(--s-4);
   border: 1px solid transparent;
   border-radius: var(--r-md);
   color: var(--c-ink);
@@ -117,8 +125,9 @@
 
 .page--course-map .cm-unit__n {
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: clamp(17px, min(1.2vw, 2.2vh), 21px);
   font-weight: 700;
+  line-height: 1.15;
   color: var(--c-brick);
 }
 
@@ -134,17 +143,56 @@
 
 .page--course-map .cm-unit__name {
   display: block;
-  margin-top: 1px;
+  margin-top: 2px;
   font-family: var(--font-display);
-  font-size: 20px;
-  line-height: 1.15;
+  font-size: clamp(14px, min(1.05vw, 1.85vh), 17px);
+  line-height: 1.22;
 }
 
-.page--course-map .cm-unit__chev { font-size: 20px; color: var(--c-ink-faint); }
+/* How much is behind each area, so the menu says something before you click. */
+.page--course-map .cm-unit__count {
+  display: block;
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--c-ink-faint);
+}
+
+.page--course-map .cm-unit__chev {
+  font-size: 20px;
+  line-height: 1.1;
+  color: var(--c-ink-faint);
+}
+
+.page--course-map .cm-rail__foot {
+  margin-top: auto;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--c-line);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--c-ink-faint);
+}
+
+/* Below ~950px tall the rail drops its extras so all five units still fit.
+   A course menu that hides its fifth unit is the bug this page started with. */
+@media (max-height: 950px) and (min-width: 901px) {
+  .page--course-map .cm-unit__count { display: none; }
+  .page--course-map .cm-rail__foot { display: none; }
+  .page--course-map .cm-rail__list { gap: 4px; }
+}
+
+@media (max-height: 820px) and (min-width: 901px) {
+  .page--course-map .cm-rail__head { display: none; }
+  .page--course-map .cm-rail { padding: var(--s-3); }
+}
 
 /* ===== Summary panel ====================================================== */
 
 .page--course-map .cm-panel {
+  /* The scroller is taken out of flow against this box. Percentage and flex
+     sizing both left the panel's content able to grow the document's scroll
+     area even though every ancestor clipped; absolutely positioning the
+     scroller inside a definite-height parent contains it for certain. */
+  position: relative;
   min-width: 0;
   min-height: 0;
   background: var(--c-paper);
@@ -156,12 +204,16 @@
 
 /* The only scrolling region on the page. */
 .page--course-map .cm-panel__scroll {
-  height: 100%;
+  position: absolute;
+  inset: 0;
   overflow-y: auto;
   padding: var(--s-6);
-  display: grid;
-  gap: var(--s-5);
-  align-content: start;
+  /* A column, not a grid packed to the top: the study-guide footer takes the
+     slack so a short unit does not leave a large empty area beneath it. When
+     the content is long the auto margin collapses and the panel scrolls. */
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
   scrollbar-width: thin;
   scrollbar-color: var(--c-line) transparent;
 }
@@ -175,7 +227,11 @@
   background: var(--c-ink-faint);
 }
 
-.page--course-map .cm-panel__kicker {
+/* ===== Detail panel sections ============================================= */
+
+.page--course-map .cm-sec { display: grid; gap: var(--s-3); }
+
+.page--course-map .cm-sec__label {
   font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 800;
@@ -184,36 +240,478 @@
   color: var(--c-brick);
 }
 
-.page--course-map .cm-panel__title {
-  margin-top: var(--s-2);
-  font-size: clamp(26px, min(2.5vw, 4.2vh), 40px);
+/* A section with no content yet. Neutral on purpose: it should read as
+   unwritten rather than as a broken component. */
+.page--course-map .cm-todo {
+  display: grid;
+  gap: 3px;
+  padding: var(--s-4);
+  border: 1px dashed var(--c-line);
+  border-radius: var(--r-sm);
+  background:
+    repeating-linear-gradient(135deg,
+      var(--c-parchment) 0 10px, var(--c-paper) 10px 20px);
+}
+.page--course-map .cm-todo__label {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--c-ink-soft);
+}
+.page--course-map .cm-todo__note { font-size: 13px; color: var(--c-ink-faint); }
+
+/* --- Unit header ---------------------------------------------------------- */
+
+.page--course-map .cm-unit-head { display: grid; gap: var(--s-3); }
+
+.page--course-map .cm-unit-head__kicker {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-brick);
+}
+
+.page--course-map .cm-unit-head { gap: var(--s-2); }
+
+.page--course-map .cm-unit-head__title {
+  font-size: clamp(24px, min(1.9vw, 3.4vh), 32px);
   line-height: 1.12;
 }
 
-/* The one sentence that says what the unit is. Sits above everything else. */
-.page--course-map .cm-lede {
-  max-width: 68ch;
+.page--course-map .cm-unit-head__hook {
   font-family: var(--font-display);
-  font-size: clamp(17px, min(1.4vw, 2.4vh), 22px);
-  line-height: 1.5;
+  font-size: clamp(16px, min(1.2vw, 2.1vh), 19px);
+  line-height: 1.4;
   color: var(--c-ink);
 }
 
-.page--course-map .cm-points {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--s-4);
+/* The panel is wide; a 70ch measure wrapped this into a narrow column and
+   pushed the diagram down for no reason. */
+.page--course-map .cm-unit-head__summary {
+  max-width: 100ch;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--c-ink-soft);
 }
 
-.page--course-map .cm-point {
-  padding: var(--s-4) var(--s-5);
-  background: var(--c-parchment);
-  border-radius: var(--r-md);
+/* --- Big question --------------------------------------------------------- */
+
+.page--course-map .cm-question {
+  padding: var(--s-3) var(--s-5);
+  background: var(--c-sage);
   border-left: 3px solid var(--c-forest);
+  border-radius: var(--r-sm);
+  font-family: var(--font-display);
+  font-size: clamp(17px, 1.35vw, 21px);
+  line-height: 1.4;
+  color: var(--c-forest);
 }
-.page--course-map .cm-point--why { border-left-color: var(--c-brick); }
 
-.page--course-map .cm-point__head {
+/* --- The story in four documents -------------------------------------------
+   The centrepiece of a unit: a sequence the student clicks through. The step
+   row is the navigation, the stage below is the lesson.
+   --------------------------------------------------------------------------- */
+
+.page--course-map .cm-walk { gap: var(--s-4); }
+
+.page--course-map .cm-walk__intro {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--c-ink-soft);
+}
+
+.page--course-map .cm-steps {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  list-style: none;
+}
+
+.page--course-map .cm-step { flex: 1 1 0; min-width: 0; }
+
+.page--course-map .cm-step__link {
+  flex: 0 0 22px;
+  align-self: center;
+  height: 1px;
+  background: var(--c-brick);
+  opacity: 0.4;
+}
+
+.page--course-map .cm-step__btn {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: var(--s-3);
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 9px var(--s-3);
+  background: var(--c-parchment);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  text-align: left;
+  transition: background var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+.page--course-map .cm-step__btn:hover { border-color: var(--c-forest); }
+
+.page--course-map .cm-step__thumb {
+  grid-row: 1 / span 2;
+  width: 44px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--c-line);
+}
+
+.page--course-map .cm-step__year {
+  grid-column: 2;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--c-brick);
+}
+
+.page--course-map .cm-step__label {
+  grid-column: 2;
+  font-family: var(--font-display);
+  font-size: 15px;
+  line-height: 1.2;
+  color: var(--c-ink);
+}
+
+/* The selected document. */
+.page--course-map .cm-step__btn[aria-pressed="true"] {
+  background: var(--c-forest);
+  border-color: var(--c-forest);
+}
+.page--course-map .cm-step__btn[aria-pressed="true"] .cm-step__year { color: var(--c-gold); }
+.page--course-map .cm-step__btn[aria-pressed="true"] .cm-step__label { color: var(--c-on-dark); }
+.page--course-map .cm-step__btn[aria-pressed="true"] .cm-step__thumb {
+  border-color: var(--c-gold);
+}
+
+/* --- Stage ----------------------------------------------------------------- */
+
+.page--course-map .cm-stages { position: relative; }
+
+.page--course-map .cm-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: var(--s-5);
+  align-items: center;
+  margin: 0;
+  padding: var(--s-4);
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+}
+.page--course-map .cm-stage[hidden] { display: none; }
+
+.page--course-map .cm-stage img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--c-line);
+}
+
+.page--course-map .cm-stage figcaption { display: grid; gap: var(--s-3); }
+
+.page--course-map .cm-stage__did {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--c-ink);
+}
+
+/* What made the next document necessary — the thread through the sequence. */
+.page--course-map .cm-stage__next {
+  padding: var(--s-3) var(--s-4);
+  background: var(--c-sage);
+  border-left: 3px solid var(--c-forest);
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--c-ink);
+}
+.page--course-map .cm-stage__next span {
+  display: block;
+  margin-bottom: 2px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-brick);
+}
+.page--course-map .cm-stage__next--end { border-left-color: var(--c-brick); }
+
+.page--course-map .cm-stage__credit {
+  font-size: 13px;
+  color: var(--c-ink-faint);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .page--course-map .cm-stage:not([hidden]) {
+    animation: cm-stage-in 180ms var(--ease);
+  }
+  @keyframes cm-stage-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: none; }
+  }
+}
+
+@media (max-width: 1100px) {
+  .page--course-map .cm-stage { grid-template-columns: 1fr; }
+  .page--course-map .cm-stage img { aspect-ratio: 5 / 2; }
+}
+
+@media (max-width: 760px) {
+  .page--course-map .cm-steps { flex-wrap: wrap; gap: var(--s-2); }
+  .page--course-map .cm-step { flex: 1 1 150px; }
+  .page--course-map .cm-step__link { display: none; }
+}
+
+/* --- Unit 2 system map -----------------------------------------------------
+   Three branch cards in a triangle, joined by arrows carrying the checks.
+   Strong at a glance, but only one thing is ever expanded: the reference
+   poster shows every explanation at once, and that is the part not copied.
+   --------------------------------------------------------------------------- */
+
+.page--course-map .cm-tri-sec { gap: var(--s-4); }
+
+.page--course-map .cm-map {
+  position: relative;
+  /* Matches the 220 x 100 viewBox, so one SVG unit is square and the
+     perpendicular label offsets come out perpendicular. */
+  aspect-ratio: 11 / 5;
+  width: min(100%, 980px);
+  margin-inline: auto;
+  /* The cards size off the box, not off the viewport. Fixed-px cards grew
+     relatively larger as the box shrank and started colliding with the
+     labels at some widths and not others. */
+  container-type: inline-size;
+}
+
+.page--course-map .cm-map__lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.page--course-map .cm-map__lines defs path { fill: var(--c-ink-faint); }
+
+.page--course-map .cm-edge {
+  /* Darker than a hairline border: on this diagram the arrows carry meaning,
+     so they have to read as arrows from across the room. */
+  stroke: var(--c-ink-faint);
+  stroke-width: 1.8;
+  vector-effect: non-scaling-stroke;
+  transition: stroke var(--dur) var(--ease);
+}
+.page--course-map .cm-edge.is-active { stroke: var(--c-brick); stroke-width: 3; }
+
+/* --- Branch card ------------------------------------------------------------ */
+
+.page--course-map .cm-br {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  translate: -50% -50%;
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  width: clamp(150px, 19cqw, 200px);
+  /* No side padding: the picture runs the full width of the card, and the
+     wording carries its own inset. */
+  padding: 0 0 var(--s-3);
+  background: var(--c-paper);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  text-align: center;
+  transition: box-shadow var(--dur) var(--ease), scale var(--dur) var(--ease);
+}
+.page--course-map .cm-br:hover { box-shadow: var(--shadow-md); scale: 1.02; }
+
+/* A band across the top of the card. The wording sits on paper below it,
+   because a scrim heavy enough to carry text swallowed the buildings. */
+.page--course-map .cm-br__art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-bottom: var(--s-3);
+  background: var(--c-parchment-dim);
+  overflow: hidden;
+}
+.page--course-map .cm-br__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.page--course-map .cm-br__name,
+.page--course-map .cm-br__article,
+.page--course-map .cm-br__role { padding-inline: var(--s-3); }
+
+.page--course-map .cm-br__name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--c-ink);
+}
+.page--course-map .cm-br__article {
+  font-size: 13px;
+  color: var(--c-ink-faint);
+}
+.page--course-map .cm-br__role {
+  margin-top: 3px;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--c-brick);
+}
+
+/* A ring rather than a border: a border would crop the picture as it
+   thickens, and the cards would jump. */
+.page--course-map .cm-br[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px var(--c-forest), var(--shadow-md);
+}
+.page--course-map .cm-br[aria-pressed="true"] .cm-br__name { color: var(--c-forest); }
+
+/* The two branches a selected check runs between. */
+.page--course-map .cm-br.is-related {
+  box-shadow: 0 0 0 2px var(--c-brick), var(--shadow-md);
+}
+
+/* --- What each branch actually is ------------------------------------------
+   Three framed notes under the diagram, left to right in the same order the
+   cards sit in it, so each note reads as belonging to the branch above it.
+   --------------------------------------------------------------------------- */
+
+.page--course-map .cm-notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-3);
+  /* Same measure as the diagram, so each note sits under its own card. */
+  width: min(100%, 980px);
+  margin-inline: auto;
+  list-style: none;
+}
+
+.page--course-map .cm-note {
+  display: grid;
+  align-content: start;
+  gap: var(--s-2);
+  width: 100%;
+  height: 100%;
+  padding: var(--s-4);
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  border-top: 3px solid var(--c-line);
+  border-radius: var(--r-sm);
+  text-align: left;
+  transition: border-color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+.page--course-map .cm-note:hover {
+  border-top-color: var(--c-forest);
+  box-shadow: var(--shadow-sm);
+}
+
+.page--course-map .cm-note__name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--c-ink);
+}
+.page--course-map .cm-note__body {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--c-ink-soft);
+}
+.page--course-map .cm-note__more {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c-brick);
+}
+
+.page--course-map .cm-note[aria-pressed="true"] {
+  border-top-color: var(--c-forest);
+  background: var(--c-sage);
+}
+.page--course-map .cm-note.is-related { border-top-color: var(--c-brick); }
+
+/* --- Check labels, clustered beside their arrow ------------------------------
+   One cluster per direction, captioned with that direction, so a label never
+   has to say which way the check runs.
+   --------------------------------------------------------------------------- */
+
+.page--course-map .cm-cluster {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  translate: -50% -50%;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+
+.page--course-map .cm-cluster__dir {
+  /* Sits on the panel's own colour so the arrow underneath does not run
+     through the wording. */
+  padding: 1px 6px;
+  background: var(--c-paper);
+  border-radius: var(--r-pill);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--c-ink-faint);
+}
+
+.page--course-map .cm-arrowchip {
+  padding: 5px var(--s-3);
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-pill);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--c-ink-soft);
+  box-shadow: var(--shadow-sm);
+  transition: background var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              color var(--dur) var(--ease);
+}
+.page--course-map .cm-arrowchip:hover {
+  border-color: var(--c-brick);
+  color: var(--c-ink);
+}
+.page--course-map .cm-arrowchip[aria-pressed="true"] {
+  background: var(--c-brick);
+  border-color: var(--c-brick);
+  color: var(--c-on-dark);
+}
+
+/* --- Readout ---------------------------------------------------------------- */
+
+.page--course-map .cm-map__readout {
+  padding: var(--s-4) var(--s-5);
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  border-left: 3px solid var(--c-forest);
+  border-radius: var(--r-md);
+}
+
+.page--course-map .cm-readout__kicker {
   font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 800;
@@ -222,55 +720,269 @@
   color: var(--c-brick);
 }
 
-.page--course-map .cm-point__body {
-  margin-top: var(--s-2);
-  font-size: 15px;
-  line-height: 1.55;
-  color: var(--c-ink-soft);
+.page--course-map .cm-readout__title {
+  margin-top: 2px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.2;
 }
 
-.page--course-map .cm-sub {
+.page--course-map .cm-readout__body {
+  margin-top: var(--s-3);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--c-ink);
+}
+
+/* Three short paragraphs rather than a label column: the same three things,
+   read the way someone would say them. */
+.page--course-map .cm-readout__p {
+  max-width: 88ch;
+  margin-top: var(--s-3);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--c-ink);
+}
+.page--course-map .cm-readout__p--why > span {
   font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--c-brick);
-  margin-bottom: var(--s-3);
+}
+.page--course-map .cm-readout__p--why > span::after {
+  content: ' — ';
+  letter-spacing: normal;
 }
 
-/* --- The idea chain ------------------------------------------------------- */
+/* --- Secondary flow, deliberately quieter ----------------------------------- */
 
-.page--course-map .cm-chain {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--s-2);
+/* --- How one law actually moves --------------------------------------------
+   Four numbered steps across the width, each carrying its own chevron into
+   the next, so the sequence reads left to right at a glance.
+   --------------------------------------------------------------------------- */
+
+.page--course-map .cm-flow-sec { gap: var(--s-5); }
+
+.page--course-map .cm-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-3);
   list-style: none;
 }
 
-.page--course-map .cm-chain__step {
-  padding: 9px var(--s-4);
-  background: var(--c-sage);
-  border: 1px solid #c6d3bd;
+.page--course-map .cm-flow__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
   border-radius: var(--r-sm);
-  font-size: 14px;
-  font-weight: 600;
+}
+
+/* The chevron sits in the gap, not inside either step. */
+.page--course-map .cm-flow__step + .cm-flow__step::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--s-3) * -1);
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-top: 2px solid var(--c-brick);
+  border-right: 2px solid var(--c-brick);
+  rotate: 45deg;
+  translate: -25% -50%;
+}
+
+.page--course-map .cm-flow__n {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  background: var(--c-sage);
+  border-radius: 50%;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 800;
   color: var(--c-forest);
 }
 
-.page--course-map .cm-chain__arrow { color: var(--c-brick); font-weight: 700; }
+.page--course-map .cm-flow__text {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--c-ink);
+}
 
-/* --- What you will learn — the detail, so it sits last -------------------- */
+/* --- Below full width: the triangle becomes a list --------------------------
+   The cards and labels are set in real type with a 13px floor, so they do not
+   shrink with the box. Measured on the rendered page, the diagram stops
+   holding them apart at about 1240px of viewport; below that it reads as a
+   list instead of as a diagram with overlapping labels.
+   --------------------------------------------------------------------------- */
 
-.page--course-map .cm-topics {
+@media (max-width: 1260px) {
+  .page--course-map .cm-map {
+    aspect-ratio: auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-3);
+    container-type: normal;
+  }
+  .page--course-map .cm-map__lines { display: none; }
+  /* Still relative, so each card's art stays inside that card. Static
+     would resolve it against the map and stack all three on top of
+     each other. */
+  /* Three cards across, still picture over wording, just no longer placed
+     as a triangle. */
+  .page--course-map .cm-br {
+    position: relative;
+    left: auto;
+    top: auto;
+    translate: none;
+    width: 100%;
+  }
+  /* The diagram becomes a list, so the clusters fall under it in reading
+     order rather than floating beside arrows that are no longer drawn. Each
+     one reads as a sentence: direction first, then its checks. */
+  .page--course-map .cm-cluster {
+    position: static;
+    left: auto;
+    top: auto;
+    translate: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2);
+    padding-top: var(--s-2);
+  }
+  .page--course-map .cm-cluster__dir { padding-inline: 0; }
+  /* Each cluster spans the row under the cards. */
+  .page--course-map .cm-cluster { grid-column: 1 / -1; }
+}
+
+/* One column once three cards across would be too narrow to read. */
+@media (max-width: 820px) {
+  .page--course-map .cm-map { grid-template-columns: 1fr; }
+  .page--course-map .cm-notes { grid-template-columns: 1fr; }
+  .page--course-map .cm-flow { grid-template-columns: 1fr; }
+  .page--course-map .cm-flow__step + .cm-flow__step::before {
+    left: 50%;
+    top: calc(var(--s-3) * -1);
+    rotate: 135deg;
+    translate: -50% -25%;
+  }
+  .page--course-map .cm-ideas { grid-template-columns: 1fr; }
+  .page--course-map .cm-recap { grid-template-columns: 1fr; }
+}
+
+/* Two across before one: the notes and the ideas read fine at half width,
+   the flow does not. */
+@media (max-width: 1100px) and (min-width: 821px) {
+  .page--course-map .cm-notes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .page--course-map .cm-ideas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .page--course-map .cm-recap { grid-template-columns: 1fr; }
+  .page--course-map .cm-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* --- Recap band ------------------------------------------------------------
+   The one-minute summary and the quiz sit side by side so the three
+   statements are still on screen while the questions are answered.
+   --------------------------------------------------------------------------- */
+
+.page--course-map .cm-recap {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--s-5);
+  /* Equal height, so the band reads as one thing rather than two cards of
+     different lengths. */
+  align-items: stretch;
+}
+
+.page--course-map .cm-sec--remember,
+.page--course-map .cm-sec--check {
+  /* Both cards stretch to the taller of the two. Without this the spare
+     height is handed to the grid rows and the content drifts apart. */
+  align-content: start;
+  padding: var(--s-4) var(--s-5) var(--s-5);
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+}
+
+.page--course-map .cm-check__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.page--course-map .cm-check__count {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c-ink-faint);
+}
+
+.page--course-map .cm-check__nav {
+  display: flex;
+  align-items: center;
   gap: var(--s-2);
+  margin-top: var(--s-4);
+}
+.page--course-map .cm-check__nav .btn { flex: 1 0 auto; }
+
+.page--course-map .cm-check__step {
+  padding: 10px var(--s-3);
+  background: transparent;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-sm);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c-ink-soft);
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.page--course-map .cm-check__step:hover:not(:disabled) {
+  border-color: var(--c-forest);
+  color: var(--c-forest);
+}
+.page--course-map .cm-check__step:disabled { opacity: 0.4; }
+
+/* Says what it is waiting for rather than appearing out of nowhere and
+   pushing the panel down. */
+.page--course-map .cm-check__score {
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--c-line);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  /* Fixed, so growing the type on completion does not move the panel. */
+  line-height: 22px;
+  font-weight: 700;
+  color: var(--c-ink-faint);
+}
+.page--course-map .cm-check__score.is-done {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--c-forest);
+}
+
+/* --- Core ideas ----------------------------------------------------------- */
+
+/* Six ideas, fixed at three across so they land as two even rows rather
+   than five and a stranded one. */
+.page--course-map .cm-ideas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-3);
   list-style: none;
 }
 
-.page--course-map .cm-topic {
+.page--course-map .cm-idea {
   display: grid;
   grid-template-columns: 26px minmax(0, 1fr);
   gap: var(--s-3);
@@ -280,18 +992,151 @@
   border: 1px solid var(--c-line);
   border-radius: var(--r-sm);
 }
-
-.page--course-map .cm-topic__n {
+.page--course-map .cm-idea__n {
   font-family: var(--font-display);
   font-size: 14px;
   font-weight: 700;
   color: var(--c-brick);
 }
-.page--course-map .cm-topic__label { font-size: 15px; line-height: 1.35; }
+.page--course-map .cm-idea__text strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+}
+.page--course-map .cm-idea__text span {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--c-ink-soft);
+}
 
-/* --- Go to the full guide ------------------------------------------------- */
+/* --- One-minute summary ---------------------------------------------------- */
+
+/* The panel around it is the card now, so the list itself is plain. */
+.page--course-map .cm-remember {
+  display: grid;
+  align-content: start;
+  gap: var(--s-4);
+  margin-top: var(--s-3);
+  padding-left: 20px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--c-ink);
+}
+.page--course-map .cm-remember li::marker {
+  color: var(--c-brick);
+  font-weight: 700;
+}
+
+/* --- Quick check ----------------------------------------------------------- */
+
+/* All the question cards share one grid cell, so the panel is as tall as
+   its tallest question from the first paint and never resizes. */
+.page--course-map .cm-check__cards { display: grid; }
+
+.page--course-map .cm-check__card {
+  grid-area: 1 / 1;
+  display: grid;
+  align-content: start;
+  gap: var(--s-4);
+  visibility: hidden;
+}
+.page--course-map .cm-check__card.is-on { visibility: visible; }
+
+.page--course-map .cm-check__q {
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+/* Stacked the same way as the questions, and their space is held from the
+   start, so answering does not move the buttons or the score. Opacity
+   rather than visibility, because a hidden verdict's descendants must stay
+   hidden and visibility: visible on a child would override that. */
+.page--course-map .cm-check__verdicts { display: grid; }
+
+.page--course-map .cm-check__verdict {
+  grid-area: 1 / 1;
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  visibility: hidden;
+}
+.page--course-map .cm-check__verdict.is-on { visibility: visible; }
+.page--course-map .cm-check__verdict:not(.is-shown) { opacity: 0; }
+
+/* Shares the cell, and is shorter than any verdict, so it fills the head of
+   the reserved space without setting its height. */
+.page--course-map .cm-check__hint {
+  grid-area: 1 / 1;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--c-ink-faint);
+}
+.page--course-map .cm-check__hint.is-off { visibility: hidden; }
+.page--course-map .cm-opts { display: grid; gap: 6px; list-style: none; }
+.page--course-map .cm-opt {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: start;
+  padding: 10px var(--s-3);
+  background: var(--c-parchment);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  line-height: 1.45;
+  cursor: pointer;
+}
+.page--course-map .cm-opt:hover { border-color: var(--c-forest); }
+.page--course-map .cm-opt input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.page--course-map .cm-opt__marker {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  border: 1px solid var(--c-ink-faint);
+  border-radius: 50%;
+}
+.page--course-map .cm-opt input:checked + .cm-opt__marker {
+  border-color: var(--c-forest);
+  border-width: 5px;
+}
+.page--course-map .cm-opt.is-right {
+  background: var(--c-sage);
+  border-color: var(--c-forest);
+}
+.page--course-map .cm-opt.is-wrong {
+  background: #f7ece8;
+  border-color: var(--c-brick);
+}
+
+/* One line is reserved whether or not there is a verdict yet, so revealing
+   it does not lengthen the card. */
+.page--course-map .cm-check__result {
+  min-height: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+  color: var(--c-ink-faint);
+}
+.page--course-map .cm-check__result.is-right { color: var(--c-forest); }
+.page--course-map .cm-check__result.is-wrong { color: var(--c-brick); }
+.page--course-map .cm-check__why {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--c-ink-soft);
+}
+
+/* --- Full unit guide slot --------------------------------------------------- */
 
 .page--course-map .cm-go {
+  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -300,7 +1145,6 @@
   padding-top: var(--s-5);
   border-top: 1px solid var(--c-line);
 }
-
 .page--course-map .cm-go__lens {
   max-width: 54ch;
   font-size: 14px;
@@ -309,32 +1153,96 @@
 }
 .page--course-map .cm-go__lens strong { color: var(--c-ink); }
 
-.page--course-map .cm-soon {
-  max-width: 40ch;
+/* Not a link: the Unit Detail routes do not exist yet. */
+.page--course-map .cm-go__soon {
+  padding: 10px var(--s-4);
+  border: 1px dashed var(--c-line);
+  border-radius: var(--r-sm);
   font-size: 14px;
-  line-height: 1.5;
+  font-weight: 700;
   color: var(--c-ink-faint);
+  white-space: nowrap;
 }
 
-/* ===== Fall back to normal flow when one screen is not enough ============= */
+/* ===== Narrow screens: chips, not a long document ========================
+   Spec section 3: keep the Course experience self-contained rather than
+   turning the page into one long scroll. Below 900px the unit rail becomes a
+   row of horizontally scrollable chips above the detail, and the detail panel
+   stays the single scrolling region.
+   ========================================================================= */
 
-@media (max-height: 620px), (max-width: 900px) {
+/* The global header wraps to two rows below 860px and becomes 79px tall, but
+   the shared --header-h token stays 56px, so the page height calc
+   under-subtracts by 23px and the page scrolls. Redefining the token on this
+   page keeps the fix inside Course Map scope; the real fix belongs in
+   styles/tokens.css, which is shared, so it is flagged rather than changed
+   here (spec section 1). */
+@media (max-width: 860px) {
+  .page--course-map { --header-h: 79px; }
+}
+
+@media (max-width: 900px) {
+  .page--course-map .cm-explorer {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: var(--s-3);
+    /* Tighter than desktop: at tablet width the default block padding pushed
+       the page 23px past the viewport. */
+    padding-block: var(--s-3);
+  }
+
+  .page--course-map .cm-rail {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-2) var(--s-3);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-line) transparent;
+  }
+  .page--course-map .cm-rail__head,
+  .page--course-map .cm-rail__foot { display: none; }
+
+  .page--course-map .cm-rail__list {
+    display: flex;
+    gap: var(--s-2);
+  }
+  .page--course-map .cm-rail__list > li { flex: 0 0 auto; }
+
+  /* Each unit collapses to a chip: number, short weighting, short name. */
+  .page--course-map .cm-unit {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--s-2);
+    align-items: center;
+    padding: 9px var(--s-3);
+    white-space: nowrap;
+    background: var(--c-paper);
+    border-color: var(--c-line);
+  }
+  .page--course-map .cm-unit__n { font-size: 16px; }
+  .page--course-map .cm-unit__meta { font-size: 13px; }
+  .page--course-map .cm-unit__name {
+    margin-top: 0;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .page--course-map .cm-unit__count,
+  .page--course-map .cm-unit__chev { display: none; }
+}
+
+/* Very small or very short viewports: one column, normal flow. Compressing
+   further hurts more than the scrolling it avoids, so this stays narrow in
+   scope and is the documented exception to the no-page-scroll rule. */
+@media (max-height: 560px), (max-width: 620px) {
   .page--course-map { height: auto; overflow: visible; }
   .page--course-map .cm-shell { display: block; height: auto; }
   .page--course-map .cm-panel { overflow: visible; }
   .page--course-map .cm-panel__scroll { height: auto; overflow: visible; }
-  .page--course-map .cm-rail { overflow: visible; }
 }
 
-@media (max-width: 900px) {
-  .page--course-map .cm-explorer { grid-template-columns: 1fr; }
-  .page--course-map .cm-rail__list {
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  }
-}
-
-@media (max-width: 560px) {
-  .page--course-map .cm-rail__list { grid-template-columns: 1fr; }
+@media (max-width: 620px) {
   .page--course-map .cm-panel__scroll { padding: var(--s-5); }
   .page--course-map .cm-go { flex-direction: column; align-items: flex-start; }
+  .page--course-map .cm-ideas { grid-template-columns: 1fr; }
 }
