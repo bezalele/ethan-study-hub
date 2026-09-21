@@ -113,16 +113,14 @@ main:focus{outline:none}
 @media(max-width:900px){.science-links-title small{max-width:none}}
 
 
-/* Photo-led lesson cards: same visual pattern across every Biology unit. */
-.lesson-card-photo{padding:0;overflow:hidden;display:flex;flex-direction:column;min-height:300px;transition:transform .15s ease,box-shadow .15s ease}
-.lesson-card-photo:hover{transform:translateY(-2px);box-shadow:0 8px 24px #183d3610}
-.lesson-card-image{display:block;height:122px;overflow:hidden;background:#e7ece3;text-decoration:none}
+/* Approved Matter & Energy card treatment, shared by every Biology unit. */
+.lesson-card-photo{padding:0;overflow:hidden;display:flex;flex-direction:column;min-height:257px;border-radius:12px}
+.lesson-card-image{display:block;height:118px;overflow:hidden;background:#e9eee3;text-decoration:none}
 .lesson-card-image:hover{text-decoration:none}
-.lesson-card-image img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .25s ease}
-.lesson-card-photo:hover .lesson-card-image img{transform:scale(1.018)}
-.lesson-card-copy{display:flex;flex-direction:column;flex:1;padding:16px 18px 18px}
-.lesson-card-copy .tag{align-self:flex-start}
-.lesson-card-copy h3{margin:7px 0 8px;font-size:18px}
-.lesson-card-copy p{margin:0 0 14px;color:var(--muted);line-height:1.5}
+.lesson-card-image img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.lesson-card-copy{display:flex;flex-direction:column;flex:1;padding:12px 20px 17px}
+.lesson-card-copy .tag{align-self:flex-start;margin:0 0 4px}
+.lesson-card-copy h3{font-size:18px;margin:0 0 7px}
+.lesson-card-copy p{font-size:14px;line-height:1.45;margin:0 0 10px;color:var(--muted)}
 .lesson-card-copy .lesson-open{margin-top:auto;align-self:flex-start}
-@media(max-width:760px){.lesson-card-photo{min-height:0}.lesson-card-image{height:135px}.lesson-card-copy{padding:15px 16px 17px}}
+@media(max-width:760px){.lesson-card-photo{min-height:0}.lesson-card-image{height:132px}.lesson-card-copy{padding:13px 17px 16px}}
