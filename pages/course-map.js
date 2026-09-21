@@ -169,44 +169,67 @@ function sectionCoreIdeas(area, d) {
     </section>`;
 }
 
-function sectionRemember(d) {
+/* The one-minute summary and the quiz are one band: read the three
+   statements, then answer on the same screen without scrolling between
+   them. */
+function sectionRecap(d) {
   const r = d.remember || [];
   return `
-    <section class="cm-sec cm-sec--remember" aria-labelledby="cm-rm">
-      <h3 class="cm-sec__label" id="cm-rm">If you remember only this…</h3>
-      ${r.length
-        ? `<ol class="cm-remember">${r.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>`
-        : placeholder('One-minute summary', 'Three statements that tie the unit together.')}
-    </section>`;
+    <div class="cm-recap">
+      <section class="cm-sec cm-sec--remember" aria-labelledby="cm-rm">
+        <h3 class="cm-sec__label" id="cm-rm">If you remember only this…</h3>
+        ${r.length
+          ? `<ol class="cm-remember">${r.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>`
+          : placeholder('One-minute summary', 'Three statements that tie the unit together.')}
+      </section>
+      ${sectionQuickCheck(d)}
+    </div>`;
 }
 
+/* A short paged quiz: one question on screen, answered before you can move
+   on, scored out of the total. Older content gave a single object rather
+   than a list, so both shapes are accepted. */
 function sectionQuickCheck(d) {
-  const q = d.quickCheck;
-  if (!q) {
+  const qs = Array.isArray(d.quickCheck) ? d.quickCheck : (d.quickCheck ? [d.quickCheck] : []);
+  if (!qs.length) {
     return `
-      <section class="cm-sec" aria-labelledby="cm-qc">
+      <section class="cm-sec cm-sec--check" aria-labelledby="cm-qc">
         <h3 class="cm-sec__label" id="cm-qc">Quick check</h3>
-        ${placeholder('Quick check', 'One question drawn from this summary.')}
+        ${placeholder('Quick check', 'Three or more questions drawn from this summary.')}
       </section>`;
   }
 
-  const options = q.options.map((o, i) => `
-    <li>
-      <label class="cm-opt">
-        <input type="radio" name="cm-quick" value="${i}">
-        <span class="cm-opt__marker" aria-hidden="true"></span>
-        <span>${esc(o)}</span>
-      </label>
-    </li>`).join('');
+  const cards = qs.map((q, n) => {
+    const options = q.options.map((o, i) => `
+      <li>
+        <label class="cm-opt">
+          <input type="radio" name="cm-q${n}" value="${i}">
+          <span class="cm-opt__marker" aria-hidden="true"></span>
+          <span>${esc(o)}</span>
+        </label>
+      </li>`).join('');
+    return `
+      <div class="cm-check__card" data-q="${n}" data-answer="${q.answer}" ${n ? 'hidden' : ''}>
+        <p class="cm-check__q">${esc(q.question)}</p>
+        <ol class="cm-opts">${options}</ol>
+        <p class="cm-check__result" data-result hidden></p>
+        ${q.why ? `<p class="cm-check__why" data-why hidden>${esc(q.why)}</p>` : ''}
+      </div>`;
+  }).join('');
 
   return `
-    <section class="cm-sec" aria-labelledby="cm-qc" data-quickcheck data-answer="${q.answer}">
-      <h3 class="cm-sec__label" id="cm-qc">Quick check</h3>
-      <p class="cm-check__q">${esc(q.question)}</p>
-      <ol class="cm-opts">${options}</ol>
-      <button class="btn btn--primary" type="button" data-check>Check answer</button>
-      <p class="cm-check__result" data-result hidden></p>
-      ${q.why ? `<p class="cm-check__why" data-why hidden>${esc(q.why)}</p>` : ''}
+    <section class="cm-sec cm-sec--check" aria-labelledby="cm-qc" data-quiz>
+      <div class="cm-check__head">
+        <h3 class="cm-sec__label" id="cm-qc">Quick check</h3>
+        <p class="cm-check__count" data-count>1 of ${qs.length}</p>
+      </div>
+      <div class="cm-check__cards">${cards}</div>
+      <div class="cm-check__nav">
+        <button class="cm-check__step" type="button" data-prev disabled>← Back</button>
+        <button class="btn btn--primary" type="button" data-check>Check answer</button>
+        <button class="cm-check__step" type="button" data-next>Next →</button>
+      </div>
+      <p class="cm-check__score" data-score hidden></p>
     </section>`;
 }
 
@@ -231,8 +254,7 @@ function panel(area) {
         ${sectionBigQuestion(d)}
         ${sectionModel(d)}
         ${sectionCoreIdeas(area, d)}
-        ${sectionRemember(d)}
-        ${sectionQuickCheck(d)}
+        ${sectionRecap(d)}
         ${sectionFullGuide(area, d)}
       </div>
     </article>`;
@@ -258,27 +280,66 @@ function wireWalk(root) {
 }
 
 function wireQuickCheck(root) {
-  const box = root.querySelector('[data-quickcheck]');
+  const box = root.querySelector('[data-quiz]');
   if (!box) return;
-  const answer = Number(box.dataset.answer);
-  const result = box.querySelector('[data-result]');
-  const why = box.querySelector('[data-why]');
 
-  box.querySelector('[data-check]').addEventListener('click', () => {
-    const picked = box.querySelector('input[name="cm-quick"]:checked');
+  const cards = [...box.querySelectorAll('[data-q]')];
+  const count = box.querySelector('[data-count]');
+  const score = box.querySelector('[data-score]');
+  const prev = box.querySelector('[data-prev]');
+  const next = box.querySelector('[data-next]');
+  const check = box.querySelector('[data-check]');
+  // One entry per question: true, false, or undefined while unanswered. A
+  // question is scored on its first answer, so a second guess cannot lift
+  // the total.
+  const marks = new Array(cards.length);
+  let at = 0;
+
+  function show(i) {
+    at = Math.max(0, Math.min(cards.length - 1, i));
+    cards.forEach((c, n) => { c.hidden = n !== at; });
+    count.textContent = `${at + 1} of ${cards.length}`;
+    prev.disabled = at === 0;
+    next.disabled = at === cards.length - 1;
+    check.disabled = marks[at] !== undefined;
+    check.textContent = marks[at] === undefined ? 'Check answer' : 'Answered';
+  }
+
+  function report() {
+    const done = marks.filter((m) => m !== undefined).length;
+    if (done < cards.length) return;
+    const right = marks.filter(Boolean).length;
+    score.hidden = false;
+    score.textContent = `You scored ${right} out of ${cards.length}.`;
+  }
+
+  check.addEventListener('click', () => {
+    const card = cards[at];
+    const result = card.querySelector('[data-result]');
+    const why = card.querySelector('[data-why]');
+    const picked = card.querySelector('input:checked');
     if (!picked) {
       result.hidden = false;
       result.className = 'cm-check__result';
       result.textContent = 'Choose an answer first.';
       return;
     }
-    const right = Number(picked.value) === answer;
+    const right = Number(picked.value) === Number(card.dataset.answer);
+    marks[at] = right;
     result.hidden = false;
     result.className = `cm-check__result ${right ? 'is-right' : 'is-wrong'}`;
     result.textContent = right ? 'Correct.' : 'Not quite.';
     picked.closest('.cm-opt').classList.add(right ? 'is-right' : 'is-wrong');
+    card.querySelectorAll('input').forEach((i) => { i.disabled = true; });
     if (why) why.hidden = false;
+    check.disabled = true;
+    check.textContent = 'Answered';
+    report();
   });
+
+  prev.addEventListener('click', () => show(at - 1));
+  next.addEventListener('click', () => show(at + 1));
+  show(0);
 }
 
 /* --- Module --------------------------------------------------------------- */

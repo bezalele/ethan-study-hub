@@ -1,33 +1,30 @@
 /* ---------------------------------------------------------------------------
    power-triangle.js — Unit 2's system map.
 
-   An infographic-style diagram: three branch cards arranged as a triangle,
-   each with civic imagery and one short role line, joined by arrows that
-   carry the checks running between them.
+   Three branch cards in a triangle, joined by the checks that run between
+   them, with a plain-English note under each branch and the longer read
+   appearing only for whatever is selected.
 
-   The reference poster for this shows every explanation at once. This does
-   not: the diagram states who does what, and the detail appears only for the
-   one thing you select — a branch card or a single check. That is the whole
-   difference between a study diagram and a classroom poster.
+   Three layers, deliberately: the diagram says who does what, the notes say
+   what each branch actually is without anyone having to click, and the
+   readout carries the detail for the one thing selected. The reference
+   poster for this puts all three on the page at once, which is the part not
+   copied.
 
    Geometry. The diagram box has a fixed aspect ratio and the SVG viewBox
-   matches it, so one SVG unit is the same length horizontally and vertically.
-   That is what makes perpendicular offsets and arrowheads come out square;
-   an earlier version stretched a square viewBox with preserveAspectRatio
-   ="none" and every angle in it was a lie. Cards and labels are HTML
-   positioned in percentages over the same box.
+   matches it, so one SVG unit is the same length horizontally and
+   vertically. That is what makes perpendicular offsets and arrowheads come
+   out square. Cards and labels are HTML positioned in percentages over the
+   same box, carried as custom properties rather than inline left/top so the
+   narrow-screen list can drop the positioning without !important.
 
    Each direction gets its own arrow, not a shared double-headed one: a
-   double head cannot say that impeachment runs only one way, and a reader
-   who clicks it has no way to tell. A pair with checks both ways therefore
-   gets two parallel single-headed arrows, and selecting a check lights only
-   the one it travels along.
-
-   Checks are grouped by direction rather than shown one per arrow: Congress
-   and the president have four checks between them, and four labels strung
-   along one short diagonal overlap no matter how they are spread. Each
-   direction gets one small cluster beside its own arrow, and every label in
-   it is still individually clickable.
+   double head cannot say that impeachment runs only one way. A pair with
+   checks both ways gets two parallel single-headed arrows, and selecting a
+   check lights only the one it travels along. Labels are grouped by
+   direction for the same reason, and because Congress and the president
+   have four checks between them — four labels strung along one short
+   diagonal overlap however they are spread.
    --------------------------------------------------------------------------- */
 
 /* The box is 11:5, so the viewBox is 220 x 100 and units are square. */
@@ -35,22 +32,21 @@ const VB_W = 220;
 const VB_H = 100;
 
 const POS = {
-  congress:  { x: 110, y: 21 },
-  president: { x: 31,  y: 79 },
-  courts:    { x: 189, y: 79 },
+  congress:  { x: 110, y: 22 },
+  president: { x: 31,  y: 78 },
+  courts:    { x: 189, y: 78 },
 };
 
 /* Half a branch card, in SVG units, used to stop each arrow at the card edge
    instead of running under it. */
-const CARD_HALF = { w: 18.5, h: 18.5 };
+const CARD_HALF = { w: 21, h: 21 };
 
 /* How far the two directions of one pair sit either side of the centreline. */
 const LINE_OFFSET = 2.4;
 
 /* How far a label cluster sits off its arrow, and how far along the arrow it
-   slides toward the branch it belongs to. Both grow with the number of
-   labels, because a taller cluster needs more clearance. */
-const CLUSTER_OFFSET = 13;
+   slides toward the branch it belongs to. */
+const CLUSTER_OFFSET = 15;
 const CLUSTER_STAGGER = 0.15;
 
 const PAIRS = [
@@ -72,9 +68,7 @@ function cardInset(a, b) {
   return Math.min(tx, ty) + 0.03;
 }
 
-/** Percentages for positioning an HTML overlay at an SVG-unit point.
-    They travel as custom properties rather than as left/top, so the
-    narrow-screen list can drop the positioning without !important. */
+/** Percentages for positioning an HTML overlay at an SVG-unit point. */
 function pct(p) {
   return { left: (p.x / VB_W) * 100, top: (p.y / VB_H) * 100 };
 }
@@ -127,7 +121,7 @@ export function renderTriangle(m, esc) {
   }).filter((p) => p.dirs.length);
 
   /* --- one single-headed arrow per direction ----------------------------- */
-  const lines = pairs.flatMap(({ a, b, dirs, nx, ny }) => {
+  const lines = pairs.flatMap(({ dirs, nx, ny }) => {
     // A pair with only one direction keeps the centreline; two directions
     // part either side of it so each arrowhead belongs to one of them.
     const apart = dirs.length > 1 ? LINE_OFFSET : 0;
@@ -157,11 +151,7 @@ export function renderTriangle(m, esc) {
       // powers it lists.
       const sign = i === 0 ? 1 : -1;
       const base = lerp(POS[a], POS[b], 0.5 - slide * (dir.from === a ? 1 : -1));
-      const at = {
-        x: base.x + nx * off * sign,
-        y: base.y + ny * off * sign,
-      };
-      const p = pct(at);
+      const p = pct({ x: base.x + nx * off * sign, y: base.y + ny * off * sign });
       const label = `${shortName(m.nodes, dir.from)} → ${shortName(m.nodes, dir.to)}`;
       const pills = dir.list.map((c) => `
         <button class="cm-arrowchip" type="button" data-check-id="${esc(c.id)}"
@@ -176,13 +166,31 @@ export function renderTriangle(m, esc) {
     });
   }).join('');
 
+  /* --- what each branch actually is, ordered across the diagram ---------- */
+  const notes = [...m.nodes]
+    .filter((n) => n.note)
+    .sort((x, y) => ((POS[x.id] || {}).x || 0) - ((POS[y.id] || {}).x || 0))
+    .map((n) => `
+      <li>
+        <button class="cm-note" type="button" data-branch="${esc(n.id)}"
+                aria-pressed="false">
+          <span class="cm-note__name">${esc(n.label)}</span>
+          <span class="cm-note__body">${esc(n.note)}</span>
+          <span class="cm-note__more">Read more</span>
+        </button>
+      </li>`).join('');
+
   const flow = m.flow ? `
-    <div class="cm-flow">
-      <p class="cm-flow__label">${esc(m.flow.label)}</p>
-      <ol class="cm-flow__steps">
-        ${m.flow.steps.map((s) => `<li>${esc(s)}</li>`).join('<li class="cm-flow__arrow" aria-hidden="true">&#8594;</li>')}
+    <section class="cm-sec cm-flow-sec" aria-labelledby="cm-fl">
+      <h3 class="cm-sec__label" id="cm-fl">${esc(m.flow.label)}</h3>
+      <ol class="cm-flow">
+        ${m.flow.steps.map((st, i) => `
+          <li class="cm-flow__step">
+            <span class="cm-flow__n">${i + 1}</span>
+            <span class="cm-flow__text">${esc(st)}</span>
+          </li>`).join('')}
       </ol>
-    </div>` : '';
+    </section>` : '';
 
   return `
     <section class="cm-sec cm-tri-sec" aria-labelledby="cm-md" data-triangle>
@@ -203,9 +211,10 @@ export function renderTriangle(m, esc) {
         ${clusters}
       </div>
 
+      ${notes ? `<ul class="cm-notes">${notes}</ul>` : ''}
       <div class="cm-map__readout" aria-live="polite" data-readout></div>
-      ${flow}
-    </section>`;
+    </section>
+    ${flow}`;
 }
 
 /** Selecting a branch or a check; never both. */
@@ -214,12 +223,13 @@ export function wireTriangle(root, model, esc) {
   if (!box) return;
 
   const readout = box.querySelector('[data-readout]');
-  const cards = [...box.querySelectorAll('[data-branch]')];
+  // A branch has two buttons now — its card and its note — and both light up.
+  const branches = [...box.querySelectorAll('[data-branch]')];
   const chips = [...box.querySelectorAll('[data-check-id]')];
   const edges = [...box.querySelectorAll('.cm-edge')];
 
   function clear() {
-    cards.forEach((b) => {
+    branches.forEach((b) => {
       b.setAttribute('aria-pressed', 'false');
       b.classList.remove('is-related');
     });
@@ -231,8 +241,8 @@ export function wireTriangle(root, model, esc) {
     const n = model.nodes.find((x) => x.id === id);
     if (!n) return;
     clear();
-    const card = cards.find((b) => b.dataset.branch === id);
-    if (card) card.setAttribute('aria-pressed', 'true');
+    branches.filter((b) => b.dataset.branch === id)
+      .forEach((b) => b.setAttribute('aria-pressed', 'true'));
     readout.innerHTML = `
       <p class="cm-readout__kicker">${esc(n.article)} &middot; ${esc(n.role)}</p>
       <h4 class="cm-readout__title">${esc(n.label)}</h4>
@@ -250,8 +260,8 @@ export function wireTriangle(root, model, esc) {
     const chip = chips.find((b) => b.dataset.checkId === id);
     if (chip) chip.setAttribute('aria-pressed', 'true');
     [c.from, c.to].forEach((b) => {
-      const card = cards.find((x) => x.dataset.branch === b);
-      if (card) card.classList.add('is-related');
+      branches.filter((x) => x.dataset.branch === b)
+        .forEach((x) => x.classList.add('is-related'));
     });
     const match = edges.find((e) => e.dataset.dir === `${c.from}>${c.to}`);
     if (match) match.classList.add('is-active');

@@ -30,20 +30,24 @@
 
                    `type: 'triangle'` — three branches and the checks between
                    them:
-                     { type, intro, nodes: [{ id, label, article, role,
+                     { type, intro, nodes: [{ id, label, article, role, note,
                        image: { src, alt, credit } | null, does, powers, why }],
                        checks: [{ id, from, to, label, body }],
                        flow: { label, steps: [string] } }
-                   Branch art is square and full-bleed: the label, article
-                   and role sit on the picture, so the image wants its subject
-                   in the upper half. A branch with image: null simply draws
-                   the scrim with no picture behind it.
+                   `note` is the plain-English "what this actually is", shown
+                   in a framed card under the diagram without anyone having to
+                   click. `does`/`powers`/`why` are the longer read that
+                   appears when the branch is selected.
+                   Branch art is a 16:9 band across the top of the card, so
+                   the image wants its subject clear of the very bottom.
                    A check names the two branches it runs between, so
                    selecting it can highlight that edge. `flow` is an optional
                    secondary strip and stays subordinate to the triangle.
      coreIdeas     [{ title, note }] — 4 to 6 orientation items.
      remember      [string] — exactly 3 statements.
-     quickCheck    { question, options: [string], answer: <index>, why }
+     quickCheck    [{ question, options: [string], answer: <index>, why }]
+                   Three or more. They are paged one at a time and scored out
+                   of the total.
      fullGuideRoute  A route such as '#/course/unit/1', or null. When null the
                    renderer shows a non-clickable "next phase" note rather
                    than a dead link.
@@ -63,7 +67,7 @@ const EMPTY = {
   model: null,
   coreIdeas: [],
   remember: [],
-  quickCheck: null,
+  quickCheck: [],
   fullGuideRoute: null,
 };
 
@@ -147,18 +151,44 @@ export const COURSE_DETAILS = {
       'The Constitution strengthened national authority while dividing power to prevent concentration.',
     ],
 
-    quickCheck: {
-      question: 'Why did the Constitution create separate branches with different powers?',
-      options: [
-        'To make the federal government act more quickly',
-        'To divide power so no single institution controls all major national powers',
-        'To give the states authority over federal law',
-        'To replace the need for elections',
-      ],
-      answer: 1,
-      why:
-        'Dividing power among branches — and between the nation and the states — makes concentrated control harder. Speed was not the goal; restraint was.',
-    },
+    quickCheck: [
+      {
+        question: 'Why did the Constitution create separate branches with different powers?',
+        options: [
+          'To make the federal government act more quickly',
+          'To divide power so no single institution controls all major national powers',
+          'To give the states authority over federal law',
+          'To replace the need for elections',
+        ],
+        answer: 1,
+        why:
+          'Dividing power among branches — and between the nation and the states — makes concentrated control harder. Speed was not the goal; restraint was.',
+      },
+      {
+        question: 'Which weakness of the Articles of Confederation pushed the states toward a convention?',
+        options: [
+          'The national government could not tax directly or regulate trade between the states',
+          'The national government had grown too powerful for the states to control',
+          'The Articles gave the president too much authority',
+          'The Articles created a national court that overruled the states',
+        ],
+        answer: 0,
+        why:
+          'Under the Articles there was no executive and no national court, and Congress had to ask the states for money. Without the power to tax or to settle trade disputes, it could not pay debts or hold commerce together.',
+      },
+      {
+        question: 'What was the Bill of Rights added to do?',
+        options: [
+          'Set out how Congress elects the president',
+          'Give the federal government powers the Constitution had left out',
+          'Write down specific protections, answering the fear that the new federal government was too strong',
+          'Replace the Articles of Confederation',
+        ],
+        answer: 2,
+        why:
+          'Anti-Federalists argued that structure alone would not protect liberty. The first ten amendments name particular protections, and the Tenth reserves undelegated powers to the states and the people.',
+      },
+    ],
 
     fullGuideRoute: null,
   },
@@ -179,6 +209,8 @@ export const COURSE_DETAILS = {
           label: 'Congress',
           article: 'Article I',
           role: 'Makes federal law',
+          note:
+            'Two chambers: the House of Representatives and the Senate. Members are elected, and both chambers have to pass the same bill before it can become law. Congress also controls federal taxing and spending.',
           image: {
             src: 'assets/course-map/branch-congress.jpg',
             alt: 'The dome of the United States Capitol at sunset',
@@ -196,6 +228,8 @@ export const COURSE_DETAILS = {
           label: 'President',
           article: 'Article II',
           role: 'Carries out the law',
+          note:
+            'One elected president, heading the executive branch — the departments and agencies that actually run federal programmes. The president does not write statutes; the job is to enforce the ones Congress passes.',
           // NEEDS-ART: the other two cards are crops of the constitution
           // chapter's painted sunset. Nothing in the repo shows the White
           // House, so this one is a flat illustration set against a stretch
@@ -219,6 +253,8 @@ export const COURSE_DETAILS = {
           label: 'Federal Courts',
           article: 'Article III',
           role: 'Interprets the law',
+          note:
+            'The Supreme Court and the lower federal courts. Judges are appointed, not elected, and serve for life on good behaviour. They only act on cases people actually bring to them.',
           image: {
             src: 'assets/course-map/branch-courts.jpg',
             alt: 'Columns of the Supreme Court beside the Contemplation of Justice statue',
@@ -288,18 +324,44 @@ export const COURSE_DETAILS = {
       'Checks and balances make concentrated power harder, and can also create conflict or delay.',
     ],
 
-    quickCheck: {
-      question: 'Which idea best explains why a president cannot normally make a federal statute alone?',
-      options: [
-        'The president may only act during a declared emergency',
-        'Federal lawmaking ordinarily runs through Congress, with the president signing or vetoing',
-        'Only the Supreme Court may write federal law',
-        'Statutes must first be approved by the states',
-      ],
-      answer: 1,
-      why:
-        'Making a statute is Congress’s job. The president takes part by signing or vetoing, and can direct the executive branch — but that is not the same as writing law.',
-    },
+    quickCheck: [
+      {
+        question: 'Which idea best explains why a president cannot normally make a federal statute alone?',
+        options: [
+          'The president may only act during a declared emergency',
+          'Federal lawmaking ordinarily runs through Congress, with the president signing or vetoing',
+          'Only the Supreme Court may write federal law',
+          'Statutes must first be approved by the states',
+        ],
+        answer: 1,
+        why:
+          'Making a statute is Congress’s job. The president takes part by signing or vetoing, and can direct the executive branch — but that is not the same as writing law.',
+      },
+      {
+        question: 'Congress has passed a bill and the president has vetoed it. What can Congress still do?',
+        options: [
+          'Nothing; a veto ends the bill',
+          'Send the bill to the Supreme Court to be signed instead',
+          'Pass it over the veto with a two-thirds vote in both chambers',
+          'Pass it over the veto with a simple majority in the Senate',
+        ],
+        answer: 2,
+        why:
+          'An override needs two thirds of both the House and the Senate. That is a high bar, which is why most vetoes hold — the check exists, but it is hard to use.',
+      },
+      {
+        question: 'Why is appointing a federal judge one of a president’s most lasting powers?',
+        options: [
+          'Judges serve for life on good behaviour, so they outlast the president who appointed them',
+          'Judges may veto bills the president dislikes',
+          'The president can remove a judge who rules the wrong way',
+          'Judges must follow the instructions of the president who appointed them',
+        ],
+        answer: 0,
+        why:
+          'The Senate has to confirm the nominee, but once confirmed a judge stays. A president serves at most eight years; an appointment can shape rulings for decades.',
+      },
+    ],
 
     fullGuideRoute: null,
   },
