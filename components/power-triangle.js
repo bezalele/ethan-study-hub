@@ -243,14 +243,16 @@ export function wireTriangle(root, model, esc) {
     clear();
     branches.filter((b) => b.dataset.branch === id)
       .forEach((b) => b.setAttribute('aria-pressed', 'true'));
+    // Prose, not a label column. The three fields are written to be read
+    // as three short paragraphs, so only the last one is announced.
     readout.innerHTML = `
       <p class="cm-readout__kicker">${esc(n.article)} &middot; ${esc(n.role)}</p>
       <h4 class="cm-readout__title">${esc(n.label)}</h4>
-      <dl class="cm-readout__list">
-        <dt>What it does</dt><dd>${esc(n.does)}</dd>
-        <dt>Its main powers</dt><dd>${esc(n.powers)}</dd>
-        <dt>Why it matters</dt><dd>${esc(n.why)}</dd>
-      </dl>`;
+      <p class="cm-readout__p">${esc(n.does)}</p>
+      <p class="cm-readout__p">${esc(n.powers)}</p>
+      <p class="cm-readout__p cm-readout__p--why">
+        <span>Why it matters</span>${esc(n.why)}
+      </p>`;
   }
 
   function showCheck(id) {

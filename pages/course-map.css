@@ -524,7 +524,9 @@
   justify-items: center;
   gap: 1px;
   width: clamp(150px, 19cqw, 200px);
-  padding: 0 var(--s-2) var(--s-3);
+  /* No side padding: the picture runs the full width of the card, and the
+     wording carries its own inset. */
+  padding: 0 0 var(--s-3);
   background: var(--c-paper);
   border-radius: var(--r-md);
   box-shadow: var(--shadow-sm);
@@ -550,6 +552,10 @@
   object-fit: cover;
   display: block;
 }
+
+.page--course-map .cm-br__name,
+.page--course-map .cm-br__article,
+.page--course-map .cm-br__role { padding-inline: var(--s-3); }
 
 .page--course-map .cm-br__name {
   font-family: var(--font-display);
@@ -728,25 +734,27 @@
   color: var(--c-ink);
 }
 
-.page--course-map .cm-readout__list {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 4px var(--s-4);
+/* Three short paragraphs rather than a label column: the same three things,
+   read the way someone would say them. */
+.page--course-map .cm-readout__p {
+  max-width: 88ch;
   margin-top: var(--s-3);
   font-size: 15px;
-  line-height: 1.55;
+  line-height: 1.65;
+  color: var(--c-ink);
 }
-.page--course-map .cm-readout__list dt {
+.page--course-map .cm-readout__p--why > span {
   font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--c-brick);
-  padding-top: 3px;
-  white-space: nowrap;
 }
-.page--course-map .cm-readout__list dd { margin: 0; color: var(--c-ink); }
+.page--course-map .cm-readout__p--why > span::after {
+  content: ' — ';
+  letter-spacing: normal;
+}
 
 /* --- Secondary flow, deliberately quieter ----------------------------------- */
 

@@ -37,7 +37,10 @@
                    `note` is the plain-English "what this actually is", shown
                    in a framed card under the diagram without anyone having to
                    click. `does`/`powers`/`why` are the longer read that
-                   appears when the branch is selected.
+                   appears when the branch is selected. They render as three
+                   plain paragraphs, so write them as whole sentences rather
+                   than as table cells. `why` is preceded by the words "Why it
+                   matters" and so starts lower case.
                    Branch art is a 16:9 band across the top of the card, so
                    the image wants its subject clear of the very bottom.
                    A check names the two branches it runs between, so
@@ -217,11 +220,11 @@ export const COURSE_DETAILS = {
             credit: 'United States Capitol',
           },
           does:
-            'Writes and passes federal legislation. The House and Senate must both agree on a bill before it can become law.',
+            'Congress writes the country’s federal laws. A bill has to pass the House and the Senate in exactly the same form before it can go to the president at all.',
           powers:
-            'Taxing and spending, regulating commerce, declaring war, confirming appointments (Senate), and impeachment.',
+            'It also holds the purse: taxing and spending, regulating commerce between the states, declaring war, and — in the Senate — confirming the president’s appointments.',
           why:
-            'Control of money and law-making makes Congress central to almost any major federal policy.',
+            'because money and law-making both run through Congress, almost no major federal policy happens without it.',
         },
         {
           id: 'president',
@@ -242,11 +245,11 @@ export const COURSE_DETAILS = {
             credit: 'The White House',
           },
           does:
-            'Heads the executive branch and is responsible for enforcing the laws Congress passes, directing federal agencies and foreign policy.',
+            'The president heads the executive branch, and the job is to carry out the laws Congress has already passed — running the federal agencies and directing foreign policy.',
           powers:
-            'Veto, appointments, commander in chief, executive orders directing how the executive branch operates.',
+            'The tools that come with it: a veto over bills, appointments, command of the armed forces, and executive orders telling the branch how to operate.',
           why:
-            'The president acts faster than Congress can, which is why so much conflict is about the limits of executive power.',
+            'the president can act faster than Congress can, which is why so much of the argument in Washington is about where that power stops.',
         },
         {
           id: 'courts',
@@ -261,11 +264,11 @@ export const COURSE_DETAILS = {
             credit: 'Supreme Court of the United States',
           },
           does:
-            'Decides cases brought before them, including whether a law or an executive action conflicts with the Constitution.',
+            'The federal courts decide the cases people bring to them. Along the way they say what a law means — and whether it can stand at all under the Constitution.',
           powers:
-            'Judicial review, lifetime appointments on good behaviour, and final say on constitutional meaning in the cases they hear.',
+            'Judicial review is the big one: the power to rule that an act of Congress, or an action by the president, conflicts with the Constitution. Judges are appointed for life on good behaviour, so they answer to no election.',
           why:
-            'Courts do not act on their own — someone has to bring a case — but when they rule, the ruling binds the other branches.',
+            'courts cannot start anything themselves; someone has to bring a case. But once they rule, the other two branches are bound by it.',
         },
       ],
       checks: [
