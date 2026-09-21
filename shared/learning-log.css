@@ -1,0 +1,128 @@
+/* ---------------------------------------------------------------------------
+   learning-log.css — styles for the shared "what did you learn today?" card.
+
+   Deliberately neutral: it inherits the host page's fonts and takes its
+   accent from --ll-accent, so Biology, Math Quest and AP Gov can each set
+   one variable and have the card look native to that subject.
+   --------------------------------------------------------------------------- */
+
+.ll {
+  --ll-accent: #315c48;
+  --ll-accent-soft: #eaf1e6;
+  --ll-edge: #cfd9c6;
+  display: grid;
+  gap: 14px;
+  padding: 20px 22px;
+  background: #fff;
+  border: 1px solid var(--ll-edge);
+  border-left: 4px solid var(--ll-accent);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(35, 63, 53, .05), 0 6px 16px rgba(35, 63, 53, .07);
+}
+
+.ll__head { display: flex; align-items: center; gap: 13px; }
+
+.ll__badge {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  background: var(--ll-accent-soft);
+  border-radius: 50%;
+  color: var(--ll-accent);
+}
+.ll__ico {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ll__title { margin: 0; font-size: 20px; line-height: 1.25; }
+.ll__sub { margin: 2px 0 0; font-size: 13px; color: #62736b; }
+
+.ll__text {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 13px;
+  border: 1px solid var(--ll-edge);
+  border-radius: 10px;
+  background: #fcfdfb;
+  color: inherit;
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.6;
+  resize: vertical;
+}
+.ll__text:focus { outline: 2px solid var(--ll-accent); outline-offset: 1px; }
+
+/* The saved note, reading as a quote rather than as a form field. */
+.ll__entry {
+  margin: 0;
+  padding: 13px 15px;
+  background: var(--ll-accent-soft);
+  border-radius: 10px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.ll__row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.ll__save,
+.ll__quiet {
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: 9px;
+  font: 700 14px/1 inherit;
+  cursor: pointer;
+}
+.ll__save {
+  background: var(--ll-accent);
+  border: 1px solid var(--ll-accent);
+  color: #fff;
+}
+.ll__save:hover { filter: brightness(1.12); }
+.ll__quiet {
+  background: #fff;
+  border: 1px solid var(--ll-edge);
+  color: inherit;
+}
+.ll__quiet:hover { border-color: var(--ll-accent); }
+
+.ll__status { font-size: 13px; color: #62736b; }
+
+.ll__past > summary {
+  cursor: pointer;
+  font: 700 14px/1.4 inherit;
+  color: var(--ll-accent);
+}
+.ll__list {
+  display: grid;
+  gap: 12px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ll__list li {
+  display: grid;
+  gap: 3px;
+  padding-left: 13px;
+  border-left: 2px solid var(--ll-edge);
+}
+.ll__when {
+  font: 700 12.5px/1.4 inherit;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: #62736b;
+}
+.ll__what { font-size: 14.5px; line-height: 1.6; white-space: pre-wrap; }
+
+@media (max-width: 760px) {
+  .ll { padding: 16px 17px; }
+  .ll__title { font-size: 18px; }
+}
