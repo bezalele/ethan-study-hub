@@ -111,3 +111,23 @@ main:focus{outline:none}
 .science-link-kicker{display:block;margin-bottom:2px;font-size:9px;line-height:1;letter-spacing:.12em;color:#7a765e}
 .science-link-icon{background:#e7efe4;color:#355f4e}
 @media(max-width:900px){.science-links-title small{max-width:none}}
+
+
+/* Approved Matter & Energy card treatment, shared by every Biology unit. */
+.lesson-card-photo{padding:0;overflow:hidden;display:flex;flex-direction:column;min-height:257px;border-radius:12px}
+.lesson-card-image{display:block;height:118px;overflow:hidden;background:#e9eee3;text-decoration:none}
+.lesson-card-image:hover{text-decoration:none}
+.lesson-card-image img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.lesson-card-copy{display:flex;flex-direction:column;flex:1;padding:12px 20px 17px}
+.lesson-card-copy .tag{align-self:flex-start;margin:0 0 4px}
+.lesson-card-copy h3{font-size:18px;margin:0 0 7px}
+.lesson-card-copy p{font-size:14px;line-height:1.45;margin:0 0 10px;color:var(--muted)}
+.lesson-card-copy .lesson-open{margin-top:auto;align-self:flex-start}
+@media(max-width:760px){.lesson-card-photo{min-height:0}.lesson-card-image{height:132px}.lesson-card-copy{padding:13px 17px 16px}}
+
+/* Exact approved photo set from the Biology page mockups. */
+.unit-art img{display:block;width:100%;height:100%;object-fit:cover}
+.home-page .hero-photo{background-image:linear-gradient(90deg,#e5edd9 0%,#e5edd9e8 31%,#e5edd900 64%),url('assets/cards/approved/home/hero.jpg');background-position:center,right center;background-repeat:no-repeat;background-size:100% 100%,auto 100%}
+.home-page .hero-photo .hero-art{min-height:238px}
+@media(min-width:1101px){.home-page .unit-art{height:98px}}
+@media(max-width:760px){.home-page .hero-photo{background-image:linear-gradient(90deg,#e5edd9f5,#e5edd9c7),url('assets/cards/approved/home/hero.jpg');background-size:100% 100%,auto 100%}.home-page .hero-photo .hero-art{display:none}}
