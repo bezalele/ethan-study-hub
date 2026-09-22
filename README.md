@@ -2,6 +2,11 @@
 
 A lightweight visual study site for Ethan and Dad. The first course is **AP U.S. Government & Politics (2026–27)**.
 
+> **Running or changing this site?** Read [docs/OPERATIONS.md](docs/OPERATIONS.md)
+> first — hosting, deploys, tests, where the journal data actually lives, the
+> Cloudflare sync setup, and the known issues. **Writing content for Ethan?**
+> Read [docs/BUILD-GUIDE.md](docs/BUILD-GUIDE.md).
+
 ## Design
 - Map first, zoom second
 - Visual founding timeline
