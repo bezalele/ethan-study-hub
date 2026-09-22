@@ -8,7 +8,7 @@
    listener and <details>, so it works with the keyboard and a screen reader.
    --------------------------------------------------------------------------- */
 
-import { el, html, esc } from '../layout/dom.js?v=10';
+import { el, html, esc } from '../layout/dom.js?v=11';
 
 function questions() {
   const data = window.EthanStudyHubContent;

@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------------
    learning-log.css — the "what did you learn today?" modal editor and the
-   history page.
+   journal page, which shows a month at a time.
 
    The header button that opens the modal is NOT styled here: it wears the
    chip shape from shared/subject-header.css so it matches the journal and
@@ -16,6 +16,269 @@
   --ll-accent-soft: #eaf1e6;
   --ll-edge: #cfd9c6;
   --ll-muted: #62736b;
+  display: grid;
+  gap: 26px;
+  align-items: start;
+  grid-template-columns: minmax(0, 330px) minmax(0, 1fr);
+}
+
+/* One column once the month and the day can no longer sit side by side
+   without squeezing the day cells below a comfortable tap target. */
+@media (max-width: 880px) {
+  .ll-history { grid-template-columns: minmax(0, 1fr); }
+  /* Stacked, the month would otherwise stretch the full page width and give
+     each day a 95px square, which looks like a wall calendar rather than a
+     date picker. */
+  .ll-cal { max-width: 400px; }
+}
+
+/* --- The month ------------------------------------------------------------
+   The point of a grid rather than a list: the days he did NOT write up are
+   visible. A list can only show the days he did.
+   --------------------------------------------------------------------------- */
+
+.ll-cal__top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.ll-cal__month {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.ll-cal__nav {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  padding: 0;
+  background: #fff;
+  border: 1px solid var(--ll-edge);
+  border-radius: 50%;
+  color: inherit;
+  font: 600 18px/1 inherit;
+  cursor: pointer;
+}
+.ll-cal__nav:hover:not(:disabled) { border-color: var(--ll-accent); color: var(--ll-accent); }
+.ll-cal__nav:disabled { opacity: .35; cursor: default; }
+
+/* Appears only when you are looking at some other month or day, so it is a
+   way back rather than a permanent fixture. */
+.ll-cal__today {
+  margin-left: auto;
+  padding: 0 12px;
+  min-height: 30px;
+  background: var(--ll-accent-soft);
+  border: 1px solid var(--ll-edge);
+  border-radius: 999px;
+  color: var(--ll-accent);
+  font: 700 13px/1 inherit;
+  cursor: pointer;
+}
+.ll-cal__today:hover { border-color: var(--ll-accent); }
+
+.ll-cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.ll-cal__dow {
+  padding-bottom: 5px;
+  text-align: center;
+  font: 700 11px/1 inherit;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ll-muted);
+}
+
+.ll-day {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  background: #fff;
+  border: 1px solid var(--ll-edge);
+  border-radius: 9px;
+  color: inherit;
+  font: 600 14px/1 inherit;
+  cursor: pointer;
+  transition: background .12s, border-color .12s;
+}
+.ll-day:hover:not(:disabled) { background: var(--ll-accent-soft); border-color: var(--ll-accent); }
+
+.ll-day--pad { background: none; border: 0; cursor: default; }
+
+/* Weekends and holidays: still openable, because he may well study on one,
+   but plainly not a day anyone is behind on. */
+.ll-day.is-off {
+  background: #f2f3ef;
+  border-color: transparent;
+  color: var(--ll-muted);
+  font-weight: 400;
+}
+
+.ll-day.is-ahead { opacity: .32; cursor: default; }
+
+.ll-day.is-today { border-color: var(--ll-accent); border-width: 2px; }
+
+.ll-day.is-selected {
+  background: var(--ll-accent);
+  border-color: var(--ll-accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+.ll-day__n { line-height: 1; }
+
+.ll-day__mark {
+  position: absolute;
+  bottom: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: transparent;
+}
+.ll-day.has-note .ll-day__mark { background: var(--ll-accent); }
+/* Only when there is actually a note: the selected day was showing a dot
+   whether or not anything had been written on it. */
+.ll-day.is-selected.has-note .ll-day__mark { background: #fff; }
+
+.ll-cal__key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12.5px;
+  color: var(--ll-muted);
+}
+.ll-cal__key li { display: flex; align-items: center; gap: 6px; }
+
+.ll-k {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+  border: 1px solid var(--ll-edge);
+  border-radius: 4px;
+  background: #fff;
+}
+.ll-k--off { background: #f2f3ef; border-color: transparent; }
+.ll-k--note {
+  width: 7px;
+  height: 7px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ll-accent);
+  margin: 0 3px;
+}
+
+.ll-cal__tally {
+  margin: 10px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ll-muted);
+}
+.ll-cal__tally strong { color: var(--ll-accent); }
+
+/* What kind of day the one on show is. */
+.ll-note__kind {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--ll-accent-soft);
+  font: 700 11.5px/1.3 inherit;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ll-accent);
+}
+.ll-note__kind.is-off { background: #f2f3ef; color: var(--ll-muted); }
+
+/* How long the run is. Kept to the same weight as the count beside it: a
+   streak is a nice thing to notice, not a scoreboard to defend. */
+.ll-cal__run { color: var(--ll-accent); font-weight: 700; }
+
+/* --- Who is at the keyboard ------------------------------------------------
+   Asked once, above the day, because it governs both the reactions and the
+   comments. It used to be a select inside the reply box, which meant a
+   reaction had no way of knowing who had left it.
+   --------------------------------------------------------------------------- */
+
+.ll-me {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 12px;
+  font-size: 12.5px;
+  color: var(--ll-muted);
+}
+.ll-me__l { letter-spacing: .04em; text-transform: uppercase; font-weight: 700; font-size: 11px; }
+
+.ll-me__b {
+  min-height: 28px;
+  padding: 0 12px;
+  background: #fff;
+  border: 1px solid var(--ll-edge);
+  border-radius: 999px;
+  color: inherit;
+  font: 600 13px/1 inherit;
+  cursor: pointer;
+}
+.ll-me__b:hover { border-color: var(--ll-accent); }
+.ll-me__b.is-on {
+  background: var(--ll-accent);
+  border-color: var(--ll-accent);
+  color: #fff;
+}
+
+/* --- Reactions -------------------------------------------------------------
+   One tap, undone by tapping again. Six of them, because picking from six
+   is a reflex and picking from twenty is a decision.
+   --------------------------------------------------------------------------- */
+
+.ll-react {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--ll-edge);
+}
+
+.ll-react__b {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 32px;
+  padding: 0 9px;
+  background: #fff;
+  border: 1px solid var(--ll-edge);
+  border-radius: 999px;
+  color: inherit;
+  font: 600 13px/1 inherit;
+  cursor: pointer;
+  transition: background .12s, border-color .12s, transform .08s;
+}
+.ll-react__b:hover { background: var(--ll-accent-soft); border-color: var(--ll-accent); }
+.ll-react__b:active { transform: scale(.94); }
+.ll-react__b.is-on {
+  background: var(--ll-accent-soft);
+  border-color: var(--ll-accent);
+}
+
+.ll-react__e { font-size: 16px; line-height: 1; }
+.ll-react__n {
+  min-width: 15px;
+  font: 700 12px/1 inherit;
+  color: var(--ll-accent);
 }
 
 /* --- Modal editor ------------------------------------------------------------ */
@@ -105,29 +368,14 @@
 .ll__link { font: 700 14px/1 inherit; color: var(--ll-accent); }
 .ll__status { font-size: 13px; color: var(--ll-muted); }
 
-.ll-who { display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; color: var(--ll-muted); }
-.ll-who select {
-  min-height: 34px;
-  padding: 0 8px;
-  border: 1px solid var(--ll-edge);
-  border-radius: 8px;
-  background: #fff;
-  font: 700 13.5px/1 inherit;
-  color: inherit;
-  cursor: pointer;
-}
+
 
 /* --- History ---------------------------------------------------------------- */
 
 /* The divider between today and the rest. It had no rule at all, so it fell
    back to whatever the host page gives an h2 — which on AP Gov is a page
    title. */
-.ll-history__h {
-  margin: 26px 0 12px;
-  font-size: 17px;
-  line-height: 1.3;
-  color: var(--ll-muted);
-}
+
 
 .ll-history__list { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
 
@@ -199,13 +447,7 @@
 .ll-note__reply { display: grid; gap: 10px; width: 100%; }
 .ll-note__add { font-size: 13.5px; min-height: 34px; }
 
-.ll-history__empty {
-  padding: 22px;
-  background: #fff;
-  border: 1px dashed var(--ll-edge);
-  border-radius: 12px;
-  color: var(--ll-muted);
-}
+
 
 @media (max-width: 760px) {
   .ll-note { padding: 15px 16px; }

@@ -13,7 +13,7 @@
    deferred module runs.
    --------------------------------------------------------------------------- */
 
-import { el, html } from '../layout/dom.js?v=10';
+import { el, html } from '../layout/dom.js?v=11';
 
 export default {
   id: 'journal',
@@ -27,8 +27,8 @@ export default {
           <p class="eyebrow">After school</p>
           <h1 class="jr-title">What you learned, Ethan</h1>
           <p class="jr-intro">
-            Write one short note a day. Your dad can comment on any of them,
-            and you can reply.
+            Write one short note a day. Pick any day on the calendar. Your mum
+            and dad can react or comment, and you can reply.
           </p>
         </header>
         <div data-learning-history></div>

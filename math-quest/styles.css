@@ -291,6 +291,15 @@ nav a:hover {
   --sh-fill: #e4eef0;
   --sh-edge: #cfdfe1;
 }
+
+/* The journal calendar takes this subject's teal the same way. Shapes come
+   from ../shared/learning-log.css. */
+.ll-history {
+  --ll-accent: #244c59;
+  --ll-accent-soft: #e4eef0;
+  --ll-edge: #cfdfe1;
+  --ll-muted: var(--muted);
+}
 #menu {
   display: none;
 }

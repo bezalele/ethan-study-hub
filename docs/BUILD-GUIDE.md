@@ -199,6 +199,38 @@ unit number and name still say what each card is.
 Known exception: the Biology home page overflows by about 110px on windows
 between roughly 780px and 1000px tall. It predates this work.
 
+## The journal is a calendar
+
+The journal page shows a month at a time, the same on all three subjects,
+because the point of the page is the habit and a habit has a shape you can
+only see on a grid: the school days he wrote up, the school days he did not,
+and the weekends that were never his to fill. A list of the days he *did*
+write hides exactly the days he did not.
+
+- **Weekdays are school days, weekends are not.** Everything else — holidays,
+  closures, professional days — lives in `shared/school-calendar.js`, one
+  file for all three subjects. **Only put dates in it that come off the
+  district's published academic calendar.** A guessed holiday hides a day he
+  really did miss; a missing one marks him down for a day he was never in
+  school. It is better to leave the file empty than to fill it from memory.
+- Days still to come cannot be picked. There is nothing to remember yet.
+- One line under the grid counts the school days written up this month, and
+  the run of days in a row if it is two or more. One line, not a scoreboard.
+
+### Reactions
+
+Six of them, one tap, tapped again to undo: 👏 🎉 💡 🤔 ❤️ 💪. They are worded
+for a parent reading a school note — "Tell me more" is a better thing for his
+mum to leave than a thumbs up. Six because picking from six is a reflex and
+picking from twenty is a decision.
+
+A reaction from a parent counts towards the unread badge on the journal chip,
+the same as a comment. A row of hands clapping on last Tuesday is exactly the
+kind of thing worth coming back for.
+
+One "You are" switch sits above the day and governs both the reactions and
+the comments, so a reaction knows who left it.
+
 ---
 
 ## Accuracy beats everything here

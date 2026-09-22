@@ -118,6 +118,47 @@
 
   function comments(e) { return Array.isArray(e.comments) ? e.comments : []; }
 
+  function reactions(e) { return Array.isArray(e.reactions) ? e.reactions : []; }
+
+  /* A short, fixed set. Six is enough to say something real in one tap and
+     few enough that picking one is not a decision. They are worded for a
+     parent reading a school note, not for a social feed — "tell me more" is
+     a better thing for his mum to leave than a thumbs up. */
+  var REACTIONS = [
+    { k: 'proud',   e: '\ud83d\udc4f', label: 'Proud of you' },
+    { k: 'nice',    e: '\ud83c\udf89', label: 'Nice work' },
+    { k: 'idea',    e: '\ud83d\udca1', label: 'Good thinking' },
+    { k: 'more',    e: '\ud83e\udd14', label: 'Tell me more' },
+    { k: 'love',    e: '\u2764\ufe0f', label: 'Love this' },
+    { k: 'tricky',  e: '\ud83d\udcaa', label: 'That was a hard one' }
+  ];
+
+  /** Add or remove one person's reaction of one kind. Tapping twice undoes it. */
+  function toggleReaction(subject, date, kind, who) {
+    var data = readAll();
+    var e = data.entries.filter(function (x) {
+      return x && x.subject === subject && x.date === date;
+    })[0];
+    if (!e) return false;
+    who = who === 'ethan' ? 'ethan' : 'parent';
+    var had = reactions(e).some(function (r) { return r.k === kind && r.who === who; });
+    e.reactions = reactions(e).filter(function (r) {
+      return !(r.k === kind && r.who === who);
+    });
+    if (!had) e.reactions.push({ k: kind, who: who, ts: Date.now() });
+    data.lastWho = who;
+    return writeAll(data);
+  }
+
+  /** Who is using the page right now. Remembered between visits. */
+  function who() { return readAll().lastWho; }
+
+  function setWho(w) {
+    var data = readAll();
+    data.lastWho = w === 'ethan' ? 'ethan' : 'parent';
+    return writeAll(data);
+  }
+
   function forSubject(subject) {
     return readAll().entries
       .filter(function (e) { return e && e.subject === subject; })
@@ -181,15 +222,16 @@
     return writeAll(data);
   }
 
-  /** Replies Ethan has not looked at yet, for the badge on the home strip. */
+  /** What Ethan has not looked at yet, for the badge on the journal chip.
+      A reaction counts: a row of hands clapping on last Tuesday is exactly
+      the kind of thing worth coming back for. */
   function newCount(subject) {
     var data = readAll();
     var since = Number(data.seen[subject] || 0);
     return data.entries.filter(function (e) { return e && e.subject === subject; })
       .reduce(function (n, e) {
-        return n + comments(e).filter(function (c) {
-          return c.who === 'parent' && Number(c.ts) > since;
-        }).length;
+        var fresh = function (x) { return x.who === 'parent' && Number(x.ts) > since; };
+        return n + comments(e).filter(fresh).length + reactions(e).filter(fresh).length;
       }, 0);
   }
 
@@ -202,8 +244,8 @@
     var newest = data.entries
       .filter(function (e) { return e && e.subject === subject; })
       .reduce(function (max, e) {
-        return comments(e).reduce(function (m, c) {
-          return Math.max(m, Number(c.ts) || 0);
+        return comments(e).concat(reactions(e)).reduce(function (m, x) {
+          return Math.max(m, Number(x.ts) || 0);
         }, max);
       }, 0);
     data.seen[subject] = Math.max(Date.now(), newest);
@@ -304,31 +346,211 @@
     drawTrigger();
   }
 
-  /* --- the full record, with comment threads ------------------------------ */
+  /* --- school days ---------------------------------------------------------
+     Weekdays are school days, weekends are not, and anything in NO_SCHOOL
+     overrides both: holidays, closures, professional days.
+
+     NO_SCHOOL starts empty on purpose. The calendar marks the school days he
+     has not written up, so a guessed holiday would put a missed day against
+     a day he was never in school. Fill it from the district's academic
+     calendar and nothing else:
+
+       LearningLog.setNoSchool({ '2026-11-26': 'Thanksgiving' });
+
+     Call it before the page mounts - the host app's own script is the place.
+     --------------------------------------------------------------------------- */
+
+  var NO_SCHOOL = {};
+
+  function setNoSchool(map) {
+    NO_SCHOOL = (map && typeof map === 'object') ? map : {};
+  }
+
+  function dateOf(iso) {
+    var p = String(iso).split('-');
+    return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+  }
+
+  function isoOf(d) {
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+
+  function isWeekend(iso) {
+    var w = dateOf(iso).getDay();
+    return w === 0 || w === 6;
+  }
+
+  function isSchoolDay(iso) {
+    return !isWeekend(iso) && !NO_SCHOOL[iso];
+  }
+
+  /** What kind of day this is, in words, for the label beside the date. */
+  function dayKind(iso) {
+    if (NO_SCHOOL[iso]) return NO_SCHOOL[iso];
+    return isWeekend(iso) ? 'Weekend' : 'School day';
+  }
+
+  /* School days in a row, counting back from today. Today not being written
+     yet does not break it — the day is not over. Weekends and holidays are
+     stepped over rather than counted, so a Friday note and a Monday note are
+     two days in a row. */
+  function streak(subject) {
+    var notes = {};
+    forSubject(subject).forEach(function (e) { notes[e.date] = e; });
+    var todayIso = today();
+    var d = dateOf(todayIso);
+    var n = 0;
+    for (var i = 0; i < 400; i++) {
+      var iso = isoOf(d);
+      if (isSchoolDay(iso)) {
+        if (notes[iso]) n += 1;
+        else if (iso !== todayIso) break;
+      }
+      d.setDate(d.getDate() - 1);
+    }
+    return n;
+  }
+
+  var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+    'August', 'September', 'October', 'November', 'December'];
+
+  /* --- the record, a month at a time ---------------------------------------
+     A calendar rather than a list, because what this page is for is the
+     habit, and a habit has a shape you can only see on a grid: the school
+     days he wrote up, the school days he did not, and the weekends that were
+     never his to fill. A list of the days he did write hides exactly the
+     days he did not.
+
+     Picking a day opens that day underneath. Days still to come cannot be
+     picked: there is nothing to remember yet.
+     --------------------------------------------------------------------------- */
 
   function mountHistory(root, opts) {
     if (!root) return;
     var subject = opts.subject;
     var label = opts.label || 'this subject';
     var learner = opts.learner || '';
-    var editing = null;   // date whose note is being written
-    var replying = null;  // date whose reply box is open
+    var todayIso = today();
+    var selected = todayIso;
+    var cursor = dateOf(todayIso);   // any date inside the month on show
+    var editing = null;              // date whose note is being written
+    var replying = null;             // date whose reply box is open
 
     markSeen(subject);
 
-    function noteBlock(e, date, isToday) {
+    /** Every entry for this subject, by date. One read per draw. */
+    function byDate() {
+      var map = {};
+      forSubject(subject).forEach(function (e) { map[e.date] = e; });
+      return map;
+    }
+
+    /** The cells of the month on show: ISO dates, padded with nulls. */
+    function cells() {
+      var y = cursor.getFullYear();
+      var m = cursor.getMonth();
+      var out = [];
+      var i;
+      for (i = 0; i < new Date(y, m, 1).getDay(); i++) out.push(null);
+      for (i = 1; i <= new Date(y, m + 1, 0).getDate(); i++) out.push(isoOf(new Date(y, m, i)));
+      while (out.length % 7) out.push(null);
+      return out;
+    }
+
+    function dayCell(iso, notes) {
+      if (!iso) return '<span class="ll-day ll-day--pad" aria-hidden="true"></span>';
+      var has = !!notes[iso];
+      var ahead = iso > todayIso;
+      var school = isSchoolDay(iso);
+      var cls = ['ll-day'];
+      if (!school) cls.push('is-off');
+      if (iso === todayIso) cls.push('is-today');
+      if (iso === selected) cls.push('is-selected');
+      if (has) cls.push('has-note');
+      if (ahead) cls.push('is-ahead');
+
+      var what = has ? 'note written'
+        : ahead ? 'still to come'
+        : school ? 'nothing written yet'
+        : dayKind(iso).toLowerCase();
+
+      return '<button type="button" class="' + cls.join(' ') + '" data-day="' + iso + '"' +
+        (ahead ? ' disabled' : '') +
+        ' aria-pressed="' + (iso === selected) + '"' +
+        ' title="' + esc(prettyDate(iso) + ' \u00b7 ' + what) + '"' +
+        ' aria-label="' + esc(prettyDate(iso) + ', ' + what) + '">' +
+        '<span class="ll-day__n">' + Number(iso.slice(8)) + '</span>' +
+        '<span class="ll-day__mark" aria-hidden="true"></span>' +
+        '</button>';
+    }
+
+    /** School days this month that have happened, and how many he wrote up. */
+    function tally(notes) {
+      var done = 0, due = 0;
+      cells().forEach(function (iso) {
+        if (!iso || iso > todayIso || !isSchoolDay(iso)) return;
+        due += 1;
+        if (notes[iso]) done += 1;
+      });
+      return { done: done, due: due };
+    }
+
+    function tallyLine(t) {
+      var run = streak(subject);
+      var tail = run >= 2 ? ' <span class="ll-cal__run">' + run + ' school days in a row.</span>' : '';
+      if (!t.due) return 'No school days in this month yet.';
+      if (t.done === t.due) {
+        return 'Every school day this month' + (learner ? ', ' + esc(learner) : '') +
+          ' \u2014 ' + t.done + ' of ' + t.due + '.' + tail;
+      }
+      return '<strong>' + t.done + ' of ' + t.due + '</strong> school days written up this month.' + tail;
+    }
+
+    /* One row of taps. Each shows how many people left it and lights up if
+       the person at the keyboard is one of them. Only on days that have a
+       note: there is nothing to react to otherwise. */
+    function reactionRow(e, date) {
+      if (!e) return '';
+      var mine = who();
+      var all = reactions(e);
+      return '<div class="ll-react" role="group" aria-label="React to this note">' +
+        REACTIONS.map(function (r) {
+          var these = all.filter(function (x) { return x.k === r.k; });
+          var on = these.some(function (x) { return x.who === mine; });
+          return '<button type="button" class="ll-react__b' + (on ? ' is-on' : '') +
+            '" data-react="' + r.k + '" data-rdate="' + esc(date) + '"' +
+            ' aria-pressed="' + on + '" title="' + esc(r.label) + '">' +
+            '<span class="ll-react__e" aria-hidden="true">' + r.e + '</span>' +
+            '<span class="sr">' + esc(r.label) + '</span>' +
+            (these.length ? '<span class="ll-react__n">' + these.length + '</span>' : '') +
+            '</button>';
+        }).join('') +
+        '</div>';
+    }
+
+    function noteBlock(e, date) {
       var cs = e ? comments(e) : [];
       var writing = editing === date;
-      return '<li class="ll-note' + (isToday ? ' ll-note--today' : '') + '" data-date="' + esc(date) + '">' +
+      var school = isSchoolDay(date);
+      var empty = school
+        ? 'Nothing written for this day yet.'
+        : 'No school this day \u2014 nothing to write up.';
+
+      return '<li class="ll-note' + (date === todayIso ? ' ll-note--today' : '') +
+          '" data-date="' + esc(date) + '">' +
         '<div class="ll-note__head">' +
           '<h3 class="ll-note__when">' + esc(prettyDate(date)) + '</h3>' +
+          '<span class="ll-note__kind' + (school ? '' : ' is-off') + '">' + esc(dayKind(date)) + '</span>' +
           '<span class="ll-note__meta">' + esc(date) + '</span>' +
           (cs.length ? '<span class="ll-note__count">' + cs.length +
             ' comment' + (cs.length === 1 ? '' : 's') + '</span>' : '') +
         '</div>' +
         (writing
           ? '<label class="sr" for="ll-e">Note for ' + esc(prettyDate(date)) + '</label>' +
-            '<textarea id="ll-e" class="ll__text" rows="3" placeholder="In class today we&hellip;">' +
+            '<textarea id="ll-e" class="ll__text" rows="4" placeholder="In class today we&hellip;">' +
               esc(e ? e.text : '') + '</textarea>' +
             '<div class="ll__row">' +
               '<button type="button" class="ll__save" data-savenote>Save</button>' +
@@ -337,7 +559,7 @@
             '</div>'
           : e
             ? '<p class="ll-note__text">' + esc(e.text) + '</p>'
-            : '<p class="ll-note__text ll-note__text--empty">Nothing written for this day yet.</p>') +
+            : '<p class="ll-note__text ll-note__text--empty">' + empty + '</p>') +
         (cs.length
           ? '<ol class="ll-note__thread">' + cs.map(function (c) {
               return '<li class="ll-c ll-c--' + esc(c.who) + '">' +
@@ -354,12 +576,6 @@
               '<label class="sr" for="ll-r">Your comment</label>' +
               '<textarea id="ll-r" class="ll__text" rows="2" placeholder="Nice work &mdash; can you explain why?"></textarea>' +
               '<div class="ll__row">' +
-                '<span class="ll-who">Reply as' +
-                  '<select data-who>' +
-                    '<option value="parent"' + (readAll().lastWho === 'parent' ? ' selected' : '') + '>Parent</option>' +
-                    '<option value="ethan"' + (readAll().lastWho === 'ethan' ? ' selected' : '') + '>Ethan</option>' +
-                  '</select>' +
-                '</span>' +
                 '<button type="button" class="ll__save" data-post>Post comment</button>' +
                 '<button type="button" class="ll__quiet" data-closereply>Cancel</button>' +
               '</div>' +
@@ -370,25 +586,71 @@
               (e ? '<button type="button" class="ll__quiet ll-note__add" data-openreply>' +
                 (cs.length ? 'Add a comment' : 'Comment on this') + '</button>' : '') +
             '</div>') +
+        reactionRow(e, date) +
         '</li>';
     }
 
     function draw() {
-      var day = today();
-      var list = forSubject(subject);
-      var earlier = list.filter(function (e) { return e.date !== day; });
+      var notes = byDate();
+      var t = tally(notes);
+      var here = dateOf(todayIso);
+      var atThisMonth = cursor.getFullYear() === here.getFullYear()
+        && cursor.getMonth() === here.getMonth();
 
       root.className = 'll-history';
       root.innerHTML =
-        '<ol class="ll-history__list">' + noteBlock(entryFor(subject, day), day, true) + '</ol>' +
-        '<h2 class="ll-history__h">Earlier days</h2>' +
-        (earlier.length
-          ? '<ol class="ll-history__list">' + earlier.map(function (e) {
-              return noteBlock(e, e.date, false);
-            }).join('') + '</ol>'
-          : '<p class="ll-history__empty">Nothing earlier yet' +
-            (learner ? ', ' + esc(learner) : '') + '. Every day you write here stays, ' +
-            'so the record builds up over the term.</p>');
+        '<section class="ll-cal" aria-label="Pick a day">' +
+          '<div class="ll-cal__top">' +
+            '<button type="button" class="ll-cal__nav" data-prev aria-label="Previous month">&lsaquo;</button>' +
+            '<h2 class="ll-cal__month">' + MONTHS[cursor.getMonth()] + ' ' + cursor.getFullYear() + '</h2>' +
+            '<button type="button" class="ll-cal__nav" data-next aria-label="Next month"' +
+              (atThisMonth ? ' disabled' : '') + '>&rsaquo;</button>' +
+            (atThisMonth && selected === todayIso ? ''
+              : '<button type="button" class="ll-cal__today" data-jump>Today</button>') +
+          '</div>' +
+          '<div class="ll-cal__grid">' +
+            DOW.map(function (d) { return '<span class="ll-cal__dow">' + d + '</span>'; }).join('') +
+            cells().map(function (iso) { return dayCell(iso, notes); }).join('') +
+          '</div>' +
+          '<ul class="ll-cal__key">' +
+            '<li><span class="ll-k ll-k--school"></span>School day</li>' +
+            '<li><span class="ll-k ll-k--off"></span>No school</li>' +
+            '<li><span class="ll-k ll-k--note"></span>Written up</li>' +
+          '</ul>' +
+          '<p class="ll-cal__tally">' + tallyLine(t) + '</p>' +
+        '</section>' +
+        '<section class="ll-pane" aria-label="The day you picked">' +
+          '<div class="ll-me">' +
+            '<span class="ll-me__l">You are</span>' +
+            '<button type="button" class="ll-me__b' + (who() === 'ethan' ? ' is-on' : '') +
+              '" data-me="ethan" aria-pressed="' + (who() === 'ethan') + '">' +
+              esc(learner || 'Ethan') + '</button>' +
+            '<button type="button" class="ll-me__b' + (who() === 'parent' ? ' is-on' : '') +
+              '" data-me="parent" aria-pressed="' + (who() === 'parent') + '">Parent</button>' +
+          '</div>' +
+          '<ol class="ll-history__list">' + noteBlock(notes[selected], selected) + '</ol>' +
+        '</section>';
+
+      root.querySelectorAll('[data-day]').forEach(function (b) {
+        b.onclick = function () {
+          selected = b.dataset.day;
+          editing = null;
+          replying = null;
+          draw();
+        };
+      });
+      var prev = root.querySelector('[data-prev]');
+      if (prev) prev.onclick = function () { cursor.setMonth(cursor.getMonth() - 1, 1); draw(); };
+      var next = root.querySelector('[data-next]');
+      if (next) next.onclick = function () { cursor.setMonth(cursor.getMonth() + 1, 1); draw(); };
+      var jump = root.querySelector('[data-jump]');
+      if (jump) jump.onclick = function () {
+        cursor = dateOf(todayIso);
+        selected = todayIso;
+        editing = null;
+        replying = null;
+        draw();
+      };
 
       root.querySelectorAll('[data-edit]').forEach(function (b) {
         b.onclick = function () { editing = b.closest('.ll-note').dataset.date; replying = null; draw(); };
@@ -415,13 +677,21 @@
       root.querySelectorAll('[data-post]').forEach(function (b) {
         b.onclick = function () {
           var note = b.closest('.ll-note');
-          addComment(subject, note.dataset.date,
-            note.querySelector('[data-who]').value,
-            note.querySelector('#ll-r').value);
+          addComment(subject, note.dataset.date, who(), note.querySelector('#ll-r').value);
           replying = null;
           markSeen(subject);
           draw();
         };
+      });
+      root.querySelectorAll('[data-react]').forEach(function (b) {
+        b.onclick = function () {
+          toggleReaction(subject, b.dataset.rdate, b.dataset.react, who());
+          markSeen(subject);
+          draw();
+        };
+      });
+      root.querySelectorAll('[data-me]').forEach(function (b) {
+        b.onclick = function () { setWho(b.dataset.me); draw(); };
       });
       root.querySelectorAll('[data-del]').forEach(function (b) {
         b.onclick = function () {
@@ -443,6 +713,11 @@
     addComment: addComment,
     newCount: newCount,
     markSeen: markSeen,
+    setNoSchool: setNoSchool,
+    isSchoolDay: isSchoolDay,
+    toggleReaction: toggleReaction,
+    streak: streak,
+    REACTIONS: REACTIONS,
     STORAGE_KEY: KEY,
   };
 }(window));

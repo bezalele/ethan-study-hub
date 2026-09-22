@@ -294,6 +294,9 @@ SUBJECTS.forEach(({ name, shell, app, prefix, subject }) => {
   check(`${name} loads subject-header.css`, html.includes(`${prefix}shared/subject-header.css?v=`));
   check(`${name} loads subject-header.js`, html.includes(`${prefix}shared/subject-header.js?v=`));
   check(`${name} mounts the cluster`, /SubjectHeader\.mount\(/.test(js));
+  /* One no-school list for all three, so a holiday entered once is a holiday
+     everywhere. Three copies would drift the first time one was edited. */
+  check(`${name} loads the shared school calendar`, html.includes(`${prefix}shared/school-calendar.js?v=`));
   check(`${name} mounts it for "${subject}"`, flat.includes(`subject:"${subject}"`));
   check(`${name} names the learner`, flat.includes('learner:"Ethan"'));
   check(`${name} gives the cluster a journal`, /journalHref:/.test(js));
@@ -308,6 +311,17 @@ SUBJECTS.forEach(({ name, shell, app, prefix, subject }) => {
     (header.match(/id="(hdr-cluster|sh-mount)"/g) || []).length === 1
     || /id="sh-mount"/.test(read('layout/layout.js')));
 });
+
+/* The journal is a calendar now: one component, so all three subjects get
+   the same grid, and one place that decides what counts as a school day. */
+const logSrc = read('shared/learning-log.js');
+check('the journal renders a month grid', /ll-cal__grid/.test(logSrc));
+check('school days are weekdays minus the no-school list',
+  /function isSchoolDay/.test(logSrc) && /!isWeekend\(iso\) && !NO_SCHOOL\[iso\]/.test(logSrc));
+check('the no-school list starts empty and is filled from one file',
+  /var NO_SCHOOL = \{\};/.test(logSrc)
+  && /setNoSchool/.test(read('shared/school-calendar.js')));
+check('days still to come cannot be picked', /ahead \? ' disabled' : ''/.test(logSrc));
 
 /* The badge belongs to the journal chip, not the writing button: a reply is
    something to go and read. */

@@ -555,7 +555,7 @@ function journal() {
   main.innerHTML = `<section class="hero"><div class="hero-copy">
     <p class="eyebrow">AFTER SCHOOL</p>
     <h1>What you learned, Ethan</h1>
-    <p>One short note a day. Your dad can comment on any of them, and you can reply.</p>
+    <p>Write one short note a day. Pick any day on the calendar. Your mum and dad can react or comment, and you can reply.</p>
   </div></section><div data-learning-history></div>`;
   if (window.LearningLog) {
     LearningLog.mountHistory(main.querySelector("[data-learning-history]"), {
