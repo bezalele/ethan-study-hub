@@ -134,6 +134,24 @@ If a change does not show up in the browser, this is the first thing to check.
 `smoke.cjs` must be green before any merge. It is the file that stops the three
 subjects quietly drifting apart.
 
+### Never test against the live Worker
+
+**Tests must point at a local worker, never at
+`ethan-journal.bezuwm.workers.dev`.**
+
+```
+npx wrangler dev --port 8788 --local --var FAMILY_KEY:ethan-lab-2026
+```
+
+Several tests clear the journal so they start from a known state. Pointed at
+the deployed Worker, that is a production delete. It happened on 2026-09-22,
+while Ethan was writing, and wiped the journal he was adding to. The DELETE
+route exists *for testing* and was aimed at the family's data.
+
+The rule is absolute: no test, probe or one-off script writes to production.
+Reading it to check something is fine. Writing is not. If a script needs a
+clean slate, it needs a local worker.
+
 ### Browser testing
 
 There is no test framework. Browser tests are written ad hoc against the Chrome
