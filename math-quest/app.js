@@ -212,7 +212,6 @@ const nav = [
   ["review", "Review mistakes"],
   ["progress", "Progress"],
   ["parent", "Parent guide"],
-  ["journal", "Journal"],
 ];
 const main = document.getElementById("main");
 let session = null;
@@ -234,7 +233,7 @@ function unitCards(list = units) {
   return `<div class="course-grid">${list.map((u) => `<a class="unit ${u.id === "equations" ? "current" : ""}" href="#unit/${u.id}"><span class="round" style="--tint:${u.tint}">${unitIcon(u.id)}</span><div><small>${u.n}</small><h3>${u.title}</h3>${u.id === "equations" ? '<span class="badge">Current unit · Exam prep</span>' : ""}<p>${u.desc}</p></div><span class="chevron">›</span></a>`).join("")}</div>`;
 }
 function home() {
-  main.innerHTML = `<section class="hero"><div class="hero-copy"><p class="eyebrow">ONE STEP AT A TIME</p><h1>Make sense of math.</h1><p>Understand the ideas. Practice with purpose. Build confidence.</p><a class="button" href="${esc(progress.lastLessonRoute || "#u2lesson/" + (progress.u2Last || "one-step"))}">${progress.lessonStarted ? "Continue learning" : "Start learning"} <span>→</span></a><a class="text-link" href="#course">Explore the course</a></div></section><div class="resume-row"><section class="card"><p class="eyebrow">${progress.lessonStarted ? "PICK UP WHERE YOU LEFT OFF" : "YOUR FIRST STEP"}</p><div class="resume-body"><span class="round">x =</span><div><h2>Get ready for your Unit 2 exam</h2><p class="muted">Six skills · Worked examples & practice</p><p class="muted">Pick up your latest skill, or start with the basics.</p><a class="button" href="#u2lesson/${progress.u2Last || "one-step"}">${progress.lessonStarted ? "Resume lesson" : "Open lesson"} <span>→</span></a></div></div></section><section class="card practice-card"><span class="round">${icon("practice")}</span><div><h2>A little practice, every day</h2><p>10 questions · About 15 minutes</p><a class="button light" href="#practice">Start practice</a></div></section></div><div class="section-heading"><div><h2>Your Algebra 1 course</h2><p>A clear path from foundations to quadratics.</p></div><a class="text-link" href="#course">View course →</a></div>${unitCards()}<section class="parent-banner"><span class="round">${icon("parent")}</span><div><strong>Learning together?</strong><p>Parent notes, worked examples, and questions to ask.</p></div><a class="button light" href="#parent">Open parent guide →</a></section>`;
+  main.innerHTML = `<section class="hero"><div class="hero-copy"><p class="eyebrow">ONE STEP AT A TIME</p><h1>Make sense of math.</h1><p>Understand the ideas. Practice with purpose. Build confidence.</p><a class="button" href="${esc(progress.lastLessonRoute || "#u2lesson/" + (progress.u2Last || "one-step"))}">${progress.lessonStarted ? "Continue learning" : "Start learning"} <span>→</span></a><a class="text-link" href="#course">Explore the course</a></div></section><div class="resume-row"><section class="card"><p class="eyebrow">${progress.lessonStarted ? "PICK UP WHERE YOU LEFT OFF" : "YOUR FIRST STEP"}</p><div class="resume-body"><span class="round">x =</span><div><h2>Get ready for your Unit 2 exam</h2><p class="muted">Six skills · Worked examples & practice</p><p class="muted">Pick up your latest skill, or start with the basics.</p><a class="button" href="#u2lesson/${progress.u2Last || "one-step"}">${progress.lessonStarted ? "Resume lesson" : "Open lesson"} <span>→</span></a></div></div></section><section class="card practice-card"><span class="round">${icon("practice")}</span><div><h2>A little practice, every day</h2><p>10 questions · About 15 minutes</p><a class="button light" href="#practice">Start practice</a></div></section></div><div class="section-heading"><div><h2>Your Algebra 1 course</h2><p>A clear path from foundations to quadratics.</p></div><a class="text-link" href="#course">View course →</a></div>${unitCards()}`;
 }
 function course(query = "") {
   const list = units.filter((u) =>
@@ -630,6 +629,9 @@ function route() {
       },
     })[page] || home
   )();
+  /* The home page is sized to fit one screen, as Biology's and AP Gov's are.
+     Only the home page: every other page is meant to scroll. */
+  document.body.classList.toggle("home-page", page === "home");
   const cluster = document.getElementById("hdr-cluster");
   if (cluster && window.SubjectHeader) {
     SubjectHeader.mount(cluster, {
@@ -643,5 +645,32 @@ document.getElementById("menu").onclick = () => {
   const open = document.body.classList.toggle("nav-open");
   document.getElementById("menu").setAttribute("aria-expanded", String(open));
 };
+/* One fact a day in the corner of the sidebar, chosen by the date so it does
+   not flicker as he moves between pages. Facts, not encouragement: he reads
+   this spot a hundred times a term and a slogan goes invisible by the third
+   day. Swap any of these out — they are only here because they are true and
+   they touch what he is studying. */
+const FACTS = [
+  "The word algebra comes from al-jabr, in the title of a book written in Baghdad around the year 820.",
+  "The equals sign was invented in 1557 by Robert Recorde, who was tired of writing “is equal to”.",
+  "Algorithm comes from the name of the mathematician who gave us algebra: al-Khwārizmī.",
+  "x became the letter for the unknown thanks to Descartes, who used the end of the alphabet for things he did not know yet.",
+  "Negative numbers were dismissed as absurd by European mathematicians well into the 1700s.",
+  "Zero only arrived in Europe as a number of its own in the 1200s, through Arabic mathematics.",
+];
+function dailyFact(list) {
+  const d = new Date();
+  const day = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5);
+  return list[day % list.length];
+}
+function drawSideFact() {
+  const el = document.getElementById("side-fact");
+  if (el) {
+    el.innerHTML =
+      '<p class="side-fact__label">Did you know?</p>' +
+      '<p class="side-fact__text">' + dailyFact(FACTS) + "</p>";
+  }
+}
+drawSideFact();
 window.addEventListener("hashchange", route);
 route();

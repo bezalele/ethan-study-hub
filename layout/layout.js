@@ -17,8 +17,13 @@
 export const NAV = [
   { id: 'home',   label: 'Home',       href: '#/' },
   { id: 'course', label: 'Course Map', href: '#/course' },
-  { id: 'study',  label: 'Study',      href: '#/study' },
 ];
+
+/* Study is deliberately absent. Its routes still work — the chapter pages
+   link to each other and back to it — but nothing at the top level points
+   into the founding story any more, so it is reachable only by a link that
+   already exists or a bookmark. Put a way in from the Course Map before
+   treating that section as live again. */
 
 /* Inline so it can never 404 the way assets/home/10-book-logo.png did. */
 const BOOK_MARK = `
@@ -37,12 +42,9 @@ export function renderLayout() {
   const footer = document.getElementById('app-footer');
 
   header.innerHTML = `
-    <a class="brand" href="./" aria-label="Ethan Study Hub — all subjects">
+    <a class="brand" href="#/" aria-label="AP U.S. Government — home">
       ${BOOK_MARK}
-      <span>
-        <span class="brand__name">Ethan Study Hub</span>
-      </span>
-      <span class="brand__sub">AP U.S. Government &amp; Politics &middot; 2026&ndash;27</span>
+      <span class="brand__name">Ethan Study Hub</span>
     </a>
     <div class="hdr-end">
       <nav id="app-nav" aria-label="Main">

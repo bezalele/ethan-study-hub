@@ -169,6 +169,36 @@ Each subject sets only three colour variables (`--sh-ink`, `--sh-fill`,
 `--sh-edge`) so the shapes stay identical while the palette stays native.
 AP Gov adds `sh-on-dark` because its header is a green banner.
 
+### What each control means
+
+- The **wordmark** goes to that subject's own home page, on all three. It is
+  the subject's masthead, not the way out.
+- The **Study Hub chip** is the only way out of a subject, and it is in the
+  same corner everywhere. One exit, labelled, always in the same place.
+- **Home** in the side nav does the same job as the wordmark. That is fine:
+  a logo that goes home is what people expect.
+
+### The sidebar footer
+
+Biology and Math Quest end their side nav with one true fact, chosen by the
+date so it does not flicker as he moves between pages. It replaced a slogan.
+He reads that spot a hundred times a term and a slogan goes invisible by the
+third day; a fact that changes is worth a glance.
+
+The facts live in a `FACTS` array at the bottom of each app's `app.js`.
+Anything in there must be true — see the last section. Swap them freely.
+
+### Home pages fit one screen
+
+All three home pages are sized to the viewport rather than scrolling, so the
+first thing he sees is the whole thing. Math Quest gets there with clamps
+tied to `vh`, and below an 880px-tall window it drops the unit descriptions
+the way the header chips drop their labels when they run out of width — the
+unit number and name still say what each card is.
+
+Known exception: the Biology home page overflows by about 110px on windows
+between roughly 780px and 1000px tall. It predates this work.
+
 ---
 
 ## Accuracy beats everything here

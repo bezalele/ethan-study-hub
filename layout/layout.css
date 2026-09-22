@@ -47,13 +47,6 @@
   white-space: nowrap;
 }
 
-.brand__sub {
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  opacity: 0.72;
-  white-space: nowrap;
-}
-
 /* --- Nav ----------------------------------------------------------------- */
 
 /* Subject nav and the shared cluster travel together at the right-hand end,
@@ -136,7 +129,6 @@
     gap: var(--s-2);
     padding-bottom: 0;
   }
-  .brand__sub { display: none; }
   .hdr-end {
     width: 100%;
     justify-content: space-between;
