@@ -487,6 +487,8 @@
       return;
     }
 
+    var auto = !!(sync.isAutomatic && sync.isAutomatic());
+
     var body;
     if (state === 'off' || state === 'disconnected') {
       body = '<span class="ll-sync__dot ll-sync__dot--off"></span>' +
@@ -502,7 +504,9 @@
       var when = sync.lastSynced();
       body = '<span class="ll-sync__dot ll-sync__dot--ok"></span>' +
         '<span>Shared with your family' + (when ? ' \u00b7 synced ' + esc(ago(when)) : '') + '.</span>' +
-        '<button type="button" class="ll-sync__link" data-forget>Disconnect</button>';
+        /* Nothing to disconnect from when connecting is automatic: the
+           next page load would simply connect again. */
+        (auto ? '' : '<button type="button" class="ll-sync__link" data-forget>Disconnect</button>');
     }
     el.className = 'll-sync';
     el.innerHTML = body;

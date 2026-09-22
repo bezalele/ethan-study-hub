@@ -5,11 +5,17 @@
    own to keep the notes. This is that somewhere. It is the only part of the
    system that outlives a browser.
 
-   Two routes, and deliberately nothing else:
+   Four routes, and deliberately nothing else:
 
-     GET  /journal   -> { entries: [...] }
-     POST /journal   -> body { entries: [...] }, merged into what is stored,
-                        returns the merged result
+     GET  /journal    -> { entries: [...] }          the daily notes
+     POST /journal    -> merged in, returns the result
+
+     GET  /progress   -> { stores: {...} }           lessons, practice, quizzes
+     POST /progress   -> merged in, returns the result
+
+   Both live in the same object under different keys, with the same auth and
+   the same merge-never-replace discipline. Their rules differ because their
+   shapes do: shared/journal-merge.js and shared/progress-merge.js.
 
    POST merges rather than replaces. That is the whole design: three laptops
    can write the same day while offline and come back in any order, and the
@@ -43,8 +49,10 @@
    --------------------------------------------------------------------------- */
 
 import '../shared/journal-merge.js';
+import '../shared/progress-merge.js';
 
 const KEY = 'journal-v1';
+const PROGRESS_KEY = 'progress-v1';
 
 /* One instance, named below, holds the family's journal. Requests to it are
    handled one at a time, which is the whole point. */
@@ -54,16 +62,26 @@ export class Journal {
   }
 
   async fetch(request) {
-    const stored = (await this.state.storage.get(KEY)) || { entries: [] };
-    const current = { entries: Array.isArray(stored.entries) ? stored.entries : [] };
+    const url = new URL(request.url);
+    const progress = url.pathname === '/progress';
+    const key = progress ? PROGRESS_KEY : KEY;
+    const merger = progress ? globalThis.ProgressMerge : globalThis.JournalMerge;
+    const empty = progress ? { stores: {} } : { entries: [] };
+
+    const current = (await this.state.storage.get(key)) || empty;
 
     if (request.method === 'GET') {
       return Response.json(current);
     }
 
+    if (request.method === 'DELETE') {
+      await this.state.storage.put(key, empty);
+      return Response.json(empty);
+    }
+
     const incoming = await request.json();
-    const merged = globalThis.JournalMerge.mergeAll(current, incoming);
-    await this.state.storage.put(KEY, merged);
+    const merged = merger.mergeAll(current, incoming);
+    await this.state.storage.put(key, merged);
     return Response.json(merged);
   }
 }
@@ -86,7 +104,7 @@ function cors(origin) {
   const allow = allowed(origin) ? origin : SITE;
   return {
     'Access-Control-Allow-Origin': allow,
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Authorization, Content-Type',
     'Access-Control-Max-Age': '86400',
     Vary: 'Origin',
@@ -129,7 +147,10 @@ export default {
       return new Response(null, { status: 204, headers: cors(origin) });
     }
 
-    if (url.pathname !== '/journal') {
+    /* /journal is the daily notes and the conversation about them.
+       /progress is his lessons, practice and quiz scores - the same auth and
+       the same object, a different document and a different set of rules. */
+    if (url.pathname !== '/journal' && url.pathname !== '/progress') {
       return json({ error: 'not found' }, 404, origin);
     }
 
@@ -141,8 +162,21 @@ export default {
       return json({ error: 'wrong passphrase' }, 401, origin);
     }
 
+    const inner = 'https://journal' + url.pathname;
+    const progress = url.pathname === '/progress';
+
     if (request.method === 'GET') {
-      const r = await object(env).fetch(new Request('https://journal/', { method: 'GET' }));
+      const r = await object(env).fetch(new Request(inner, { method: 'GET' }));
+      return json(await r.json(), 200, origin);
+    }
+
+    /* Nothing in the merge rules can take anything away - that is what makes
+       a parent's empty laptop harmless. The price is that there has to be one
+       deliberate way to clear a document: a new school year, or a test that
+       needs to start from nothing. It is not reachable by accident; no page
+       on the site ever sends DELETE. */
+    if (request.method === 'DELETE') {
+      const r = await object(env).fetch(new Request(inner, { method: 'DELETE' }));
       return json(await r.json(), 200, origin);
     }
 
@@ -153,12 +187,17 @@ export default {
       } catch {
         return json({ error: 'body is not JSON' }, 400, origin);
       }
-      if (!incoming || !Array.isArray(incoming.entries)) {
-        return json({ error: 'body needs an entries array' }, 400, origin);
+      const body = progress
+        ? (incoming && typeof incoming.stores === 'object' && incoming.stores
+            ? { stores: incoming.stores } : null)
+        : (incoming && Array.isArray(incoming.entries)
+            ? { entries: incoming.entries } : null);
+      if (!body) {
+        return json({ error: progress ? 'body needs a stores object' : 'body needs an entries array' }, 400, origin);
       }
-      const r = await object(env).fetch(new Request('https://journal/', {
+      const r = await object(env).fetch(new Request(inner, {
         method: 'POST',
-        body: JSON.stringify({ entries: incoming.entries }),
+        body: JSON.stringify(body),
       }));
       return json(await r.json(), 200, origin);
     }

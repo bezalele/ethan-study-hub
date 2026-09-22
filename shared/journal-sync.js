@@ -40,11 +40,19 @@
 
   function log() { return global.LearningLog; }
 
+  /* The built-in key first, so every browser is connected the moment it
+     loads the page and nobody ever writes a note that quietly goes nowhere.
+     The stored one remains as an override, for a per-device key later.
+     See shared/family-key.js for why the built-in one is not a secret. */
   function pass() {
+    if (global.ESH_FAMILY_KEY) return global.ESH_FAMILY_KEY;
     try { return localStorage.getItem(KEY_PASS) || ''; } catch (e) { return ''; }
   }
 
   function isConnected() { return !!pass(); }
+
+  /** True when connecting is automatic, so the UI offers no button for it. */
+  function isAutomatic() { return !!global.ESH_FAMILY_KEY; }
 
   function lastSynced() {
     try { return Number(localStorage.getItem(KEY_LAST)) || 0; } catch (e) { return 0; }
@@ -90,8 +98,11 @@
     }
   }
 
-  function call(method, body) {
-    return fetch(ENDPOINT, {
+  /* One authenticated call. Exposed as `request` so progress-sync.js can
+     reach its own route without keeping a second copy of the passphrase
+     handling, the endpoint, or the error wrapping. */
+  function request(method, path, body) {
+    return fetch(ENDPOINT.replace(/\/journal$/, path), {
       method: method,
       headers: {
         Authorization: 'Bearer ' + pass(),
@@ -105,6 +116,8 @@
       });
     });
   }
+
+  function call(method, body) { return request(method, '/journal', body); }
 
   /**
    * Check a passphrase against the Worker and remember it if it is right.
@@ -169,8 +182,29 @@
     timer = setTimeout(sync, 1200);
   }
 
+  /* A link that connects this browser in one click:
+       .../biology/?connect=the-passphrase#log
+
+     Typing a passphrase on every browser someone uses is the kind of small
+     friction that quietly kills a family habit. This is the same secret, sent
+     the same way people already send each other links - and it is stripped
+     out of the address bar the moment it is used, so it does not sit in
+     history or get copied out of the URL by accident. */
+  function fromLink() {
+    var m = /[?&]connect=([^&#]+)/.exec(global.location.search);
+    if (!m) return;
+    var phrase;
+    try { phrase = decodeURIComponent(m[1]); } catch (e) { phrase = m[1]; }
+    var clean = global.location.pathname +
+      global.location.search.replace(/([?&])connect=[^&#]*(&|$)/, '$1').replace(/[?&]$/, '') +
+      global.location.hash;
+    try { history.replaceState(null, '', clean); } catch (e) { /* older browser */ }
+    connect(phrase).catch(function () { /* the strip reports it */ });
+  }
+
   function start() {
     if (!log()) return;
+    fromLink();
     document.addEventListener('esh:log-changed', nudge);
     /* Another tab on this laptop wrote something. */
     global.addEventListener('storage', function (e) {
@@ -182,11 +216,20 @@
       if (!document.hidden) sync();
     });
     global.addEventListener('online', sync);
+
+    /* The same gap the progress client has: someone reading the journal with
+       the page open has nothing of their own to change, so a reply left on
+       another laptop would not appear until they navigated. */
+    setInterval(function () { if (!document.hidden) sync(); }, 45000);
+    global.addEventListener('hashchange', sync);
+
     if (isConnected()) sync();
   }
 
   global.JournalSync = {
     ENDPOINT: ENDPOINT,
+    request: request,
+    isAutomatic: isAutomatic,
     isConnected: isConnected,
     lastSynced: lastSynced,
     connect: connect,
