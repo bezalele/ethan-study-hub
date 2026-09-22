@@ -22,9 +22,13 @@
   grid-template-columns: minmax(0, 330px) minmax(0, 1fr);
 }
 
-/* One column once the month and the day can no longer sit side by side
-   without squeezing the day cells below a comfortable tap target. */
-@media (max-width: 880px) {
+/* One column once the month and the day can no longer sit side by side.
+
+   1000px, not 880: the month takes a fixed 330 and the subjects with a
+   sidebar spend another 224-226 before the content starts, which left the
+   day barely 250px - narrower than a note card can be drawn - and it spilled
+   past the edge of the page. */
+@media (max-width: 1000px) {
   .ll-history { grid-template-columns: minmax(0, 1fr); }
   /* Stacked, the month would otherwise stretch the full page width and give
      each day a 95px square, which looks like a wall calendar rather than a
@@ -514,3 +518,49 @@
 .ll-sync__in:focus { outline: 2px solid var(--ll-accent); outline-offset: 1px; }
 
 .ll-sync__go { min-height: 32px; font-size: 13px; }
+
+/* --- What the day was about ------------------------------------------------
+   A lesson picked from a list rather than a pasted address: he writes his
+   note from the home page, not from inside a lesson, and a raw URL in a
+   comment means nothing to him.
+   --------------------------------------------------------------------------- */
+
+.ll-pick {
+  display: grid;
+  gap: 5px;
+  margin-top: 10px;
+}
+.ll-pick__l {
+  font: 700 11px/1 inherit;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ll-muted);
+}
+.ll-pick select {
+  width: 100%;
+  max-width: 420px;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--ll-edge);
+  border-radius: 8px;
+  background: #fff;
+  font: 14px/1 inherit;
+  color: inherit;
+}
+.ll-pick select:focus { outline: 2px solid var(--ll-accent); outline-offset: 1px; }
+
+/* On the day itself: a way in to the material, for whoever is reading. */
+.ll-note__lesson {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: -2px;
+  padding: 6px 12px;
+  background: var(--ll-accent-soft);
+  border: 1px solid var(--ll-edge);
+  border-radius: 999px;
+  font: 700 13px/1.3 inherit;
+  color: var(--ll-accent);
+  text-decoration: none;
+}
+.ll-note__lesson:hover { border-color: var(--ll-accent); text-decoration: none; }

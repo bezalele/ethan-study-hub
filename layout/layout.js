@@ -61,6 +61,21 @@ export function renderLayout() {
 }
 
 /**
+ * The five course units, for the “what was this about?” picker on the daily
+ * note. Read from the same content file the Course Map reads, so there is no
+ * second list to keep in step.
+ */
+function courseUnits() {
+  const units = (window.EthanStudyHubContent && window.EthanStudyHubContent.units) || [];
+  return units.map((u) => ({
+    id: String(u.id),
+    title: 'Unit ' + u.id + ' · ' + u.title,
+    group: 'Course map',
+    href: '#/course/' + u.id,
+  }));
+}
+
+/**
  * Draw the shared right-hand cluster: Today’s Note, Ethan’s Journal,
  * Study Hub, and his initial — the same four controls, in the same order,
  * as Biology and Math Quest.
@@ -82,6 +97,7 @@ function mountCluster() {
       journalHref: '#/journal',
       hubHref: './',
       onDark: true,
+      lessons: courseUnits(),
     });
   }
 }

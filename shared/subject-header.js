@@ -84,6 +84,10 @@
         label: opts.label,
         learner: learner,
         historyHref: opts.journalHref,
+        /* The note written from the header can name the lesson it was about,
+           the same as the one written on the journal page. The list is the
+           host app's - nothing here knows what a lesson is. */
+        lessons: opts.lessons || [],
       });
     }
   }

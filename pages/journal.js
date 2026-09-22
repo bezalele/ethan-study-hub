@@ -13,7 +13,7 @@
    deferred module runs.
    --------------------------------------------------------------------------- */
 
-import { el, html } from '../layout/dom.js?v=13';
+import { el, html } from '../layout/dom.js?v=14';
 
 export default {
   id: 'journal',
@@ -36,10 +36,17 @@ export default {
 
     const slot = page.querySelector('[data-learning-history]');
     if (window.LearningLog) {
+      const units = (window.EthanStudyHubContent && window.EthanStudyHubContent.units) || [];
       window.LearningLog.mountHistory(slot, {
         subject: 'apgov',
         label: 'AP U.S. Government',
         learner: 'Ethan',
+        lessons: units.map((u) => ({
+          id: String(u.id),
+          title: `Unit ${u.id} · ${u.title}`,
+          group: 'Course map',
+          href: `#/course/${u.id}`,
+        })),
       });
     } else {
       slot.textContent = 'Notes are unavailable in this browser.';

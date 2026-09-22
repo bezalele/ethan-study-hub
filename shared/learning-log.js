@@ -183,8 +183,11 @@
     return forSubject(subject).filter(function (e) { return e.date === date; })[0] || null;
   }
 
-  /** One entry per subject per day. Editing keeps that day's comments. */
-  function put(subject, date, text) {
+  /** One entry per subject per day. Editing keeps that day's comments.
+      `lesson` is optional: { title, href } pointing at the course material
+      the day was about. It travels with the note text, so editing the note
+      can change or clear it. */
+  function put(subject, date, text, lesson) {
     var data = readAll();
     var existing = data.entries.filter(function (e) {
       return e && e.subject === subject && e.date === date;
@@ -192,12 +195,15 @@
     data.entries = data.entries.filter(function (e) {
       return !(e && e.subject === subject && e.date === date);
     });
-    data.entries.push({
+    var row = {
       subject: subject, date: date, text: text.trim(), ts: Date.now(),
       comments: existing ? rawComments(existing) : [],
       reactions: existing ? rawReactions(existing) : [],
-    });
-    return writeAll(data);
+    };
+    if (lesson && lesson.href && lesson.title) {
+      row.lesson = { title: String(lesson.title), href: String(lesson.href) };
+    }
+    return writeAll((data.entries.push(row), data));
   }
 
   /* Not a deletion — an empty day, stamped now. It has to outrank whatever
@@ -266,6 +272,49 @@
     return writeAll(data);
   }
 
+  /* The lessons this subject can offer, as [{ id, title, group, href }].
+     Each app hands its own list in at mount time; nothing here knows what a
+     lesson is. Empty means no picker is shown at all. */
+  function lessonPicker(lessons, current) {
+    if (!lessons || !lessons.length) return '';
+    var groups = [];
+    var byGroup = {};
+    lessons.forEach(function (l) {
+      var g = l.group || '';
+      if (!byGroup[g]) { byGroup[g] = []; groups.push(g); }
+      byGroup[g].push(l);
+    });
+    var chosen = current && current.href ? current.href : '';
+    return '<label class="ll-pick">' +
+      '<span class="ll-pick__l">What was this about?</span>' +
+      '<select data-lesson>' +
+        '<option value="">\u2014 nothing in particular \u2014</option>' +
+        groups.map(function (g) {
+          var opts = byGroup[g].map(function (l) {
+            return '<option value="' + esc(l.href) + '"' +
+              (l.href === chosen ? ' selected' : '') + '>' + esc(l.title) + '</option>';
+          }).join('');
+          return g ? '<optgroup label="' + esc(g) + '">' + opts + '</optgroup>' : opts;
+        }).join('') +
+      '</select>' +
+    '</label>';
+  }
+
+  /** Read the picker back out of a form, as a { title, href } or null. */
+  function pickedLesson(root) {
+    var sel = root.querySelector('[data-lesson]');
+    if (!sel || !sel.value) return null;
+    var opt = sel.options[sel.selectedIndex];
+    return { title: opt.textContent, href: sel.value };
+  }
+
+  /** The chip shown on a day that has one. */
+  function lessonChip(e) {
+    if (!e || !e.lesson || !e.lesson.href) return '';
+    return '<a class="ll-note__lesson" href="' + esc(e.lesson.href) + '">' +
+      '<span aria-hidden="true">\ud83d\udcd8</span>' + esc(e.lesson.title) + '</a>';
+  }
+
   var PENCIL = '<svg class="sh-chip__ico" viewBox="0 0 24 24" aria-hidden="true">' +
     '<path d="M4 20h4.2L19 9.2a2.1 2.1 0 0 0-3-3L5.2 17 4 20Z"/><path d="M14.8 7.4 16.6 9.2"/></svg>';
 
@@ -294,6 +343,7 @@
     var label = opts.label || 'this subject';
     var learner = opts.learner || '';
     var historyHref = opts.historyHref || '';
+    var lessons = opts.lessons || [];
     var dlg = null;
 
     function prompt() {
@@ -333,6 +383,7 @@
           '<label class="sr" for="ll-m">Today’s note</label>' +
           '<textarea id="ll-m" class="ll__text" rows="5" placeholder="In class today we&hellip;">' +
             esc(entry ? entry.text : '') + '</textarea>' +
+          lessonPicker(lessons, entry && entry.lesson) +
           '<div class="ll__row ll-modal__row">' +
             '<button type="button" class="ll__save" data-save>Save</button>' +
             '<button type="button" class="ll__quiet" data-cancel>Cancel</button>' +
@@ -347,7 +398,9 @@
       if (all) all.onclick = function () { dlg.close(); };
       dlg.querySelector('[data-save]').onclick = function () {
         var text = dlg.querySelector('#ll-m').value;
-        var okay = text.trim() ? put(subject, day, text) : remove(subject, day);
+        var okay = text.trim()
+          ? put(subject, day, text, pickedLesson(dlg))
+          : remove(subject, day);
         if (okay) dlg.close();
         else dlg.querySelector('[data-status]').textContent =
           'This browser will not let the note save right now.';
@@ -538,6 +591,7 @@
     var subject = opts.subject;
     var label = opts.label || 'this subject';
     var learner = opts.learner || '';
+    var lessons = opts.lessons || [];
     var todayIso = today();
     var selected = todayIso;
     var cursor = dateOf(todayIso);   // any date inside the month on show
@@ -657,13 +711,14 @@
           ? '<label class="sr" for="ll-e">Note for ' + esc(prettyDate(date)) + '</label>' +
             '<textarea id="ll-e" class="ll__text" rows="4" placeholder="In class today we&hellip;">' +
               esc(e ? e.text : '') + '</textarea>' +
+            lessonPicker(lessons, e && e.lesson) +
             '<div class="ll__row">' +
               '<button type="button" class="ll__save" data-savenote>Save</button>' +
               '<button type="button" class="ll__quiet" data-cancelnote>Cancel</button>' +
               (e ? '<span class="ll__status">Clearing the box deletes this day.</span>' : '') +
             '</div>'
           : e
-            ? '<p class="ll-note__text">' + esc(e.text) + '</p>'
+            ? '<p class="ll-note__text">' + esc(e.text) + '</p>' + lessonChip(e)
             : '<p class="ll-note__text ll-note__text--empty">' + empty + '</p>') +
         (cs.length
           ? '<ol class="ll-note__thread">' + cs.map(function (c) {
@@ -779,7 +834,7 @@
         b.onclick = function () {
           var note = b.closest('.ll-note');
           var text = note.querySelector('#ll-e').value;
-          if (text.trim()) put(subject, note.dataset.date, text);
+          if (text.trim()) put(subject, note.dataset.date, text, pickedLesson(note));
           else remove(subject, note.dataset.date);
           editing = null;
           draw();

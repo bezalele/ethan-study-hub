@@ -559,9 +559,29 @@ function journal() {
   </div></section><div data-learning-history></div>`;
   if (window.LearningLog) {
     LearningLog.mountHistory(main.querySelector("[data-learning-history]"), {
-      subject: "math", label: "Algebra 1", learner: "Ethan",
+      subject: "math", label: "Algebra 1", learner: "Ethan", lessons: lessonChoices(),
     });
   }
+}
+/* Everything he could have been studying, for the "what was this about?"
+   picker on the daily note. Two sets, because two parts of the course build
+   their lessons differently. */
+function lessonChoices() {
+  const out = [];
+  if (typeof U2_TOPICS !== "undefined") {
+    U2_TOPICS.forEach((t) => out.push({ id: t.id, title: t.title, group: "Unit 2 · Equations & systems", href: "#u2lesson/" + t.id }));
+  }
+  if (typeof COURSE_LESSONS !== "undefined") {
+    /* courseName knows the two course units by name; originalTopics is the
+       Unit 2 list and does not cover them, so asking it returned a raw id. */
+    const unitName = (id) => {
+      if (typeof courseName === "function") return courseName(id);
+      const u = (typeof originalTopics !== "undefined" ? originalTopics : []).find((x) => x.id === id);
+      return u ? u.title : id;
+    };
+    COURSE_LESSONS.forEach((l) => out.push({ id: l.id, title: l.title, group: unitName(l.unit), href: "#study/" + l.id }));
+  }
+  return out;
 }
 function route() {
   const [page = "home", arg = ""] = (location.hash.slice(1) || "home").split(
@@ -636,7 +656,7 @@ function route() {
   if (cluster && window.SubjectHeader) {
     SubjectHeader.mount(cluster, {
       subject: "math", label: "Algebra 1", learner: "Ethan",
-      journalHref: "#journal", hubHref: "../",
+      journalHref: "#journal", hubHref: "../", lessons: lessonChoices(),
     });
   }
   window.scrollTo(0, 0);

@@ -68,7 +68,7 @@
     if (!a) return b;
     if (!b) return a;
     var newer = num(a.ts) >= num(b.ts) ? a : b;
-    return {
+    var out = {
       subject: newer.subject,
       date: newer.date,
       text: typeof newer.text === 'string' ? newer.text : '',
@@ -76,6 +76,12 @@
       comments: mergeComments(a.comments, b.comments),
       reactions: mergeReactions(a.reactions, b.reactions)
     };
+    /* The lesson a day was about is part of the note, not a thing of its own:
+       it is set and cleared from the same box, so it follows the same
+       last-write-wins as the text rather than lingering after an edit that
+       removed it. */
+    if (newer.lesson && newer.lesson.href) out.lesson = newer.lesson;
+    return out;
   }
 
   /**
