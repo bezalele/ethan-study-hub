@@ -454,3 +454,63 @@
   .ll-c { grid-template-columns: 1fr auto; }
   .ll-c--ethan { margin-left: 14px; }
 }
+
+/* --- Is this laptop connected? ---------------------------------------------
+   One quiet line under the month. Four words, most of the time.
+   --------------------------------------------------------------------------- */
+
+.ll-sync {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--ll-edge);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ll-muted);
+}
+.ll-sync:empty { display: none; }
+
+.ll-sync__dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--ll-muted);
+}
+.ll-sync__dot--ok { background: #4c7c52; }
+.ll-sync__dot--off { background: #b2a894; }
+.ll-sync__dot--bad { background: #b4552f; }
+.ll-sync__dot--busy { background: var(--ll-accent); animation: ll-pulse 1s ease-in-out infinite; }
+
+@keyframes ll-pulse { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .ll-sync__dot--busy { animation: none; } }
+
+.ll-sync__link {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--ll-accent);
+  font: 700 12.5px/1.5 inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.ll-sync__link:hover { text-decoration: none; }
+
+.ll-sync.is-asking { gap: 6px; }
+
+.ll-sync__in {
+  flex: 1 1 140px;
+  min-width: 0;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--ll-edge);
+  border-radius: 7px;
+  font: 13px/1 inherit;
+  color: inherit;
+}
+.ll-sync__in:focus { outline: 2px solid var(--ll-accent); outline-offset: 1px; }
+
+.ll-sync__go { min-height: 32px; font-size: 13px; }

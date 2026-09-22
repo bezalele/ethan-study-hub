@@ -1,0 +1,7 @@
+# Wrangler's local state: an account cache (which carries the account email),
+# and miniflare's simulated storage from `wrangler dev`. Machine-local, and
+# this repo is public.
+.wrangler/
+
+# Node, if it ever appears.
+node_modules/

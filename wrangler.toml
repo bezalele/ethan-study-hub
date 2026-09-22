@@ -1,0 +1,21 @@
+# The Worker that holds Ethan's journal. See worker/journal.js and
+# docs/OPERATIONS.md §7.
+#
+# The passphrase is NOT here. This repo is public. It is set once with:
+#   npx wrangler secret put FAMILY_KEY
+
+name = "ethan-journal"
+main = "worker/journal.js"
+compatibility_date = "2026-09-22"
+
+# A Durable Object, not KV. Every write is a read-merge-write, and KV's edge
+# cache gives no read-after-write guarantee: a stale read merged against
+# nothing and wrote the result back over real notes. A Durable Object
+# serialises requests through one instance with consistent storage.
+[[durable_objects.bindings]]
+name = "JOURNAL_DO"
+class_name = "Journal"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Journal"]

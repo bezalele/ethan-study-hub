@@ -116,9 +116,21 @@
     }
   }
 
-  function comments(e) { return Array.isArray(e.comments) ? e.comments : []; }
+  /* Raw rows, tombstones and all. Only merging and writing want these. */
+  function rawComments(e) { return Array.isArray(e.comments) ? e.comments : []; }
+  function rawReactions(e) { return Array.isArray(e.reactions) ? e.reactions : []; }
 
-  function reactions(e) { return Array.isArray(e.reactions) ? e.reactions : []; }
+  /* What to show. A deleted comment keeps its id and carries `del`; a
+     reaction taken off keeps its row and carries `off`. Both have to stay in
+     the store so the removal survives a merge with a laptop that still has
+     the original — see shared/journal-merge.js. Neither is ever displayed. */
+  function comments(e) {
+    return rawComments(e).filter(function (c) { return !c.del; });
+  }
+
+  function reactions(e) {
+    return rawReactions(e).filter(function (r) { return !r.off; });
+  }
 
   /* A short, fixed set. Six is enough to say something real in one tap and
      few enough that picking one is not a decision. They are worded for a
@@ -142,10 +154,10 @@
     if (!e) return false;
     who = who === 'ethan' ? 'ethan' : 'parent';
     var had = reactions(e).some(function (r) { return r.k === kind && r.who === who; });
-    e.reactions = reactions(e).filter(function (r) {
+    e.reactions = rawReactions(e).filter(function (r) {
       return !(r.k === kind && r.who === who);
     });
-    if (!had) e.reactions.push({ k: kind, who: who, ts: Date.now() });
+    e.reactions.push({ k: kind, who: who, ts: Date.now(), off: had });
     data.lastWho = who;
     return writeAll(data);
   }
@@ -159,9 +171,11 @@
     return writeAll(data);
   }
 
+  /* Days with something written on them. A day whose text is empty is a
+     deleted day, kept only so the deletion survives the next merge. */
   function forSubject(subject) {
     return readAll().entries
-      .filter(function (e) { return e && e.subject === subject; })
+      .filter(function (e) { return e && e.subject === subject && e.text; })
       .sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
   }
 
@@ -178,21 +192,19 @@
     data.entries = data.entries.filter(function (e) {
       return !(e && e.subject === subject && e.date === date);
     });
-    if (text.trim()) {
-      data.entries.push({
-        subject: subject, date: date, text: text.trim(), ts: Date.now(),
-        comments: existing ? comments(existing) : [],
-      });
-    }
+    data.entries.push({
+      subject: subject, date: date, text: text.trim(), ts: Date.now(),
+      comments: existing ? rawComments(existing) : [],
+      reactions: existing ? rawReactions(existing) : [],
+    });
     return writeAll(data);
   }
 
+  /* Not a deletion — an empty day, stamped now. It has to outrank whatever
+     the other laptops still hold, and a row that simply vanished would lose
+     that argument on the next sync. */
   function remove(subject, date) {
-    var data = readAll();
-    data.entries = data.entries.filter(function (e) {
-      return !(e && e.subject === subject && e.date === date);
-    });
-    return writeAll(data);
+    return put(subject, date, '');
   }
 
   function addComment(subject, date, who, text) {
@@ -202,7 +214,7 @@
       return x && x.subject === subject && x.date === date;
     })[0];
     if (!e) return false;
-    e.comments = comments(e).concat([{
+    e.comments = rawComments(e).concat([{
       id: 'c' + Date.now() + Math.random().toString(36).slice(2, 6),
       who: who === 'ethan' ? 'ethan' : 'parent',
       text: text.trim(),
@@ -218,7 +230,9 @@
       return x && x.subject === subject && x.date === date;
     })[0];
     if (!e) return false;
-    e.comments = comments(e).filter(function (c) { return c.id !== id; });
+    e.comments = rawComments(e).map(function (c) {
+      return c.id === id ? { id: c.id, who: c.who, text: '', ts: Date.now(), del: true } : c;
+    });
     return writeAll(data);
   }
 
@@ -417,6 +431,93 @@
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
     'August', 'September', 'October', 'November', 'December'];
 
+  /* --- is this laptop connected? ------------------------------------------
+     One line under the month. It is the only place the sync is visible, and
+     most of the time it says four words and gets out of the way.
+
+     It redraws on its own rather than through the calendar's draw(), so a
+     sync landing while Ethan is halfway through typing a note does not throw
+     the box away underneath him.
+     --------------------------------------------------------------------------- */
+
+  var stripEl = null;
+
+  /* The calendar currently on screen, so a sync landing after the page has
+     drawn can put the new days on it. Without this, opening the journal shows
+     whatever this laptop knew a moment before the sync arrived - which is
+     exactly the moment someone else's note is most likely to be waiting. */
+  var liveRedraw = null;
+
+  document.addEventListener('esh:log-changed', function () {
+    if (liveRedraw) liveRedraw();
+  });
+
+  function ago(ts) {
+    var s = Math.round((Date.now() - ts) / 1000);
+    if (s < 60) return 'just now';
+    if (s < 3600) return Math.round(s / 60) + ' min ago';
+    if (s < 86400) return Math.round(s / 3600) + ' hr ago';
+    return new Date(ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  }
+
+  function drawStrip(el, detail) {
+    if (!el) return;
+    stripEl = el;
+    var sync = global.JournalSync;
+    if (!sync) { el.innerHTML = ''; return; }
+    var state = (detail && detail.state) || (sync.isConnected() ? 'idle' : 'off');
+
+    if (state === 'asking') {
+      el.className = 'll-sync is-asking';
+      el.innerHTML =
+        '<label class="sr" for="ll-key">Family passphrase</label>' +
+        '<input id="ll-key" class="ll-sync__in" type="password" autocomplete="off"' +
+        ' placeholder="Family passphrase">' +
+        '<button type="button" class="ll__save ll-sync__go" data-go>Connect</button>' +
+        '<button type="button" class="ll__quiet ll-sync__go" data-cancelkey>Cancel</button>';
+      var input = el.querySelector('#ll-key');
+      input.focus();
+      var go = function () {
+        el.querySelector('[data-go]').disabled = true;
+        sync.connect(input.value).catch(function () { /* announced already */ });
+      };
+      el.querySelector('[data-go]').onclick = go;
+      input.onkeydown = function (ev) { if (ev.key === 'Enter') go(); };
+      el.querySelector('[data-cancelkey]').onclick = function () { drawStrip(el, null); };
+      return;
+    }
+
+    var body;
+    if (state === 'off' || state === 'disconnected') {
+      body = '<span class="ll-sync__dot ll-sync__dot--off"></span>' +
+        '<span>Saved on this laptop only.</span>' +
+        '<button type="button" class="ll-sync__link" data-connect>Connect this laptop</button>';
+    } else if (state === 'syncing') {
+      body = '<span class="ll-sync__dot ll-sync__dot--busy"></span><span>Syncing\u2026</span>';
+    } else if (state === 'error') {
+      body = '<span class="ll-sync__dot ll-sync__dot--bad"></span>' +
+        '<span>' + esc(detail && detail.message ? detail.message : 'Could not reach the journal.') + '</span>' +
+        '<button type="button" class="ll-sync__link" data-connect>Try again</button>';
+    } else {
+      var when = sync.lastSynced();
+      body = '<span class="ll-sync__dot ll-sync__dot--ok"></span>' +
+        '<span>Shared with your family' + (when ? ' \u00b7 synced ' + esc(ago(when)) : '') + '.</span>' +
+        '<button type="button" class="ll-sync__link" data-forget>Disconnect</button>';
+    }
+    el.className = 'll-sync';
+    el.innerHTML = body;
+
+    var c = el.querySelector('[data-connect]');
+    if (c) c.onclick = function () { drawStrip(el, { state: 'asking' }); };
+    var f = el.querySelector('[data-forget]');
+    if (f) f.onclick = function () { sync.disconnect(); };
+  }
+
+  /* Registered once, at load, not per mount: mountHistory runs again on every
+     navigation in two of the three apps, and a listener added there would
+     stack up one deep per page visited. */
+  document.addEventListener('esh:sync', function (e) { drawStrip(stripEl, e.detail); });
+
   /* --- the record, a month at a time ---------------------------------------
      A calendar rather than a list, because what this page is for is the
      habit, and a habit has a shape you can only see on a grid: the school
@@ -590,7 +691,17 @@
         '</li>';
     }
 
+    var drawing = false;
+
+    /* Redraw on someone else's writing, but never out from under Ethan's
+       hands: if a box is open, the new material waits until he closes it. */
+    liveRedraw = function () {
+      if (drawing || editing || replying) return;
+      draw();
+    };
+
     function draw() {
+      drawing = true;
       var notes = byDate();
       var t = tally(notes);
       var here = dateOf(todayIso);
@@ -618,6 +729,7 @@
             '<li><span class="ll-k ll-k--note"></span>Written up</li>' +
           '</ul>' +
           '<p class="ll-cal__tally">' + tallyLine(t) + '</p>' +
+          '<div class="ll-sync" data-sync></div>' +
         '</section>' +
         '<section class="ll-pane" aria-label="The day you picked">' +
           '<div class="ll-me">' +
@@ -631,6 +743,7 @@
           '<ol class="ll-history__list">' + noteBlock(notes[selected], selected) + '</ol>' +
         '</section>';
 
+      drawStrip(root.querySelector('[data-sync]'), null);
       root.querySelectorAll('[data-day]').forEach(function (b) {
         b.onclick = function () {
           selected = b.dataset.day;
@@ -699,6 +812,7 @@
           draw();
         };
       });
+      drawing = false;
     }
 
     draw();

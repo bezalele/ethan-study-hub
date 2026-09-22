@@ -155,13 +155,13 @@ Two habits worth keeping:
 
 **This is the most important section in this file.**
 
-### Today: the browser only
+### The browser holds a copy; the Worker holds the journal
 
 | | |
 | --- | --- |
 | Where | `localStorage`, key `esh-learning-log-v1` |
-| Scope | one browser, on one device |
-| Shape | `{ entries: [{ subject, date, text, ts, comments: [{id, who, text, ts}], reactions: [{k, who, ts}] }], seen: {}, lastWho }` |
+| Scope | this browser — a cache, synced to the Worker in §7 |
+| Shape | `{ entries: [{ subject, date, text, ts, comments: [{id, who, text, ts, del?}], reactions: [{k, who, ts, off?}] }], seen: {}, lastWho }` |
 | Written by | `shared/learning-log.js` |
 
 All three subjects share one key and are told apart by the `subject` field, so
@@ -195,57 +195,119 @@ files. The storage is untouched.
    defensive (`comments(e)`, `reactions(e)` both default to `[]`) so older
    entries keep working. Keep it that way.
 
-### The limitation that matters
+### It is a cache, not the only copy
 
-**Browser storage is per device.** Ethan's laptop and his mum's laptop each
-hold their own separate copy and will never see each other. The point of the
-journal is the two of them talking, so until §7 is done, the feature is
-single-device.
+Reading never waits on the network: every page draws from this local copy, so
+the journal is instant and works offline. §7 keeps it in step with the Worker
+in the background. A laptop that is **not** connected still works perfectly —
+it is simply private to that machine, and the strip under the calendar says
+so in as many words.
 
-`biology/learning-sync` holds an earlier attempt at this using a private GitHub
-repo and a personal access token. **It is not the chosen approach** — a token
+Losing this local copy is no longer losing the journal: connect the laptop
+again and it comes back down from the Worker.
+
+`biology/learning-sync` holds an earlier attempt at sync using a private GitHub
+repo and a personal access token. **It is not what was built** — a token
 in browser storage on a shared origin, expiring within a year and failing
 silently, is worse than the alternative below.
 
 ---
 
-## 7. Sync — Cloudflare Worker + KV
+## 7. Sync — the Cloudflare Worker
 
-Chosen because it is free at this size, never sleeps, nothing expires, no
-secret sits on Ethan's laptop, and the notes outlive any browser.
+**This is live.** The journal is shared across devices.
 
-### One-time setup (account owner)
+| | |
+| --- | --- |
+| Endpoint | `https://ethan-journal.bezuwm.workers.dev/journal` |
+| Worker | `worker/journal.js`, config in `wrangler.toml` |
+| Storage | a Durable Object named `family`, one JSON document |
+| Auth | one shared passphrase in an `Authorization: Bearer` header |
+| Account | `bezuwm@gmail.com`, `d278cfe038a87cd5b338f95e49971bc1` |
+| Client | `shared/journal-sync.js`, merge rules in `shared/journal-merge.js` |
 
-1. Create a free Cloudflare account — https://dash.cloudflare.com/sign-up
-   (email and password, no card).
-2. Authorise the CLI. This opens a browser and waits for the callback, so it
-   has to be run by hand rather than from a tool call:
+Two routes, nothing else:
 
-   ```
-   cd C:\Users\bezuw\ethan-study-hub
-   npx wrangler login
-   ```
+```
+GET  /journal   -> { entries: [...] }
+POST /journal   -> body { entries: [...] }, merged in, returns the result
+```
 
-   Approve in the browser tab. The CLI prints `Successfully logged in.` The
-   credential is stored per machine and lasts; it is not in this repo.
-3. Choose a family passphrase, e.g. `ethan-lab-2026`. It is entered once on
-   each laptop and is what stops anyone else reading the journal. **It does not
-   go in this repo.**
+**POST merges, it never replaces.** Three laptops can write the same day
+while offline and come back in any order; the server settles it with the same
+rules the browsers use, because it imports the very file the browsers load.
+There is no "last write wins on the whole document", which is how you lose an
+afternoon's work to a stale tab.
 
-`npx wrangler deploy --temporary` deploys to a throwaway preview account
-without logging in. Fine for a smoke test, never for the real thing.
+### Why a Durable Object and not KV
 
-### Once set up
+It was KV first, and KV was wrong. Every write here is read-merge-write, and
+KV caches reads at the edge with no read-after-write guarantee. The
+two-browser test caught the consequence: one laptop synced while its read was
+stale, merged its own nothing into an empty journal, and wrote that back over
+a note that had already reached the server.
 
-- The worker's URL is the one piece of configuration the site needs.
-- `localStorage` stays as the local cache, so the page is instant and works
-  offline; the worker is synced in the background.
-- Merge rules (already written, from `biology/learning-sync`): entries are keyed
-  by `subject|date`; the note with the later `ts` wins; comments and reactions
-  are unioned by id; a delete is an empty-text tombstone. This means two
-  laptops editing the same day cannot silently destroy each other's work.
+A Durable Object serialises every request through one instance with strongly
+consistent storage, so the read a merge is based on is always the real one.
+**Do not move this back to KV.** Any store without read-after-write
+consistency is unsafe for this access pattern.
 
----
+### Deploying a change to the Worker
+
+```
+npx wrangler deploy          # from the repo root
+```
+
+The site and the Worker deploy separately. Changing `shared/journal-merge.js`
+changes both, so deploy the Worker and push the site together, or the two
+sides will disagree about a merge for as long as they are out of step.
+
+### The passphrase
+
+Currently `ethan-lab-2026`. It lives in exactly two places: Cloudflare, and
+each laptop's browser storage. **Never in this repo, which is public.**
+
+```
+npx wrangler secret put FAMILY_KEY      # to change it
+```
+
+Changing it disconnects every laptop until each retypes the new one.
+
+### Connecting a laptop
+
+Once per browser, about ten seconds:
+
+1. Open the journal on that laptop
+2. Under the calendar: *"Saved on this laptop only. Connect this laptop"*
+3. Type the passphrase, press enter
+4. It then reads *"Shared with your family"* and never asks again
+
+It is per **browser**, not per laptop: Chrome and Safari on the same machine
+are two connections.
+
+### What syncs and what does not
+
+Entries sync — notes, comments, reactions, and their tombstones. `seen` and
+`lastWho` do **not**: they say what the person at *this* device has read and
+who they last posted as. Syncing `seen` would clear Ethan's unread badge the
+moment his mum opened the journal on hers.
+
+### Deletes are tombstones, not holes
+
+A deleted note is an empty `text` with a fresh timestamp. A deleted comment
+keeps its id and carries `del: true`. A reaction taken off keeps its row and
+carries `off: true`. All three are invisible in the UI and all three must
+stay in the store — a row that simply vanished would be restored by the next
+laptop that still had it. `comments()` and `reactions()` in
+`shared/learning-log.js` filter them for display; `rawComments()` and
+`rawReactions()` are what writing and merging use.
+
+### Clearing the journal
+
+There is no delete endpoint by design. To wipe it, POST every entry back
+blanked — an empty `text`, every comment `del: true`, every reaction
+`off: true`, all with a timestamp ahead of what is stored. A tombstone with
+an older timestamp will simply lose the merge.
 
 ## 8. Known issues
 
@@ -255,6 +317,7 @@ without logging in. Fine for a smoke test, never for the real thing.
 | **Biology home overflows** | ~110px too tall on windows between roughly 780px and 1000px tall, so a scrollbar appears. Confirmed pre-existing against an untouched `main`. Math Quest's home has had the fix; Biology's has not. |
 | **The founding story has no way in** | AP Gov's `#/study` routes all work and the chapters link to each other, but nothing at the top level points into them since Study left the nav. A link from the Course Map is the natural fix. |
 | **`/favicon.ico` 404** | Biology and Math Quest declare no icon, so the browser probes the site root. Cosmetic. |
+| **Sync is opt-in per browser** | A laptop nobody connected keeps its notes to itself, silently and correctly. If a note "did not arrive", check the strip under the calendar on both machines first. |
 | **The school calendar is empty** | `shared/school-calendar.js` has no dates in it, so every weekday counts as a school day and a holiday will show as a day Ethan missed. It needs the district's published academic calendar — **not** a sports fixture list, and nothing from memory. See BUILD-GUIDE. |
 
 ---
