@@ -167,6 +167,32 @@ Two habits worth keeping:
 All three subjects share one key and are told apart by the `subject` field, so
 a combined view across subjects stays possible without moving anyone's data.
 
+### His work, as opposed to his notes
+
+Separate stores, one per subject, each with a shape its own app chose long
+before any of this synced. All three are synced by `shared/progress-sync.js`
+to the `/progress` document (§7).
+
+| Key | Holds |
+| --- | --- |
+| `ethan_biology_v1` | `{ explored[], attempts[], notes{}, last }` |
+| `ethan_math_quest_v2` | `{ version, attempts[], lessonStarted, lessonComplete, ... }` |
+| `ethanQuizScoresV1` | `{ chapterId: { best, last, total, attempts } }` |
+
+**Every merge rule in `shared/progress-merge.js` is a union, a maximum or an
+OR. Nothing there can make a store smaller.** That is the safety property the
+whole feature rests on, not tidiness: a parent's laptop has no progress on it,
+so a rule that could subtract would mean his mum opening the Biology page
+deletes his term's work.
+
+Two consequences worth knowing before changing that file:
+
+- A sync can never remove anything, so clearing is a deliberate `DELETE` (§7).
+- Biology's per-lesson note boxes carry no timestamp, so when two copies
+  differ the longer text wins. It is a guess, chosen because it loses the
+  least — he adds to those as he thinks, and an empty box never beats a
+  written one.
+
 ### A deploy does not touch it
 
 Verified, not assumed. Notes and a full comment thread were written on the live
@@ -226,12 +252,25 @@ silently, is worse than the alternative below.
 | Account | `bezuwm@gmail.com`, `d278cfe038a87cd5b338f95e49971bc1` |
 | Client | `shared/journal-sync.js`, merge rules in `shared/journal-merge.js` |
 
-Two routes, nothing else:
+Routes:
 
 ```
-GET  /journal   -> { entries: [...] }
-POST /journal   -> body { entries: [...] }, merged in, returns the result
+GET    /journal    -> { entries: [...] }     the daily notes and the thread
+POST   /journal    -> merged in, returns the result
+
+GET    /progress   -> { stores: {...} }      lessons, practice, quiz scores
+POST   /progress   -> merged in, returns the result
+
+DELETE /journal | /progress   -> clears that document
 ```
+
+Both documents live in the same Durable Object under different keys, with the
+same auth. Their merge rules differ because their shapes do.
+
+`DELETE` exists because nothing in either merge can take anything away, so
+there has to be exactly one deliberate way to clear a document — a new school
+year, or a test that needs to start from nothing. **No page on the site ever
+sends it.**
 
 **POST merges, it never replaces.** Three laptops can write the same day
 while offline and come back in any order; the server settles it with the same
@@ -262,33 +301,40 @@ The site and the Worker deploy separately. Changing `shared/journal-merge.js`
 changes both, so deploy the Worker and push the site together, or the two
 sides will disagree about a merge for as long as they are out of step.
 
-### The passphrase
+### The key, and why it ships with the page
 
-Currently `ethan-lab-2026`. It lives in exactly two places: Cloudflare, and
-each laptop's browser storage. **Never in this repo, which is public.**
+`shared/family-key.js` carries the key, so **every browser is connected the
+moment it loads the site**. No prompt, no button, nothing to remember, on any
+machine.
+
+**It is not a secret and nothing should be built as though it were.** It is
+served to anyone who opens the site. What it buys is that Ethan never writes
+a note, saves it, and finds out later it went nowhere — which is the failure
+a per-browser passphrase allowed, and the reason the trade was made. The site
+carries a `noindex` and is not linked from anywhere, so it is unlisted rather
+than protected.
+
+The server side is a real secret and stays one:
 
 ```
-npx wrangler secret put FAMILY_KEY      # to change it
+npx wrangler secret put FAMILY_KEY      # Cloudflare's copy
 ```
 
-Changing it disconnects every laptop until each retypes the new one.
+To rotate: change `shared/family-key.js`, publish, and set the secret to
+match. Every browser follows on its next load — no going round three laptops.
+
+**Planned:** a proper login in front of this. The `connect` / `disconnect`
+path in `shared/journal-sync.js` is deliberately still there and still works,
+so that can replace the built-in key without a rewrite.
 
 ### Connecting a laptop
 
-Once per browser, about ten seconds:
-
-1. Open the journal on that laptop
-2. Under the calendar: *"Saved on this laptop only. Connect this laptop"*
-3. Type the passphrase, press enter
-4. It then reads *"Shared with your family"* and never asks again
-
-It is per **browser**, not per laptop: Chrome and Safari on the same machine
-are two connections.
+Nothing to do. Opening the site is connecting.
 
 ### What syncs and what does not
 
-Entries sync — notes, comments, reactions, and their tombstones. `seen` and
-`lastWho` do **not**: they say what the person at *this* device has read and
+Journal entries sync — notes, comments, reactions, and their tombstones — and
+so do the three progress stores. `seen` and `lastWho` do **not**: they say what the person at *this* device has read and
 who they last posted as. Syncing `seen` would clear Ethan's unread badge the
 moment his mum opened the journal on hers.
 
@@ -317,7 +363,7 @@ an older timestamp will simply lose the merge.
 | **Biology home overflows** | ~110px too tall on windows between roughly 780px and 1000px tall, so a scrollbar appears. Confirmed pre-existing against an untouched `main`. Math Quest's home has had the fix; Biology's has not. |
 | **The founding story has no way in** | AP Gov's `#/study` routes all work and the chapters link to each other, but nothing at the top level points into them since Study left the nav. A link from the Course Map is the natural fix. |
 | **`/favicon.ico` 404** | Biology and Math Quest declare no icon, so the browser probes the site root. Cosmetic. |
-| **Sync is opt-in per browser** | A laptop nobody connected keeps its notes to itself, silently and correctly. If a note "did not arrive", check the strip under the calendar on both machines first. |
+| **The journal is unlisted, not private** | The key ships with the page, so anyone who opens the site — or reads its source — is in. Deliberate, documented in `shared/family-key.js`, and to be replaced by a login. |
 | **The school calendar is empty** | `shared/school-calendar.js` has no dates in it, so every weekday counts as a school day and a holiday will show as a day Ethan missed. It needs the district's published academic calendar — **not** a sports fixture list, and nothing from memory. See BUILD-GUIDE. |
 
 ---
