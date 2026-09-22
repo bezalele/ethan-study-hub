@@ -293,7 +293,11 @@ nav a:hover {
 }
 
 /* The journal calendar takes this subject's teal the same way. Shapes come
-   from ../shared/learning-log.css. */
+   from ../shared/learning-log.css. The hero on that page is a full-bleed
+   photograph, so the calendar needs room under it or the month sits on the
+   picture's edge. */
+.hero + .ll-history { margin-top: 26px; }
+
 .ll-history {
   --ll-accent: #244c59;
   --ll-accent-soft: #e4eef0;
