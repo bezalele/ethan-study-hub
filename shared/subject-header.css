@@ -1,0 +1,141 @@
+/* ---------------------------------------------------------------------------
+   subject-header.css — the cluster at the top right of every subject.
+
+   Four things, in this order, identical on Biology, Math Quest and AP U.S.
+   Government:
+
+     Today's Note      Ethan writes the day's line. Opens the editor where he
+                       stands; he never has to leave the page he is on.
+     Ethan's Journal   the whole record. This is the door his mum uses, so it
+                       is in the same spot in all three subjects and it is the
+                       one that carries the unread-replies badge — a reply is
+                       something to go and *read*.
+     Study Hub         back out to the three subjects.
+     E                 whose hub this is.
+
+   Two shapes, not four: the note is filled because it is an action, the two
+   links are outlined because they are navigation. Icons tell the two links
+   apart.
+
+   Colours come from three variables so one set of shapes works on a white
+   header and on a dark green banner:
+
+     --sh-ink    text, icon and border colour
+     --sh-fill   the filled chip's background
+     --sh-edge   the outlined chip's border
+
+   A dark header adds `sh-on-dark`, which swaps the painted colours for
+   translucent white and so sits on whatever the banner is doing behind it.
+
+   Behaviour lives in subject-header.js and learning-log.js; the note chip's
+   markup is written by LearningLog.mountButton, which uses these classes.
+   --------------------------------------------------------------------------- */
+
+.sh-cluster {
+  --sh-ink: #315c48;
+  --sh-fill: #eaf1e6;
+  --sh-edge: #cfd9c6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.sh-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 13px;
+  border: 1px solid var(--sh-edge);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--sh-ink);
+  font: 700 13px/1 inherit;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.sh-chip:hover {
+  background: var(--sh-fill);
+  border-color: var(--sh-ink);
+  text-decoration: none;
+}
+
+/* The one thing on the header that is an action rather than a destination. */
+.sh-chip--write {
+  background: var(--sh-fill);
+  border-color: var(--sh-ink);
+}
+
+.sh-chip__ico {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Today's note is already written. */
+.sh-chip__tick {
+  font-size: 12px;
+  opacity: .75;
+}
+
+/* Replies Ethan has not read yet. Reading the journal clears it. */
+.sh-chip__dot {
+  display: grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: #b4552f;
+  border-radius: 999px;
+  font: 700 12px/1 inherit;
+  color: #fff;
+}
+
+.sh-avatar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  background: var(--sh-ink);
+  border-radius: 50%;
+  color: #fff;
+  font: 700 13px/1 inherit;
+  user-select: none;
+}
+
+/* --- On a dark banner ---------------------------------------------------- */
+
+.sh-cluster.sh-on-dark {
+  --sh-ink: #ffffff;
+  --sh-fill: rgba(255, 255, 255, .15);
+  --sh-edge: rgba(255, 255, 255, .3);
+}
+.sh-on-dark .sh-chip:hover {
+  background: rgba(255, 255, 255, .24);
+  border-color: rgba(255, 255, 255, .55);
+}
+.sh-on-dark .sh-chip--write { border-color: rgba(255, 255, 255, .5); }
+.sh-on-dark .sh-avatar {
+  background: rgba(255, 255, 255, .16);
+  border: 1px solid rgba(255, 255, 255, .34);
+}
+
+/* --- Narrow ---------------------------------------------------------------
+   Labels go before anything else does: the icons carry the meaning and the
+   four targets stay where they were, which matters more than the words.
+   --------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .sh-cluster { gap: 6px; }
+  .sh-chip { padding: 0 10px; }
+  .sh-chip__txt { display: none; }
+}

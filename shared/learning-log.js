@@ -24,10 +24,12 @@
    Two surfaces, deliberately:
      mountButton   a small trigger for the app header. Opens a modal editor,
                    so writing the day's note costs no page space and moves
-                   nothing. Carries a badge when there are unseen replies.
+                   nothing. Mounted by shared/subject-header.js as part of
+                   the top-right cluster rather than called directly.
      mountHistory  the full record — every note by date, each with its own
                    comment thread, so notes can be talked about rather than
-                   only written.
+                   only written. This is what the "Ethan's Journal" chip in
+                   that cluster leads to, and where unread replies are shown.
 
    Dates are local, not UTC — "today" has to mean the day it is where Ethan
    is sitting, or an evening entry lands on tomorrow.
@@ -92,10 +94,22 @@
     }
   }
 
+  /* Anything that changes the store announces it, so surfaces that are not
+     part of this component can redraw. The header cluster listens: without
+     this it depends on being mounted after whatever changed the data, and
+     each app mounts in a different order. Ordering bugs of that kind are
+     invisible until the badge sticks. */
+  function notify() {
+    try {
+      document.dispatchEvent(new Event('esh:log-changed'));
+    } catch (e) { /* No Event constructor: the UI simply redraws on the next load. */ }
+  }
+
   /** Returns false when storage is unavailable, so the UI can say so. */
   function writeAll(data) {
     try {
       localStorage.setItem(KEY, JSON.stringify(data));
+      notify();
       return true;
     } catch (e) {
       return false;
@@ -196,7 +210,7 @@
     return writeAll(data);
   }
 
-  var PENCIL = '<svg class="ll__ico" viewBox="0 0 24 24" aria-hidden="true">' +
+  var PENCIL = '<svg class="sh-chip__ico" viewBox="0 0 24 24" aria-hidden="true">' +
     '<path d="M4 20h4.2L19 9.2a2.1 2.1 0 0 0-3-3L5.2 17 4 20Z"/><path d="M14.8 7.4 16.6 9.2"/></svg>';
 
   function firstLine(text, max) {
@@ -208,6 +222,14 @@
      A button rather than a panel: writing one line a day should not cost the
      home page a permanent block, and nothing on the page moves when it opens.
      It lives in the app header, so the note can be written from any page.
+
+     The trigger wears the shared header's chip classes (shared/subject-header.css)
+     rather than a look of its own, because it sits shoulder to shoulder with
+     the journal and hub chips and has to match them exactly. Behaviour is
+     this file's business; the shape is the header's.
+
+     No badge here. Unread replies are shown on the journal chip next door,
+     which is where you go to read them.
      --------------------------------------------------------------------------- */
 
   function mountButton(root, opts) {
@@ -224,14 +246,12 @@
 
     function drawTrigger() {
       var has = !!entryFor(subject, today());
-      var fresh = newCount(subject);
       root.innerHTML =
-        '<button type="button" class="ll-trigger' + (has ? ' is-done' : '') + '" data-open ' +
+        '<button type="button" class="sh-chip sh-chip--write" data-open ' +
           'title="' + esc(prompt()) + '" aria-label="' + esc(prompt()) + '">' +
           PENCIL +
-          '<span class="ll-trigger__txt">Today’s note</span>' +
-          (fresh ? '<span class="ll-trigger__dot" aria-label="' + fresh + ' new replies">' + fresh + '</span>'
-                 : (has ? '<span class="ll-trigger__tick" aria-hidden="true">✓</span>' : '')) +
+          '<span class="sh-chip__txt">Today’s Note</span>' +
+          (has ? '<span class="sh-chip__tick" aria-hidden="true">✓</span>' : '') +
         '</button>';
       root.querySelector('[data-open]').onclick = open;
     }

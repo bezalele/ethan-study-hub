@@ -270,6 +270,59 @@ section('Asset version is consistent');
   });
 }
 
+/* --- 13. The shared header cluster is the same in all three subjects ------
+   The whole point of shared/subject-header.js is that Ethan and his mum find
+   the same four controls in the same order wherever they are. Three separate
+   apps with three separate headers will drift apart the moment nobody is
+   checking, so this checks.
+   --------------------------------------------------------------------------- */
+
+section('Shared header cluster');
+
+const SUBJECTS = [
+  { name: 'AP U.S. Government', shell: APP,                   app: 'layout/layout.js', prefix: '',    subject: 'apgov'   },
+  { name: 'Honors Biology',     shell: 'biology/index.html',  app: 'biology/app.js',   prefix: '../', subject: 'biology' },
+  { name: 'Math Quest',         shell: 'math-quest/index.html', app: 'math-quest/app.js', prefix: '../', subject: 'math'  },
+];
+
+SUBJECTS.forEach(({ name, shell, app, prefix, subject }) => {
+  const html = read(shell);
+  const js = read(app);
+  /* Quote style and spacing differ between the three apps, so compare a
+     normalised copy rather than three near-identical regexes. */
+  const flat = js.replace(/['"]/g, '"').replace(/\s+/g, '');
+  check(`${name} loads subject-header.css`, html.includes(`${prefix}shared/subject-header.css?v=`));
+  check(`${name} loads subject-header.js`, html.includes(`${prefix}shared/subject-header.js?v=`));
+  check(`${name} mounts the cluster`, /SubjectHeader\.mount\(/.test(js));
+  check(`${name} mounts it for "${subject}"`, flat.includes(`subject:"${subject}"`));
+  check(`${name} names the learner`, flat.includes('learner:"Ethan"'));
+  check(`${name} gives the cluster a journal`, /journalHref:/.test(js));
+  check(`${name} gives the cluster the hub`, /hubHref:/.test(js));
+
+  /* Nothing may hand-roll what the cluster provides. A stray Study Hub link
+     or a second avatar is exactly how the three headers diverged before. */
+  const header = (html.match(/<header[\s\S]*?<\/header>/) || [''])[0];
+  check(`${name} header has no search box`, !/<input[^>]*type="search"/.test(header));
+  check(`${name} header has no hand-rolled avatar`, !/class="avatar"/.test(header));
+  check(`${name} header has one cluster mount`,
+    (header.match(/id="(hdr-cluster|sh-mount)"/g) || []).length === 1
+    || /id="sh-mount"/.test(read('layout/layout.js')));
+});
+
+/* The badge belongs to the journal chip, not the writing button: a reply is
+   something to go and read. */
+const clusterJs = read('shared/subject-header.js');
+const logJs = read('shared/learning-log.js');
+check('the unread badge lives on the journal chip', /sh-chip__dot/.test(clusterJs));
+check('the note button carries no badge', !/sh-chip__dot/.test(logJs));
+check('the note button wears the shared chip shape', /sh-chip sh-chip--write/.test(logJs));
+
+/* AP Gov renders its chrome once, so its journal chip is the one link that
+   the nav-href check above cannot see. */
+const clusterHref = (read('layout/layout.js').match(/journalHref:\s*'#([^']*)'/) || [])[1];
+check('AP Gov journal chip points at a real route',
+  routePaths.includes('/' + String(clusterHref).replace(/^\//, '')), clusterHref);
+
 /* --- Result ---------------------------------------------------------------- */
 
 console.log(`\n${checks - failures}/${checks} checks passed`);

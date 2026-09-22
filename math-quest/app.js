@@ -630,10 +630,11 @@ function route() {
       },
     })[page] || home
   )();
-  const logSlot = document.getElementById("log-mount");
-  if (logSlot && window.LearningLog) {
-    LearningLog.mountButton(logSlot, {
-      subject: "math", label: "Algebra 1", learner: "Ethan", historyHref: "#journal",
+  const cluster = document.getElementById("hdr-cluster");
+  if (cluster && window.SubjectHeader) {
+    SubjectHeader.mount(cluster, {
+      subject: "math", label: "Algebra 1", learner: "Ethan",
+      journalHref: "#journal", hubHref: "../",
     });
   }
   window.scrollTo(0, 0);
@@ -641,11 +642,6 @@ function route() {
 document.getElementById("menu").onclick = () => {
   const open = document.body.classList.toggle("nav-open");
   document.getElementById("menu").setAttribute("aria-expanded", String(open));
-};
-document.getElementById("search").onkeydown = (e) => {
-  if (e.key === "Enter") {
-    location.hash = "search/" + encodeURIComponent(e.target.value.trim());
-  }
 };
 window.addEventListener("hashchange", route);
 route();

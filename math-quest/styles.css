@@ -276,31 +276,12 @@ nav a:hover {
   margin: 0 10px;
   color: #98a09f;
 }
-.search {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid #dde1dc;
-  border-radius: 7px;
-  padding: 6px 12px;
-  background: #ffffff70;
-}
-.search input {
-  border: 0;
-  outline: 0;
-  background: transparent;
-  font: 12px Arial;
-  width: 230px;
-  padding: 5px;
-}
-.avatar {
-  border-radius: 50%;
-  background: #244c59;
-  color: white;
-  width: 33px;
-  height: 33px;
-  display: grid;
-  place-items: center;
+/* The shared top-right cluster (Today's Note, Ethan's Journal, Study Hub, E)
+   in this subject's teal. Shapes come from ../shared/subject-header.css. */
+.sh-cluster {
+  --sh-ink: #244c59;
+  --sh-fill: #e4eef0;
+  --sh-edge: #cfdfe1;
 }
 #menu {
   display: none;
@@ -816,13 +797,6 @@ button.ghost {
   }
   .topbar #breadcrumb {
     font-size: 12px;
-  }
-  .search {
-    order: 4;
-    width: 100%;
-  }
-  .search input {
-    width: 100%;
   }
   .hero {
     min-height: 310px;

@@ -1,6 +1,10 @@
 /* ---------------------------------------------------------------------------
-   learning-log.css — the "what did you learn today?" button, its modal,
-   and the history page.
+   learning-log.css — the "what did you learn today?" modal editor and the
+   history page.
+
+   The header button that opens the modal is NOT styled here: it wears the
+   chip shape from shared/subject-header.css so it matches the journal and
+   hub chips standing next to it.
 
    Deliberately neutral: it inherits the host page's fonts and takes its
    accent from --ll-accent, so Biology, Math Quest and AP Gov can each set
@@ -12,43 +16,6 @@
   --ll-accent-soft: #eaf1e6;
   --ll-edge: #cfd9c6;
   --ll-muted: #62736b;
-}
-
-/* --- Header trigger ---------------------------------------------------------
-   Small enough to live in the app header, so the day's note is one click
-   away from any page and costs the page no space at all.
-   --------------------------------------------------------------------------- */
-
-.ll-trigger {
-  --ll-accent: #315c48;
-  --ll-accent-soft: #eaf1e6;
-  --ll-edge: #cfd9c6;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 34px;
-  padding: 0 11px;
-  background: #fff;
-  border: 1px solid var(--ll-edge);
-  border-radius: 999px;
-  color: var(--ll-accent);
-  font: 700 13px/1 inherit;
-  white-space: nowrap;
-  cursor: pointer;
-}
-.ll-trigger:hover { border-color: var(--ll-accent); background: var(--ll-accent-soft); }
-.ll-trigger.is-done { background: var(--ll-accent-soft); }
-.ll-trigger__tick { color: var(--ll-accent); font-size: 13px; }
-.ll-trigger__dot {
-  display: grid;
-  place-items: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  background: #b4552f;
-  border-radius: 999px;
-  font: 700 12px/1 inherit;
-  color: #fff;
 }
 
 /* --- Modal editor ------------------------------------------------------------ */
@@ -100,7 +67,6 @@
 .ll-modal__all { margin-left: auto; }
 
 @media (max-width: 760px) {
-  .ll-trigger__txt { display: none; }
   .ll-modal__card { padding: 20px 18px 18px; }
 }
 

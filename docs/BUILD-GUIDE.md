@@ -138,6 +138,39 @@ Relaxed is the default, not a rule that overrides the subject.
 
 ---
 
+## The header is the same in every subject
+
+Top right of Biology, Math Quest and AP U.S. Government, in this order:
+
+| | who it is for | what it does |
+| --- | --- | --- |
+| **Today's Note** | Ethan | opens the editor over the page he is already on |
+| **Ethan's Journal** | his mum, and him | the whole record: every day, every reply |
+| **Study Hub** | both | back out to the three subjects |
+| **E** | — | whose hub this is |
+
+Two doors to the same notes on purpose. Writing should cost him nothing —
+one click, from wherever he is, no navigation. Reading is a different job:
+his mum needs one address she can be told once and find in any subject, and
+replies need the history around them to make sense.
+
+The unread-replies badge sits on **Ethan's Journal**, never on Today's Note.
+A reply is something to go and read; a number on the writing button would
+read as homework outstanding.
+
+This is built once, in `shared/subject-header.js` and
+`shared/subject-header.css`, and mounted by each app into an empty element.
+Do not hand-roll any of the four in a subject's own header — that is exactly
+how the three drifted apart the first time. `tests/smoke.cjs` checks all
+three subjects load the shared files, mount the cluster, and have no
+leftover search box or second avatar.
+
+Each subject sets only three colour variables (`--sh-ink`, `--sh-fill`,
+`--sh-edge`) so the shapes stay identical while the palette stays native.
+AP Gov adds `sh-on-dark` because its header is a green banner.
+
+---
+
 ## Accuracy beats everything here
 
 Every rule in this document loses to being correct. A relaxed, funny,

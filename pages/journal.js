@@ -1,10 +1,11 @@
 /* ---------------------------------------------------------------------------
    journal.js — Ethan's daily notes for this subject.
 
-   Reached from "Today's note" in the main nav. Writing the day's note and
-   reading the record are the same page rather than a modal over whatever
-   page you happened to be on: one place to go, and the history is in front
-   of you while you write.
+   Reached from "Ethan's Journal" in the shared header cluster — the same
+   chip, in the same place, on all three subjects, so there is one address to
+   give his mum. Writing the day's note has its own chip next to it, which
+   opens an editor in place; this page is the record, and it is also where
+   replies are read and answered.
 
    The list, the editing and the comment threads all come from
    shared/learning-log.js, which Biology and Math Quest mount the same way.
@@ -12,7 +13,7 @@
    deferred module runs.
    --------------------------------------------------------------------------- */
 
-import { el, html } from '../layout/dom.js?v=9';
+import { el, html } from '../layout/dom.js?v=10';
 
 export default {
   id: 'journal',

@@ -9,13 +9,15 @@
    which `setActive` below is solely responsible for.
    --------------------------------------------------------------------------- */
 
-/** The navigation. One array, one source of truth. */
+/** The navigation. One array, one source of truth.
+
+    Subject navigation only. Study Hub and the notes are not here: they live
+    in the shared cluster on the right, in the same place and the same order
+    as on Biology and Math Quest. */
 export const NAV = [
-  { id: 'hub', label: '← Study Hub', href: './' },
   { id: 'home',   label: 'Home',       href: '#/' },
   { id: 'course', label: 'Course Map', href: '#/course' },
   { id: 'study',  label: 'Study',      href: '#/study' },
-  { id: 'journal', label: 'Today’s note', href: '#/journal' },
 ];
 
 /* Inline so it can never 404 the way assets/home/10-book-logo.png did. */
@@ -42,13 +44,44 @@ export function renderLayout() {
       </span>
       <span class="brand__sub">AP U.S. Government &amp; Politics &middot; 2026&ndash;27</span>
     </a>
-    <nav id="app-nav" aria-label="Main">
-      ${NAV.map((item) => `<a class="nav__link" data-nav="${item.id}" href="${item.href}">${item.label}</a>`).join('')}
-    </nav>`;
+    <div class="hdr-end">
+      <nav id="app-nav" aria-label="Main">
+        ${NAV.map((item) => `<a class="nav__link" data-nav="${item.id}" href="${item.href}">${item.label}</a>`).join('')}
+      </nav>
+      <div id="sh-mount"></div>
+    </div>`;
 
   footer.innerHTML = `
     <span>Ethan Study Hub &middot; AP U.S. Government &amp; Politics</span>
     <span>Progress is saved on this device.</span>`;
+
+  mountCluster();
+}
+
+/**
+ * Draw the shared right-hand cluster: Today’s Note, Ethan’s Journal,
+ * Study Hub, and his initial — the same four controls, in the same order,
+ * as Biology and Math Quest.
+ *
+ * Called once, from renderLayout. The chrome here is rendered at boot and
+ * never again, but the cluster keeps itself current: it listens for the
+ * learning log announcing a change and redraws itself.
+ *
+ * `onDark` because this header is the forest-green banner — the cluster
+ * keeps its shapes and swaps its colours for translucent white.
+ */
+function mountCluster() {
+  const mount = document.getElementById('sh-mount');
+  if (mount && window.SubjectHeader) {
+    window.SubjectHeader.mount(mount, {
+      subject: 'apgov',
+      label: 'AP U.S. Government',
+      learner: 'Ethan',
+      journalHref: '#/journal',
+      hubHref: './',
+      onDark: true,
+    });
+  }
 }
 
 /**
