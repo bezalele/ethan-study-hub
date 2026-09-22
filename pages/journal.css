@@ -11,10 +11,40 @@
   padding-block: var(--s-7) var(--s-9);
 }
 
-.page--journal .jr-head {
+/* The banner. Same construction as Biology's and Math Quest's: the picture
+   sits at its own size on the right, a wash of the page colour carries the
+   words across the left, and the image is never stretched to fit. */
+.page--journal .jr-hero {
   display: grid;
   gap: var(--s-2);
-  max-width: 60ch;
+  max-width: none;
+  padding: var(--s-6) var(--s-7);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background-color: var(--c-parchment-dim);
+  background-image:
+    linear-gradient(90deg,
+      var(--c-parchment-dim) 0%,
+      var(--c-parchment-dim) 44%,
+      color-mix(in srgb, var(--c-parchment-dim) 85%, transparent) 64%,
+      transparent 93%),
+    url("../assets/chapters/constitution-rights/hero-constitution-legacy.jpg");
+  background-position: center, right center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%, auto 100%;
+}
+.page--journal .jr-hero > * { max-width: 56ch; }
+
+@media (max-width: 860px) {
+  .page--journal .jr-hero {
+    padding: var(--s-5);
+    background-image:
+      linear-gradient(90deg,
+        var(--c-parchment-dim) 0%,
+        color-mix(in srgb, var(--c-parchment-dim) 96%, transparent) 64%,
+        color-mix(in srgb, var(--c-parchment-dim) 80%, transparent) 100%),
+      url("../assets/chapters/constitution-rights/hero-constitution-legacy.jpg");
+  }
 }
 
 .page--journal .jr-title {

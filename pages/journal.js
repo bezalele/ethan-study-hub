@@ -13,7 +13,7 @@
    deferred module runs.
    --------------------------------------------------------------------------- */
 
-import { el, html } from '../layout/dom.js?v=11';
+import { el, html } from '../layout/dom.js?v=12';
 
 export default {
   id: 'journal',
@@ -23,7 +23,7 @@ export default {
     const page = el('div', 'page page--journal');
     page.append(html(`
       <div class="shell jr-shell">
-        <header class="jr-head">
+        <header class="jr-head jr-hero">
           <p class="eyebrow">After school</p>
           <h1 class="jr-title">What you learned, Ethan</h1>
           <p class="jr-intro">
