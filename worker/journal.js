@@ -69,15 +69,21 @@ export class Journal {
 }
 
 /* The site is served from GitHub Pages, so every call here is cross-origin.
-   Only the hub may call it; a browser will refuse anything else. */
-const ALLOWED = [
-  'https://bezalele.github.io',
-  'http://127.0.0.1:8777',
-  'http://localhost:8777',
-];
+
+   The live site, plus any local server while the site is being worked on -
+   the port changes depending on what started it, and pinning one guarantees
+   a confusing CORS failure the first time somebody uses a different one.
+   Allowing any localhost port costs nothing: the passphrase is what protects
+   the journal, and a page on a stranger's machine does not have it. */
+const SITE = 'https://bezalele.github.io';
+const LOCAL = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+
+function allowed(origin) {
+  return origin === SITE || LOCAL.test(origin);
+}
 
 function cors(origin) {
-  const allow = ALLOWED.includes(origin) ? origin : ALLOWED[0];
+  const allow = allowed(origin) ? origin : SITE;
   return {
     'Access-Control-Allow-Origin': allow,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
