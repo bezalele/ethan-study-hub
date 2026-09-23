@@ -659,6 +659,15 @@
   color: var(--ll-muted);
 }
 
+/* The ones he has actually been in lately. Most days this row is the whole
+   job, so it is marked out from the units below it - outlined, not filled:
+   the filled badge belongs to a lesson he has already chosen. */
+.ll-opt--fast .ll-row__ic {
+  background: #fff;
+  border: 1px solid var(--ll-accent);
+  font-size: 13px;
+}
+
 /* Already attached, with a way to take it back off. */
 .ll-pick__chosen { display: grid; gap: 1px; }
 .ll-row.ll-lk {

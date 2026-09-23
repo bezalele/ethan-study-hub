@@ -367,9 +367,7 @@
   function mountPicker(host, opts) {
     if (!host) return { links: function () { return []; } };
     var lessons = opts.lessons || [];
-    /* opts.recent - the lessons he has opened lately - is deliberately not
-       shown yet. One way in is easier to learn than two, and the units are
-       the way in that teaches him where things live. Held for later. */
+    var recentHrefs = opts.recent || [];
     var chosen = (opts.initial || []).map(function (l) {
       return { title: l.title, href: l.href };
     });
@@ -384,6 +382,12 @@
       if (!byGroup[g]) { byGroup[g] = []; groups.push(g); }
       byGroup[g].push(l);
     });
+
+    /* The lessons he has actually opened, newest first, from his own progress
+       on this device. Most evenings the right answer is already here. */
+    var recent = recentHrefs.map(function (h) {
+      return lessons.filter(function (l) { return l.href === h; })[0];
+    }).filter(Boolean).slice(0, 3);
 
     function has(href) {
       return chosen.some(function (c) { return c.href === href; });
@@ -414,11 +418,20 @@
         '</div>';
       }).join('');
 
+      var lately = recent.filter(function (l) { return !has(l.href); });
+
       host.className = 'll-pick';
       host.innerHTML =
         '<span class="ll-pick__l">What was this about?</span>' +
         '<div class="ll-pick__list">' +
           (chosenRows ? '<div class="ll-pick__chosen">' + chosenRows + '</div>' : '') +
+          (lately.length
+            ? '<p class="ll-pick__cap">Lately</p>' +
+              lately.map(function (l) {
+                return row('ll-opt ll-opt--fast', 'data-add="' + esc(l.href) + '"',
+                  '\u21ba', l.title, '<span class="ll-row__go" aria-hidden="true"></span>');
+              }).join('')
+            : '') +
           '<p class="ll-pick__cap">All lessons</p>' +
           groups.map(function (g) {
             var isOpen = open === g;
