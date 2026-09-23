@@ -10,6 +10,48 @@ rather than following the rule off a cliff.
 
 ---
 
+## The site is live and Ethan is using it
+
+**This rule outranks everything else in this document, including the one
+about accuracy. Nothing anybody has written may be overwritten, cleared or
+lost — not his daily notes, not the journal conversation, not his lessons,
+practice or quiz results.**
+
+Three things count as his and are never to be written over:
+
+| | Where it lives | Holds |
+| --- | --- | --- |
+| The journal | Worker `/journal`, cached in each browser | his daily notes, comments, reactions |
+| His work | Worker `/progress`, cached in each browser | lessons explored, practice attempts, quiz scores |
+| His lesson notes | inside the Biology progress store | what he typed in a lesson's reflection box |
+
+What that means in practice:
+
+- **Never write to the live Worker from a test, a probe, or a one-off script.**
+  Reading it to diagnose something is fine. Writing is not, and that includes
+  tidying up after yourself. Tests use a local worker — see
+  [OPERATIONS.md §5](OPERATIONS.md).
+- **Never use the `DELETE` route on production.** It exists so tests can start
+  from a known state. It is not a cleanup tool.
+- **Never change the storage key** (`esh-learning-log-v1`, `ethan_biology_v1`,
+  `ethan_math_quest_v2`, `ethanQuizScoresV1`). If a format has to change,
+  migrate: read the old, transform, write the new.
+- **Keep every merge rule additive.** A union, a maximum or an OR can never
+  make somebody's record smaller. A parent's laptop holds no progress at all,
+  so any rule that could subtract would delete his term the moment they opened
+  the page.
+- **Deletes are tombstones, never holes.** A removed note is an empty text with
+  a fresh timestamp; a removed comment keeps its id and carries `del`. A row
+  that simply vanished gets restored by the next device that still has it.
+- **Seeding demo data goes in a throwaway browser profile**, never into the
+  shared store.
+
+This was written on 2026-09-22 after a test suite pointed at the deployed
+Worker and cleared the journal while Ethan was writing in it. The rule is not
+a precaution; it is a repair.
+
+---
+
 ## How we work
 
 **The owner provides the course material. The assistant builds the
