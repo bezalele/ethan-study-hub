@@ -127,3 +127,24 @@ export const AREAS = [
 export function getArea(n) {
   return AREAS.find((a) => a.n === Number(n));
 }
+
+/**
+ * A topic's address inside its unit: 'Checks and balances' -> 'checks-and-balances'.
+ *
+ * The daily note links a topic as #/course/2/checks-and-balances, and the
+ * Course Map uses the same slug as the id it scrolls to, so the two cannot
+ * disagree about what a topic is called.
+ */
+export function topicSlug(topic) {
+  return String(topic)
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+/** The topic a slug names, or undefined. */
+export function getTopic(n, slug) {
+  const area = getArea(n);
+  return area && area.topics.find((t) => topicSlug(t) === slug);
+}

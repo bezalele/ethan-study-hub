@@ -15,6 +15,8 @@
     in the shared cluster on the right, in the same place and the same order
     as on Biology and Math Quest. */
 import { CHAPTERS } from '../content/chapters.js?v=17';
+import { AREAS, topicSlug } from '../content/course.js?v=17';
+import { unitIdeas } from '../content/courseDetails.js?v=17';
 
 export const NAV = [
   { id: 'home',   label: 'Home',       href: '#/' },
@@ -68,10 +70,9 @@ export function renderLayout() {
  * Read from the same two content files the Course Map and the chapters read,
  * so there is no second list to keep in step.
  *
- * The founding story comes first and is a group, because its five chapters
- * are pages in their own right. Then the units, each a row of its own: a
- * unit is as deep as this subject can be linked, so there is nothing to open
- * underneath one.
+ * The founding story comes first, because that is where the history starts.
+ * Then the five units, each opening onto its core ideas - the same list the
+ * Course Map shows, and the link lands on the one he picked.
  */
 export function courseLessons() {
   const units = (window.EthanStudyHubContent && window.EthanStudyHubContent.units) || [];
@@ -84,14 +85,17 @@ export function courseLessons() {
     group: 'The founding story',
     href: '#/study/' + c.id,
   }));
-  units
-    .slice()
-    .sort((a, b) => Number(a.id) - Number(b.id))
-    .forEach((u) => lessons.push({
-      id: 'unit-' + u.id,
-      title: 'Unit ' + u.id + ' · ' + u.title,
-      href: '#/course/' + u.id,
-    }));
+  /* Then the units, each opening onto its own core ideas. The link carries
+     the idea he picked, so the Course Map opens at that line rather than at
+     the top of a unit he has to hunt through. */
+  AREAS.slice()
+    .sort((a, b) => a.n - b.n)
+    .forEach((a) => unitIdeas(a).forEach((t) => lessons.push({
+      id: 'u' + a.n + '-' + topicSlug(t),
+      title: t,
+      group: 'Unit ' + a.n + ' · ' + a.title,
+      href: '#/course/' + a.n + '/' + topicSlug(t),
+    })));
   return lessons;
 }
 

@@ -1,7 +1,9 @@
 /* ---------------------------------------------------------------------------
    course-map.js — the Course Map: the map of the whole AP course.
 
-   Routes: #/course (defaults to Unit 1) and #/course/:unit
+   Routes: #/course (defaults to Unit 1), #/course/:unit, and
+   #/course/:unit/:topic, which opens the unit at one of its core ideas -
+   that is what the daily note's lesson links point at.
 
    Layout, per docs/COURSE_PAGE_IMPLEMENTATION_SPEC.md section 3: the page
    itself never scrolls on desktop. The unit selector stays put and the right
@@ -15,8 +17,8 @@
    the content lands.
    --------------------------------------------------------------------------- */
 
-import { AREAS, getArea } from '../content/course.js?v=17';
-import { getDetail } from '../content/courseDetails.js?v=17';
+import { AREAS, getArea, topicSlug } from '../content/course.js?v=17';
+import { getDetail, unitIdeas } from '../content/courseDetails.js?v=17';
 import { renderTriangle, wireTriangle } from '../components/power-triangle.js?v=17';
 import { el, html, esc } from '../layout/dom.js?v=17';
 
@@ -149,12 +151,16 @@ function sectionDocumentWalk(d) {
 }
 
 function sectionCoreIdeas(area, d) {
+  /* unitIdeas is the shared answer; the notes beside them are this page's. */
   const ideas = d.coreIdeas && d.coreIdeas.length
     ? d.coreIdeas
-    : area.topics.map((t) => ({ title: t, note: '' }));
+    : unitIdeas(area).map((t) => ({ title: t, note: '' }));
 
+  /* The id is the same slug the daily note links to, so a note that says
+     "we did checks and balances" lands on that line rather than at the top
+     of the unit. */
   const items = ideas.map((idea, i) => `
-    <li class="cm-idea">
+    <li class="cm-idea" id="idea-${esc(topicSlug(idea.title))}">
       <span class="cm-idea__n">${String(i + 1).padStart(2, '0')}</span>
       <span class="cm-idea__text">
         <strong>${esc(idea.title)}</strong>
@@ -363,6 +369,19 @@ function wireQuickCheck(root) {
   show(0);
 }
 
+/* Arriving from a daily note: mark the idea it named and bring it into view.
+   The page is not in the document yet when render returns, so this waits for
+   the frame after it is - and the panel is the scrolling region, not the
+   window, so the line is scrolled inside that. */
+function focusTopic(page, slug) {
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const li = page.querySelector('#idea-' + CSS.escape(slug));
+    if (!li) return;
+    li.classList.add('is-named');
+    li.scrollIntoView({ block: 'center' });
+  }));
+}
+
 /* --- Module --------------------------------------------------------------- */
 
 export default {
@@ -388,6 +407,7 @@ export default {
     wireWalk(page);
     if (d0.model && d0.model.type === 'triangle') wireTriangle(page, d0.model, esc);
     wireQuickCheck(page);
+    if (params.topic) focusTopic(page, params.topic);
     return page;
   },
 };
