@@ -309,6 +309,25 @@
   box-shadow: 0 18px 50px rgba(20, 38, 30, .28);
 }
 
+/* The card never grows past the screen, and Save never leaves it.
+   Everything in here keeps its height except the lesson list, which takes
+   what is left - so three picked lessons cost the list some rows rather than
+   costing him the buttons. */
+.ll-modal__card {
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+  max-height: calc(100dvh - 28px);
+}
+.ll-modal__card > * { flex: 0 0 auto; }
+.ll-modal__card .ll-pick {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.ll-modal__card .ll-pick__list { flex: 1 1 auto; min-height: 96px; }
+
 .ll-modal__x {
   position: absolute;
   top: 10px;
@@ -547,6 +566,22 @@
   color: var(--ll-muted);
 }
 
+/* What he has picked, above the list rather than inside it: it is the answer
+   to the question, and it should not scroll away while he looks for the
+   next one. */
+.ll-pick__chosen { display: grid; gap: 2px; }
+
+/* Said only when he reaches for a fourth. Accent, not alarm - he has not
+   done anything wrong. */
+.ll-pick__full {
+  margin: 0;
+  padding: 7px 10px;
+  background: var(--ll-accent-soft);
+  border-radius: 8px;
+  font: 700 12.5px/1.4 inherit;
+  color: var(--ll-accent);
+}
+
 /* One card. It scrolls inside itself so Save never leaves the screen. */
 .ll-pick__list {
   max-height: 300px;
@@ -659,8 +694,29 @@
   color: var(--ll-muted);
 }
 
+/* Picked, and still exactly where it was. The row does not leave the list -
+   tapping it again is how it comes off, so it has to stay findable. */
+.ll-row.is-on {
+  background: var(--ll-accent-soft);
+  color: var(--ll-accent);
+  font-weight: 700;
+}
+.ll-unit__list .ll-row.is-on .ll-row__ic { background: var(--ll-accent); }
+.ll-row__tick {
+  flex: 0 0 auto;
+  margin-right: 3px;
+  font: 700 13px/1 inherit;
+  color: var(--ll-accent);
+}
+
+/* What a folded unit has given him, so he can see it without opening it. */
+.ll-unit__n {
+  flex: 0 0 auto;
+  font: 700 11px/1 inherit;
+  color: var(--ll-accent);
+}
+
 /* Already attached, with a way to take it back off. */
-.ll-pick__chosen { display: grid; gap: 1px; }
 .ll-row.ll-lk {
   background: var(--ll-accent-soft);
   color: var(--ll-accent);

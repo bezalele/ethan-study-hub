@@ -427,7 +427,44 @@
       '</button>';
     }
 
+    /* Three. Enough for a day that touched more than one thing, few enough
+       that the note still means something. At three he is told rather than
+       silently overruled: nothing he picked is dropped to make room. */
+    var MAX = 3;
+    var full = false;   // he reached for a fourth
+
+    /* Picking is a toggle, and nothing leaves the list when it is picked.
+       A lesson he has chosen stays exactly where it was, ticked - so the way
+       to take it off is the same row he turned on, and the list underneath
+       him never reshuffles while he is reading it. */
+    function toggle(href) {
+      var l = lessons.filter(function (x) { return x.href === href; })[0];
+      if (!l) return;
+      if (has(href)) {
+        chosen = chosen.filter(function (c) { return c.href !== href; });
+        full = false;
+      } else if (chosen.length >= MAX) {
+        full = true;
+      } else {
+        chosen.push({ title: l.title, href: l.href });
+        full = false;
+      }
+      /* `open` is deliberately untouched: the unit he is reading stays open,
+         so picking two things out of it costs two taps and no hunting. */
+      draw();
+    }
+
+    function tail(on) {
+      return on
+        ? '<span class="ll-row__tick" aria-hidden="true">\u2713</span>'
+        : '<span class="ll-row__go" aria-hidden="true"></span>';
+    }
+
     function draw() {
+      /* A redraw replaces the list, so remember where he was reading. */
+      var box = host.querySelector('.ll-pick__list');
+      var at = box ? box.scrollTop : 0;
+
       var chosenRows = chosen.map(function (c) {
         return '<div class="ll-row ll-lk">' +
           '<span class="ll-row__ic ll-row__ic--on" aria-hidden="true">\ud83d\udcd6</span>' +
@@ -440,67 +477,66 @@
       host.className = 'll-pick';
       host.innerHTML =
         '<span class="ll-pick__l">What was this about?</span>' +
+        (chosenRows ? '<div class="ll-pick__chosen">' + chosenRows + '</div>' : '') +
+        (full
+          ? '<p class="ll-pick__full">Three is the most. Take one off above to add another.</p>'
+          : '') +
         '<div class="ll-pick__list">' +
-          (chosenRows ? '<div class="ll-pick__chosen">' + chosenRows + '</div>' : '') +
           '<p class="ll-pick__cap">All lessons</p>' +
           sections.map(function (sec) {
             if (sec.one) {
-              if (has(sec.one.href)) return '';
-              return row('ll-opt ll-opt--one', 'data-add="' + esc(sec.one.href) + '"',
-                esc(badge(sec.one.title)), sec.one.title,
-                '<span class="ll-row__go" aria-hidden="true"></span>');
+              var lit = has(sec.one.href);
+              return row('ll-opt ll-opt--one' + (lit ? ' is-on' : ''),
+                'data-add="' + esc(sec.one.href) + '" aria-pressed="' + lit + '"',
+                esc(badge(sec.one.title)), sec.one.title, tail(lit));
             }
             var g = sec.group;
             var isOpen = open === g;
-            var items = sec.items.filter(function (l) { return !has(l.href); });
+            var picked = sec.items.filter(function (l) { return has(l.href); }).length;
             return '<div class="ll-unit' + (isOpen ? ' is-open' : '') + '">' +
               '<button type="button" class="ll-row ll-unit__b" data-group="' + esc(g) + '" ' +
                 'aria-expanded="' + isOpen + '">' +
                 '<span class="ll-row__ic ll-unit__ic" aria-hidden="true">' + esc(badge(g)) + '</span>' +
                 '<span class="ll-row__t">' + esc(g) + '</span>' +
+                /* Folded, a unit still says what he took from it. */
+                (picked && !isOpen ? '<span class="ll-unit__n">' + picked + ' picked</span>' : '') +
                 '<span class="ll-row__go ll-unit__caret" aria-hidden="true"></span>' +
               '</button>' +
               (isOpen
                 ? '<div class="ll-unit__list">' +
-                    (items.length
-                      ? items.map(function (l) {
-                          return row('ll-opt', 'data-add="' + esc(l.href) + '"',
-                            '', l.title, '<span class="ll-row__go" aria-hidden="true"></span>');
-                        }).join('')
-                      : '<span class="ll-unit__done">All of these are already linked.</span>') +
+                    sec.items.map(function (l) {
+                      var lit = has(l.href);
+                      return row('ll-opt' + (lit ? ' is-on' : ''),
+                        'data-add="' + esc(l.href) + '" aria-pressed="' + lit + '"',
+                        '', l.title, tail(lit));
+                    }).join('') +
                   '</div>'
                 : '') +
             '</div>';
           }).join('') +
         '</div>';
 
+      box = host.querySelector('.ll-pick__list');
+      if (box) box.scrollTop = at;
+
       host.querySelectorAll('[data-group]').forEach(function (b) {
         b.onclick = function (ev) {
           ev.preventDefault();
           open = (open === b.dataset.group) ? null : b.dataset.group;
+          full = false;
           draw();
           /* Bring the unit he just opened to the top of the list, so its
              lessons are what he is looking at and not what he scrolls for. */
           var o = host.querySelector('.ll-unit.is-open');
-          var box = host.querySelector('.ll-pick__list');
-          if (o && box) box.scrollTop += o.getBoundingClientRect().top - box.getBoundingClientRect().top - 4;
+          var list = host.querySelector('.ll-pick__list');
+          if (o && list) list.scrollTop += o.getBoundingClientRect().top - list.getBoundingClientRect().top - 4;
         };
       });
       host.querySelectorAll('[data-add]').forEach(function (b) {
-        b.onclick = function (ev) {
-          ev.preventDefault();
-          var l = lessons.filter(function (x) { return x.href === b.dataset.add; })[0];
-          if (l && !has(l.href)) chosen.push({ title: l.title, href: l.href });
-          open = null;
-          draw();
-        };
+        b.onclick = function (ev) { ev.preventDefault(); toggle(b.dataset.add); };
       });
       host.querySelectorAll('[data-drop]').forEach(function (b) {
-        b.onclick = function (ev) {
-          ev.preventDefault();
-          chosen = chosen.filter(function (c) { return c.href !== b.dataset.drop; });
-          draw();
-        };
+        b.onclick = function (ev) { ev.preventDefault(); toggle(b.dataset.drop); };
       });
     }
 
