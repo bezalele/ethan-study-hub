@@ -367,7 +367,9 @@
   function mountPicker(host, opts) {
     if (!host) return { links: function () { return []; } };
     var lessons = opts.lessons || [];
-    var recentHrefs = opts.recent || [];
+    /* opts.recent - the lessons he has opened lately - is deliberately not
+       shown yet. One way in is easier to learn than two, and the units are
+       the way in that teaches him where things live. Held for later. */
     var chosen = (opts.initial || []).map(function (l) {
       return { title: l.title, href: l.href };
     });
@@ -382,10 +384,6 @@
       if (!byGroup[g]) { byGroup[g] = []; groups.push(g); }
       byGroup[g].push(l);
     });
-
-    var recent = recentHrefs.map(function (h) {
-      return lessons.filter(function (l) { return l.href === h; })[0];
-    }).filter(Boolean).slice(0, 3);
 
     function has(href) {
       return chosen.some(function (c) { return c.href === href; });
@@ -416,20 +414,11 @@
         '</div>';
       }).join('');
 
-      var lately = recent.filter(function (l) { return !has(l.href); });
-
       host.className = 'll-pick';
       host.innerHTML =
         '<span class="ll-pick__l">What was this about?</span>' +
         '<div class="ll-pick__list">' +
           (chosenRows ? '<div class="ll-pick__chosen">' + chosenRows + '</div>' : '') +
-          (lately.length
-            ? '<p class="ll-pick__cap">Lately</p>' +
-              lately.map(function (l) {
-                return row('ll-opt ll-opt--fast', 'data-add="' + esc(l.href) + '"',
-                  '\u21ba', l.title, '<span class="ll-row__go" aria-hidden="true"></span>');
-              }).join('')
-            : '') +
           '<p class="ll-pick__cap">All lessons</p>' +
           groups.map(function (g) {
             var isOpen = open === g;
@@ -586,6 +575,17 @@
       if (all) all.onclick = function () { dlg.close(); };
       dlg.querySelector('[data-save]').onclick = function () {
         var text = dlg.querySelector('#ll-m').value;
+        /* A day is its note: an empty box clears it. So saving a lesson with
+           nothing written would throw the lesson away on the spot - which is
+           exactly what it looked like when a pick "did not save". Ask for the
+           line instead, and keep everything he has picked. */
+        if (!text.trim() && picker.links().length) {
+          var ask = dlg.querySelector('[data-status]');
+          ask.className = 'll__status ll__status--ask';
+          ask.textContent = 'Write a line about it first \u2014 then the lesson saves with it.';
+          dlg.querySelector('#ll-m').focus();
+          return;
+        }
         var okay = text.trim() ? put(subject, day, text) : remove(subject, day);
         /* Links are their own list, applied after the note exists. */
         if (okay && text.trim()) applyLinks(subject, day, picker.links());
@@ -904,7 +904,8 @@
             '<div class="ll__row">' +
               '<button type="button" class="ll__save" data-savenote>Save</button>' +
               '<button type="button" class="ll__quiet" data-cancelnote>Cancel</button>' +
-              (e ? '<span class="ll__status">Clearing the box deletes this day.</span>' : '') +
+              '<span class="ll__status" data-pagestatus>' +
+                (e ? 'Clearing the box deletes this day.' : '') + '</span>' +
             '</div>'
           : e
             ? '<p class="ll-note__text">' + esc(e.text) + '</p>'
@@ -1038,6 +1039,17 @@
           var text = note.querySelector('#ll-e').value;
           var d = note.dataset.date;
           var wanted = pagePicker ? pagePicker.links() : null;
+          /* Same as the modal: don't throw a pick away because the box is
+             still empty. */
+          if (!text.trim() && wanted && wanted.length) {
+            var ask = note.querySelector('[data-pagestatus]');
+            if (ask) {
+              ask.className = 'll__status ll__status--ask';
+              ask.textContent = 'Write a line about it first \u2014 then the lesson saves with it.';
+            }
+            note.querySelector('#ll-e').focus();
+            return;
+          }
           if (text.trim()) {
             put(subject, d, text);
             if (wanted) applyLinks(subject, d, wanted);

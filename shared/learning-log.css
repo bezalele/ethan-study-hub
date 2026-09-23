@@ -371,6 +371,9 @@
 
 .ll__link { font: 700 14px/1 inherit; color: var(--ll-accent); }
 .ll__status { font-size: 13px; color: var(--ll-muted); }
+/* The one status that asks him for something rather than telling him how
+   things work. */
+.ll__status--ask { font-weight: 700; color: var(--ll-accent); }
 
 
 
@@ -654,13 +657,6 @@
   padding: 6px 9px;
   font: 500 12.5px/1.4 inherit;
   color: var(--ll-muted);
-}
-
-/* The ones he has actually been in. Most days this row is the whole job. */
-.ll-opt--fast .ll-row__ic {
-  background: #fff;
-  border: 1px solid var(--ll-accent);
-  font-size: 13px;
 }
 
 /* Already attached, with a way to take it back off. */
