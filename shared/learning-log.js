@@ -393,21 +393,28 @@
 
     if (!lessons.length) { host.innerHTML = ''; return { links: function () { return chosen; } }; }
 
-    /* A lesson with no group is a row of its own, not a unit to open: AP Gov
-       can only be linked as far as a unit, so its units are the rows. */
-    var groups = [];
+    /* One list of sections, kept in the order the app handed them over -
+       which is the order the course runs. A unit with lessons under it opens;
+       a lesson with no group is a row of its own and links straight out,
+       because some units are as deep as a subject can be linked. The two
+       kinds sit in one sequence so Unit 3 never jumps above Unit 2 for being
+       a different shape. */
+    var sections = [];
     var byGroup = {};
-    var flat = [];
     lessons.forEach(function (l) {
-      if (!l.group) { flat.push(l); return; }
-      if (!byGroup[l.group]) { byGroup[l.group] = []; groups.push(l.group); }
-      byGroup[l.group].push(l);
+      if (!l.group) { sections.push({ one: l }); return; }
+      if (!byGroup[l.group]) {
+        byGroup[l.group] = { group: l.group, items: [] };
+        sections.push(byGroup[l.group]);
+      }
+      byGroup[l.group].items.push(l);
     });
 
-    /* Course order, not the order the app happened to build them in. A unit
-       sorts by its number; anything without one - Foundations, Start here -
-       comes first, because that is where the course starts. */
-    groups.sort(function (a, b) { return unitNo(a) - unitNo(b); });
+    /* One group and nothing to choose between: open it. AP Gov's only
+       foldable thing is the founding story, and folding the single item on
+       offer is a door for the sake of a door. */
+    var onlyGroup = sections.filter(function (s) { return s.group; });
+    if (onlyGroup.length === 1) open = onlyGroup[0].group;
 
     function has(href) {
       return chosen.some(function (c) { return c.href === href; });
@@ -438,13 +445,16 @@
         '<div class="ll-pick__list">' +
           (chosenRows ? '<div class="ll-pick__chosen">' + chosenRows + '</div>' : '') +
           '<p class="ll-pick__cap">All lessons</p>' +
-          flat.filter(function (l) { return !has(l.href); }).map(function (l) {
-            return row('ll-opt ll-opt--one', 'data-add="' + esc(l.href) + '"',
-              esc(badge(l.title)), l.title, '<span class="ll-row__go" aria-hidden="true"></span>');
-          }).join('') +
-          groups.map(function (g) {
+          sections.map(function (sec) {
+            if (sec.one) {
+              if (has(sec.one.href)) return '';
+              return row('ll-opt ll-opt--one', 'data-add="' + esc(sec.one.href) + '"',
+                esc(badge(sec.one.title)), sec.one.title,
+                '<span class="ll-row__go" aria-hidden="true"></span>');
+            }
+            var g = sec.group;
             var isOpen = open === g;
-            var items = byGroup[g].filter(function (l) { return !has(l.href); });
+            var items = sec.items.filter(function (l) { return !has(l.href); });
             return '<div class="ll-unit' + (isOpen ? ' is-open' : '') + '">' +
               '<button type="button" class="ll-row ll-unit__b" data-group="' + esc(g) + '" ' +
                 'aria-expanded="' + isOpen + '">' +

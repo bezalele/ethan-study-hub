@@ -567,20 +567,29 @@ function journal() {
    picker on the daily note. Two sets, because two parts of the course build
    their lessons differently. */
 function lessonChoices() {
-  const out = [];
+  /* Walk the course map itself, so the picker lists the units in the order
+     the course teaches them - and lists ALL of them. Foundations, Unit 1 and
+     Unit 2 have written lessons, so they open. The rest are real pages with
+     an outline and practice but no lessons yet, so each is a row of its own
+     that links straight to the unit. He should be able to write down what
+     his class covered whether or not we have built the lesson for it. */
+  const byUnit = {};
+  const add = (unit, lesson) => (byUnit[unit] = byUnit[unit] || []).push(lesson);
   if (typeof U2_TOPICS !== "undefined") {
-    U2_TOPICS.forEach((t) => out.push({ id: t.id, title: t.title, group: "Unit 2 · Equations & systems", href: "#u2lesson/" + t.id }));
+    U2_TOPICS.forEach((t) => add("equations", { id: t.id, title: t.title, href: "#u2lesson/" + t.id }));
   }
   if (typeof COURSE_LESSONS !== "undefined") {
-    /* courseName knows the two course units by name; originalTopics is the
-       Unit 2 list and does not cover them, so asking it returned a raw id. */
-    const unitName = (id) => {
-      if (typeof courseName === "function") return courseName(id);
-      const u = (typeof originalTopics !== "undefined" ? originalTopics : []).find((x) => x.id === id);
-      return u ? u.title : id;
-    };
-    COURSE_LESSONS.forEach((l) => out.push({ id: l.id, title: l.title, group: unitName(l.unit), href: "#study/" + l.id }));
+    COURSE_LESSONS.forEach((l) => add(l.unit, { id: l.id, title: l.title, href: "#study/" + l.id }));
   }
+  const out = [];
+  units.forEach((u) => {
+    /* "Unit 2 · Equations & systems", but plain "Foundations" - its own
+       label is "Start here", which says nothing about the maths. */
+    const name = /^Unit/.test(u.n) ? u.n + " · " + u.title : u.title;
+    const mine = byUnit[u.id] || [];
+    if (mine.length) mine.forEach((l) => out.push({ id: l.id, title: l.title, group: name, href: l.href }));
+    else out.push({ id: "unit-" + u.id, title: name, href: "#unit/" + u.id });
+  });
   return out;
 }
 /* The ones he has actually been in, newest first: whatever he last opened,

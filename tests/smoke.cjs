@@ -323,12 +323,13 @@ check('the no-school list starts empty and is filled from one file',
   && /setNoSchool/.test(read('shared/school-calendar.js')));
 check('days still to come cannot be picked', /ahead \? ' disabled' : ''/.test(logSrc));
 
-/* The badge belongs to the journal chip, not the writing button: a reply is
-   something to go and read. */
+/* No badge anywhere in the cluster. A red count made the site look like
+   something with a task outstanding rather than somewhere to write a line
+   about the day. */
 const clusterJs = read('shared/subject-header.js');
 const logJs = read('shared/learning-log.js');
-check('the unread badge lives on the journal chip', /sh-chip__dot/.test(clusterJs));
-check('the note button carries no badge', !/sh-chip__dot/.test(logJs));
+check('no unread badge on the journal chip', !/sh-chip__dot'/.test(clusterJs));
+check('none on the note button either', !/sh-chip__dot/.test(logJs));
 check('the note button wears the shared chip shape', /sh-chip sh-chip--write/.test(logJs));
 
 /* AP Gov renders its chrome once, so its journal chip is the one link that
