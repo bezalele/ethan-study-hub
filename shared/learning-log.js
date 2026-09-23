@@ -119,6 +119,20 @@
   /* Raw rows, tombstones and all. Only merging and writing want these. */
   function rawComments(e) { return Array.isArray(e.comments) ? e.comments : []; }
   function rawReactions(e) { return Array.isArray(e.reactions) ? e.reactions : []; }
+  function rawLinks(e) { return Array.isArray(e.links) ? e.links : []; }
+
+  /* What to show. Days written before links were a list carry a single
+     `lesson` instead; it reads as one link so nothing already saved is lost
+     or needs migrating. */
+  function links(e) {
+    if (!e) return [];
+    var rows = rawLinks(e).filter(function (l) { return !l.del && l.href; });
+    if (rows.length) return rows;
+    if (e.lesson && e.lesson.href) {
+      return [{ id: 'legacy', title: e.lesson.title, href: e.lesson.href }];
+    }
+    return [];
+  }
 
   /* What to show. A deleted comment keeps its id and carries `del`; a
      reaction taken off keeps its row and carries `off`. Both have to stay in
@@ -187,7 +201,7 @@
       `lesson` is optional: { title, href } pointing at the course material
       the day was about. It travels with the note text, so editing the note
       can change or clear it. */
-  function put(subject, date, text, lesson) {
+  function put(subject, date, text) {
     var data = readAll();
     var existing = data.entries.filter(function (e) {
       return e && e.subject === subject && e.date === date;
@@ -199,16 +213,60 @@
       subject: subject, date: date, text: text.trim(), ts: Date.now(),
       comments: existing ? rawComments(existing) : [],
       reactions: existing ? rawReactions(existing) : [],
+      /* Carried across untouched: a note edit must never drop a link. That
+         is exactly how one went missing when links lived on the note. */
+      links: existing ? rawLinks(existing) : [],
     };
-    if (lesson && lesson.href && lesson.title) {
-      row.lesson = { title: String(lesson.title), href: String(lesson.href) };
-    }
+    if (existing && existing.lesson) row.lesson = existing.lesson;
     return writeAll((data.entries.push(row), data));
   }
 
   /* Not a deletion — an empty day, stamped now. It has to outrank whatever
      the other laptops still hold, and a row that simply vanished would lose
      that argument on the next sync. */
+  /** Attach a lesson to a day. Ignores one that is already there. */
+  function addLink(subject, date, link) {
+    if (!link || !link.href) return false;
+    var data = readAll();
+    var e = data.entries.filter(function (x) {
+      return x && x.subject === subject && x.date === date;
+    })[0];
+    if (!e) return false;
+    var rows = rawLinks(e);
+    var already = rows.filter(function (l) { return l.href === link.href; })[0];
+    if (already && !already.del) return true;
+    if (already) {
+      already.del = false;
+      already.ts = Date.now();
+    } else {
+      rows.push({
+        id: 'l' + Date.now() + Math.random().toString(36).slice(2, 6),
+        title: String(link.title || link.href),
+        href: String(link.href),
+        ts: Date.now(),
+      });
+    }
+    e.links = rows;
+    return writeAll(data);
+  }
+
+  /* Marked, not removed: a row that simply vanished would be put back by the
+     next laptop that still had it. */
+  function removeLink(subject, date, href) {
+    var data = readAll();
+    var e = data.entries.filter(function (x) {
+      return x && x.subject === subject && x.date === date;
+    })[0];
+    if (!e) return false;
+    e.links = rawLinks(e).map(function (l) {
+      return l.href === href ? { id: l.id, title: l.title, href: l.href, ts: Date.now(), del: true } : l;
+    });
+    /* A day written before links were a list keeps its single `lesson`, so
+       removing that one has to clear the old field too. */
+    if (e.lesson && e.lesson.href === href) delete e.lesson;
+    return writeAll(data);
+  }
+
   function remove(subject, date) {
     return put(subject, date, '');
   }
@@ -275,46 +333,148 @@
   /* The lessons this subject can offer, as [{ id, title, group, href }].
      Each app hands its own list in at mount time; nothing here knows what a
      lesson is. Empty means no picker is shown at all. */
-  function lessonPicker(lessons, current) {
-    if (!lessons || !lessons.length) return '';
-    /* A typed box with suggestions rather than a plain dropdown: twenty-seven
-       lessons is a long scroll, and he knows what he did today faster than he
-       can find it in a list. Typing narrows it; leaving it empty attaches
-       nothing. The datalist is native, so it behaves the way the browser's
-       own autocomplete does on his phone as well as the laptop. */
-    var chosen = current && current.title ? current.title : '';
-    return '<label class="ll-pick">' +
-      '<span class="ll-pick__l">What was this about?</span>' +
-      '<input class="ll-pick__in" list="ll-lessons" data-lesson autocomplete="off" ' +
-        'placeholder="Start typing a lesson, or leave empty" value="' + esc(chosen) + '">' +
-      '<datalist id="ll-lessons">' +
-        lessons.map(function (l) {
-          return '<option value="' + esc(l.title) + '"' +
-            (l.group ? ' label="' + esc(l.group) + '"' : '') + '></option>';
-        }).join('') +
-      '</datalist>' +
-    '</label>';
+  /** Make the day's links match what was picked, and nothing more. */
+  function applyLinks(subject, date, wanted) {
+    var now = links(entryFor(subject, date));
+    now.forEach(function (l) {
+      if (!wanted.some(function (x) { return x.href === l.href; })) {
+        removeLink(subject, date, l.href);
+      }
+    });
+    wanted.forEach(function (l) {
+      if (!now.some(function (x) { return x.href === l.href; })) {
+        addLink(subject, date, l);
+      }
+    });
   }
 
-  /** Read the picker back, as a { title, href } or null.
-      Matched on the title he typed: anything that is not a real lesson
-      simply attaches no link, rather than making a dead one. */
-  function pickedLesson(root, lessons) {
-    var box = root.querySelector('[data-lesson]');
-    if (!box) return null;
-    var typed = String(box.value || '').trim().toLowerCase();
-    if (!typed) return null;
-    var hit = (lessons || []).filter(function (l) {
-      return String(l.title).trim().toLowerCase() === typed;
-    })[0];
-    return hit ? { title: hit.title, href: hit.href } : null;
+  /* --- What was this about? ------------------------------------------------
+     He is fourteen and he is writing this at the end of a school day. A list
+     of twenty-seven lessons is where he closes the tab, so nothing here is
+     ever long and nothing here needs typing.
+
+       Lately   the lessons he has actually opened. Most days the right
+                answer is already sitting here and it costs one tap.
+       Units    otherwise, the handful of units. Opening one shows only its
+                lessons - and walking unit then lesson is itself worth
+                something: after a fortnight he knows the shape of his own
+                course without being taught it.
+
+     It manages its own DOM rather than being redrawn by the editor around
+     it, because the editor redraw would throw away whatever he had typed.
+     --------------------------------------------------------------------------- */
+
+  function mountPicker(host, opts) {
+    if (!host) return { links: function () { return []; } };
+    var lessons = opts.lessons || [];
+    var recentHrefs = opts.recent || [];
+    var chosen = (opts.initial || []).map(function (l) {
+      return { title: l.title, href: l.href };
+    });
+    var open = null;   // which unit is expanded
+
+    if (!lessons.length) { host.innerHTML = ''; return { links: function () { return chosen; } }; }
+
+    var groups = [];
+    var byGroup = {};
+    lessons.forEach(function (l) {
+      var g = l.group || 'Lessons';
+      if (!byGroup[g]) { byGroup[g] = []; groups.push(g); }
+      byGroup[g].push(l);
+    });
+
+    var recent = recentHrefs.map(function (h) {
+      return lessons.filter(function (l) { return l.href === h; })[0];
+    }).filter(Boolean).slice(0, 3);
+
+    function has(href) {
+      return chosen.some(function (c) { return c.href === href; });
+    }
+
+    function draw() {
+      var chips = chosen.map(function (c) {
+        return '<span class="ll-lk">' +
+          '<span aria-hidden="true">\ud83d\udcd6</span>' + esc(c.title) +
+          '<button type="button" class="ll-lk__x" data-drop="' + esc(c.href) + '" ' +
+            'aria-label="Remove ' + esc(c.title) + '">&times;</button>' +
+        '</span>';
+      }).join('');
+
+      var lately = recent.filter(function (l) { return !has(l.href); });
+
+      host.className = 'll-pick';
+      host.innerHTML =
+        '<span class="ll-pick__l">What was this about?</span>' +
+        (chips ? '<div class="ll-pick__chosen">' + chips + '</div>' : '') +
+        (lately.length
+          ? '<div class="ll-pick__row"><span class="ll-pick__cap">Lately</span>' +
+              lately.map(function (l) {
+                return '<button type="button" class="ll-opt ll-opt--fast" data-add="' + esc(l.href) +
+                  '">' + esc(l.title) + '</button>';
+              }).join('') +
+            '</div>'
+          : '') +
+        '<div class="ll-pick__units">' +
+          groups.map(function (g) {
+            var isOpen = open === g;
+            var items = byGroup[g].filter(function (l) { return !has(l.href); });
+            return '<div class="ll-unit' + (isOpen ? ' is-open' : '') + '">' +
+              '<button type="button" class="ll-unit__b" data-group="' + esc(g) + '" ' +
+                'aria-expanded="' + isOpen + '">' +
+                '<span class="ll-unit__caret" aria-hidden="true"></span>' + esc(g) +
+                '<span class="ll-unit__n">' + byGroup[g].length + '</span>' +
+              '</button>' +
+              (isOpen
+                ? '<div class="ll-unit__list">' +
+                    (items.length
+                      ? items.map(function (l) {
+                          return '<button type="button" class="ll-opt" data-add="' + esc(l.href) +
+                            '">' + esc(l.title) + '</button>';
+                        }).join('')
+                      : '<span class="ll-unit__done">All of these are already linked.</span>') +
+                  '</div>'
+                : '') +
+            '</div>';
+          }).join('') +
+        '</div>';
+
+      host.querySelectorAll('[data-group]').forEach(function (b) {
+        b.onclick = function (ev) {
+          ev.preventDefault();
+          open = (open === b.dataset.group) ? null : b.dataset.group;
+          draw();
+        };
+      });
+      host.querySelectorAll('[data-add]').forEach(function (b) {
+        b.onclick = function (ev) {
+          ev.preventDefault();
+          var l = lessons.filter(function (x) { return x.href === b.dataset.add; })[0];
+          if (l && !has(l.href)) chosen.push({ title: l.title, href: l.href });
+          open = null;
+          draw();
+        };
+      });
+      host.querySelectorAll('[data-drop]').forEach(function (b) {
+        b.onclick = function (ev) {
+          ev.preventDefault();
+          chosen = chosen.filter(function (c) { return c.href !== b.dataset.drop; });
+          draw();
+        };
+      });
+    }
+
+    draw();
+    return { links: function () { return chosen.slice(); } };
   }
 
-  /** The chip shown on a day that has one. */
-  function lessonChip(e) {
-    if (!e || !e.lesson || !e.lesson.href) return '';
-    return '<a class="ll-note__lesson" href="' + esc(e.lesson.href) + '">' +
-      '<span aria-hidden="true">\ud83d\udcd6</span>' + esc(e.lesson.title) + '</a>';
+  /** Every lesson a day points at, as links you can actually follow. */
+  function lessonChips(e) {
+    var rows = links(e);
+    if (!rows.length) return '';
+    return '<div class="ll-note__links">' + rows.map(function (l) {
+      return '<a class="ll-note__lesson" href="' + esc(l.href) + '">' +
+        '<span aria-hidden="true">\ud83d\udcd6</span>' + esc(l.title) + '</a>';
+    }).join('') + '</div>';
   }
 
   var PENCIL = '<svg class="sh-chip__ico" viewBox="0 0 24 24" aria-hidden="true">' +
@@ -385,7 +545,7 @@
           '<label class="sr" for="ll-m">Today’s note</label>' +
           '<textarea id="ll-m" class="ll__text" rows="5" placeholder="In class today we&hellip;">' +
             esc(entry ? entry.text : '') + '</textarea>' +
-          lessonPicker(lessons, entry && entry.lesson) +
+          '<div data-picker></div>' +
           '<div class="ll__row ll-modal__row">' +
             '<button type="button" class="ll__save" data-save>Save</button>' +
             '<button type="button" class="ll__quiet" data-cancel>Cancel</button>' +
@@ -394,15 +554,19 @@
           '</div>' +
         '</div>';
 
+      var picker = mountPicker(dlg.querySelector('[data-picker]'), {
+        lessons: lessons, recent: opts.recent || [], initial: links(entry),
+      });
+
       dlg.querySelector('[data-x]').onclick = function () { dlg.close(); };
       dlg.querySelector('[data-cancel]').onclick = function () { dlg.close(); };
       var all = dlg.querySelector('[data-all]');
       if (all) all.onclick = function () { dlg.close(); };
       dlg.querySelector('[data-save]').onclick = function () {
         var text = dlg.querySelector('#ll-m').value;
-        var okay = text.trim()
-          ? put(subject, day, text, pickedLesson(dlg, lessons))
-          : remove(subject, day);
+        var okay = text.trim() ? put(subject, day, text) : remove(subject, day);
+        /* Links are their own list, applied after the note exists. */
+        if (okay && text.trim()) applyLinks(subject, day, picker.links());
         if (okay) dlg.close();
         else dlg.querySelector('[data-status]').textContent =
           'This browser will not let the note save right now.';
@@ -598,6 +762,7 @@
     var selected = todayIso;
     var cursor = dateOf(todayIso);   // any date inside the month on show
     var editing = null;              // date whose note is being written
+    var pagePicker = null;           // the lesson picker, while an editor is open
     var replying = null;             // date whose reply box is open
 
     markSeen(subject);
@@ -713,7 +878,7 @@
           ? '<label class="sr" for="ll-e">Note for ' + esc(prettyDate(date)) + '</label>' +
             '<textarea id="ll-e" class="ll__text" rows="4" placeholder="In class today we&hellip;">' +
               esc(e ? e.text : '') + '</textarea>' +
-            lessonPicker(lessons, e && e.lesson) +
+            '<div data-picker></div>' +
             '<div class="ll__row">' +
               '<button type="button" class="ll__save" data-savenote>Save</button>' +
               '<button type="button" class="ll__quiet" data-cancelnote>Cancel</button>' +
@@ -735,7 +900,7 @@
           : '') +
         /* Under the conversation, not wedged between the note and the replies
            to it: the link is where you go after reading, not part of the note. */
-        lessonChip(e) +
+        lessonChips(e) +
         (replying === date
           ? '<div class="ll-note__reply">' +
               '<label class="sr" for="ll-r">Your comment</label>' +
@@ -808,6 +973,16 @@
         '</section>';
 
       drawStrip(root.querySelector('[data-sync]'), null);
+
+      /* Mounted after the editor exists, and only while one is open. */
+      pagePicker = null;
+      var slot = root.querySelector('[data-picker]');
+      if (slot) {
+        pagePicker = mountPicker(slot, {
+          lessons: lessons, recent: opts.recent || [],
+          initial: links(notes[editing]),
+        });
+      }
       root.querySelectorAll('[data-day]').forEach(function (b) {
         b.onclick = function () {
           selected = b.dataset.day;
@@ -839,8 +1014,14 @@
         b.onclick = function () {
           var note = b.closest('.ll-note');
           var text = note.querySelector('#ll-e').value;
-          if (text.trim()) put(subject, note.dataset.date, text, pickedLesson(note, lessons));
-          else remove(subject, note.dataset.date);
+          var d = note.dataset.date;
+          var wanted = pagePicker ? pagePicker.links() : null;
+          if (text.trim()) {
+            put(subject, d, text);
+            if (wanted) applyLinks(subject, d, wanted);
+          } else {
+            remove(subject, d);
+          }
           editing = null;
           draw();
         };
@@ -894,6 +1075,9 @@
     setNoSchool: setNoSchool,
     isSchoolDay: isSchoolDay,
     toggleReaction: toggleReaction,
+    addLink: addLink,
+    removeLink: removeLink,
+    links: links,
     streak: streak,
     REACTIONS: REACTIONS,
     STORAGE_KEY: KEY,

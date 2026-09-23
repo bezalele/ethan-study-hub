@@ -15,10 +15,10 @@
    the content lands.
    --------------------------------------------------------------------------- */
 
-import { AREAS, getArea } from '../content/course.js?v=15';
-import { getDetail } from '../content/courseDetails.js?v=15';
-import { renderTriangle, wireTriangle } from '../components/power-triangle.js?v=15';
-import { el, html, esc } from '../layout/dom.js?v=15';
+import { AREAS, getArea } from '../content/course.js?v=16';
+import { getDetail } from '../content/courseDetails.js?v=16';
+import { renderTriangle, wireTriangle } from '../components/power-triangle.js?v=16';
+import { el, html, esc } from '../layout/dom.js?v=16';
 
 /* --- Shared pieces -------------------------------------------------------- */
 

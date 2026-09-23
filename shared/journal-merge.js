@@ -64,6 +64,19 @@
     return Object.keys(byKey).map(function (k) { return byKey[k]; });
   }
 
+  function mergeLinks(a, b) {
+    var byId = {};
+    [].concat(a || [], b || []).forEach(function (l) {
+      if (!l || !l.id) return;
+      var prev = byId[l.id];
+      if (!prev || (l.del && !prev.del) || (!(prev.del && !l.del) && num(l.ts) > num(prev.ts))) {
+        byId[l.id] = l;
+      }
+    });
+    return Object.keys(byId).map(function (k) { return byId[k]; })
+      .sort(function (p, q) { return num(p.ts) - num(q.ts); });
+  }
+
   function mergeEntry(a, b) {
     if (!a) return b;
     if (!b) return a;
@@ -76,11 +89,14 @@
       comments: mergeComments(a.comments, b.comments),
       reactions: mergeReactions(a.reactions, b.reactions)
     };
-    /* The lesson a day was about is part of the note, not a thing of its own:
-       it is set and cleared from the same box, so it follows the same
-       last-write-wins as the text rather than lingering after an edit that
-       removed it. */
-    if (newer.lesson && newer.lesson.href) out.lesson = newer.lesson;
+    /* Links merge like comments - union by id, tombstones travel - NOT like
+       the note text. Tying them to the note meant an edit that did not
+       re-pick them silently dropped them, which is how one disappeared. */
+    out.links = mergeLinks(a.links, b.links);
+    /* A day written before links were a list keeps its single `lesson`,
+       unless one of the two sides has deliberately cleared it. */
+    var legacy = (a.lesson && a.lesson.href ? a : null) || (b.lesson && b.lesson.href ? b : null);
+    if (legacy && !(newer === a ? !a.lesson : !b.lesson)) out.lesson = legacy.lesson;
     return out;
   }
 
@@ -104,6 +120,7 @@
 
   root.JournalMerge = {
     mergeAll: mergeAll,
+    mergeLinks: mergeLinks,
     mergeEntry: mergeEntry,
     mergeComments: mergeComments,
     mergeReactions: mergeReactions

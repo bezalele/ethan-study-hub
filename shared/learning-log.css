@@ -520,15 +520,18 @@
 .ll-sync__go { min-height: 32px; font-size: 13px; }
 
 /* --- What the day was about ------------------------------------------------
-   A lesson picked from a list rather than a pasted address: he writes his
-   note from the home page, not from inside a lesson, and a raw URL in a
-   comment means nothing to him.
+   A fourteen-year-old writing this at the end of a school day will not read
+   a list of twenty-seven lessons. Nothing here is long: the ones he has
+   opened lately sit on top, and otherwise the units fold open one at a time.
+   Nothing here needs typing either.
    --------------------------------------------------------------------------- */
 
 .ll-pick {
   display: grid;
-  gap: 5px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--ll-edge);
 }
 .ll-pick__l {
   font: 700 11px/1 inherit;
@@ -536,21 +539,124 @@
   text-transform: uppercase;
   color: var(--ll-muted);
 }
-.ll-pick__in {
-  width: 100%;
-  max-width: 420px;
-  min-height: 38px;
-  padding: 0 11px;
-  border: 1px solid var(--ll-edge);
-  border-radius: 8px;
-  background: #fff;
-  font: 14px/1 inherit;
-  color: inherit;
-}
-.ll-pick__in:focus { outline: 2px solid var(--ll-accent); outline-offset: 1px; }
-.ll-pick__in::placeholder { color: var(--ll-muted); opacity: .8; }
 
-/* On the day itself: a way in to the material, for whoever is reading. */
+.ll-pick__chosen { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.ll-pick__row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.ll-pick__cap {
+  font: 700 11px/1 inherit;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ll-muted);
+  margin-right: 2px;
+}
+
+/* One lesson, offered. Big enough to hit without aiming. */
+.ll-opt {
+  min-height: 32px;
+  padding: 0 12px;
+  background: #fff;
+  border: 1px solid var(--ll-edge);
+  border-radius: 999px;
+  color: inherit;
+  font: 600 13px/1.3 inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background .12s, border-color .12s;
+}
+.ll-opt:hover { background: var(--ll-accent-soft); border-color: var(--ll-accent); }
+
+/* The ones he has actually been in, so most days this is the whole job. */
+.ll-opt--fast { background: var(--ll-accent-soft); border-color: var(--ll-accent); color: var(--ll-accent); }
+.ll-opt--fast:hover { filter: brightness(.97); }
+
+/* The units, folded. Tall enough that the folded list itself never scrolls -
+   a scrollbar on six short rows reads as "there is more of this than you
+   think", which is the opposite of the point. It only scrolls once a unit
+   is open, and the cap is what keeps Save on screen. */
+.ll-pick__units {
+  display: grid;
+  gap: 2px;
+  max-height: 252px;
+  overflow: auto;
+  padding-right: 2px;
+  overscroll-behavior: contain;
+}
+
+.ll-unit__b {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 34px;
+  padding: 0 8px;
+  background: none;
+  border: 0;
+  border-radius: 7px;
+  color: inherit;
+  font: 600 13.5px/1.3 inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ll-unit__b:hover { background: var(--ll-accent-soft); }
+
+.ll-unit__caret {
+  width: 0;
+  height: 0;
+  flex: 0 0 auto;
+  border-left: 5px solid currentColor;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  opacity: .5;
+  transition: transform .15s;
+}
+.ll-unit.is-open .ll-unit__caret { transform: rotate(90deg); }
+.ll-unit.is-open .ll-unit__b { color: var(--ll-accent); }
+
+.ll-unit__n {
+  margin-left: auto;
+  font: 700 11px/1 inherit;
+  color: var(--ll-muted);
+}
+
+.ll-unit__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 6px 0 8px 18px;
+}
+.ll-unit__done { padding-left: 18px; font-size: 12.5px; color: var(--ll-muted); }
+
+/* A lesson already attached, in the editor, with a way to take it off. */
+.ll-lk {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 6px 5px 11px;
+  background: var(--ll-accent);
+  border-radius: 999px;
+  font: 700 12.5px/1.3 inherit;
+  color: #fff;
+}
+.ll-lk__x {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  background: rgba(255,255,255,.22);
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  font: 700 13px/1 inherit;
+  cursor: pointer;
+}
+.ll-lk__x:hover { background: rgba(255,255,255,.38); }
+
+/* --- On the day itself ---------------------------------------------------- */
+
+.ll-note__links { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; }
+
 .ll-note__lesson {
   display: inline-flex;
   align-items: center;

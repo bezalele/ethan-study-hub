@@ -559,7 +559,7 @@ function journal() {
   </div></section><div data-learning-history></div>`;
   if (window.LearningLog) {
     LearningLog.mountHistory(main.querySelector("[data-learning-history]"), {
-      subject: "math", label: "Algebra 1", learner: "Ethan", lessons: lessonChoices(),
+      subject: "math", label: "Algebra 1", learner: "Ethan", lessons: lessonChoices(), recent: recentLessons(),
     });
   }
 }
@@ -583,6 +583,21 @@ function lessonChoices() {
   }
   return out;
 }
+/* The ones he has actually been in, newest first: whatever he last opened,
+   then the skills his recent practice attempts belong to. */
+function recentLessons() {
+  const out = [];
+  const push = (h) => { if (h && out.indexOf(h) === -1) out.push(h); };
+  if (progress.lastLessonRoute) push("#" + String(progress.lastLessonRoute).replace(/^#/, ""));
+  if (progress.u2Last) push("#u2lesson/" + progress.u2Last);
+  (progress.attempts || []).slice().reverse().forEach((a) => {
+    if (!a || !a.skill) return;
+    push(a.unit2 ? "#u2lesson/" + a.skill : "#study/" + a.skill);
+  });
+  const known = lessonChoices().map((l) => l.href);
+  return out.filter((h) => known.indexOf(h) > -1).slice(0, 3);
+}
+
 function route() {
   const [page = "home", arg = ""] = (location.hash.slice(1) || "home").split(
     "/",
@@ -656,7 +671,7 @@ function route() {
   if (cluster && window.SubjectHeader) {
     SubjectHeader.mount(cluster, {
       subject: "math", label: "Algebra 1", learner: "Ethan",
-      journalHref: "#journal", hubHref: "../", lessons: lessonChoices(),
+      journalHref: "#journal", hubHref: "../", lessons: lessonChoices(), recent: recentLessons(),
     });
   }
   window.scrollTo(0, 0);

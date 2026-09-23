@@ -88,6 +88,9 @@
            the same as the one written on the journal page. The list is the
            host app's - nothing here knows what a lesson is. */
         lessons: opts.lessons || [],
+        /* And the ones he has opened lately, so the note written from here
+           offers the same one-tap shortcut the journal page does. */
+        recent: opts.recent || [],
       });
     }
   }
