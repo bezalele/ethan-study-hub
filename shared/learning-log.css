@@ -536,25 +536,25 @@
   text-transform: uppercase;
   color: var(--ll-muted);
 }
-.ll-pick select {
+.ll-pick__in {
   width: 100%;
   max-width: 420px;
-  min-height: 36px;
-  padding: 0 10px;
+  min-height: 38px;
+  padding: 0 11px;
   border: 1px solid var(--ll-edge);
   border-radius: 8px;
   background: #fff;
   font: 14px/1 inherit;
   color: inherit;
 }
-.ll-pick select:focus { outline: 2px solid var(--ll-accent); outline-offset: 1px; }
+.ll-pick__in:focus { outline: 2px solid var(--ll-accent); outline-offset: 1px; }
+.ll-pick__in::placeholder { color: var(--ll-muted); opacity: .8; }
 
 /* On the day itself: a way in to the material, for whoever is reading. */
 .ll-note__lesson {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  margin-top: -2px;
   padding: 6px 12px;
   background: var(--ll-accent-soft);
   border: 1px solid var(--ll-edge);

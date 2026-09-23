@@ -277,42 +277,44 @@
      lesson is. Empty means no picker is shown at all. */
   function lessonPicker(lessons, current) {
     if (!lessons || !lessons.length) return '';
-    var groups = [];
-    var byGroup = {};
-    lessons.forEach(function (l) {
-      var g = l.group || '';
-      if (!byGroup[g]) { byGroup[g] = []; groups.push(g); }
-      byGroup[g].push(l);
-    });
-    var chosen = current && current.href ? current.href : '';
+    /* A typed box with suggestions rather than a plain dropdown: twenty-seven
+       lessons is a long scroll, and he knows what he did today faster than he
+       can find it in a list. Typing narrows it; leaving it empty attaches
+       nothing. The datalist is native, so it behaves the way the browser's
+       own autocomplete does on his phone as well as the laptop. */
+    var chosen = current && current.title ? current.title : '';
     return '<label class="ll-pick">' +
       '<span class="ll-pick__l">What was this about?</span>' +
-      '<select data-lesson>' +
-        '<option value="">\u2014 nothing in particular \u2014</option>' +
-        groups.map(function (g) {
-          var opts = byGroup[g].map(function (l) {
-            return '<option value="' + esc(l.href) + '"' +
-              (l.href === chosen ? ' selected' : '') + '>' + esc(l.title) + '</option>';
-          }).join('');
-          return g ? '<optgroup label="' + esc(g) + '">' + opts + '</optgroup>' : opts;
+      '<input class="ll-pick__in" list="ll-lessons" data-lesson autocomplete="off" ' +
+        'placeholder="Start typing a lesson, or leave empty" value="' + esc(chosen) + '">' +
+      '<datalist id="ll-lessons">' +
+        lessons.map(function (l) {
+          return '<option value="' + esc(l.title) + '"' +
+            (l.group ? ' label="' + esc(l.group) + '"' : '') + '></option>';
         }).join('') +
-      '</select>' +
+      '</datalist>' +
     '</label>';
   }
 
-  /** Read the picker back out of a form, as a { title, href } or null. */
-  function pickedLesson(root) {
-    var sel = root.querySelector('[data-lesson]');
-    if (!sel || !sel.value) return null;
-    var opt = sel.options[sel.selectedIndex];
-    return { title: opt.textContent, href: sel.value };
+  /** Read the picker back, as a { title, href } or null.
+      Matched on the title he typed: anything that is not a real lesson
+      simply attaches no link, rather than making a dead one. */
+  function pickedLesson(root, lessons) {
+    var box = root.querySelector('[data-lesson]');
+    if (!box) return null;
+    var typed = String(box.value || '').trim().toLowerCase();
+    if (!typed) return null;
+    var hit = (lessons || []).filter(function (l) {
+      return String(l.title).trim().toLowerCase() === typed;
+    })[0];
+    return hit ? { title: hit.title, href: hit.href } : null;
   }
 
   /** The chip shown on a day that has one. */
   function lessonChip(e) {
     if (!e || !e.lesson || !e.lesson.href) return '';
     return '<a class="ll-note__lesson" href="' + esc(e.lesson.href) + '">' +
-      '<span aria-hidden="true">\ud83d\udcd8</span>' + esc(e.lesson.title) + '</a>';
+      '<span aria-hidden="true">\ud83d\udcd6</span>' + esc(e.lesson.title) + '</a>';
   }
 
   var PENCIL = '<svg class="sh-chip__ico" viewBox="0 0 24 24" aria-hidden="true">' +
@@ -399,7 +401,7 @@
       dlg.querySelector('[data-save]').onclick = function () {
         var text = dlg.querySelector('#ll-m').value;
         var okay = text.trim()
-          ? put(subject, day, text, pickedLesson(dlg))
+          ? put(subject, day, text, pickedLesson(dlg, lessons))
           : remove(subject, day);
         if (okay) dlg.close();
         else dlg.querySelector('[data-status]').textContent =
@@ -718,7 +720,7 @@
               (e ? '<span class="ll__status">Clearing the box deletes this day.</span>' : '') +
             '</div>'
           : e
-            ? '<p class="ll-note__text">' + esc(e.text) + '</p>' + lessonChip(e)
+            ? '<p class="ll-note__text">' + esc(e.text) + '</p>'
             : '<p class="ll-note__text ll-note__text--empty">' + empty + '</p>') +
         (cs.length
           ? '<ol class="ll-note__thread">' + cs.map(function (c) {
@@ -731,6 +733,9 @@
                 '</li>';
             }).join('') + '</ol>'
           : '') +
+        /* Under the conversation, not wedged between the note and the replies
+           to it: the link is where you go after reading, not part of the note. */
+        lessonChip(e) +
         (replying === date
           ? '<div class="ll-note__reply">' +
               '<label class="sr" for="ll-r">Your comment</label>' +
@@ -834,7 +839,7 @@
         b.onclick = function () {
           var note = b.closest('.ll-note');
           var text = note.querySelector('#ll-e').value;
-          if (text.trim()) put(subject, note.dataset.date, text, pickedLesson(note));
+          if (text.trim()) put(subject, note.dataset.date, text, pickedLesson(note, lessons));
           else remove(subject, note.dataset.date);
           editing = null;
           draw();

@@ -9,8 +9,8 @@
    highlight (home).
    --------------------------------------------------------------------------- */
 
-import { CHAPTERS } from '../content/chapters.js?v=14';
-import { html, esc } from '../layout/dom.js?v=14';
+import { CHAPTERS } from '../content/chapters.js?v=15';
+import { html, esc } from '../layout/dom.js?v=15';
 
 export function renderTimeline(activeId) {
   const node = '<li class="c-timeline__node" aria-hidden="true"></li>';
