@@ -862,6 +862,44 @@
       return map;
     }
 
+    /* The Sunday-to-Saturday week a day belongs to - the same weeks the
+       month grid draws, so a row up there is a page down here. */
+    function weekOf(iso) {
+      var d = dateOf(iso);
+      d.setDate(d.getDate() - d.getDay());
+      var out = [];
+      for (var i = 0; i < 7; i++) { out.push(isoOf(d)); d.setDate(d.getDate() + 1); }
+      return out;
+    }
+
+    /* Days of that week he could have written: nothing in the future. */
+    function weekDays(iso) {
+      return weekOf(iso).filter(function (d) { return d <= todayIso; });
+    }
+
+    /** "21 - 27 September", or "28 September - 4 October" across a month. */
+    function weekLabel(iso) {
+      var days = weekOf(iso);
+      var a = dateOf(days[0]);
+      var b = dateOf(days[6]);
+      var am = MONTHS[a.getMonth()];
+      var bm = MONTHS[b.getMonth()];
+      return am === bm
+        ? a.getDate() + ' \u2013 ' + b.getDate() + ' ' + bm
+        : a.getDate() + ' ' + am + ' \u2013 ' + b.getDate() + ' ' + bm;
+    }
+
+    /** How much of this week is written up. */
+    function weekTally(iso, notes) {
+      var done = 0, due = 0;
+      weekDays(iso).forEach(function (d) {
+        if (!isSchoolDay(d)) return;
+        due += 1;
+        if (notes[d]) done += 1;
+      });
+      return { done: done, due: due };
+    }
+
     /** The cells of the month on show: ISO dates, padded with nulls. */
     function cells() {
       var y = cursor.getFullYear();
@@ -945,6 +983,24 @@
         '</div>';
     }
 
+    /* A blank day in the middle of the week is one line, not a card. Seven
+       full cards is a wall; seven lines is a week you can read. The day he
+       picked and the day he is writing always open out in full. */
+    function slimBlock(date) {
+      var school = isSchoolDay(date);
+      return '<li class="ll-note ll-note--slim' + (date === todayIso ? ' ll-note--today' : '') +
+          '" data-date="' + esc(date) + '">' +
+        '<div class="ll-note__head">' +
+          '<h3 class="ll-note__when">' + esc(prettyDate(date)) + '</h3>' +
+          '<span class="ll-note__kind' + (school ? '' : ' is-off') + '">' +
+            esc(dayKind(date)) + '</span>' +
+        '</div>' +
+        (school
+          ? '<button type="button" class="ll__quiet ll-note__add" data-edit>Write this day</button>'
+          : '<span class="ll-note__text ll-note__text--empty">Nothing to write up.</span>') +
+        '</li>';
+    }
+
     function noteBlock(e, date) {
       var cs = e ? comments(e) : [];
       var writing = editing === date;
@@ -954,6 +1010,7 @@
         : 'No school this day \u2014 nothing to write up.';
 
       return '<li class="ll-note' + (date === todayIso ? ' ll-note--today' : '') +
+          (date === selected ? ' is-picked' : '') +
           '" data-date="' + esc(date) + '">' +
         '<div class="ll-note__head">' +
           '<h3 class="ll-note__when">' + esc(prettyDate(date)) + '</h3>' +
@@ -1018,11 +1075,21 @@
       draw();
     };
 
+    function weekLine(t) {
+      if (!t.due) return 'No school days this week yet.';
+      if (t.done === t.due) return 'Every school day this week \u2014 ' + t.done + ' of ' + t.due + '.';
+      return t.done + ' of ' + t.due + ' school days written up.';
+    }
+
     function draw() {
       drawing = true;
       var notes = byDate();
       var t = tally(notes);
       var here = dateOf(todayIso);
+      /* Newest first: today is the line anybody opening this page wants. */
+      var days = weekDays(selected).slice().reverse();
+      var wt = weekTally(selected, notes);
+      var thisWeek = weekOf(selected)[0] === weekOf(todayIso)[0];
       var atThisMonth = cursor.getFullYear() === here.getFullYear()
         && cursor.getMonth() === here.getMonth();
 
@@ -1049,7 +1116,7 @@
           '<p class="ll-cal__tally">' + tallyLine(t) + '</p>' +
           '<div class="ll-sync" data-sync></div>' +
         '</section>' +
-        '<section class="ll-pane" aria-label="The day you picked">' +
+        '<section class="ll-pane" aria-label="The week you picked">' +
           '<div class="ll-me">' +
             '<span class="ll-me__l">You are</span>' +
             '<button type="button" class="ll-me__b' + (who() === 'ethan' ? ' is-on' : '') +
@@ -1058,7 +1125,23 @@
             '<button type="button" class="ll-me__b' + (who() === 'parent' ? ' is-on' : '') +
               '" data-me="parent" aria-pressed="' + (who() === 'parent') + '">Parent</button>' +
           '</div>' +
-          '<ol class="ll-history__list">' + noteBlock(notes[selected], selected) + '</ol>' +
+          /* The pager: a week at a time, newest day first, so what he wrote
+             today is the first thing anybody reads. */
+          '<div class="ll-week">' +
+            '<button type="button" class="ll-cal__nav" data-wprev aria-label="The week before">&lsaquo;</button>' +
+            '<h2 class="ll-week__t">' + esc(weekLabel(selected)) + '</h2>' +
+            '<button type="button" class="ll-cal__nav" data-wnext aria-label="The week after"' +
+              (thisWeek ? ' disabled' : '') + '>&rsaquo;</button>' +
+            '<span class="ll-week__n">' + weekLine(wt) + '</span>' +
+            (thisWeek ? '' : '<button type="button" class="ll-cal__today" data-wnow>This week</button>') +
+          '</div>' +
+          '<ol class="ll-history__list">' +
+            days.map(function (d) {
+              return (notes[d] || d === selected || editing === d || replying === d)
+                ? noteBlock(notes[d], d)
+                : slimBlock(d);
+            }).join('') +
+          '</ol>' +
         '</section>';
 
       drawStrip(root.querySelector('[data-sync]'), null);
@@ -1084,6 +1167,34 @@
       if (prev) prev.onclick = function () { cursor.setMonth(cursor.getMonth() - 1, 1); draw(); };
       var next = root.querySelector('[data-next]');
       if (next) next.onclick = function () { cursor.setMonth(cursor.getMonth() + 1, 1); draw(); };
+      /* Paging weeks moves the day he has picked with it, and takes the
+         month grid along so the two never disagree about where he is. */
+      function goWeek(step) {
+        var d = dateOf(selected);
+        d.setDate(d.getDate() + step * 7);
+        var iso = isoOf(d);
+        if (iso > todayIso) iso = todayIso;
+        var week = weekDays(iso);
+        /* Land on the last day of that week he could have written. */
+        selected = week[week.length - 1] || iso;
+        cursor = dateOf(selected);
+        editing = null;
+        replying = null;
+        draw();
+      }
+      var wprev = root.querySelector('[data-wprev]');
+      if (wprev) wprev.onclick = function () { goWeek(-1); };
+      var wnext = root.querySelector('[data-wnext]');
+      if (wnext) wnext.onclick = function () { goWeek(1); };
+      var wnow = root.querySelector('[data-wnow]');
+      if (wnow) wnow.onclick = function () {
+        selected = todayIso;
+        cursor = dateOf(todayIso);
+        editing = null;
+        replying = null;
+        draw();
+      };
+
       var jump = root.querySelector('[data-jump]');
       if (jump) jump.onclick = function () {
         cursor = dateOf(todayIso);

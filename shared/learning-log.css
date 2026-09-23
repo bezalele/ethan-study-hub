@@ -405,6 +405,49 @@
 
 .ll-history__list { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
 
+/* --- A week at a time ------------------------------------------------------
+   The month grid is the map; this is the page. Seven days is enough to see
+   what the week has been without anybody scrolling for it.
+   --------------------------------------------------------------------------- */
+
+.ll-week {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.ll-week__t {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.2;
+}
+.ll-week__n {
+  font: 600 12.5px/1.4 inherit;
+  color: var(--ll-muted);
+}
+/* Pushes the "This week" button to the far end of the row. */
+.ll-week .ll-cal__today { margin-left: auto; }
+
+/* A day nobody has written, sitting between days somebody has: one line, so
+   the week reads as a week rather than a wall of empty cards. */
+.ll-note--slim {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 20px;
+  border-left-color: var(--ll-edge);
+  box-shadow: none;
+}
+.ll-note--slim .ll-note__when { font-size: 15px; }
+.ll-note--slim .ll-note__add { margin-left: auto; }
+.ll-note--slim .ll-note__text--empty { margin: 0; }
+
+/* The day the month grid has selected, so the two halves of the page agree
+   about which one is being talked about. */
+.ll-note.is-picked { box-shadow: 0 0 0 2px var(--ll-accent-soft); }
+
 .ll-note {
   display: grid;
   gap: 11px;
