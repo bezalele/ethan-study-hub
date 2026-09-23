@@ -130,9 +130,45 @@ If a change does not show up in the browser, this is the first thing to check.
 | `node tests/smoke.cjs` | structural invariants — CSS scoping, one cache version, no inline handlers, every image exists, the shared header and journal rules | **210/210** |
 | `node tests/quiz-check.cjs` | the AP Gov quizzes score correctly | passes |
 | `node tests/layout-check.cjs` | renders every route and looks for tiny text, overflow, missing images | **36/72 — 36 known failures** (§8) |
+| `node tests/publish-safety.cjs` | a deploy cannot lose a note: every merge rule is additive, and no journal payload is committed to this public repo | passes |
 
 `smoke.cjs` must be green before any merge. It is the file that stops the three
 subjects quietly drifting apart.
+
+### Publishing cannot reach the notes
+
+Asked directly, more than once: *does pushing the code and publishing overwrite
+the notes?* No — and here is the whole argument, so it can be checked rather
+than believed.
+
+**The notes are not in the repository.** Publishing is a push to `main`; GitHub
+Pages serves the files as they are. A deploy replaces HTML, CSS and JS. The
+notes live in the Durable Object and in each browser, which a file deploy has
+no way to touch. `tests/publish-safety.cjs` walks every text file in the repo
+and fails if a journal or progress payload was ever pasted into one — that
+would also publish his school notes to the world, since the repo is public.
+
+**No merge rule can subtract.** The only way a release has ever taken data is
+through code, so every rule in `journal-merge.js` and `progress-merge.js` is a
+union, a max or an OR. A side that knows nothing about something may never
+remove it. That is the rule that matters on a parent's laptop, which arrives
+empty, and it is what `tests/publish-safety.cjs` checks case by case: an empty
+copy merged either way round keeps every note, reply, reaction, link and score,
+a stale copy is not read as a set of deletions, and deletes still travel as
+tombstones rather than holes.
+
+**And it is proved end to end, not only in the rules.** The browser test
+`fresh.cjs` (scratchpad) seeds a local worker with a note, thread, reaction and
+link, then opens the site in a browser with empty storage, leaves it through a
+full round of polling, reloads it as though a new version had shipped, and
+opens a second empty machine. The server is byte-for-byte unchanged, and the
+empty laptop pulls the note down rather than pushing its emptiness up.
+
+**The one real risk is shipping half of it.** The site and the Worker share
+`shared/journal-merge.js`, so they cannot drift in the repo — but they can
+drift *in production* if one is deployed without the other. An older Worker
+silently drops fields the new site writes; that is how the first lesson links
+disappeared. §7 has the probe. Ship both, in that order, every time.
 
 ### Never test against the live Worker
 

@@ -377,3 +377,18 @@ export const COURSE_DETAILS = {
 export function getDetail(n) {
   return COURSE_DETAILS[Number(n)] || { ...EMPTY };
 }
+
+/**
+ * The core ideas a unit actually shows, as titles.
+ *
+ * A unit with written detail shows its `coreIdeas`; one without falls back to
+ * the topic list on the area itself. The Course Map renders these and the
+ * daily note offers them, so both must ask the same question - they were
+ * asking different ones, and a note linked an idea the page never showed.
+ */
+export function unitIdeas(area) {
+  const d = getDetail(area.n);
+  return d.coreIdeas && d.coreIdeas.length
+    ? d.coreIdeas.map((i) => i.title)
+    : area.topics.slice();
+}

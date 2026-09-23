@@ -22,9 +22,10 @@
      Ethan's Journal   reads. Goes to the record, which is where his mum is
                        told to look and where replies are answered.
 
-   The unread badge sits on the journal, never on the note button: a reply is
-   something to go and read, and putting a number on the writing button would
-   make it look as though he had homework outstanding.
+   There is no unread badge. A red count on the chip made the site look like
+   something with a task outstanding rather than somewhere to write a line
+   about his day, which is the opposite of the point. LearningLog.newCount is
+   still there if a quieter cue is ever wanted.
 
    Classic script, like learning-log.js, so the two classic-script apps and
    the module-based one all use it the same way. Requires learning-log.js to
@@ -61,7 +62,6 @@
     var learner = opts.learner || '';
     var possessive = learner ? learner + '’s' : 'Your';
     var journal = possessive + ' Journal';
-    var fresh = global.LearningLog ? global.LearningLog.newCount(opts.subject) : 0;
 
     root.className = 'sh-cluster' + (opts.onDark ? ' sh-on-dark' : '');
     root.innerHTML =
@@ -70,7 +70,6 @@
         'title="Every day ' + esc(learner || 'you') + ' has written, and the replies">' +
         ICON.journal +
         '<span class="sh-chip__txt">' + esc(journal) + '</span>' +
-        (fresh ? '<span class="sh-chip__dot" aria-label="' + fresh + ' new replies">' + fresh + '</span>' : '') +
       '</a>' +
       '<a class="sh-chip sh-chip--quiet" href="' + esc(opts.hubHref || '../') + '" title="All subjects">' +
         ICON.hub + '<span class="sh-chip__txt">Study Hub</span>' +
@@ -88,6 +87,9 @@
            the same as the one written on the journal page. The list is the
            host app's - nothing here knows what a lesson is. */
         lessons: opts.lessons || [],
+        /* And the ones he has opened lately, so the note written from here
+           offers the same one-tap shortcut the journal page does. */
+        recent: opts.recent || [],
       });
     }
   }

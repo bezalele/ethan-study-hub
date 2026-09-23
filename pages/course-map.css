@@ -992,6 +992,14 @@
   border: 1px solid var(--c-line);
   border-radius: var(--r-sm);
 }
+/* The idea a daily note pointed at. Held, not flashed: he has arrived here
+   from his own note and should be able to see which line it meant. */
+.page--course-map .cm-idea.is-named {
+  background: var(--c-paper, #fff);
+  border-color: var(--c-brick);
+  box-shadow: 0 0 0 3px rgba(150, 60, 35, .12);
+}
+
 .page--course-map .cm-idea__n {
   font-family: var(--font-display);
   font-size: 14px;

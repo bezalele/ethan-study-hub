@@ -87,18 +87,6 @@
 }
 
 /* Replies Ethan has not read yet. Reading the journal clears it. */
-.sh-chip__dot {
-  display: grid;
-  place-items: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  background: #b4552f;
-  border-radius: 999px;
-  font: 700 12px/1 inherit;
-  color: #fff;
-}
-
 .sh-avatar {
   display: grid;
   place-items: center;

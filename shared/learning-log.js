@@ -119,6 +119,20 @@
   /* Raw rows, tombstones and all. Only merging and writing want these. */
   function rawComments(e) { return Array.isArray(e.comments) ? e.comments : []; }
   function rawReactions(e) { return Array.isArray(e.reactions) ? e.reactions : []; }
+  function rawLinks(e) { return Array.isArray(e.links) ? e.links : []; }
+
+  /* What to show. Days written before links were a list carry a single
+     `lesson` instead; it reads as one link so nothing already saved is lost
+     or needs migrating. */
+  function links(e) {
+    if (!e) return [];
+    var rows = rawLinks(e).filter(function (l) { return !l.del && l.href; });
+    if (rows.length) return rows;
+    if (e.lesson && e.lesson.href) {
+      return [{ id: 'legacy', title: e.lesson.title, href: e.lesson.href }];
+    }
+    return [];
+  }
 
   /* What to show. A deleted comment keeps its id and carries `del`; a
      reaction taken off keeps its row and carries `off`. Both have to stay in
@@ -187,7 +201,7 @@
       `lesson` is optional: { title, href } pointing at the course material
       the day was about. It travels with the note text, so editing the note
       can change or clear it. */
-  function put(subject, date, text, lesson) {
+  function put(subject, date, text) {
     var data = readAll();
     var existing = data.entries.filter(function (e) {
       return e && e.subject === subject && e.date === date;
@@ -199,16 +213,60 @@
       subject: subject, date: date, text: text.trim(), ts: Date.now(),
       comments: existing ? rawComments(existing) : [],
       reactions: existing ? rawReactions(existing) : [],
+      /* Carried across untouched: a note edit must never drop a link. That
+         is exactly how one went missing when links lived on the note. */
+      links: existing ? rawLinks(existing) : [],
     };
-    if (lesson && lesson.href && lesson.title) {
-      row.lesson = { title: String(lesson.title), href: String(lesson.href) };
-    }
+    if (existing && existing.lesson) row.lesson = existing.lesson;
     return writeAll((data.entries.push(row), data));
   }
 
   /* Not a deletion — an empty day, stamped now. It has to outrank whatever
      the other laptops still hold, and a row that simply vanished would lose
      that argument on the next sync. */
+  /** Attach a lesson to a day. Ignores one that is already there. */
+  function addLink(subject, date, link) {
+    if (!link || !link.href) return false;
+    var data = readAll();
+    var e = data.entries.filter(function (x) {
+      return x && x.subject === subject && x.date === date;
+    })[0];
+    if (!e) return false;
+    var rows = rawLinks(e);
+    var already = rows.filter(function (l) { return l.href === link.href; })[0];
+    if (already && !already.del) return true;
+    if (already) {
+      already.del = false;
+      already.ts = Date.now();
+    } else {
+      rows.push({
+        id: 'l' + Date.now() + Math.random().toString(36).slice(2, 6),
+        title: String(link.title || link.href),
+        href: String(link.href),
+        ts: Date.now(),
+      });
+    }
+    e.links = rows;
+    return writeAll(data);
+  }
+
+  /* Marked, not removed: a row that simply vanished would be put back by the
+     next laptop that still had it. */
+  function removeLink(subject, date, href) {
+    var data = readAll();
+    var e = data.entries.filter(function (x) {
+      return x && x.subject === subject && x.date === date;
+    })[0];
+    if (!e) return false;
+    e.links = rawLinks(e).map(function (l) {
+      return l.href === href ? { id: l.id, title: l.title, href: l.href, ts: Date.now(), del: true } : l;
+    });
+    /* A day written before links were a list keeps its single `lesson`, so
+       removing that one has to clear the old field too. */
+    if (e.lesson && e.lesson.href === href) delete e.lesson;
+    return writeAll(data);
+  }
+
   function remove(subject, date) {
     return put(subject, date, '');
   }
@@ -275,46 +333,225 @@
   /* The lessons this subject can offer, as [{ id, title, group, href }].
      Each app hands its own list in at mount time; nothing here knows what a
      lesson is. Empty means no picker is shown at all. */
-  function lessonPicker(lessons, current) {
-    if (!lessons || !lessons.length) return '';
-    /* A typed box with suggestions rather than a plain dropdown: twenty-seven
-       lessons is a long scroll, and he knows what he did today faster than he
-       can find it in a list. Typing narrows it; leaving it empty attaches
-       nothing. The datalist is native, so it behaves the way the browser's
-       own autocomplete does on his phone as well as the laptop. */
-    var chosen = current && current.title ? current.title : '';
-    return '<label class="ll-pick">' +
-      '<span class="ll-pick__l">What was this about?</span>' +
-      '<input class="ll-pick__in" list="ll-lessons" data-lesson autocomplete="off" ' +
-        'placeholder="Start typing a lesson, or leave empty" value="' + esc(chosen) + '">' +
-      '<datalist id="ll-lessons">' +
-        lessons.map(function (l) {
-          return '<option value="' + esc(l.title) + '"' +
-            (l.group ? ' label="' + esc(l.group) + '"' : '') + '></option>';
-        }).join('') +
-      '</datalist>' +
-    '</label>';
+  /** Make the day's links match what was picked, and nothing more. */
+  function applyLinks(subject, date, wanted) {
+    var now = links(entryFor(subject, date));
+    now.forEach(function (l) {
+      if (!wanted.some(function (x) { return x.href === l.href; })) {
+        removeLink(subject, date, l.href);
+      }
+    });
+    wanted.forEach(function (l) {
+      if (!now.some(function (x) { return x.href === l.href; })) {
+        addLink(subject, date, l);
+      }
+    });
   }
 
-  /** Read the picker back, as a { title, href } or null.
-      Matched on the title he typed: anything that is not a real lesson
-      simply attaches no link, rather than making a dead one. */
-  function pickedLesson(root, lessons) {
-    var box = root.querySelector('[data-lesson]');
-    if (!box) return null;
-    var typed = String(box.value || '').trim().toLowerCase();
-    if (!typed) return null;
-    var hit = (lessons || []).filter(function (l) {
-      return String(l.title).trim().toLowerCase() === typed;
-    })[0];
-    return hit ? { title: hit.title, href: hit.href } : null;
+  /* --- What was this about? ------------------------------------------------
+     He is fourteen and he is writing this at the end of a school day. A list
+     of twenty-seven lessons is where he closes the tab, so nothing here is
+     ever long and nothing here needs typing.
+
+       Lately   the lessons he has actually opened. Most days the right
+                answer is already sitting here and it costs one tap.
+       Units    otherwise, the handful of units. Opening one shows only its
+                lessons - and walking unit then lesson is itself worth
+                something: after a fortnight he knows the shape of his own
+                course without being taught it.
+
+     It manages its own DOM rather than being redrawn by the editor around
+     it, because the editor redraw would throw away whatever he had typed.
+     --------------------------------------------------------------------------- */
+
+  /* A unit's number, where its name carries one. -1 sorts the ones that do
+     not - Foundations, Start here - to the front. */
+  function unitNo(name) {
+    var n = /(\d+)/.exec(name || '');
+    return n ? Number(n[1]) : -1;
   }
 
-  /** The chip shown on a day that has one. */
-  function lessonChip(e) {
-    if (!e || !e.lesson || !e.lesson.href) return '';
-    return '<a class="ll-note__lesson" href="' + esc(e.lesson.href) + '">' +
-      '<span aria-hidden="true">\ud83d\udcd6</span>' + esc(e.lesson.title) + '</a>';
+  /* Its badge: the number where there is one, else its initial. Small and
+     quiet - it is there to give the eye a left edge to run down. */
+  function badge(name) {
+    var n = unitNo(name);
+    if (n > -1) return String(n);
+    /* "The founding story" is an F, not a T. */
+    return String(name || '?').trim().replace(/^(the|a|an)\s+/i, '').charAt(0).toUpperCase();
+  }
+
+  function mountPicker(host, opts) {
+    if (!host) return { links: function () { return []; } };
+    var lessons = opts.lessons || [];
+    /* opts.recent - the lessons he has opened lately - is accepted and not
+       shown. One way in is easier to learn than two. Held for later, on
+       purpose; turning it on is a block of markup in draw(). */
+    var chosen = (opts.initial || []).map(function (l) {
+      return { title: l.title, href: l.href };
+    });
+    /* Everything starts folded, every subject, every time. The list he
+       arrives at is the shape of his course - six or seven lines - and it is
+       the same short list whether or not one of them happens to be the only
+       one that opens. */
+    var open = null;   // which unit is expanded
+
+    if (!lessons.length) { host.innerHTML = ''; return { links: function () { return chosen; } }; }
+
+    /* One list of sections, kept in the order the app handed them over -
+       which is the order the course runs. A unit with lessons under it opens;
+       a lesson with no group is a row of its own and links straight out,
+       because some units are as deep as a subject can be linked. The two
+       kinds sit in one sequence so Unit 3 never jumps above Unit 2 for being
+       a different shape. */
+    var sections = [];
+    var byGroup = {};
+    lessons.forEach(function (l) {
+      if (!l.group) { sections.push({ one: l }); return; }
+      if (!byGroup[l.group]) {
+        byGroup[l.group] = { group: l.group, items: [] };
+        sections.push(byGroup[l.group]);
+      }
+      byGroup[l.group].items.push(l);
+    });
+
+    function has(href) {
+      return chosen.some(function (c) { return c.href === href; });
+    }
+
+
+    function row(cls, attr, ic, title, tail) {
+      return '<button type="button" class="ll-row ' + cls + '" ' + attr + '>' +
+        '<span class="ll-row__ic" aria-hidden="true">' + ic + '</span>' +
+        '<span class="ll-row__t">' + esc(title) + '</span>' +
+        (tail || '') +
+      '</button>';
+    }
+
+    /* Three. Enough for a day that touched more than one thing, few enough
+       that the note still means something. At three he is told rather than
+       silently overruled: nothing he picked is dropped to make room. */
+    var MAX = 3;
+    var full = false;   // he reached for a fourth
+
+    /* Picking is a toggle, and nothing leaves the list when it is picked.
+       A lesson he has chosen stays exactly where it was, ticked - so the way
+       to take it off is the same row he turned on, and the list underneath
+       him never reshuffles while he is reading it. */
+    function toggle(href) {
+      var l = lessons.filter(function (x) { return x.href === href; })[0];
+      if (!l) return;
+      if (has(href)) {
+        chosen = chosen.filter(function (c) { return c.href !== href; });
+        full = false;
+      } else if (chosen.length >= MAX) {
+        full = true;
+      } else {
+        chosen.push({ title: l.title, href: l.href });
+        full = false;
+      }
+      /* `open` is deliberately untouched: the unit he is reading stays open,
+         so picking two things out of it costs two taps and no hunting. */
+      draw();
+    }
+
+    function tail(on) {
+      return on
+        ? '<span class="ll-row__tick" aria-hidden="true">\u2713</span>'
+        : '<span class="ll-row__go" aria-hidden="true"></span>';
+    }
+
+    function draw() {
+      /* A redraw replaces the list, so remember where he was reading. */
+      var box = host.querySelector('.ll-pick__list');
+      var at = box ? box.scrollTop : 0;
+
+      var chosenRows = chosen.map(function (c) {
+        return '<div class="ll-row ll-lk">' +
+          '<span class="ll-row__ic ll-row__ic--on" aria-hidden="true">\ud83d\udcd6</span>' +
+          '<span class="ll-row__t">' + esc(c.title) + '</span>' +
+          '<button type="button" class="ll-lk__x" data-drop="' + esc(c.href) + '" ' +
+            'aria-label="Remove ' + esc(c.title) + '">&times;</button>' +
+        '</div>';
+      }).join('');
+
+      host.className = 'll-pick';
+      host.innerHTML =
+        '<span class="ll-pick__l">What was this about?</span>' +
+        (chosenRows ? '<div class="ll-pick__chosen">' + chosenRows + '</div>' : '') +
+        (full
+          ? '<p class="ll-pick__full">Three is the most. Take one off above to add another.</p>'
+          : '') +
+        '<div class="ll-pick__list">' +
+          '<p class="ll-pick__cap">All lessons</p>' +
+          sections.map(function (sec) {
+            if (sec.one) {
+              var lit = has(sec.one.href);
+              return row('ll-opt ll-opt--one' + (lit ? ' is-on' : ''),
+                'data-add="' + esc(sec.one.href) + '" aria-pressed="' + lit + '"',
+                esc(badge(sec.one.title)), sec.one.title, tail(lit));
+            }
+            var g = sec.group;
+            var isOpen = open === g;
+            var picked = sec.items.filter(function (l) { return has(l.href); }).length;
+            return '<div class="ll-unit' + (isOpen ? ' is-open' : '') + '">' +
+              '<button type="button" class="ll-row ll-unit__b" data-group="' + esc(g) + '" ' +
+                'aria-expanded="' + isOpen + '">' +
+                '<span class="ll-row__ic ll-unit__ic" aria-hidden="true">' + esc(badge(g)) + '</span>' +
+                '<span class="ll-row__t">' + esc(g) + '</span>' +
+                /* Folded, a unit still says what he took from it. */
+                (picked && !isOpen ? '<span class="ll-unit__n">' + picked + ' picked</span>' : '') +
+                '<span class="ll-row__go ll-unit__caret" aria-hidden="true"></span>' +
+              '</button>' +
+              (isOpen
+                ? '<div class="ll-unit__list">' +
+                    sec.items.map(function (l) {
+                      var lit = has(l.href);
+                      return row('ll-opt' + (lit ? ' is-on' : ''),
+                        'data-add="' + esc(l.href) + '" aria-pressed="' + lit + '"',
+                        '', l.title, tail(lit));
+                    }).join('') +
+                  '</div>'
+                : '') +
+            '</div>';
+          }).join('') +
+        '</div>';
+
+      box = host.querySelector('.ll-pick__list');
+      if (box) box.scrollTop = at;
+
+      host.querySelectorAll('[data-group]').forEach(function (b) {
+        b.onclick = function (ev) {
+          ev.preventDefault();
+          open = (open === b.dataset.group) ? null : b.dataset.group;
+          full = false;
+          draw();
+          /* Bring the unit he just opened to the top of the list, so its
+             lessons are what he is looking at and not what he scrolls for. */
+          var o = host.querySelector('.ll-unit.is-open');
+          var list = host.querySelector('.ll-pick__list');
+          if (o && list) list.scrollTop += o.getBoundingClientRect().top - list.getBoundingClientRect().top - 4;
+        };
+      });
+      host.querySelectorAll('[data-add]').forEach(function (b) {
+        b.onclick = function (ev) { ev.preventDefault(); toggle(b.dataset.add); };
+      });
+      host.querySelectorAll('[data-drop]').forEach(function (b) {
+        b.onclick = function (ev) { ev.preventDefault(); toggle(b.dataset.drop); };
+      });
+    }
+
+    draw();
+    return { links: function () { return chosen.slice(); } };
+  }
+
+  /** Every lesson a day points at, as links you can actually follow. */
+  function lessonChips(e) {
+    var rows = links(e);
+    if (!rows.length) return '';
+    return '<div class="ll-note__links">' + rows.map(function (l) {
+      return '<a class="ll-note__lesson" href="' + esc(l.href) + '">' +
+        '<span aria-hidden="true">\ud83d\udcd6</span>' + esc(l.title) + '</a>';
+    }).join('') + '</div>';
   }
 
   var PENCIL = '<svg class="sh-chip__ico" viewBox="0 0 24 24" aria-hidden="true">' +
@@ -383,9 +620,9 @@
           '<h2 class="ll-modal__title">' + esc(prompt()) + '</h2>' +
           '<p class="ll-modal__day">' + esc(prettyDate(day)) + ' &middot; ' + esc(label) + '</p>' +
           '<label class="sr" for="ll-m">Today’s note</label>' +
-          '<textarea id="ll-m" class="ll__text" rows="5" placeholder="In class today we&hellip;">' +
+          '<textarea id="ll-m" class="ll__text" rows="4" placeholder="In class today we&hellip;">' +
             esc(entry ? entry.text : '') + '</textarea>' +
-          lessonPicker(lessons, entry && entry.lesson) +
+          '<div data-picker></div>' +
           '<div class="ll__row ll-modal__row">' +
             '<button type="button" class="ll__save" data-save>Save</button>' +
             '<button type="button" class="ll__quiet" data-cancel>Cancel</button>' +
@@ -394,15 +631,30 @@
           '</div>' +
         '</div>';
 
+      var picker = mountPicker(dlg.querySelector('[data-picker]'), {
+        lessons: lessons, recent: opts.recent || [], initial: links(entry),
+      });
+
       dlg.querySelector('[data-x]').onclick = function () { dlg.close(); };
       dlg.querySelector('[data-cancel]').onclick = function () { dlg.close(); };
       var all = dlg.querySelector('[data-all]');
       if (all) all.onclick = function () { dlg.close(); };
       dlg.querySelector('[data-save]').onclick = function () {
         var text = dlg.querySelector('#ll-m').value;
-        var okay = text.trim()
-          ? put(subject, day, text, pickedLesson(dlg, lessons))
-          : remove(subject, day);
+        /* A day is its note: an empty box clears it. So saving a lesson with
+           nothing written would throw the lesson away on the spot - which is
+           exactly what it looked like when a pick "did not save". Ask for the
+           line instead, and keep everything he has picked. */
+        if (!text.trim() && picker.links().length) {
+          var ask = dlg.querySelector('[data-status]');
+          ask.className = 'll__status ll__status--ask';
+          ask.textContent = 'Write a line about it first \u2014 then the lesson saves with it.';
+          dlg.querySelector('#ll-m').focus();
+          return;
+        }
+        var okay = text.trim() ? put(subject, day, text) : remove(subject, day);
+        /* Links are their own list, applied after the note exists. */
+        if (okay && text.trim()) applyLinks(subject, day, picker.links());
         if (okay) dlg.close();
         else dlg.querySelector('[data-status]').textContent =
           'This browser will not let the note save right now.';
@@ -598,6 +850,7 @@
     var selected = todayIso;
     var cursor = dateOf(todayIso);   // any date inside the month on show
     var editing = null;              // date whose note is being written
+    var pagePicker = null;           // the lesson picker, while an editor is open
     var replying = null;             // date whose reply box is open
 
     markSeen(subject);
@@ -713,11 +966,12 @@
           ? '<label class="sr" for="ll-e">Note for ' + esc(prettyDate(date)) + '</label>' +
             '<textarea id="ll-e" class="ll__text" rows="4" placeholder="In class today we&hellip;">' +
               esc(e ? e.text : '') + '</textarea>' +
-            lessonPicker(lessons, e && e.lesson) +
+            '<div data-picker></div>' +
             '<div class="ll__row">' +
               '<button type="button" class="ll__save" data-savenote>Save</button>' +
               '<button type="button" class="ll__quiet" data-cancelnote>Cancel</button>' +
-              (e ? '<span class="ll__status">Clearing the box deletes this day.</span>' : '') +
+              '<span class="ll__status" data-pagestatus>' +
+                (e ? 'Clearing the box deletes this day.' : '') + '</span>' +
             '</div>'
           : e
             ? '<p class="ll-note__text">' + esc(e.text) + '</p>'
@@ -735,7 +989,7 @@
           : '') +
         /* Under the conversation, not wedged between the note and the replies
            to it: the link is where you go after reading, not part of the note. */
-        lessonChip(e) +
+        lessonChips(e) +
         (replying === date
           ? '<div class="ll-note__reply">' +
               '<label class="sr" for="ll-r">Your comment</label>' +
@@ -808,6 +1062,16 @@
         '</section>';
 
       drawStrip(root.querySelector('[data-sync]'), null);
+
+      /* Mounted after the editor exists, and only while one is open. */
+      pagePicker = null;
+      var slot = root.querySelector('[data-picker]');
+      if (slot) {
+        pagePicker = mountPicker(slot, {
+          lessons: lessons, recent: opts.recent || [],
+          initial: links(notes[editing]),
+        });
+      }
       root.querySelectorAll('[data-day]').forEach(function (b) {
         b.onclick = function () {
           selected = b.dataset.day;
@@ -839,8 +1103,25 @@
         b.onclick = function () {
           var note = b.closest('.ll-note');
           var text = note.querySelector('#ll-e').value;
-          if (text.trim()) put(subject, note.dataset.date, text, pickedLesson(note, lessons));
-          else remove(subject, note.dataset.date);
+          var d = note.dataset.date;
+          var wanted = pagePicker ? pagePicker.links() : null;
+          /* Same as the modal: don't throw a pick away because the box is
+             still empty. */
+          if (!text.trim() && wanted && wanted.length) {
+            var ask = note.querySelector('[data-pagestatus]');
+            if (ask) {
+              ask.className = 'll__status ll__status--ask';
+              ask.textContent = 'Write a line about it first \u2014 then the lesson saves with it.';
+            }
+            note.querySelector('#ll-e').focus();
+            return;
+          }
+          if (text.trim()) {
+            put(subject, d, text);
+            if (wanted) applyLinks(subject, d, wanted);
+          } else {
+            remove(subject, d);
+          }
           editing = null;
           draw();
         };
@@ -894,6 +1175,9 @@
     setNoSchool: setNoSchool,
     isSchoolDay: isSchoolDay,
     toggleReaction: toggleReaction,
+    addLink: addLink,
+    removeLink: removeLink,
+    links: links,
     streak: streak,
     REACTIONS: REACTIONS,
     STORAGE_KEY: KEY,

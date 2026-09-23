@@ -309,6 +309,25 @@
   box-shadow: 0 18px 50px rgba(20, 38, 30, .28);
 }
 
+/* The card never grows past the screen, and Save never leaves it.
+   Everything in here keeps its height except the lesson list, which takes
+   what is left - so three picked lessons cost the list some rows rather than
+   costing him the buttons. */
+.ll-modal__card {
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+  max-height: calc(100dvh - 28px);
+}
+.ll-modal__card > * { flex: 0 0 auto; }
+.ll-modal__card .ll-pick {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.ll-modal__card .ll-pick__list { flex: 1 1 auto; min-height: 96px; }
+
 .ll-modal__x {
   position: absolute;
   top: 10px;
@@ -371,6 +390,9 @@
 
 .ll__link { font: 700 14px/1 inherit; color: var(--ll-accent); }
 .ll__status { font-size: 13px; color: var(--ll-muted); }
+/* The one status that asks him for something rather than telling him how
+   things work. */
+.ll__status--ask { font-weight: 700; color: var(--ll-accent); }
 
 
 
@@ -520,15 +542,22 @@
 .ll-sync__go { min-height: 32px; font-size: 13px; }
 
 /* --- What the day was about ------------------------------------------------
-   A lesson picked from a list rather than a pasted address: he writes his
-   note from the home page, not from inside a lesson, and a raw URL in a
-   comment means nothing to him.
+   A fourteen-year-old writing this at the end of a school day will not read
+   a cloud of twenty-seven buttons. So this is one quiet list instead: every
+   line is the same shape, the units sit folded, and opening one shows only
+   its own lessons, indented under it. Nothing here needs typing.
    --------------------------------------------------------------------------- */
 
 .ll-pick {
   display: grid;
-  gap: 5px;
-  margin-top: 10px;
+  gap: 7px;
+  /* The note card lays its children out with justify-items:start, so without
+     this the panel would shrink to the longest lesson title. */
+  width: 100%;
+  max-width: 560px;
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--ll-edge);
 }
 .ll-pick__l {
   font: 700 11px/1 inherit;
@@ -536,21 +565,186 @@
   text-transform: uppercase;
   color: var(--ll-muted);
 }
-.ll-pick__in {
-  width: 100%;
-  max-width: 420px;
-  min-height: 38px;
-  padding: 0 11px;
-  border: 1px solid var(--ll-edge);
-  border-radius: 8px;
-  background: #fff;
-  font: 14px/1 inherit;
-  color: inherit;
-}
-.ll-pick__in:focus { outline: 2px solid var(--ll-accent); outline-offset: 1px; }
-.ll-pick__in::placeholder { color: var(--ll-muted); opacity: .8; }
 
-/* On the day itself: a way in to the material, for whoever is reading. */
+/* What he has picked, above the list rather than inside it: it is the answer
+   to the question, and it should not scroll away while he looks for the
+   next one. */
+.ll-pick__chosen { display: grid; gap: 2px; }
+
+/* Said only when he reaches for a fourth. Accent, not alarm - he has not
+   done anything wrong. */
+.ll-pick__full {
+  margin: 0;
+  padding: 7px 10px;
+  background: var(--ll-accent-soft);
+  border-radius: 8px;
+  font: 700 12.5px/1.4 inherit;
+  color: var(--ll-accent);
+}
+
+/* One card. It scrolls inside itself so Save never leaves the screen. */
+.ll-pick__list {
+  max-height: 300px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ll-edge) transparent;
+  padding: 5px;
+  background: #fff;
+  border: 1px solid var(--ll-edge);
+  border-radius: 12px;
+}
+
+/* A hairline scrollbar. The default Windows one is wide enough to read as
+   "this list is long", which is the impression the whole panel avoids. */
+.ll-pick__list::-webkit-scrollbar { width: 8px; }
+.ll-pick__list::-webkit-scrollbar-thumb {
+  background: var(--ll-edge);
+  border: 2px solid #fff;
+  border-radius: 99px;
+}
+.ll-pick__list::-webkit-scrollbar-track { background: transparent; }
+
+.ll-pick__cap {
+  margin: 9px 8px 4px;
+  font: 700 10.5px/1 inherit;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ll-muted);
+}
+.ll-pick__list > .ll-pick__cap:first-child { margin-top: 3px; }
+
+/* Every line in the list - chosen, lately, unit, lesson - is this shape.
+   One rhythm down the left edge is what keeps it from reading as clutter. */
+.ll-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 9px;
+  background: none;
+  border: 0;
+  border-radius: 9px;
+  color: inherit;
+  font: 600 13.5px/1.35 inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background .12s;
+}
+.ll-row:hover { background: var(--ll-accent-soft); }
+.ll-row__t { flex: 1; min-width: 0; }
+
+.ll-row__ic {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--ll-accent-soft);
+  color: var(--ll-accent);
+  font: 700 12px/1 inherit;
+}
+
+/* The chevron, pointing right when folded and down when open. */
+.ll-row__go {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  margin-right: 3px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+  opacity: .3;
+  transition: transform .15s;
+}
+
+/* A hairline between units, the way a list of settings reads. */
+.ll-unit + .ll-unit > .ll-unit__b { box-shadow: inset 0 1px 0 rgba(20, 40, 30, .06); }
+
+.ll-unit.is-open > .ll-unit__b { background: var(--ll-accent-soft); color: var(--ll-accent); }
+.ll-unit.is-open .ll-unit__ic { background: var(--ll-accent); color: #fff; }
+.ll-unit.is-open .ll-unit__caret { transform: rotate(45deg); opacity: .55; }
+
+/* Its lessons, indented and hung off a rail, so the unit they belong to is
+   never in doubt - which is half the reason he is picking rather than
+   pasting a link. */
+.ll-unit__list {
+  display: grid;
+  gap: 1px;
+  margin: 2px 0 7px 22px;
+  padding-left: 11px;
+  border-left: 2px solid var(--ll-accent-soft);
+}
+.ll-unit__list .ll-row { min-height: 36px; font-size: 13px; }
+/* No badge on a lesson: a dot is enough to line them up. */
+.ll-unit__list .ll-row__ic {
+  width: 6px;
+  height: 6px;
+  margin: 0 10px;
+  border-radius: 50%;
+  background: var(--ll-edge);
+}
+.ll-unit__list .ll-row:hover .ll-row__ic { background: var(--ll-accent); }
+.ll-unit__done {
+  display: block;
+  padding: 6px 9px;
+  font: 500 12.5px/1.4 inherit;
+  color: var(--ll-muted);
+}
+
+/* Picked, and still exactly where it was. The row does not leave the list -
+   tapping it again is how it comes off, so it has to stay findable. */
+.ll-row.is-on {
+  background: var(--ll-accent-soft);
+  color: var(--ll-accent);
+  font-weight: 700;
+}
+.ll-unit__list .ll-row.is-on .ll-row__ic { background: var(--ll-accent); }
+.ll-row__tick {
+  flex: 0 0 auto;
+  margin-right: 3px;
+  font: 700 13px/1 inherit;
+  color: var(--ll-accent);
+}
+
+/* What a folded unit has given him, so he can see it without opening it. */
+.ll-unit__n {
+  flex: 0 0 auto;
+  font: 700 11px/1 inherit;
+  color: var(--ll-accent);
+}
+
+/* Already attached, with a way to take it back off. */
+.ll-row.ll-lk {
+  background: var(--ll-accent-soft);
+  color: var(--ll-accent);
+  font-weight: 700;
+  cursor: default;
+}
+.ll-row__ic--on { background: var(--ll-accent); color: #fff; font-size: 12px; }
+.ll-lk__x {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  color: var(--ll-accent);
+  font: 700 15px/1 inherit;
+  opacity: .6;
+  cursor: pointer;
+}
+.ll-lk__x:hover { background: #fff; opacity: 1; }
+
+/* --- On the day itself ---------------------------------------------------- */
+
+.ll-note__links { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; }
+
 .ll-note__lesson {
   display: inline-flex;
   align-items: center;

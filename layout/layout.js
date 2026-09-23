@@ -14,6 +14,10 @@
     Subject navigation only. Study Hub and the notes are not here: they live
     in the shared cluster on the right, in the same place and the same order
     as on Biology and Math Quest. */
+import { CHAPTERS } from '../content/chapters.js?v=17';
+import { AREAS, topicSlug } from '../content/course.js?v=17';
+import { unitIdeas } from '../content/courseDetails.js?v=17';
+
 export const NAV = [
   { id: 'home',   label: 'Home',       href: '#/' },
   { id: 'course', label: 'Course Map', href: '#/course' },
@@ -61,18 +65,38 @@ export function renderLayout() {
 }
 
 /**
- * The five course units, for the “what was this about?” picker on the daily
- * note. Read from the same content file the Course Map reads, so there is no
- * second list to keep in step.
+ * What he can point a daily note at, in the order the course runs.
+ *
+ * Read from the same two content files the Course Map and the chapters read,
+ * so there is no second list to keep in step.
+ *
+ * The founding story comes first, because that is where the history starts.
+ * Then the five units, each opening onto its core ideas - the same list the
+ * Course Map shows, and the link lands on the one he picked.
  */
-function courseUnits() {
+export function courseLessons() {
   const units = (window.EthanStudyHubContent && window.EthanStudyHubContent.units) || [];
-  return units.map((u) => ({
-    id: String(u.id),
-    title: 'Unit ' + u.id + ' · ' + u.title,
-    group: 'Course map',
-    href: '#/course/' + u.id,
+  /* The story first, in the order it happened - colonies, Declaration,
+     Articles, Convention, Bill of Rights. It is where the course starts and
+     where the site starts, and Unit 1 is the argument that story leads to. */
+  const lessons = CHAPTERS.map((c) => ({
+    id: c.id,
+    title: c.title,
+    group: 'The founding story',
+    href: '#/study/' + c.id,
   }));
+  /* Then the units, each opening onto its own core ideas. The link carries
+     the idea he picked, so the Course Map opens at that line rather than at
+     the top of a unit he has to hunt through. */
+  AREAS.slice()
+    .sort((a, b) => a.n - b.n)
+    .forEach((a) => unitIdeas(a).forEach((t) => lessons.push({
+      id: 'u' + a.n + '-' + topicSlug(t),
+      title: t,
+      group: 'Unit ' + a.n + ' · ' + a.title,
+      href: '#/course/' + a.n + '/' + topicSlug(t),
+    })));
+  return lessons;
 }
 
 /**
@@ -97,7 +121,7 @@ function mountCluster() {
       journalHref: '#/journal',
       hubHref: './',
       onDark: true,
-      lessons: courseUnits(),
+      lessons: courseLessons(),
     });
   }
 }
