@@ -296,7 +296,7 @@ nav a:hover {
    from ../shared/learning-log.css. The hero on that page is a full-bleed
    photograph, so the calendar needs room under it or the month sits on the
    picture's edge. */
-.hero + .ll-history { margin-top: 26px; }
+.hero + .ll-history { margin-top: 20px; }
 
 .ll-history {
   --ll-accent: #244c59;
@@ -310,7 +310,10 @@ nav a:hover {
 main {
   max-width: 1500px;
   margin: auto;
-  min-height: calc(100vh - 120px);
+  /* 132, not 120: the header, the footer and the margins around them come
+     to 132, and the twelve missing pixels gave every page on this subject a
+     scrollbar with nothing under it. */
+  min-height: calc(100vh - 132px);
 }
 .hero {
   min-height: 275px;
@@ -322,6 +325,12 @@ main {
   overflow: hidden;
   box-shadow: 0 5px 15px #253b3010;
 }
+/* On the journal the banner is a heading, not a picture to sit and look at:
+   the week and its notes have to fit under it. Specificity, not source
+   order: `.hero` sets a 275px floor further up. */
+.hero.hero--journal { min-height: 0; padding: 22px 30px; }
+.hero.hero--journal h1 { font-size: 30px; margin: 2px 0 6px; }
+
 .hero-copy {
   width: 59%;
 }

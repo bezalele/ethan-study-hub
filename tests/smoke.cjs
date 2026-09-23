@@ -315,7 +315,9 @@ SUBJECTS.forEach(({ name, shell, app, prefix, subject }) => {
 /* The journal is a calendar now: one component, so all three subjects get
    the same grid, and one place that decides what counts as a school day. */
 const logSrc = read('shared/learning-log.js');
-check('the journal renders a month grid', /ll-cal__grid/.test(logSrc));
+check('the journal shows a month to pick from and a week to read',
+  /ll-cal__grid/.test(logSrc) && /function weekOf\(/.test(logSrc));
+check('and the notes are the only thing that scrolls', /function fitList\(/.test(logSrc));
 check('school days are weekdays minus the no-school list',
   /function isSchoolDay/.test(logSrc) && /!isWeekend\(iso\) && !NO_SCHOOL\[iso\]/.test(logSrc));
 check('the no-school list starts empty and is filled from one file',

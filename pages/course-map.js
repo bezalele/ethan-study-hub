@@ -17,10 +17,10 @@
    the content lands.
    --------------------------------------------------------------------------- */
 
-import { AREAS, getArea, topicSlug } from '../content/course.js?v=17';
-import { getDetail, unitIdeas } from '../content/courseDetails.js?v=17';
-import { renderTriangle, wireTriangle } from '../components/power-triangle.js?v=17';
-import { el, html, esc } from '../layout/dom.js?v=17';
+import { AREAS, getArea, topicSlug } from '../content/course.js?v=18';
+import { getDetail, unitIdeas } from '../content/courseDetails.js?v=18';
+import { renderTriangle, wireTriangle } from '../components/power-triangle.js?v=18';
+import { el, html, esc } from '../layout/dom.js?v=18';
 
 /* --- Shared pieces -------------------------------------------------------- */
 

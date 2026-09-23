@@ -1081,6 +1081,26 @@
       return t.done + ' of ' + t.due + ' school days written up.';
     }
 
+    /* The notes are the only thing on this page that scrolls. They take what
+       the window has left under them - measured, because each subject puts a
+       different amount of chrome above - so the page behind never grows a
+       scrollbar of its own and the calendar stays where he left it. */
+    function fitList() {
+      var list = root.querySelector('[data-list]');
+      if (!list) return;
+      var box = list.getBoundingClientRect();
+      var foot = document.querySelector('footer');
+      var end = foot ? foot.getBoundingClientRect().bottom
+        : document.body.getBoundingClientRect().bottom;
+      var under = Math.max(0, end - box.bottom);
+      var h = Math.max(260, window.innerHeight - box.top - under - 4);
+      list.style.maxHeight = h + 'px';
+      /* One corrective pass: the subjects pad themselves differently below
+         the footer, and measuring what is left over beats guessing at it. */
+      var over = document.documentElement.scrollHeight - window.innerHeight;
+      if (over > 0) list.style.maxHeight = Math.max(260, h - over) + 'px';
+    }
+
     function draw() {
       drawing = true;
       var notes = byDate();
@@ -1117,25 +1137,25 @@
           '<div class="ll-sync" data-sync></div>' +
         '</section>' +
         '<section class="ll-pane" aria-label="The week you picked">' +
-          '<div class="ll-me">' +
-            '<span class="ll-me__l">You are</span>' +
-            '<button type="button" class="ll-me__b' + (who() === 'ethan' ? ' is-on' : '') +
-              '" data-me="ethan" aria-pressed="' + (who() === 'ethan') + '">' +
-              esc(learner || 'Ethan') + '</button>' +
-            '<button type="button" class="ll-me__b' + (who() === 'parent' ? ' is-on' : '') +
-              '" data-me="parent" aria-pressed="' + (who() === 'parent') + '">Parent</button>' +
-          '</div>' +
-          /* The pager: a week at a time, newest day first, so what he wrote
-             today is the first thing anybody reads. */
+          /* One line at the head of the week: where you are, how to move,
+             and who is typing. It used to be three. */
           '<div class="ll-week">' +
             '<button type="button" class="ll-cal__nav" data-wprev aria-label="The week before">&lsaquo;</button>' +
             '<h2 class="ll-week__t">' + esc(weekLabel(selected)) + '</h2>' +
             '<button type="button" class="ll-cal__nav" data-wnext aria-label="The week after"' +
               (thisWeek ? ' disabled' : '') + '>&rsaquo;</button>' +
-            '<span class="ll-week__n">' + weekLine(wt) + '</span>' +
             (thisWeek ? '' : '<button type="button" class="ll-cal__today" data-wnow>This week</button>') +
+            '<div class="ll-me">' +
+              '<span class="ll-me__l">You are</span>' +
+              '<button type="button" class="ll-me__b' + (who() === 'ethan' ? ' is-on' : '') +
+                '" data-me="ethan" aria-pressed="' + (who() === 'ethan') + '">' +
+                esc(learner || 'Ethan') + '</button>' +
+              '<button type="button" class="ll-me__b' + (who() === 'parent' ? ' is-on' : '') +
+                '" data-me="parent" aria-pressed="' + (who() === 'parent') + '">Parent</button>' +
+            '</div>' +
           '</div>' +
-          '<ol class="ll-history__list">' +
+          '<p class="ll-week__n">' + weekLine(wt) + '</p>' +
+          '<ol class="ll-history__list" data-list>' +
             days.map(function (d) {
               return (notes[d] || d === selected || editing === d || replying === d)
                 ? noteBlock(notes[d], d)
@@ -1268,7 +1288,25 @@
           draw();
         };
       });
+      fitList();
       drawing = false;
+    }
+
+    /* Once at mount, not once per draw. Things above the list keep moving
+       after the first paint - the banner image lands, the sync line changes
+       its mind about how long ago it synced - so rather than guess at when
+       the page has settled, watch it and measure again when it changes.
+       fitList only ever shrinks to fit, so this converges rather than
+       chasing itself. */
+    if (global.addEventListener) {
+      global.addEventListener('resize', function () { fitList(); });
+      global.addEventListener('load', function () { fitList(); });
+    }
+    if (global.ResizeObserver) {
+      new global.ResizeObserver(function () { fitList(); }).observe(document.body);
+    } else if (global.setTimeout) {
+      global.setTimeout(function () { fitList(); }, 400);
+      global.setTimeout(function () { fitList(); }, 1500);
     }
 
     draw();
