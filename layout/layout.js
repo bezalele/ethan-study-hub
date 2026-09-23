@@ -14,6 +14,8 @@
     Subject navigation only. Study Hub and the notes are not here: they live
     in the shared cluster on the right, in the same place and the same order
     as on Biology and Math Quest. */
+import { CHAPTERS } from '../content/chapters.js?v=16';
+
 export const NAV = [
   { id: 'home',   label: 'Home',       href: '#/' },
   { id: 'course', label: 'Course Map', href: '#/course' },
@@ -61,18 +63,33 @@ export function renderLayout() {
 }
 
 /**
- * The five course units, for the “what was this about?” picker on the daily
- * note. Read from the same content file the Course Map reads, so there is no
- * second list to keep in step.
+ * What he can point a daily note at, in the order the course runs.
+ *
+ * Read from the same two content files the Course Map and the chapters read,
+ * so there is no second list to keep in step.
+ *
+ * The units come first, each a row of its own: a unit is as deep as this
+ * subject can be linked, so there is nothing to open underneath one. The
+ * founding story is a group, because its five chapters are pages in their
+ * own right.
  */
-function courseUnits() {
+export function courseLessons() {
   const units = (window.EthanStudyHubContent && window.EthanStudyHubContent.units) || [];
-  return units.map((u) => ({
-    id: String(u.id),
-    title: 'Unit ' + u.id + ' · ' + u.title,
-    group: 'Course map',
-    href: '#/course/' + u.id,
+  const lessons = units
+    .slice()
+    .sort((a, b) => Number(a.id) - Number(b.id))
+    .map((u) => ({
+      id: 'unit-' + u.id,
+      title: 'Unit ' + u.id + ' · ' + u.title,
+      href: '#/course/' + u.id,
+    }));
+  CHAPTERS.forEach((c) => lessons.push({
+    id: c.id,
+    title: c.title,
+    group: 'The founding story',
+    href: '#/study/' + c.id,
   }));
+  return lessons;
 }
 
 /**
@@ -97,7 +114,7 @@ function mountCluster() {
       journalHref: '#/journal',
       hubHref: './',
       onDark: true,
-      lessons: courseUnits(),
+      lessons: courseLessons(),
     });
   }
 }

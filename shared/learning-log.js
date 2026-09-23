@@ -364,6 +364,22 @@
      it, because the editor redraw would throw away whatever he had typed.
      --------------------------------------------------------------------------- */
 
+  /* A unit's number, where its name carries one. -1 sorts the ones that do
+     not - Foundations, Start here - to the front. */
+  function unitNo(name) {
+    var n = /(\d+)/.exec(name || '');
+    return n ? Number(n[1]) : -1;
+  }
+
+  /* Its badge: the number where there is one, else its initial. Small and
+     quiet - it is there to give the eye a left edge to run down. */
+  function badge(name) {
+    var n = unitNo(name);
+    if (n > -1) return String(n);
+    /* "The founding story" is an F, not a T. */
+    return String(name || '?').trim().replace(/^(the|a|an)\s+/i, '').charAt(0).toUpperCase();
+  }
+
   function mountPicker(host, opts) {
     if (!host) return { links: function () { return []; } };
     var lessons = opts.lessons || [];
@@ -377,24 +393,26 @@
 
     if (!lessons.length) { host.innerHTML = ''; return { links: function () { return chosen; } }; }
 
+    /* A lesson with no group is a row of its own, not a unit to open: AP Gov
+       can only be linked as far as a unit, so its units are the rows. */
     var groups = [];
     var byGroup = {};
+    var flat = [];
     lessons.forEach(function (l) {
-      var g = l.group || 'Lessons';
-      if (!byGroup[g]) { byGroup[g] = []; groups.push(g); }
-      byGroup[g].push(l);
+      if (!l.group) { flat.push(l); return; }
+      if (!byGroup[l.group]) { byGroup[l.group] = []; groups.push(l.group); }
+      byGroup[l.group].push(l);
     });
+
+    /* Course order, not the order the app happened to build them in. A unit
+       sorts by its number; anything without one - Foundations, Start here -
+       comes first, because that is where the course starts. */
+    groups.sort(function (a, b) { return unitNo(a) - unitNo(b); });
 
     function has(href) {
       return chosen.some(function (c) { return c.href === href; });
     }
 
-    /* A unit's badge: its number where it has one, else its initial. Small
-       and quiet - it is there to give the eye a left edge to run down. */
-    function badge(g) {
-      var n = /(\d+)/.exec(g);
-      return n ? n[1] : g.trim().charAt(0).toUpperCase();
-    }
 
     function row(cls, attr, ic, title, tail) {
       return '<button type="button" class="ll-row ' + cls + '" ' + attr + '>' +
@@ -420,6 +438,10 @@
         '<div class="ll-pick__list">' +
           (chosenRows ? '<div class="ll-pick__chosen">' + chosenRows + '</div>' : '') +
           '<p class="ll-pick__cap">All lessons</p>' +
+          flat.filter(function (l) { return !has(l.href); }).map(function (l) {
+            return row('ll-opt ll-opt--one', 'data-add="' + esc(l.href) + '"',
+              esc(badge(l.title)), l.title, '<span class="ll-row__go" aria-hidden="true"></span>');
+          }).join('') +
           groups.map(function (g) {
             var isOpen = open === g;
             var items = byGroup[g].filter(function (l) { return !has(l.href); });
