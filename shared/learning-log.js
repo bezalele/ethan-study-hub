@@ -391,13 +391,29 @@
       return chosen.some(function (c) { return c.href === href; });
     }
 
+    /* A unit's badge: its number where it has one, else its initial. Small
+       and quiet - it is there to give the eye a left edge to run down. */
+    function badge(g) {
+      var n = /(\d+)/.exec(g);
+      return n ? n[1] : g.trim().charAt(0).toUpperCase();
+    }
+
+    function row(cls, attr, ic, title, tail) {
+      return '<button type="button" class="ll-row ' + cls + '" ' + attr + '>' +
+        '<span class="ll-row__ic" aria-hidden="true">' + ic + '</span>' +
+        '<span class="ll-row__t">' + esc(title) + '</span>' +
+        (tail || '') +
+      '</button>';
+    }
+
     function draw() {
-      var chips = chosen.map(function (c) {
-        return '<span class="ll-lk">' +
-          '<span aria-hidden="true">\ud83d\udcd6</span>' + esc(c.title) +
+      var chosenRows = chosen.map(function (c) {
+        return '<div class="ll-row ll-lk">' +
+          '<span class="ll-row__ic ll-row__ic--on" aria-hidden="true">\ud83d\udcd6</span>' +
+          '<span class="ll-row__t">' + esc(c.title) + '</span>' +
           '<button type="button" class="ll-lk__x" data-drop="' + esc(c.href) + '" ' +
             'aria-label="Remove ' + esc(c.title) + '">&times;</button>' +
-        '</span>';
+        '</div>';
       }).join('');
 
       var lately = recent.filter(function (l) { return !has(l.href); });
@@ -405,31 +421,32 @@
       host.className = 'll-pick';
       host.innerHTML =
         '<span class="ll-pick__l">What was this about?</span>' +
-        (chips ? '<div class="ll-pick__chosen">' + chips + '</div>' : '') +
-        (lately.length
-          ? '<div class="ll-pick__row"><span class="ll-pick__cap">Lately</span>' +
+        '<div class="ll-pick__list">' +
+          (chosenRows ? '<div class="ll-pick__chosen">' + chosenRows + '</div>' : '') +
+          (lately.length
+            ? '<p class="ll-pick__cap">Lately</p>' +
               lately.map(function (l) {
-                return '<button type="button" class="ll-opt ll-opt--fast" data-add="' + esc(l.href) +
-                  '">' + esc(l.title) + '</button>';
-              }).join('') +
-            '</div>'
-          : '') +
-        '<div class="ll-pick__units">' +
+                return row('ll-opt ll-opt--fast', 'data-add="' + esc(l.href) + '"',
+                  '\u21ba', l.title, '<span class="ll-row__go" aria-hidden="true"></span>');
+              }).join('')
+            : '') +
+          '<p class="ll-pick__cap">All lessons</p>' +
           groups.map(function (g) {
             var isOpen = open === g;
             var items = byGroup[g].filter(function (l) { return !has(l.href); });
             return '<div class="ll-unit' + (isOpen ? ' is-open' : '') + '">' +
-              '<button type="button" class="ll-unit__b" data-group="' + esc(g) + '" ' +
+              '<button type="button" class="ll-row ll-unit__b" data-group="' + esc(g) + '" ' +
                 'aria-expanded="' + isOpen + '">' +
-                '<span class="ll-unit__caret" aria-hidden="true"></span>' + esc(g) +
-                '<span class="ll-unit__n">' + byGroup[g].length + '</span>' +
+                '<span class="ll-row__ic ll-unit__ic" aria-hidden="true">' + esc(badge(g)) + '</span>' +
+                '<span class="ll-row__t">' + esc(g) + '</span>' +
+                '<span class="ll-row__go ll-unit__caret" aria-hidden="true"></span>' +
               '</button>' +
               (isOpen
                 ? '<div class="ll-unit__list">' +
                     (items.length
                       ? items.map(function (l) {
-                          return '<button type="button" class="ll-opt" data-add="' + esc(l.href) +
-                            '">' + esc(l.title) + '</button>';
+                          return row('ll-opt', 'data-add="' + esc(l.href) + '"',
+                            '', l.title, '<span class="ll-row__go" aria-hidden="true"></span>');
                         }).join('')
                       : '<span class="ll-unit__done">All of these are already linked.</span>') +
                   '</div>'
@@ -443,6 +460,11 @@
           ev.preventDefault();
           open = (open === b.dataset.group) ? null : b.dataset.group;
           draw();
+          /* Bring the unit he just opened to the top of the list, so its
+             lessons are what he is looking at and not what he scrolls for. */
+          var o = host.querySelector('.ll-unit.is-open');
+          var box = host.querySelector('.ll-pick__list');
+          if (o && box) box.scrollTop += o.getBoundingClientRect().top - box.getBoundingClientRect().top - 4;
         };
       });
       host.querySelectorAll('[data-add]').forEach(function (b) {
@@ -543,7 +565,7 @@
           '<h2 class="ll-modal__title">' + esc(prompt()) + '</h2>' +
           '<p class="ll-modal__day">' + esc(prettyDate(day)) + ' &middot; ' + esc(label) + '</p>' +
           '<label class="sr" for="ll-m">Today’s note</label>' +
-          '<textarea id="ll-m" class="ll__text" rows="5" placeholder="In class today we&hellip;">' +
+          '<textarea id="ll-m" class="ll__text" rows="4" placeholder="In class today we&hellip;">' +
             esc(entry ? entry.text : '') + '</textarea>' +
           '<div data-picker></div>' +
           '<div class="ll__row ll-modal__row">' +
