@@ -338,6 +338,37 @@ node -e "fetch('https://ethan-journal.bezuwm.workers.dev/journal',{method:'POST'
 
 If it prints `DROPPED`, the Worker is behind the site.
 
+### The journal keeps its own history
+
+Every change snapshots the version before it. Sixty are kept, and a restore
+snapshots what it replaces, so a restore is itself reversible.
+
+```
+GET  /journal/history        what can be gone back to, newest first
+POST /journal/restore        { "id": "snap:journal-v1:1790..." }
+GET  /progress/history       the same for his work
+POST /progress/restore
+```
+
+**Nobody should ever retype a note from a screenshot.** That happened on
+2026-09-22, twice, because the Worker kept no history and there was nothing
+to go back to. Restoring is now a command, not archaeology.
+
+Snapshots are taken only when a write actually changes something, so a laptop
+polling every 45 seconds does not fill the history with identical copies.
+DELETE snapshots first as well.
+
+### Never write to the journal by hand
+
+Not to clean up test data, not to tidy, not to fix formatting. The only
+writes to `/journal` and `/progress` come from the site itself.
+
+Restoring a snapshot after a confirmed loss is the sole exception, and it is
+the user's call, not the assistant's. Every hand-written "cleanup" in this
+project has destroyed something real: a note was blanked on 2026-09-22
+because it had been written in the minutes between reading the server and
+writing to it. Reading is safe. Writing is not.
+
 ### The key, and why it ships with the page
 
 `shared/family-key.js` carries the key, so **every browser is connected the

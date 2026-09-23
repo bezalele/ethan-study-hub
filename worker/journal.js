@@ -61,26 +61,78 @@ export class Journal {
     this.state = state;
   }
 
+  /* Every change keeps the version before it. Nothing here should ever need
+     somebody to retype a note from a screenshot: if a write turns out to be
+     wrong - a bad merge, a stray script, a mistake - the previous state is
+     still sitting here and /history and /restore put it back.
+
+     KEEP is generous on purpose. Storage is measured in kilobytes and the
+     cost of one missing snapshot is somebody's work. */
+  async snapshot(key, value) {
+    const id = 'snap:' + key + ':' + Date.now();
+    await this.state.storage.put(id, value);
+    const all = await this.state.storage.list({ prefix: 'snap:' + key + ':' });
+    const ids = [...all.keys()].sort();
+    const KEEP = 60;
+    if (ids.length > KEEP) {
+      await this.state.storage.delete(ids.slice(0, ids.length - KEEP));
+    }
+  }
+
   async fetch(request) {
     const url = new URL(request.url);
-    const progress = url.pathname === '/progress';
+    const progress = url.pathname.indexOf('progress') > -1;
     const key = progress ? PROGRESS_KEY : KEY;
     const merger = progress ? globalThis.ProgressMerge : globalThis.JournalMerge;
     const empty = progress ? { stores: {} } : { entries: [] };
 
     const current = (await this.state.storage.get(key)) || empty;
 
+    /* What is available to go back to, newest first. */
+    if (url.pathname.indexOf('/history') > -1) {
+      const all = await this.state.storage.list({ prefix: 'snap:' + key + ':' });
+      const rows = [...all.entries()].map(function (row) {
+        const at = Number(row[0].split(':').pop());
+        const v = row[1] || {};
+        return {
+          id: row[0],
+          at: at,
+          when: new Date(at).toISOString(),
+          notes: (v.entries || []).filter(function (e) { return e && e.text; }).length,
+          stores: v.stores ? Object.keys(v.stores).length : undefined,
+        };
+      }).sort(function (a, b) { return b.at - a.at; });
+      return Response.json({ snapshots: rows });
+    }
+
+    /* Put one back. The state being replaced is snapshotted first, so even
+       an unwanted restore is itself reversible. */
+    if (url.pathname.indexOf('/restore') > -1) {
+      const body = await request.json();
+      const want = await this.state.storage.get(String(body.id || ''));
+      if (!want) return Response.json({ error: 'no such snapshot' }, { status: 404 });
+      await this.snapshot(key, current);
+      await this.state.storage.put(key, want);
+      return Response.json(want);
+    }
+
     if (request.method === 'GET') {
       return Response.json(current);
     }
 
     if (request.method === 'DELETE') {
+      await this.snapshot(key, current);
       await this.state.storage.put(key, empty);
       return Response.json(empty);
     }
 
     const incoming = await request.json();
     const merged = merger.mergeAll(current, incoming);
+    /* Only when something actually changed, so a laptop polling every
+       45 seconds does not fill the history with identical copies. */
+    if (JSON.stringify(merged) !== JSON.stringify(current)) {
+      await this.snapshot(key, current);
+    }
     await this.state.storage.put(key, merged);
     return Response.json(merged);
   }
@@ -150,7 +202,10 @@ export default {
     /* /journal is the daily notes and the conversation about them.
        /progress is his lessons, practice and quiz scores - the same auth and
        the same object, a different document and a different set of rules. */
-    if (url.pathname !== '/journal' && url.pathname !== '/progress') {
+    const ROUTES = ['/journal', '/progress',
+                    '/journal/history', '/progress/history',
+                    '/journal/restore', '/progress/restore'];
+    if (ROUTES.indexOf(url.pathname) === -1) {
       return json({ error: 'not found' }, 404, origin);
     }
 
@@ -163,7 +218,17 @@ export default {
     }
 
     const inner = 'https://journal' + url.pathname;
-    const progress = url.pathname === '/progress';
+    const progress = url.pathname.indexOf('progress') > -1;
+
+    /* History and restore go straight through: the object does the work and
+       the checks, because only it can see what it has kept. */
+    if (url.pathname.indexOf('/history') > -1 || url.pathname.indexOf('/restore') > -1) {
+      const r = await object(env).fetch(new Request(inner, {
+        method: request.method === 'GET' ? 'GET' : 'POST',
+        body: request.method === 'GET' ? undefined : await request.text(),
+      }));
+      return json(await r.json(), r.status, origin);
+    }
 
     if (request.method === 'GET') {
       const r = await object(env).fetch(new Request(inner, { method: 'GET' }));
