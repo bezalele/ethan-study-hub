@@ -68,27 +68,30 @@ export function renderLayout() {
  * Read from the same two content files the Course Map and the chapters read,
  * so there is no second list to keep in step.
  *
- * The units come first, each a row of its own: a unit is as deep as this
- * subject can be linked, so there is nothing to open underneath one. The
- * founding story is a group, because its five chapters are pages in their
- * own right.
+ * The founding story comes first and is a group, because its five chapters
+ * are pages in their own right. Then the units, each a row of its own: a
+ * unit is as deep as this subject can be linked, so there is nothing to open
+ * underneath one.
  */
 export function courseLessons() {
   const units = (window.EthanStudyHubContent && window.EthanStudyHubContent.units) || [];
-  const lessons = units
-    .slice()
-    .sort((a, b) => Number(a.id) - Number(b.id))
-    .map((u) => ({
-      id: 'unit-' + u.id,
-      title: 'Unit ' + u.id + ' · ' + u.title,
-      href: '#/course/' + u.id,
-    }));
-  CHAPTERS.forEach((c) => lessons.push({
+  /* The story first, in the order it happened - colonies, Declaration,
+     Articles, Convention, Bill of Rights. It is where the course starts and
+     where the site starts, and Unit 1 is the argument that story leads to. */
+  const lessons = CHAPTERS.map((c) => ({
     id: c.id,
     title: c.title,
     group: 'The founding story',
     href: '#/study/' + c.id,
   }));
+  units
+    .slice()
+    .sort((a, b) => Number(a.id) - Number(b.id))
+    .forEach((u) => lessons.push({
+      id: 'unit-' + u.id,
+      title: 'Unit ' + u.id + ' · ' + u.title,
+      href: '#/course/' + u.id,
+    }));
   return lessons;
 }
 
