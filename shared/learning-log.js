@@ -389,6 +389,10 @@
     var chosen = (opts.initial || []).map(function (l) {
       return { title: l.title, href: l.href };
     });
+    /* Everything starts folded, every subject, every time. The list he
+       arrives at is the shape of his course - six or seven lines - and it is
+       the same short list whether or not one of them happens to be the only
+       one that opens. */
     var open = null;   // which unit is expanded
 
     if (!lessons.length) { host.innerHTML = ''; return { links: function () { return chosen; } }; }
@@ -409,12 +413,6 @@
       }
       byGroup[l.group].items.push(l);
     });
-
-    /* One group and nothing to choose between: open it. AP Gov's only
-       foldable thing is the founding story, and folding the single item on
-       offer is a door for the sake of a door. */
-    var onlyGroup = sections.filter(function (s) { return s.group; });
-    if (onlyGroup.length === 1) open = onlyGroup[0].group;
 
     function has(href) {
       return chosen.some(function (c) { return c.href === href; });
