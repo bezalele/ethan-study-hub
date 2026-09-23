@@ -315,9 +315,28 @@ consistency is unsafe for this access pattern.
 npx wrangler deploy          # from the repo root
 ```
 
-The site and the Worker deploy separately. Changing `shared/journal-merge.js`
-changes both, so deploy the Worker and push the site together, or the two
-sides will disagree about a merge for as long as they are out of step.
+**The site and the Worker are two separate deploys, and they share code.**
+`shared/journal-merge.js` and `shared/progress-merge.js` are loaded by the
+browser *and* compiled into the Worker. Touch either and BOTH must ship.
+
+This is not a tidiness rule. The merge decides which fields survive, so a
+Worker running the older copy **silently drops whatever the new browsers are
+sending**. It happened on 2026-09-22: the site shipped with lesson links on
+the daily note, the Worker did not, and every link was stripped on the next
+sync — no error, no warning, the field simply vanished.
+
+The check, after any release that touches a merge file:
+
+```bash
+# write a value only the new merge understands, and read it back
+node -e "fetch('https://ethan-journal.bezuwm.workers.dev/journal',{method:'POST',
+  headers:{Authorization:'Bearer <key>','Content-Type':'application/json'},
+  body:JSON.stringify({entries:[{subject:'math',date:'1970-01-01',text:'probe',
+  ts:Date.now(),lesson:{title:'t',href:'#h'}}]})}).then(r=>r.json())
+  .then(j=>console.log(j.entries.find(e=>e.date==='1970-01-01').lesson || 'DROPPED'))"
+```
+
+If it prints `DROPPED`, the Worker is behind the site.
 
 ### The key, and why it ships with the page
 
