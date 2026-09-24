@@ -469,6 +469,12 @@
 .ll-note--slim .ll-note__add { margin-left: auto; }
 .ll-note--slim .ll-note__text--empty { margin: 0; }
 
+/* A week with nothing in it yet. */
+.ll-note--none {
+  border-left-color: var(--ll-edge);
+  box-shadow: none;
+}
+
 /* The day the month grid has selected, so the two halves of the page agree
    about which one is being talked about. */
 .ll-note.is-picked { box-shadow: 0 0 0 2px var(--ll-accent-soft); }

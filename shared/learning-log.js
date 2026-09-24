@@ -1134,6 +1134,13 @@
       var here = dateOf(todayIso);
       /* Newest first: today is the line anybody opening this page wants. */
       var days = weekDays(selected).slice().reverse();
+      /* A day with nothing on it is left out. The page is for what happened,
+         not for a list of the days it did not. Three exceptions, all of them
+         days somebody has asked for: today, whichever day the calendar has
+         picked, and whichever one is open for writing. */
+      var shown = days.filter(function (d) {
+        return notes[d] || d === todayIso || d === selected || editing === d || replying === d;
+      });
       var wt = weekTally(selected, notes);
       var thisWeek = weekOf(selected)[0] === weekOf(todayIso)[0];
       var atThisMonth = cursor.getFullYear() === here.getFullYear()
@@ -1182,11 +1189,15 @@
           '</div>' +
           '<p class="ll-week__n">' + weekLine(wt) + '</p>' +
           '<ol class="ll-history__list" data-list>' +
-            days.map(function (d) {
-              return (notes[d] || d === selected || editing === d || replying === d)
-                ? noteBlock(notes[d], d)
-                : slimBlock(d);
-            }).join('') +
+            (shown.length
+              ? shown.map(function (d) {
+                  return (notes[d] || d === selected || editing === d || replying === d)
+                    ? noteBlock(notes[d], d)
+                    : slimBlock(d);
+                }).join('')
+              : '<li class="ll-note ll-note--none">' +
+                  '<p class="ll-note__text ll-note__text--empty">Nothing written this week yet. ' +
+                  'Pick a day on the calendar to write one.</p></li>') +
           '</ol>' +
         '</section>';
 
