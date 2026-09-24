@@ -131,9 +131,40 @@ If a change does not show up in the browser, this is the first thing to check.
 | `node tests/quiz-check.cjs` | the AP Gov quizzes score correctly | passes |
 | `node tests/layout-check.cjs` | renders every route and looks for tiny text, overflow, missing images | **36/72 — 36 known failures** (§8) |
 | `node tests/publish-safety.cjs` | a deploy cannot lose a note: every merge rule is additive, and no journal payload is committed to this public repo | passes |
+| `node tools/backup.cjs` | not a test - takes the copy you want to have before publishing | writes two files |
 
 `smoke.cjs` must be green before any merge. It is the file that stops the three
 subjects quietly drifting apart.
+
+### Back it up before you publish
+
+```
+node tools/backup.cjs
+```
+
+Reads the journal and his work off the Worker and writes them to
+`~/esh-backups` as plain JSON, outside this repository because this repository
+is public. It prints what it saved in words - *"5 notes, 1 replies, 4 lesson
+links, 2026-09-22 to 2026-09-23"* - and reads each file back before claiming
+it is saved. It never writes to the server.
+
+Do this before every publish. It takes two seconds and it is the copy that
+survives the Worker itself.
+
+**Restoring**, if it ever comes to that: POST the file back. The command is
+printed at the end of every backup. A POST *merges* - it adds what is missing
+and cannot subtract - so putting an old copy back cannot undo anything written
+since. That is rehearsed, not assumed: `restore-drill.cjs` puts a real backup
+onto an empty local worker, checks every note, reply, reaction and link comes
+back word for word, then writes something new and restores the old copy over
+the top to prove the new thing survives.
+
+**The Worker keeps its own history too.** It snapshots before every write:
+the last 60, plus the first of each day for forty days. Sixty on their own
+covered nineteen hours once the family started using it properly, so a busy
+week would have pushed last Tuesday off the end. `GET /journal/history` lists
+them, `POST /journal/restore {id}` puts one back, and the state being replaced
+is itself snapshotted first.
 
 ### Publishing cannot reach the notes
 

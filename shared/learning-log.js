@@ -333,19 +333,20 @@
   /* The lessons this subject can offer, as [{ id, title, group, href }].
      Each app hands its own list in at mount time; nothing here knows what a
      lesson is. Empty means no picker is shown at all. */
-  /** Make the day's links match what was picked, and nothing more. */
-  function applyLinks(subject, date, wanted) {
-    var now = links(entryFor(subject, date));
-    now.forEach(function (l) {
-      if (!wanted.some(function (x) { return x.href === l.href; })) {
-        removeLink(subject, date, l.href);
-      }
-    });
-    wanted.forEach(function (l) {
-      if (!now.some(function (x) { return x.href === l.href; })) {
-        addLink(subject, date, l);
-      }
-    });
+  /** Add what was picked; remove only what was deliberately taken off.
+   *
+   * This used to make the day match the picker exactly, which meant a link
+   * that arrived while the box was open - Ethan attaching one on his laptop
+   * while his mum was typing on hers - was absent from the picker and so was
+   * deleted on save. Every link in the family's journal had been tombstoned
+   * that way, each one at the moment the next was written.
+   *
+   * So: additions are additions, removals are only the ones somebody pressed
+   * the x on, and anything the day gained in the meantime is left alone.
+   */
+  function applyLinks(subject, date, wanted, dropped) {
+    (dropped || []).forEach(function (href) { removeLink(subject, date, href); });
+    (wanted || []).forEach(function (l) { addLink(subject, date, l); });
   }
 
   /* --- What was this about? ------------------------------------------------
@@ -381,7 +382,7 @@
   }
 
   function mountPicker(host, opts) {
-    if (!host) return { links: function () { return []; } };
+    if (!host) return { links: function () { return []; }, dropped: function () { return []; } };
     var lessons = opts.lessons || [];
     /* opts.recent - the lessons he has opened lately - is accepted and not
        shown. One way in is easier to learn than two. Held for later, on
@@ -389,13 +390,19 @@
     var chosen = (opts.initial || []).map(function (l) {
       return { title: l.title, href: l.href };
     });
+    /* The ones somebody pressed the x on while this box was open. Only these
+       are ever removed from the day. */
+    var dropped = [];
     /* Everything starts folded, every subject, every time. The list he
        arrives at is the shape of his course - six or seven lines - and it is
        the same short list whether or not one of them happens to be the only
        one that opens. */
     var open = null;   // which unit is expanded
 
-    if (!lessons.length) { host.innerHTML = ''; return { links: function () { return chosen; } }; }
+    if (!lessons.length) {
+      host.innerHTML = '';
+      return { links: function () { return chosen; }, dropped: function () { return []; } };
+    }
 
     /* One list of sections, kept in the order the app handed them over -
        which is the order the course runs. A unit with lessons under it opens;
@@ -438,15 +445,24 @@
        to take it off is the same row he turned on, and the list underneath
        him never reshuffles while he is reading it. */
     function toggle(href) {
-      var l = lessons.filter(function (x) { return x.href === href; })[0];
-      if (!l) return;
+      /* Off first, and without consulting the lesson list. A day can carry a
+         link this subject no longer offers - written by an older version of
+         the app, or pointing at a lesson since renamed - and the x on it has
+         to work all the same. */
       if (has(href)) {
         chosen = chosen.filter(function (c) { return c.href !== href; });
+        if (dropped.indexOf(href) === -1) dropped.push(href);
         full = false;
-      } else if (chosen.length >= MAX) {
+        draw();
+        return;
+      }
+      var l = lessons.filter(function (x) { return x.href === href; })[0];
+      if (!l) return;
+      if (chosen.length >= MAX) {
         full = true;
       } else {
         chosen.push({ title: l.title, href: l.href });
+        dropped = dropped.filter(function (h) { return h !== href; });
         full = false;
       }
       /* `open` is deliberately untouched: the unit he is reading stays open,
@@ -541,7 +557,10 @@
     }
 
     draw();
-    return { links: function () { return chosen.slice(); } };
+    return {
+      links: function () { return chosen.slice(); },
+      dropped: function () { return dropped.slice(); },
+    };
   }
 
   /** Every lesson a day points at, as links you can actually follow. */
@@ -606,8 +625,15 @@
       var entry = entryFor(subject, day);
 
       if (!dlg) {
+        /* The header redraws whenever anything is written, and each redraw
+           runs this again with a fresh closure. Without this the old dialog
+           stayed in the document, invisible, holding a stale copy of the
+           note and its lessons. */
+        var stale = document.querySelectorAll('dialog.ll-modal[data-subject="' + subject + '"]');
+        for (var i = 0; i < stale.length; i++) stale[i].remove();
         dlg = document.createElement('dialog');
         dlg.className = 'll-modal';
+        dlg.dataset.subject = subject;
         document.body.appendChild(dlg);
         // Clicking the backdrop closes it; clicking the card must not.
         dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
@@ -654,7 +680,7 @@
         }
         var okay = text.trim() ? put(subject, day, text) : remove(subject, day);
         /* Links are their own list, applied after the note exists. */
-        if (okay && text.trim()) applyLinks(subject, day, picker.links());
+        if (okay && text.trim()) applyLinks(subject, day, picker.links(), picker.dropped());
         if (okay) dlg.close();
         else dlg.querySelector('[data-status]').textContent =
           'This browser will not let the note save right now.';
@@ -862,6 +888,44 @@
       return map;
     }
 
+    /* The Sunday-to-Saturday week a day belongs to - the same weeks the
+       month grid draws, so a row up there is a page down here. */
+    function weekOf(iso) {
+      var d = dateOf(iso);
+      d.setDate(d.getDate() - d.getDay());
+      var out = [];
+      for (var i = 0; i < 7; i++) { out.push(isoOf(d)); d.setDate(d.getDate() + 1); }
+      return out;
+    }
+
+    /* Days of that week he could have written: nothing in the future. */
+    function weekDays(iso) {
+      return weekOf(iso).filter(function (d) { return d <= todayIso; });
+    }
+
+    /** "21 - 27 September", or "28 September - 4 October" across a month. */
+    function weekLabel(iso) {
+      var days = weekOf(iso);
+      var a = dateOf(days[0]);
+      var b = dateOf(days[6]);
+      var am = MONTHS[a.getMonth()];
+      var bm = MONTHS[b.getMonth()];
+      return am === bm
+        ? a.getDate() + ' \u2013 ' + b.getDate() + ' ' + bm
+        : a.getDate() + ' ' + am + ' \u2013 ' + b.getDate() + ' ' + bm;
+    }
+
+    /** How much of this week is written up. */
+    function weekTally(iso, notes) {
+      var done = 0, due = 0;
+      weekDays(iso).forEach(function (d) {
+        if (!isSchoolDay(d)) return;
+        due += 1;
+        if (notes[d]) done += 1;
+      });
+      return { done: done, due: due };
+    }
+
     /** The cells of the month on show: ISO dates, padded with nulls. */
     function cells() {
       var y = cursor.getFullYear();
@@ -945,6 +1009,24 @@
         '</div>';
     }
 
+    /* A blank day in the middle of the week is one line, not a card. Seven
+       full cards is a wall; seven lines is a week you can read. The day he
+       picked and the day he is writing always open out in full. */
+    function slimBlock(date) {
+      var school = isSchoolDay(date);
+      return '<li class="ll-note ll-note--slim' + (date === todayIso ? ' ll-note--today' : '') +
+          '" data-date="' + esc(date) + '">' +
+        '<div class="ll-note__head">' +
+          '<h3 class="ll-note__when">' + esc(prettyDate(date)) + '</h3>' +
+          '<span class="ll-note__kind' + (school ? '' : ' is-off') + '">' +
+            esc(dayKind(date)) + '</span>' +
+        '</div>' +
+        (school
+          ? '<button type="button" class="ll__quiet ll-note__add" data-edit>Write this day</button>'
+          : '<span class="ll-note__text ll-note__text--empty">Nothing to write up.</span>') +
+        '</li>';
+    }
+
     function noteBlock(e, date) {
       var cs = e ? comments(e) : [];
       var writing = editing === date;
@@ -954,6 +1036,7 @@
         : 'No school this day \u2014 nothing to write up.';
 
       return '<li class="ll-note' + (date === todayIso ? ' ll-note--today' : '') +
+          (date === selected ? ' is-picked' : '') +
           '" data-date="' + esc(date) + '">' +
         '<div class="ll-note__head">' +
           '<h3 class="ll-note__when">' + esc(prettyDate(date)) + '</h3>' +
@@ -1018,11 +1101,48 @@
       draw();
     };
 
+    function weekLine(t) {
+      if (!t.due) return 'No school days this week yet.';
+      if (t.done === t.due) return 'Every school day this week \u2014 ' + t.done + ' of ' + t.due + '.';
+      return t.done + ' of ' + t.due + ' school days written up.';
+    }
+
+    /* The notes are the only thing on this page that scrolls. They take what
+       the window has left under them - measured, because each subject puts a
+       different amount of chrome above - so the page behind never grows a
+       scrollbar of its own and the calendar stays where he left it. */
+    function fitList() {
+      var list = root.querySelector('[data-list]');
+      if (!list) return;
+      var box = list.getBoundingClientRect();
+      var foot = document.querySelector('footer');
+      var end = foot ? foot.getBoundingClientRect().bottom
+        : document.body.getBoundingClientRect().bottom;
+      var under = Math.max(0, end - box.bottom);
+      var h = Math.max(260, window.innerHeight - box.top - under - 4);
+      list.style.maxHeight = h + 'px';
+      /* One corrective pass: the subjects pad themselves differently below
+         the footer, and measuring what is left over beats guessing at it. */
+      var over = document.documentElement.scrollHeight - window.innerHeight;
+      if (over > 0) list.style.maxHeight = Math.max(260, h - over) + 'px';
+    }
+
     function draw() {
       drawing = true;
       var notes = byDate();
       var t = tally(notes);
       var here = dateOf(todayIso);
+      /* Newest first: today is the line anybody opening this page wants. */
+      var days = weekDays(selected).slice().reverse();
+      /* A day with nothing on it is left out. The page is for what happened,
+         not for a list of the days it did not. Three exceptions, all of them
+         days somebody has asked for: today, whichever day the calendar has
+         picked, and whichever one is open for writing. */
+      var shown = days.filter(function (d) {
+        return notes[d] || d === todayIso || d === selected || editing === d || replying === d;
+      });
+      var wt = weekTally(selected, notes);
+      var thisWeek = weekOf(selected)[0] === weekOf(todayIso)[0];
       var atThisMonth = cursor.getFullYear() === here.getFullYear()
         && cursor.getMonth() === here.getMonth();
 
@@ -1049,16 +1169,36 @@
           '<p class="ll-cal__tally">' + tallyLine(t) + '</p>' +
           '<div class="ll-sync" data-sync></div>' +
         '</section>' +
-        '<section class="ll-pane" aria-label="The day you picked">' +
-          '<div class="ll-me">' +
-            '<span class="ll-me__l">You are</span>' +
-            '<button type="button" class="ll-me__b' + (who() === 'ethan' ? ' is-on' : '') +
-              '" data-me="ethan" aria-pressed="' + (who() === 'ethan') + '">' +
-              esc(learner || 'Ethan') + '</button>' +
-            '<button type="button" class="ll-me__b' + (who() === 'parent' ? ' is-on' : '') +
-              '" data-me="parent" aria-pressed="' + (who() === 'parent') + '">Parent</button>' +
+        '<section class="ll-pane" aria-label="The week you picked">' +
+          /* One line at the head of the week: where you are, how to move,
+             and who is typing. It used to be three. */
+          '<div class="ll-week">' +
+            '<button type="button" class="ll-cal__nav" data-wprev aria-label="The week before">&lsaquo;</button>' +
+            '<h2 class="ll-week__t">' + esc(weekLabel(selected)) + '</h2>' +
+            '<button type="button" class="ll-cal__nav" data-wnext aria-label="The week after"' +
+              (thisWeek ? ' disabled' : '') + '>&rsaquo;</button>' +
+            (thisWeek ? '' : '<button type="button" class="ll-cal__today" data-wnow>This week</button>') +
+            '<div class="ll-me">' +
+              '<span class="ll-me__l">You are</span>' +
+              '<button type="button" class="ll-me__b' + (who() === 'ethan' ? ' is-on' : '') +
+                '" data-me="ethan" aria-pressed="' + (who() === 'ethan') + '">' +
+                esc(learner || 'Ethan') + '</button>' +
+              '<button type="button" class="ll-me__b' + (who() === 'parent' ? ' is-on' : '') +
+                '" data-me="parent" aria-pressed="' + (who() === 'parent') + '">Parent</button>' +
+            '</div>' +
           '</div>' +
-          '<ol class="ll-history__list">' + noteBlock(notes[selected], selected) + '</ol>' +
+          '<p class="ll-week__n">' + weekLine(wt) + '</p>' +
+          '<ol class="ll-history__list" data-list>' +
+            (shown.length
+              ? shown.map(function (d) {
+                  return (notes[d] || d === selected || editing === d || replying === d)
+                    ? noteBlock(notes[d], d)
+                    : slimBlock(d);
+                }).join('')
+              : '<li class="ll-note ll-note--none">' +
+                  '<p class="ll-note__text ll-note__text--empty">Nothing written this week yet. ' +
+                  'Pick a day on the calendar to write one.</p></li>') +
+          '</ol>' +
         '</section>';
 
       drawStrip(root.querySelector('[data-sync]'), null);
@@ -1084,6 +1224,34 @@
       if (prev) prev.onclick = function () { cursor.setMonth(cursor.getMonth() - 1, 1); draw(); };
       var next = root.querySelector('[data-next]');
       if (next) next.onclick = function () { cursor.setMonth(cursor.getMonth() + 1, 1); draw(); };
+      /* Paging weeks moves the day he has picked with it, and takes the
+         month grid along so the two never disagree about where he is. */
+      function goWeek(step) {
+        var d = dateOf(selected);
+        d.setDate(d.getDate() + step * 7);
+        var iso = isoOf(d);
+        if (iso > todayIso) iso = todayIso;
+        var week = weekDays(iso);
+        /* Land on the last day of that week he could have written. */
+        selected = week[week.length - 1] || iso;
+        cursor = dateOf(selected);
+        editing = null;
+        replying = null;
+        draw();
+      }
+      var wprev = root.querySelector('[data-wprev]');
+      if (wprev) wprev.onclick = function () { goWeek(-1); };
+      var wnext = root.querySelector('[data-wnext]');
+      if (wnext) wnext.onclick = function () { goWeek(1); };
+      var wnow = root.querySelector('[data-wnow]');
+      if (wnow) wnow.onclick = function () {
+        selected = todayIso;
+        cursor = dateOf(todayIso);
+        editing = null;
+        replying = null;
+        draw();
+      };
+
       var jump = root.querySelector('[data-jump]');
       if (jump) jump.onclick = function () {
         cursor = dateOf(todayIso);
@@ -1118,7 +1286,7 @@
           }
           if (text.trim()) {
             put(subject, d, text);
-            if (wanted) applyLinks(subject, d, wanted);
+            if (wanted) applyLinks(subject, d, wanted, pagePicker.dropped());
           } else {
             remove(subject, d);
           }
@@ -1157,7 +1325,25 @@
           draw();
         };
       });
+      fitList();
       drawing = false;
+    }
+
+    /* Once at mount, not once per draw. Things above the list keep moving
+       after the first paint - the banner image lands, the sync line changes
+       its mind about how long ago it synced - so rather than guess at when
+       the page has settled, watch it and measure again when it changes.
+       fitList only ever shrinks to fit, so this converges rather than
+       chasing itself. */
+    if (global.addEventListener) {
+      global.addEventListener('resize', function () { fitList(); });
+      global.addEventListener('load', function () { fitList(); });
+    }
+    if (global.ResizeObserver) {
+      new global.ResizeObserver(function () { fitList(); }).observe(document.body);
+    } else if (global.setTimeout) {
+      global.setTimeout(function () { fitList(); }, 400);
+      global.setTimeout(function () { fitList(); }, 1500);
     }
 
     draw();

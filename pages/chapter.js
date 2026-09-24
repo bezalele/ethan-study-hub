@@ -18,9 +18,9 @@
 
 import {
   CHAPTERS, getChapter, nextChapter, prevChapter, chapterPosition,
-} from '../content/chapters.js?v=17';
-import { renderTimeline } from '../components/timeline.js?v=17';
-import { el, html, esc } from '../layout/dom.js?v=17';
+} from '../content/chapters.js?v=18';
+import { renderTimeline } from '../components/timeline.js?v=18';
+import { el, html, esc } from '../layout/dom.js?v=18';
 
 /* --- Small shared pieces -------------------------------------------------- */
 
