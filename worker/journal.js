@@ -66,17 +66,41 @@ export class Journal {
      wrong - a bad merge, a stray script, a mistake - the previous state is
      still sitting here and /history and /restore put it back.
 
-     KEEP is generous on purpose. Storage is measured in kilobytes and the
-     cost of one missing snapshot is somebody's work. */
+     What is kept is generous on purpose: storage is measured in kilobytes
+     and the cost of one missing snapshot is somebody's work. The recent
+     ones answer "undo what just happened"; the daily ones answer "this has
+     been wrong since last week". */
   async snapshot(key, value) {
     const id = 'snap:' + key + ':' + Date.now();
     await this.state.storage.put(id, value);
     const all = await this.state.storage.list({ prefix: 'snap:' + key + ':' });
     const ids = [...all.keys()].sort();
-    const KEEP = 60;
-    if (ids.length > KEEP) {
-      await this.state.storage.delete(ids.slice(0, ids.length - KEEP));
+
+    /* Two rules, not one.
+     *
+     *   RECENT  the last 60, which covers an evening of editing and is what
+     *           you want when something has just gone wrong.
+     *   DAILY   the first snapshot of each of the last 40 days, which is what
+     *           you want when something went wrong a week ago and nobody
+     *           noticed. Fifty snapshots covered nineteen hours once he
+     *           started using it properly; without this rule, a busy week
+     *           would push last Tuesday off the end.
+     */
+    const RECENT = 60;
+    const DAYS = 40;
+    const keep = new Set(ids.slice(-RECENT));
+    const firstOfDay = new Map();
+    const cutoff = Date.now() - DAYS * 86400000;
+    for (const one of ids) {
+      const at = Number(one.slice(one.lastIndexOf(':') + 1));
+      if (!at || at < cutoff) continue;
+      const day = new Date(at).toISOString().slice(0, 10);
+      if (!firstOfDay.has(day)) firstOfDay.set(day, one);
     }
+    for (const one of firstOfDay.values()) keep.add(one);
+
+    const drop = ids.filter((one) => !keep.has(one));
+    if (drop.length) await this.state.storage.delete(drop);
   }
 
   async fetch(request) {
