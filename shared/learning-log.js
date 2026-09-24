@@ -333,19 +333,20 @@
   /* The lessons this subject can offer, as [{ id, title, group, href }].
      Each app hands its own list in at mount time; nothing here knows what a
      lesson is. Empty means no picker is shown at all. */
-  /** Make the day's links match what was picked, and nothing more. */
-  function applyLinks(subject, date, wanted) {
-    var now = links(entryFor(subject, date));
-    now.forEach(function (l) {
-      if (!wanted.some(function (x) { return x.href === l.href; })) {
-        removeLink(subject, date, l.href);
-      }
-    });
-    wanted.forEach(function (l) {
-      if (!now.some(function (x) { return x.href === l.href; })) {
-        addLink(subject, date, l);
-      }
-    });
+  /** Add what was picked; remove only what was deliberately taken off.
+   *
+   * This used to make the day match the picker exactly, which meant a link
+   * that arrived while the box was open - Ethan attaching one on his laptop
+   * while his mum was typing on hers - was absent from the picker and so was
+   * deleted on save. Every link in the family's journal had been tombstoned
+   * that way, each one at the moment the next was written.
+   *
+   * So: additions are additions, removals are only the ones somebody pressed
+   * the x on, and anything the day gained in the meantime is left alone.
+   */
+  function applyLinks(subject, date, wanted, dropped) {
+    (dropped || []).forEach(function (href) { removeLink(subject, date, href); });
+    (wanted || []).forEach(function (l) { addLink(subject, date, l); });
   }
 
   /* --- What was this about? ------------------------------------------------
@@ -381,7 +382,7 @@
   }
 
   function mountPicker(host, opts) {
-    if (!host) return { links: function () { return []; } };
+    if (!host) return { links: function () { return []; }, dropped: function () { return []; } };
     var lessons = opts.lessons || [];
     /* opts.recent - the lessons he has opened lately - is accepted and not
        shown. One way in is easier to learn than two. Held for later, on
@@ -389,13 +390,19 @@
     var chosen = (opts.initial || []).map(function (l) {
       return { title: l.title, href: l.href };
     });
+    /* The ones somebody pressed the x on while this box was open. Only these
+       are ever removed from the day. */
+    var dropped = [];
     /* Everything starts folded, every subject, every time. The list he
        arrives at is the shape of his course - six or seven lines - and it is
        the same short list whether or not one of them happens to be the only
        one that opens. */
     var open = null;   // which unit is expanded
 
-    if (!lessons.length) { host.innerHTML = ''; return { links: function () { return chosen; } }; }
+    if (!lessons.length) {
+      host.innerHTML = '';
+      return { links: function () { return chosen; }, dropped: function () { return []; } };
+    }
 
     /* One list of sections, kept in the order the app handed them over -
        which is the order the course runs. A unit with lessons under it opens;
@@ -438,15 +445,24 @@
        to take it off is the same row he turned on, and the list underneath
        him never reshuffles while he is reading it. */
     function toggle(href) {
-      var l = lessons.filter(function (x) { return x.href === href; })[0];
-      if (!l) return;
+      /* Off first, and without consulting the lesson list. A day can carry a
+         link this subject no longer offers - written by an older version of
+         the app, or pointing at a lesson since renamed - and the x on it has
+         to work all the same. */
       if (has(href)) {
         chosen = chosen.filter(function (c) { return c.href !== href; });
+        if (dropped.indexOf(href) === -1) dropped.push(href);
         full = false;
-      } else if (chosen.length >= MAX) {
+        draw();
+        return;
+      }
+      var l = lessons.filter(function (x) { return x.href === href; })[0];
+      if (!l) return;
+      if (chosen.length >= MAX) {
         full = true;
       } else {
         chosen.push({ title: l.title, href: l.href });
+        dropped = dropped.filter(function (h) { return h !== href; });
         full = false;
       }
       /* `open` is deliberately untouched: the unit he is reading stays open,
@@ -541,7 +557,10 @@
     }
 
     draw();
-    return { links: function () { return chosen.slice(); } };
+    return {
+      links: function () { return chosen.slice(); },
+      dropped: function () { return dropped.slice(); },
+    };
   }
 
   /** Every lesson a day points at, as links you can actually follow. */
@@ -606,8 +625,15 @@
       var entry = entryFor(subject, day);
 
       if (!dlg) {
+        /* The header redraws whenever anything is written, and each redraw
+           runs this again with a fresh closure. Without this the old dialog
+           stayed in the document, invisible, holding a stale copy of the
+           note and its lessons. */
+        var stale = document.querySelectorAll('dialog.ll-modal[data-subject="' + subject + '"]');
+        for (var i = 0; i < stale.length; i++) stale[i].remove();
         dlg = document.createElement('dialog');
         dlg.className = 'll-modal';
+        dlg.dataset.subject = subject;
         document.body.appendChild(dlg);
         // Clicking the backdrop closes it; clicking the card must not.
         dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
@@ -654,7 +680,7 @@
         }
         var okay = text.trim() ? put(subject, day, text) : remove(subject, day);
         /* Links are their own list, applied after the note exists. */
-        if (okay && text.trim()) applyLinks(subject, day, picker.links());
+        if (okay && text.trim()) applyLinks(subject, day, picker.links(), picker.dropped());
         if (okay) dlg.close();
         else dlg.querySelector('[data-status]').textContent =
           'This browser will not let the note save right now.';
@@ -1249,7 +1275,7 @@
           }
           if (text.trim()) {
             put(subject, d, text);
-            if (wanted) applyLinks(subject, d, wanted);
+            if (wanted) applyLinks(subject, d, wanted, pagePicker.dropped());
           } else {
             remove(subject, d);
           }

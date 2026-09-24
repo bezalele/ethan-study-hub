@@ -219,9 +219,14 @@
 
     /* The same gap the progress client has: someone reading the journal with
        the page open has nothing of their own to change, so a reply left on
-       another laptop would not appear until they navigated. */
-    setInterval(function () { if (!document.hidden) sync(); }, 45000);
+       another laptop would not appear until they navigated.
+
+       Twenty seconds, not forty-five: "he saved a link and I cannot see it"
+       was partly this. A note is a few hundred bytes and there are three
+       laptops. */
+    setInterval(function () { if (!document.hidden) sync(); }, 20000);
     global.addEventListener('hashchange', sync);
+    global.addEventListener('focus', sync);
 
     if (isConnected()) sync();
   }
