@@ -17,10 +17,10 @@
    the content lands.
    --------------------------------------------------------------------------- */
 
-import { AREAS, getArea, topicSlug } from '../content/course.js?v=18';
-import { getDetail, unitIdeas } from '../content/courseDetails.js?v=18';
-import { renderTriangle, wireTriangle } from '../components/power-triangle.js?v=18';
-import { el, html, esc } from '../layout/dom.js?v=18';
+import { AREAS, getArea, topicSlug } from '../content/course.js?v=19';
+import { getDetail, unitIdeas } from '../content/courseDetails.js?v=19';
+import { renderTriangle, wireTriangle } from '../components/power-triangle.js?v=19';
+import { el, html, esc } from '../layout/dom.js?v=19';
 
 /* --- Shared pieces -------------------------------------------------------- */
 
@@ -298,7 +298,7 @@ function wireWalk(root) {
   });
 }
 
-function wireQuickCheck(root) {
+function wireQuickCheck(root, unit) {
   const box = root.querySelector('[data-quiz]');
   if (!box) return;
 
@@ -334,6 +334,9 @@ function wireQuickCheck(root) {
     const right = marks.filter(Boolean).length;
     score.classList.add('is-done');
     score.textContent = `You scored ${right} out of ${cards.length}.`;
+    /* Kept, rather than shown and forgotten. It syncs like everything else,
+       so the run he did on his laptop is the run his parents see. */
+    if (window.ApGovProgress) window.ApGovProgress.recordUnitCheck(unit, right, cards.length);
   }
 
   function reveal() {
@@ -406,7 +409,7 @@ export default {
       </div>`));
     wireWalk(page);
     if (d0.model && d0.model.type === 'triangle') wireTriangle(page, d0.model, esc);
-    wireQuickCheck(page);
+    wireQuickCheck(page, area.n);
     if (params.topic) focusTopic(page, params.topic);
     return page;
   },

@@ -127,12 +127,37 @@
     return out;
   }
 
+  /* --- AP U.S. Government, the unit quick checks ----------------------------
+     { units: { "2": { best, last, total, attempts, at } } }
+     --------------------------------------------------------------------------- */
+  function mergeApGov(a, b) {
+    a = obj(a); b = obj(b);
+    var A = obj(a.units), B = obj(b.units);
+    var units = {};
+    Object.keys(A).concat(Object.keys(B)).forEach(function (u) {
+      if (units[u]) return;
+      var x = obj(A[u]), y = obj(B[u]);
+      var newer = num(y.at) >= num(x.at) ? y : x;
+      units[u] = {
+        best: Math.max(num(x.best), num(y.best)),
+        /* The higher count, not the sum: syncing the same two laptops again
+           would otherwise inflate it every time. */
+        attempts: Math.max(num(x.attempts), num(y.attempts)),
+        total: Math.max(num(x.total), num(y.total)),
+        last: newer.last !== undefined ? newer.last : 0,
+        at: Math.max(num(x.at), num(y.at)),
+      };
+    });
+    return { units: units };
+  }
+
   /* Which rule belongs to which store. A key nobody has taught this file
      about is kept whole from whichever side has it, rather than dropped. */
   var RULES = {
     'ethan_biology_v1': mergeBiology,
     'ethan_math_quest_v2': mergeMath,
-    'ethanQuizScoresV1': mergeScores
+    'ethanQuizScoresV1': mergeScores,
+    'ethan_apgov_v1': mergeApGov
   };
 
   function keys() { return Object.keys(RULES); }

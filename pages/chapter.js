@@ -18,9 +18,9 @@
 
 import {
   CHAPTERS, getChapter, nextChapter, prevChapter, chapterPosition,
-} from '../content/chapters.js?v=18';
-import { renderTimeline } from '../components/timeline.js?v=18';
-import { el, html, esc } from '../layout/dom.js?v=18';
+} from '../content/chapters.js?v=19';
+import { renderTimeline } from '../components/timeline.js?v=19';
+import { el, html, esc } from '../layout/dom.js?v=19';
 
 /* --- Small shared pieces -------------------------------------------------- */
 
@@ -503,7 +503,7 @@ function wireQuiz(root) {
     const rec = saveScore(chapter, score, total);
     bestEl.textContent = rec.attempts > 1
       ? `Best so far ${rec.best} of ${total} · ${rec.attempts} attempts`
-      : 'Saved on this device.';
+      : 'Saved, and shared with your family.';
     box.querySelector('[data-form]').hidden = true;
     box.querySelector('.ch-quiz__foot').hidden = true;
     box.querySelector('.ch-quiz__dots').hidden = true;

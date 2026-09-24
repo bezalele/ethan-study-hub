@@ -41,7 +41,7 @@
    docs/CONTENT-GUIDE.md lists the slots with recommended dimensions.
    --------------------------------------------------------------------------- */
 
-import { CHAPTER_IMAGES, IMAGES } from './assets.js?v=18';
+import { CHAPTER_IMAGES, IMAGES } from './assets.js?v=19';
 
 /** Used as the chapter hero until a chapter supplies its own `hero`. */
 const DEFAULT_HERO = IMAGES.heroSigning;

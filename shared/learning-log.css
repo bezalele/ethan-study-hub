@@ -428,6 +428,66 @@
   border-radius: 99px;
 }
 
+/* The column the month lives in. Its height is set by the component, out of
+   what the window has left, and it scrolls only when it has to. */
+.ll-cal {
+  overscroll-behavior: contain;
+  contain: paint;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ll-edge) transparent;
+  padding-right: 2px;
+}
+.ll-cal::-webkit-scrollbar { width: 10px; }
+.ll-cal::-webkit-scrollbar-thumb {
+  background: var(--ll-edge);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 99px;
+}
+
+/* --- How it is going -------------------------------------------------------
+   Under the calendar, where the eye goes after the dots. What he has done,
+   then at most one thing waiting. Quiet on purpose: this is the part of the
+   page most easily turned into a scoreboard, and a scoreboard is the last
+   thing a tired fourteen-year-old needs.
+   --------------------------------------------------------------------------- */
+
+.ll-how {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 2px;
+}
+/* One line, wrapping only when it must: this is a glance, not a report. */
+.ll-how__done {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: 500 13px/1.5 inherit;
+  color: var(--ll-muted);
+}
+.ll-how__done li { display: flex; align-items: baseline; gap: 8px; }
+.ll-how__done li::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ll-accent);
+}
+/* The one thing waiting. An invitation, in his subject's colour, not a
+   warning in red. */
+.ll-how__next {
+  margin: 0;
+  padding: 9px 11px;
+  background: var(--ll-accent-soft);
+  border-radius: 9px;
+  font: 500 13px/1.5 inherit;
+}
+.ll-how__go { font-weight: 700; color: var(--ll-accent); white-space: nowrap; }
+
 /* --- A week at a time ------------------------------------------------------
    The month grid is the map; this is the page. Seven days is enough to see
    what the week has been without anybody scrolling for it.
