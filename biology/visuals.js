@@ -184,43 +184,110 @@ function mountVisual(type,lessonId){
     trees:[[80,1,'full'],[152,.88,'full'],[236,.95,'full']],
     shrubs:[300,344,392],grass:[52,112,186,262,332,404,452,506,548],
     beetles:[[124,236],[306,240],[428,234]],birds:[[168,92],[228,74],[436,86]],fox:492,built:false},
+
    fire:{richness:4,status:'After a fire',ground:'#b6a98c',sky:'#f1ece4',
     line:'Some species decline or leave after the disturbance.',
     trees:[[80,1,'bare'],[152,.88,'stump'],[236,.95,'scorched']],
     shrubs:[344],grass:[262,452,548],
     beetles:[[428,234]],birds:[[436,86]],fox:null,built:false,burn:true},
+
    disease:{richness:5,status:'After a disease of the oaks',ground:'#cbd8a8',sky:'#eef4ef',
     line:'Disturbances do not affect every species in the same way.',
     trees:[[80,1,'bare'],[152,.88,'bare'],[236,.95,'bare']],
     shrubs:[300,344,392],grass:[52,112,186,262,332,404,452,506,548],
     beetles:[[124,236],[306,240],[428,234]],birds:[[168,92],[228,74],[436,86]],fox:492,built:false},
+
    habitat:{richness:4,status:'Habitat reduced',ground:'#cbd8a8',sky:'#eef4ef',
     line:'Habitat loss can reduce the number of species an area can support.',
     trees:[[80,1,'full'],[152,.88,'full']],
     shrubs:[300],grass:[52,112,186,262],
     beetles:[[124,236]],birds:[[168,92]],fox:null,built:true},
-   later:{richness:6,status:'Recovering',ground:'#c6d7a2',sky:'#eef4ef',
-    line:'The ecosystem can recover, but it may not return exactly to its original state.',
-    resilience:'Resilience is an ecosystem\u2019s ability to recover after a disturbance.',
+
+   /* --- and what "years later" means, which depends on what happened --- */
+
+   'fire-later':{richness:6,status:'Years after the fire',ground:'#c6d7a2',sky:'#eef4ef',
+    line:'After fire, an ecosystem may recover if soil, seeds, roots, and nearby organisms remain.',
+    second:'Recovery can happen through ecological succession.',
     trees:[[84,.42,'full'],[160,.36,'full'],[240,.3,'full']],
     shrubs:[286,330,374,418],grass:[46,96,146,196,246,296,346,396,446,496,542],
-    beetles:[[124,236],[264,240],[392,234],[470,238]],birds:[[168,92],[228,74],[436,86]],fox:508,built:false}
+    beetles:[[124,236],[264,240],[392,234],[470,238]],birds:[[168,92],[228,74],[436,86]],fox:508,built:false},
+
+   'disease-later':{richness:6,status:'Years after the disease',ground:'#c6d7a2',sky:'#eef4ef',
+    line:'After disease, some populations may recover, while the community may also change.',
+    second:'Here a few resistant oaks remain and shrubs have taken much of the space.',
+    trees:[[80,.9,'full'],[152,.5,'full'],[236,.95,'stump']],
+    shrubs:[286,330,374,418],grass:[52,112,186,262,332,404,452,506,548],
+    beetles:[[124,236],[306,240],[428,234]],birds:[[168,92],[228,74],[436,86]],fox:492,built:false},
+
+   'habitat-later':{richness:4,status:'Years later \u00b7 without restoration',ground:'#cbd8a8',sky:'#eef4ef',
+    line:'Habitat loss does not automatically reverse over time. If the land stays developed, the original habitat cannot simply grow back.',
+    trees:[[80,1,'full'],[152,.88,'full']],
+    shrubs:[300],grass:[52,112,186,262,332],
+    beetles:[[124,236]],birds:[[168,92]],fox:null,built:true},
+
+   'habitat-restored':{richness:5,status:'Years later \u00b7 with restoration',ground:'#c6d7a2',sky:'#eef4ef',
+    line:'Recovery is possible if habitat is restored, but it takes time and may not recreate the original ecosystem exactly.',
+    trees:[[80,1,'full'],[152,.88,'full'],[420,.4,'full'],[500,.34,'full']],
+    shrubs:[300,344,470],grass:[52,112,186,262,332,404,452,506,548],
+    beetles:[[124,236],[306,240],[428,234]],birds:[[168,92],[436,86]],fox:null,built:'restored'}
   };
 
-  return buttons([['healthy','Healthy ecosystem'],['fire','Fire'],['disease','Disease'],['habitat','Habitat loss'],['later','Years later']],mode=>{
-   const st=STATES[mode];
+  /* The five controls, plus - only where it means something - a choice
+     between leaving the land developed and putting habitat back. */
+  let picked='healthy',after=null,restored=false;
+
+  const drawControls=()=>{
+   const main=[['healthy','Healthy ecosystem'],['fire','Fire'],['disease','Disease'],['habitat','Habitat loss'],['later','Years later']];
+   const armed=!!after;
+   controls.innerHTML=main.map(([value,label])=>{
+    const on=value==='later'?picked==='later':picked===value;
+    const off=value==='later'&&!armed;
+    return `<button class="soft" data-value="${value}" aria-pressed="${on}"${off?' disabled title="Choose a disturbance first"':''}>${label}</button>`;
+   }).join('')+
+   (armed?'':'<span class="small muted">Choose a disturbance, then see what happens years later.</span>')+
+   (picked==='later'&&after==='habitat'
+    ? '<div class="controls" data-restore>'+
+      [['no','Without restoration'],['yes','With restoration']].map(([v,l])=>
+       `<button class="soft" data-restore-value="${v}" aria-pressed="${(v==='yes')===restored}">${l}</button>`).join('')+
+      '</div>'
+    : '');
+   controls.querySelectorAll('[data-value]').forEach(b=>b.onclick=()=>{
+    const v=b.dataset.value;
+    if(v==='later'){ if(!after) return; picked='later'; }
+    else { picked=v; if(v==='fire'||v==='disease'||v==='habitat'){ after=v; restored=false; } }
+    draw();
+   });
+   controls.querySelectorAll('[data-restore-value]').forEach(b=>b.onclick=()=>{
+    restored=b.dataset.restoreValue==='yes';
+    draw();
+   });
+  };
+
+  const draw=()=>{
+   drawControls();
+   const key=picked==='later'
+    ? (after==='habitat'?(restored?'habitat-restored':'habitat-later'):after+'-later')
+    : picked;
+   const st=STATES[key];
 
    const built=st.built
-    ? `<rect x="404" y="120" width="178" height="${GROUND-120}" fill="#ded8cd"/>`+
-      `<rect x="430" y="140" width="56" height="74" fill="#c9bfb0" stroke="#a89c8a"/>`+
-      `<path d="M424 140l34-24 34 24Z" fill="#9e8f7d"/>`+
-      `<rect x="446" y="176" width="16" height="38" fill="#8d8271"/>`+
-      `<rect x="506" y="158" width="52" height="56" fill="#c9bfb0" stroke="#a89c8a"/>`+
-      `<path d="M500 158l32-20 32 20Z" fill="#9e8f7d"/>`+
-      `<path d="M404 120v${GROUND-120}" stroke="#9a9384" stroke-width="2" stroke-dasharray="7 6"/>`+
-      `<text x="493" y="112" text-anchor="middle" font-size="12" fill="#6f675a">woodland cleared</text>`
+    ? (st.built==='restored'
+      ? `<rect x="404" y="120" width="178" height="${GROUND-120}" fill="#e6ecdc"/>`+
+        `<rect x="430" y="150" width="46" height="64" fill="#c9bfb0" stroke="#a89c8a"/>`+
+        `<path d="M424 150l29-20 29 20Z" fill="#9e8f7d"/>`+
+        `<path d="M404 120v${GROUND-120}" stroke="#9a9384" stroke-width="2" stroke-dasharray="7 6"/>`+
+        `<text x="500" y="112" text-anchor="middle" font-size="12" fill="#4a6b45">replanted</text>`
+      : `<rect x="404" y="120" width="178" height="${GROUND-120}" fill="#ded8cd"/>`+
+        `<rect x="430" y="140" width="56" height="74" fill="#c9bfb0" stroke="#a89c8a"/>`+
+        `<path d="M424 140l34-24 34 24Z" fill="#9e8f7d"/>`+
+        `<rect x="446" y="176" width="16" height="38" fill="#8d8271"/>`+
+        `<rect x="506" y="158" width="52" height="56" fill="#c9bfb0" stroke="#a89c8a"/>`+
+        `<path d="M500 158l32-20 32 20Z" fill="#9e8f7d"/>`+
+        `<path d="M404 120v${GROUND-120}" stroke="#9a9384" stroke-width="2" stroke-dasharray="7 6"/>`+
+        /* The moment it happens, and the years after it, are different
+           sentences: one is the clearing, the other is its persistence. */
+        `<text x="493" y="112" text-anchor="middle" font-size="12" fill="#6f675a">${key==='habitat'?'woodland cleared':'still developed'}</text>`)
     : '';
-   /* Scorch on the ground rather than marks floating above it. */
    const burn=st.burn
     ? [[118,10],[196,7],[330,9],[470,6]].map(([x,r])=>
        `<ellipse cx="${x}" cy="${GROUND+9}" rx="${r*2.2}" ry="${r*0.7}" fill="#8d7d63" opacity=".55"/>`).join('')
@@ -238,21 +305,35 @@ function mountVisual(type,lessonId){
     st.birds.map(([x,y])=>bird(x,y)).join('')+
     (st.fox?fox(st.fox):'');
 
-   /* Under the scene: what is there, what it is called, and one line. */
    const chip=(x,y,w,text,fill,ink)=>`<rect x="${x}" y="${y}" width="${w}" height="30" rx="10" fill="${fill}" stroke="#b9c9b4"/>`+
     `<text x="${x+w/2}" y="${y+20}" text-anchor="middle" font-size="14" fill="${ink}">${esc(text)}</text>`;
-   const panel=chip(18,264,196,st.status,mode==='healthy'||mode==='later'?'#dcecdc':'#f0e6d8','#183d36')+
-    chip(224,264,224,`Species richness: ${st.richness} kinds`,'#e8eef5','#1f4653')+
-    `<text x="462" y="284" font-size="12.5" fill="#6a7b72">illustrative, not a survey</text>`;
+   const good=key==='healthy'||key==='fire-later'||key==='disease-later'||key==='habitat-restored';
+   const panel=chip(18,264,250,st.status,good?'#dcecdc':'#f0e6d8','#183d36')+
+    chip(278,264,212,`Species richness: ${st.richness} kinds`,'#e8eef5','#1f4653')+
+    `<text x="502" y="284" font-size="12" fill="#6a7b72">illustrative</text>`;
 
-   const lines=`<text x="18" y="322" font-size="14.5" fill="#183d36">${esc(st.line)}</text>`+
-    (st.resilience?`<text x="18" y="346" font-size="14.5" fill="#33705a">${esc(st.resilience)}</text>`:'');
+   /* The long lines wrap by hand: SVG text does not. */
+   const wrap=(text,width)=>{
+    const words=String(text).split(' '),lines=[];let line='';
+    words.forEach(w=>{
+     if((line+' '+w).trim().length*7.1>width){lines.push(line.trim());line=w;}
+     else line=(line+' '+w).trim();
+    });
+    if(line)lines.push(line);
+    return lines;
+   };
+   const lines=wrap(st.line,556).map((t,i)=>`<text x="18" y="${318+i*21}" font-size="14.5" fill="#183d36">${esc(t)}</text>`).join('');
+   const secondY=318+wrap(st.line,556).length*21+3;
+   const second=st.second?`<text x="18" y="${secondY}" font-size="14.5" fill="#33705a">${esc(st.second)}</text>`:'';
 
-   drawing.innerHTML=svg(`${scene}${panel}${lines}`,
+   drawing.innerHTML=svg(`${scene}${panel}${lines}${second}`,
     `A woodland: ${st.status.toLowerCase()}. Species richness ${st.richness} kinds. ${st.line}`,
-    st.resilience?360:336);
-   caption.textContent='Biodiversity means the variety of living things in an ecosystem. Disturbances such as fire, disease, or habitat loss can change which species live there. A resilient ecosystem can recover over time, although it may not return exactly to the way it was before.';
-  });
+    (st.second?secondY:318+wrap(st.line,556).length*21)+14);
+   caption.textContent='Biodiversity means the variety of living things in an ecosystem. Disturbances such as fire, disease, and habitat loss can affect ecosystems in different ways. Some ecosystems can recover naturally, while others need restoration. Recovery does not always mean returning exactly to the original state.';
+  };
+
+  draw();
+  return;
  }
 
  /* Unit 1 - Human impacts and conservation.
