@@ -3,7 +3,7 @@ const svg=(body,label,h=280)=>`<svg viewBox="0 0 600 ${h}" role="img" aria-label
 const textSVG=(x,y,t,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#183d36">${esc(t)}</text>`;
 const box=(x,y,w,h,t,fill='#e4eee5')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${fill}" stroke="#789787"/>${textSVG(x+w/2,y+h/2+6,t)}`;
 const line=(x,y,a,b)=>`<path d="M${x} ${y}L${a} ${b}" fill="none" stroke="#446d61" stroke-width="2" marker-end="url(#arrow)"/>`;
-const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',biodiversity:'Disturb it, then watch it come back',impact:'From the field to the stream'};
+const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',biodiversity:'Disturb it, then watch it come back',impact:'What happens to the stream?'};
 const REAL_LIFE={
  cells:{
   title:"Cells: The Building Blocks of Life",
@@ -178,41 +178,104 @@ function mountVisual(type,lessonId){
  }
 
  /* Unit 1 - Human impacts and conservation.
-    One chain, two versions of it. The stages are the lesson's own runoff
-    example, and the oxygen bar at the end is driven by the chain rather than
-    decorating it. Deliberately NOT "the algae used up the oxygen": the stage
-    that lowers oxygen is decomposition, which is the mistake the lesson
-    already warns about. */
+
+    The test this has to pass: a fourteen-year-old looks at it for five
+    seconds and can say what happened, without reading the paragraph below.
+    So the scene carries the consequence - the water, the algae, the fish -
+    and seven numbered steps say it in plain English underneath.
+
+    Two things are deliberate. The step that lowers the oxygen is the
+    decomposers, not the algae "using it up", which is the mistake this
+    lesson already warns about. And the oxygen is described in words, never
+    a number, because an invented "3 out of 10" reads like a measurement
+    somebody took. */
  if(type==='impact'){
+  const fish=(x,y,c,sad)=>`<ellipse cx="${x}" cy="${y}" rx="15" ry="9" fill="${c}"/>`+
+   `<path d="M${x+13} ${y}l13 -8v16Z" fill="${c}"/>`+
+   `<circle cx="${x-7}" cy="${y-3}" r="1.9" fill="#f4f7f5"/>`+
+   (sad?`<path d="M${x-13} ${y+4}q4 -4 8 -1" stroke="#f4f7f5" stroke-width="1.6" fill="none"/>`+
+        `<circle cx="${x-17}" cy="${y-10}" r="3" fill="none" stroke="#e8efe9" stroke-width="1.5"/>`+
+        `<circle cx="${x-23}" cy="${y-19}" r="2" fill="none" stroke="#e8efe9" stroke-width="1.5"/>`
+       :`<path d="M${x-13} ${y+2}q4 4 8 1" stroke="#f4f7f5" stroke-width="1.6" fill="none"/>`);
+  const algae=(x,y,n,c)=>Array.from({length:n},(_,i)=>
+   `<ellipse cx="${x+i*30}" cy="${y+(i%2?7:0)}" rx="14" ry="7" fill="${c}"/>`+
+   `<ellipse cx="${x+8+i*30}" cy="${y+10+(i%2?7:0)}" rx="9" ry="5" fill="${c}" opacity=".75"/>`).join('');
+  const tuft=(x,y,c)=>`<path d="M${x-5} ${y}q5-13 1-17M${x} ${y}q2-15 0-18M${x+5} ${y}q-5-13-1-17" stroke="${c}" stroke-width="2.5" fill="none"/>`;
+  const tree=(x,y,c)=>`<path d="M${x} ${y}v-9" stroke="#6b5334" stroke-width="3"/><circle cx="${x}" cy="${y-17}" r="9" fill="${c}"/>`;
+  /* Drawn by hand rather than with the shared marker, whose head scales with
+     the stroke width. */
+  const flow=(x1,x2,y,h,c)=>`<path d="M${x1} ${y-h/2}H${x2-14}v${-h/2}l16 ${h}l-16 ${h}v${-h/2}H${x1}Z" fill="${c}"/>`;
+
   const RUNS={
-   impact:{title:'Fertiliser runs off the field',oxygen:3,
-    stages:[['Fertiliser on the field','#efe0c6'],['Rain carries it to the stream','#dfe8ee'],['Extra nitrogen and phosphorus','#dfe8ee'],['More algae grow','#cfe3cb'],['Algae die; decomposers break them down','#e6d6c6'],['Microbes use oxygen as they do it','#e6d6c6']],
-    note:'Trace the chain rather than calling the fertiliser harmful and stopping there. Note the step that actually lowers the oxygen: it is the decomposition of all that extra material, and the respiration of the microbes doing it - not the algae simply using it up. How far this goes depends on how much nutrient arrives, the temperature, the flow, and what was limiting growth in the first place.'},
-   buffer:{title:'A planted buffer strip along the bank',oxygen:8,
-    stages:[['Fertiliser on the field','#efe0c6'],['Strip of grass and trees at the edge','#cfe3cb'],['Less runoff reaches the water','#dfe8ee'],['Smaller nutrient increase','#dfe8ee'],['Less extra algal growth','#cfe3cb'],['Less material to decompose','#e6d6c6']],
-    note:'A buffer intercepts some of what the rain carries. Less arrives, so less grows, so there is less to decompose later - the whole chain is damped rather than any one step being switched off. Whether it works here is a question for measurement: nutrient and oxygen readings before and after, a comparison site, and enough time to see past a dry month. Cost, land and upkeep are part of the judgement too.'}
+   impact:{
+    title:'How fertilizer runoff can hurt a stream',
+    water:'#8fa860',lit:false,
+    oxygen:'Low dissolved oxygen',fishLine:'Fish can struggle',
+    scene:'algae everywhere',
+    steps:['Fertilizer on field','Rain washes it in','Nutrients feed algae','Extra algae die','Decomposers use oxygen','Oxygen in water drops','Fish can struggle'],
+    spoken:'Fertilizer on the field, rain washes nutrients into the stream, too many nutrients feed algae, the extra algae die and decompose, decomposers use oxygen, oxygen in the water drops, and fish can struggle.',
+    note:'The chain is the point: no single step is "the pollution". Notice which step takes the oxygen out - it is the decomposers breaking down all that extra dead algae, not the algae themselves using it up. How far it goes depends on how much nutrient arrives, the temperature, the flow, and what was limiting growth before.'},
+   buffer:{
+    title:'How a buffer strip can protect the stream',
+    water:'#9dc6dc',lit:true,
+    oxygen:'Higher dissolved oxygen',fishLine:'Healthier conditions for fish',
+    scene:'clearer water',
+    steps:['Grass and trees','Catch some runoff','Fewer nutrients','Less extra algae','Less to decompose','More oxygen stays','Healthier for fish'],
+    spoken:'Grass and trees along the stream catch some of the runoff, fewer nutrients reach the water, there is less extra algae, less material decomposes, more oxygen stays in the water, and conditions are healthier for fish.',
+    note:'A buffer does not switch a step off; it damps the whole chain, because less arriving means less growing and then less to decompose. Whether it worked here is a question for measurement - nutrient and oxygen readings before and after, a comparison site, and long enough to see past a dry month. Cost, land and upkeep count too.'}
   };
+
   return buttons([['impact','Human impact'],['buffer','Conservation response']],mode=>{
-   const run=RUNS[mode],STEP=38,TOP=64,H=28;
-   const rows=run.stages.map((stage,i)=>{
-    const y=TOP+i*STEP;
-    return `<rect x="30" y="${y}" width="392" height="${H}" rx="9" fill="${stage[1]}" stroke="#a9bdb2"/>`+
-     `<text x="44" y="${y+19}" font-size="14" fill="#183d36">${esc(stage[0])}</text>`+
-     /* The arrow lives in the gap between two boxes, not on top of one. */
-     (i<run.stages.length-1?`<path d="M226 ${y+H+1}v${STEP-H-2}" stroke="#446d61" stroke-width="2" marker-end="url(#arrow)"/>`:'');
+   const run=RUNS[mode],lit=run.lit;
+
+   /* --- the scene -------------------------------------------------------- */
+   const fieldW=lit?150:196;
+   const field=`<rect x="18" y="58" width="${fieldW}" height="96" rx="10" fill="#e3dcc3" stroke="#c3b894"/>`+
+    `${[0,1,2,3,4].map(i=>`<circle cx="${40+i*((fieldW-44)/4)}" cy="${80+(i%2)*14}" r="3.5" fill="#c08a4a"/>`).join('')}`+
+    `<text x="${18+fieldW/2}" y="146" text-anchor="middle" font-size="12.5" fill="#5d5330">fertilizer on the field</text>`;
+   const buffer=lit
+    ? `<rect x="176" y="58" width="60" height="96" rx="10" fill="#cfe0bd" stroke="#8fae76"/>`+
+      /* Two trees and a tuft between them: enough to read as planting, and it
+         leaves the strip's label somewhere to sit. */
+      `${tree(192,118,'#6f8f5a')}${tree(220,122,'#89a86b')}${tuft(206,128,'#7f9d5c')}`+
+      `<text x="206" y="146" text-anchor="middle" font-size="12" fill="#43613c">buffer</text>`
+    : '';
+   /* The thin band says "a little" better than the words would, and there is
+      no room for them between the buffer and the water. */
+   const runoff=lit
+    ? flow(240,266,106,7,'#cbb894')
+    : flow(216,268,106,22,'#c08a4a')+`<text x="242" y="94" text-anchor="middle" font-size="12" fill="#7d6a45">runoff</text>`;
+   const streamX=268;
+   const stream=`<rect x="${streamX}" y="58" width="${582-streamX}" height="96" rx="10" fill="${run.water}" stroke="#7d9aa8"/>`+
+    (lit?algae(300,78,2,'#86ab6f'):algae(296,76,6,'#5a7a3a'))+
+    (lit?`${fish(400,116,'#3f6c85',false)}${fish(470,100,'#3f6c85',false)}${fish(520,128,'#3f6c85',false)}`
+        :`${fish(400,118,'#4d5a52',true)}${fish(496,122,'#4d5a52',true)}`)+
+    `<text x="${(streamX+582)/2}" y="146" text-anchor="middle" font-size="12.5" fill="${lit?'#1f4653':'#2c3a22'}">${esc(run.scene)}</text>`;
+
+   /* --- seven steps, numbered, so the order needs no connector ----------- */
+   const chip=(x,y,w,n,text,fill)=>`<rect x="${x}" y="${y}" width="${w}" height="36" rx="10" fill="${fill}" stroke="#a9bdb2"/>`+
+    `<circle cx="${x+18}" cy="${y+18}" r="11" fill="#ffffff" stroke="#a9bdb2"/>`+
+    `<text x="${x+18}" y="${y+23}" text-anchor="middle" font-size="12" font-weight="700" fill="#446d61">${n}</text>`+
+    `<text x="${x+34}" y="${y+23}" font-size="12" fill="#183d36">${esc(text)}</text>`;
+   const tints=lit
+    ? ['#cfe3cb','#cfe3cb','#dfe8ee','#dfe8ee','#e6d6c6','#dfe8ee','#d7eede']
+    : ['#efe0c6','#dfe8ee','#cfe3cb','#cfe3cb','#e6d6c6','#dfe8ee','#f2ddd0'];
+   const W=182,GAP=9;
+   const chain=run.steps.map((text,i)=>{
+    const col=i%3,rowN=Math.floor(i/3);
+    const x=18+col*(W+GAP),y=182+rowN*46;
+    return chip(x,y,W,i+1,text,tints[i]);
    }).join('');
-   const o2=run.oxygen,colY=TOP,colH=run.stages.length*STEP-10,barH=Math.round(o2/10*colH),ok=o2>=6;
-   drawing.innerHTML=svg(`${textSVG(226,40,run.title,17)}${rows}`+
-    `${textSVG(513,40,'Dissolved oxygen',15)}`+
-    `<rect x="470" y="${colY}" width="86" height="${colH}" rx="10" fill="#eef3f5" stroke="#a9bdb2"/>`+
-    `<rect x="470" y="${colY+colH-barH}" width="86" height="${barH}" rx="10" fill="${ok?'#7fb2a2':'#c58f6d'}"/>`+
-    `<text x="513" y="${colY+colH-barH+22}" text-anchor="middle" font-size="15" fill="#ffffff">${o2} of 10</text>`+
-    `${textSVG(513,colY+colH+26,ok?'enough for fish':'fish under stress',15)}`,
-    `${run.title}: ${run.stages.length} stages from the field to the stream, with dissolved oxygen at ${o2} out of 10.`,
-    TOP+run.stages.length*STEP+40);
+
+   const verdict=`<rect x="18" y="320" width="564" height="42" rx="11" fill="${lit?'#dff0e6':'#f6e3d7'}" stroke="${lit?'#8fb9a2':'#d3ab90'}"/>`+
+    `<text x="300" y="346" text-anchor="middle" font-size="16" fill="#183d36">${esc(run.oxygen)}  \u00b7  ${esc(run.fishLine)}</text>`;
+
+   drawing.innerHTML=svg(`${textSVG(300,34,run.title,18)}${field}${buffer}${runoff}${stream}${chain}${verdict}`,
+    `${run.title}. ${run.spoken} ${run.oxygen}.`,376);
    caption.textContent=run.note;
   });
  }
+
 
  if(type==='web')return buttons([['normal','Show food web'],['loss','What if rabbits decline?']],mode=>{drawing.innerHTML=svg(`${line(140,190,250,65)}${line(150,195,265,190)}${line(350,65,460,65)}${line(350,190,460,85)}${line(340,215,460,245)}${box(30,165,130,65,'Grass')}${box(230,30,135,65,'Rabbits',mode==='loss'?'#efcfbf':'#e4eee5')}${box(230,170,135,65,'Mice')}${box(440,30,130,65,'Foxes')}${box(430,220,150,55,'Owls')}`,'A food web: grass feeds rabbits and mice; rabbits and mice feed foxes; mice feed owls.',310);caption.textContent=mode==='loss'?'Rabbit decline can reduce one food source for foxes. Mice are an alternative, so the final outcome depends on their availability and other interactions. These are possible effects, not an exact prediction.':'Arrows point from food to consumer. This is a simplified example; decomposers and many other connections are omitted. Click the scenario to reason about a change.';});
  if(type==='energy')return buttons([['photo','Photosynthesis'],['resp','Respiration'],['cycle','Carbon connection']],mode=>{const photo=mode==='photo';drawing.innerHTML=mode==='cycle'?svg(`${box(205,20,190,55,'Atmospheric CO₂','#d4e8ed')}${box(30,180,160,65,'Plant biomass')}${box(405,180,160,65,'Consumer biomass','#eadcc6')}${line(220,75,130,177)}${line(190,210,405,210)}${line(480,180,375,75)}${line(105,180,255,75)}${textSVG(105,116,'Photosynthesis',14)}${textSVG(490,120,'Respiration',14)}${textSVG(298,200,'Feeding',14)}`,'Simplified carbon pathways between atmospheric carbon dioxide and plant and consumer biomass.'):svg(`${box(35,95,160,70,photo?'CO₂ + water':'Glucose + O₂','#d8e8e5')}${line(197,130,395,130)}${box(400,95,170,70,photo?'Sugar + O₂':'CO₂ + water','#efe3c8')}${textSVG(300,65,photo?'Light energy enters':'Energy transferred')}${textSVG(300,212,photo?'Chloroplast · photosynthesis':'ATP + heat · respiration')}`,'Summary of '+(photo?'photosynthesis':'aerobic respiration')+' inputs and outputs.');caption.textContent=mode==='cycle'?'Carbon atoms move among reservoirs. This diagram omits soil, oceans, combustion, and other stores. Plants as well as consumers respire.':photo?'Summary: 6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂. Light supplies energy; atoms are rearranged. The detailed pathway is more complex.':'Summary: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O. Energy is transferred to ATP and dispersed as heat. Glycolysis is in the cytoplasm; later aerobic stages involve mitochondria in eukaryotes.';});
