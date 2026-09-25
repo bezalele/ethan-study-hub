@@ -130,20 +130,20 @@ B('energy','photosynthesis','Photosynthesis: build with light','Trace the source
  ['What is released in the summary equation?','Oxygen','Nitrogen gas only','No products','The summary includes oxygen among the products.'],
  ['Why can a rate stop rising when light increases?','Another factor may be limiting','Atoms stop being conserved','Light becomes a nutrient atom','Multiple factors constrain biological rates.']
 ]);
-B('energy','respiration','Cellular respiration: make ATP available','Connect food molecules, oxygen, and usable cellular energy.','energy',[
+B('energy','respiration','Cellular respiration: make ATP available','Connect food molecules, oxygen, and usable cellular energy.','respiration',[
  ['Food contains chemical energy','Cellular respiration transfers energy from organic molecules to ATP and other forms, including heat. ATP helps couple energy-releasing processes to cellular work such as active transport and muscle contraction.'],
  ['Track the overall reaction','A summary of aerobic respiration is glucose + oxygen → carbon dioxide + water, with energy transferred to ATP and heat. Glycolysis occurs in the cytoplasm; in eukaryotes, later aerobic stages are associated with mitochondria.'],
- ['Plants respire too','Plant cells need ATP for work as animal cells do. Photosynthesis and respiration are connected but are different processes with different machinery. Fermentation regenerates NAD⁺ so glycolysis can continue when aerobic pathways are unavailable; it does not yield the same ATP return as complete aerobic respiration.']
-],[['ATP','Molecule that transfers energy for cellular work'],['Respiration','Process that transfers energy from fuel molecules'],['Mitochondrion','Organelle involved in aerobic respiration'],['Fermentation','Pathway that permits glycolysis to continue without aerobic processing']],
+ ['Plants respire too','Plant cells need ATP for work as animal cells do. Photosynthesis and respiration are connected but are different processes with different machinery. When oxygen is limited, fermentation allows glycolysis to keep going, so the cell continues to obtain a small amount of ATP — far less than aerobic respiration obtains from the same glucose.']
+],[['ATP','Molecule that transfers energy for cellular work'],['Respiration','Process that transfers energy from fuel molecules'],['Mitochondrion','Organelle involved in aerobic respiration'],['Fermentation','Pathway that lets glycolysis continue when oxygen is limited, for much less ATP']],
  'Breathing exchanges gases with the environment. Cellular respiration is a set of chemical reactions inside cells.',[
- ['Connect soccer to cells',['Muscle cells use ATP during movement.','Respiration helps replenish ATP using fuel molecules.','The circulatory and respiratory systems help deliver oxygen and remove carbon dioxide.']],
- ['Explain plant activity at night',['A plant may stop photosynthesizing without light.','Its cells still carry out respiration using stored organic molecules.','Plants therefore do not simply stop all energy processing in darkness.']]
+ ['Connect soccer to cells',['Food supplies glucose, and breathing supplies oxygen; blood delivers both to the muscle.','Muscle cells carry out cellular respiration, transferring energy from glucose to ATP.','ATP powers the contraction. Oxygen is used in the process — it is not itself the energy.']],
+ ['Explain plant activity at night',['Without light, photosynthesis stops or slows sharply.','Cellular respiration continues, using sugars the plant stored while it was light.','Plants photosynthesize AND respire; only one of the two needs the sun.']]
 ],['Why is “mitochondria create energy” inaccurate?',['Energy is conserved.','Chemical energy is transferred from fuels into ATP and heat.','Mitochondria participate in that transformation rather than creating energy from nothing.']],[
  ['What is a main function of ATP?','Transfer energy for cellular work','Store the entire genome','Replace all enzymes','ATP couples energy availability to cellular processes.'],
  ['Do plant cells carry out cellular respiration?','Yes','Only animal cells do','Only after all chloroplasts disappear','Plant cells need ATP for work and carry out respiration.'],
  ['Where does glycolysis occur?','Cytoplasm','Only inside the nucleus','Only outside the cell','Glycolysis occurs in the cytoplasm.'],
  ['Which gas is a product of aerobic respiration?','Carbon dioxide','Nitrogen only','Hydrogen only','Carbon from fuel molecules can be released as CO₂.'],
- ['What does fermentation help regenerate?','NAD⁺ for glycolysis','New sunlight','A new nucleus','Regenerating NAD⁺ permits glycolysis to continue.']
+ ['When oxygen is limited, what does fermentation allow?','Glycolysis to continue, for a small amount of ATP','The same ATP yield as aerobic respiration','Cells to make their own oxygen','Glycolysis keeps going and the cell still obtains some ATP, but aerobic respiration obtains far more from the same glucose.']
 ]);
 B('energy','food-energy','Food webs and energy pyramids','Read arrows and estimate transfers between trophic levels.','web',[
  ['Read arrows as transfers','A food-web arrow points from a food source to the organism consuming it: grass → rabbit. Producers form organic molecules; consumers obtain them by eating; decomposers break down organic matter.'],

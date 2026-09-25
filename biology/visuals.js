@@ -3,7 +3,7 @@ const svg=(body,label,h=280)=>`<svg viewBox="0 0 600 ${h}" role="img" aria-label
 const textSVG=(x,y,t,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#183d36">${esc(t)}</text>`;
 const box=(x,y,w,h,t,fill='#e4eee5')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${fill}" stroke="#789787"/>${textSVG(x+w/2,y+h/2+6,t)}`;
 const line=(x,y,a,b)=>`<path d="M${x} ${y}L${a} ${b}" fill="none" stroke="#446d61" stroke-width="2" marker-end="url(#arrow)"/>`;
-const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',photosynthesis:'Follow carbon into a plant',biodiversity:'How does an ecosystem respond to change?',impact:'What happens to the stream?'};
+const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',photosynthesis:'Follow carbon into a plant',respiration:'Follow energy from glucose to ATP',biodiversity:'How does an ecosystem respond to change?',impact:'What happens to the stream?'};
 const REAL_LIFE={
  cells:{
   title:"Cells: The Building Blocks of Life",
@@ -508,31 +508,41 @@ function mountVisual(type,lessonId){
      `<path d="M170 196q56-92 196-54q-38 98-196 54Z" fill="#5f8a4e"/>`+
      `<ellipse cx="264" cy="156" rx="58" ry="30" fill="#7ba762" stroke="#3f6236"/>`+
      label(264,161,'chloroplast',13,'#1d3419')+
-     label(264,232,'photosynthesis happens in here',12,'#3f6236')+
+     label(236,240,'photosynthesis happens in here',12,'#3f6236')+
      /* in */
      co2(64,150)+co2(64,196)+co2(64,242)+
      arrow('M92 152L176 170','#5f7f8c')+
      arrow('M92 196H176','#5f7f8c')+
      arrow('M92 240L176 200','#5f7f8c')+
      label(64,272,'carbon dioxide',12.5,'#3d5d69')+
-     /* out: the same carbon, now in sugar */
-     arrow('M372 150L424 132','#4e7a5f')+
-     `<path d="M432 92h52a32 32 0 0 1 0 64h-52a32 32 0 0 1 0-64Z" fill="#efe0b8" stroke="#c9ad6c"/>`+
-     carbon(448,124)+carbon(474,124)+carbon(500,124)+
-     label(474,80,'sugar (glucose)',13,'#6b5520')+
+     /* Out: the carbon, now in sugar. Deliberately NOT a count - three
+        molecules in and three discs out would read as the equation, and the
+        equation says six. The discs trace where the atoms came from; the
+        balanced summary underneath does the arithmetic. */
+     arrow('M372 150L410 140','#4e7a5f')+
+     `<rect x="416" y="118" width="128" height="36" rx="12" fill="#e8eef5" stroke="#a9c0cc"/>`+
+     carbon(436,136,9)+
+     label(462,141,'carbon from CO\u2082',12.5,'#2d4d5c','start')+
+     arrow('M480 158V186','#4e7a5f')+
+     `<path d="M416 190h112a26 26 0 0 1 0 52h-112a26 26 0 0 1 0-52Z" fill="#efe0b8" stroke="#c9ad6c"/>`+
+     label(472,210,'sugar (glucose)',13,'#6b5520')+
+     label(472,230,'C\u2086H\u2081\u2082O\u2086',12.5,'#8a7340')+
      /* out: oxygen */
-     arrow('M366 182L430 206','#5f7f8c')+
-     `<circle cx="452" cy="212" r="11" fill="#cfe2ea" stroke="#8fb3c4"/>`+
-     `<circle cx="476" cy="226" r="8.5" fill="#cfe2ea" stroke="#8fb3c4"/>`+
-     label(500,218,'oxygen out',12.5,'#3d5d69','start')+
-     /* and where the sugar ends up */
-     plant(210,320,.5)+
-     arrow('M444 160L268 300','#9a7f45',true)+
-     label(210,356,'becomes plant material',12.5,'#6b5520')+
+     arrow('M340 196L352 244','#5f7f8c')+
+     `<circle cx="358" cy="258" r="11" fill="#cfe2ea" stroke="#8fb3c4"/>`+
+     `<circle cx="378" cy="272" r="8.5" fill="#cfe2ea" stroke="#8fb3c4"/>`+
+     label(300,286,'oxygen out',12.5,'#3d5d69')+
+     /* and where the sugar ends up: the third link in the same chain */
+     arrow('M480 246V272','#9a7f45')+
+     `<rect x="416" y="274" width="128" height="40" rx="12" fill="#e6efe1" stroke="#a9c0a2"/>`+
+     plant(440,308,.17)+
+     label(462,299,'becomes',12,'#4a6b53','start')+
+     label(462,312,'plant material',12,'#4a6b53','start')+
      label(300,374,'The carbon atoms in sugar came from carbon dioxide in the air.',15.5,'#183d36')+
      label(300,396,'Water and minerals are needed too \u2014 a plant is not built from air alone.',13,'#4a6b53')+
-     label(300,422,'6CO\u2082 + 6H\u2082O + light \u2192 C\u2086H\u2081\u2082O\u2086 + 6O\u2082',13,'#78867d'),
-     'Carbon dioxide entering a leaf, the same carbon atoms appearing in a sugar molecule, oxygen leaving, and the sugar becoming plant material.',440);
+     label(300,422,'6CO\u2082 + 6H\u2082O + light \u2192 C\u2086H\u2081\u2082O\u2086 + 6O\u2082',13,'#78867d')+
+     label(300,440,'The drawing follows where the atoms go; the equation is what balances.',11.5,'#93a099'),
+     'Carbon dioxide entering a leaf, the same carbon atoms appearing in a sugar molecule, oxygen leaving, and the sugar becoming plant material.',456);
     caption.textContent='Follow the carbon: it arrives as carbon dioxide, it is built into sugar, and the sugar becomes the plant. Light is the energy that drives the building, not an ingredient - and water and mineral nutrients are needed as well.';
     return;
    }
@@ -546,7 +556,7 @@ function mountVisual(type,lessonId){
    drawing.innerHTML=svg(DEFS+
     `<path d="M70 44V252H542" stroke="#6c8278" fill="none" stroke-width="2"/>`+
     label(306,284,'more light \u2192',13,'#54685c')+
-    `<text x="34" y="150" font-size="13" fill="#54685c" transform="rotate(-90 34 150)" text-anchor="middle">faster \u2192</text>`+
+    `<text x="34" y="150" font-size="13" fill="#54685c" transform="rotate(-90 34 150)" text-anchor="middle">rate of photosynthesis \u2191</text>`+
     curve(112,'#4e8a5f',false)+
     curve(74,'#8fae76',true)+
     label(468,70,'with more CO\u2082',13,'#2f6a44','start')+
@@ -559,6 +569,148 @@ function mountVisual(type,lessonId){
     chip(438,326,130,'CAN LIMIT IT','temperature','#f1e6ef'),
     'Two light-response curves: the rate rises with light and then levels off, and it levels off lower when less carbon dioxide is available.',390);
    caption.textContent='Raising one factor speeds photosynthesis only while that factor is the one holding it back. When the curve flattens, something else has become limiting - here, the carbon dioxide. Light, carbon dioxide, water and temperature can each take that role. These curves are illustrative shapes, not measured data.';
+  });
+ }
+
+ /* Unit 2 - Cellular respiration: make ATP available.
+
+    Four states, one story: fuel and oxygen in, the work of the cell out.
+    Two things this has to get right, because both are wrong in most
+    fourteen-year-olds' heads before the lesson and in plenty afterwards:
+    breathing is not cellular respiration, and a mitochondrion does not make
+    energy. So "transferred" is the word everywhere, heat leaves in every
+    state that has an arrow to spare, and the body-and-cell distinction is
+    drawn rather than asserted.
+
+    Deliberately absent: the Krebs cycle, electron carriers, the transport
+    chain, ATP counts. The learning point is where things happen and what
+    becomes what. */
+ if(type==='respiration'){
+  const DEFS='<defs><marker id="ra" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">'+
+   '<path d="M0 1L10 5.5L0 10Z" fill="currentColor"/></marker></defs>';
+  const arrow=(d,color,dash)=>`<path d="${d}" stroke="${color}" fill="none" stroke-width="2.6" color="${color}"`+
+   (dash?' stroke-dasharray="7 6"':'')+' marker-end="url(#ra)"/>';
+  const label=(x,y,text,size=13,ink='#183d36',anchor='middle')=>
+   `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="${size}" fill="${ink}">${esc(text)}</text>`;
+  const pill=(x,y,w,h,text,fill,ink,size)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.min(14,h/2)}" fill="${fill}" stroke="#b3c3bb"/>`+
+   label(x+w/2,y+h/2+(size||13)/3+1,text,size||13,ink||'#183d36');
+  const glucose=(x,y)=>`<path d="M${x} ${y-13}l12 7v14l-12 7l-12-7v-14Z" fill="#e8c98a" stroke="#c09b52"/>`+
+   label(x,y+5,'glucose',10.5,'#6b5520');
+  const o2=(x,y)=>`<circle cx="${x-7}" cy="${y}" r="8" fill="#cfe2ea" stroke="#8fb3c4"/>`+
+   `<circle cx="${x+7}" cy="${y}" r="8" fill="#cfe2ea" stroke="#8fb3c4"/>`+label(x,y+3,'O\u2082',10,'#3d5d69');
+  const atp=(x,y,k=1)=>`<rect x="${x-26*k}" y="${y-15*k}" width="${52*k}" height="${30*k}" rx="${9*k}" fill="#d9e9d6" stroke="#6f9a6a"/>`+
+   label(x,y+5*k,'ATP',15*k,'#2f5c34');
+  const cell=(cx,cy,rx,ry,fill='#eef4ef')=>`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" stroke="#93a89b" stroke-width="2"/>`;
+  const mito=(cx,cy,k=1)=>`<ellipse cx="${cx}" cy="${cy}" rx="${46*k}" ry="${24*k}" fill="#efc9a8" stroke="#b98253" stroke-width="2"/>`+
+   `<path d="M${cx-30*k} ${cy-8*k}q${10*k} ${16*k} ${20*k} 0q${10*k} -${16*k} ${20*k} 0" stroke="#b98253" stroke-width="${2.4*k}" fill="none"/>`;
+  const heat=(x,y)=>[0,1,2].map(i=>`<path d="M${x+i*13} ${y}q4-8 0-13q-4-6 0-11" stroke="#c08552" stroke-width="2" fill="none" stroke-linecap="round"/>`).join('');
+
+  return buttons([['fuel','Fuel + oxygen'],['inside','Inside the cell'],['work','ATP at work'],['low','Low oxygen']],mode=>{
+
+   if(mode==='fuel'){
+    drawing.innerHTML=svg(DEFS+
+     cell(300,150,120,76)+
+     label(300,120,'a cell',13,'#54685c')+
+     label(300,156,'cellular respiration',16,'#183d36')+
+     label(300,178,'transfers energy from glucose',12.5,'#54685c')+
+     glucose(70,120)+o2(70,196)+
+     arrow('M96 124L176 136','#b98253')+
+     arrow('M96 194L176 170','#5f7f8c')+
+     label(70,150,'food',12,'#6b5520')+
+     label(70,224,'oxygen',12,'#3d5d69')+
+     arrow('M424 128L488 108','#5f7f8c')+
+     arrow('M424 152H488','#5f7f8c')+
+     arrow('M424 176L488 198','#c08552')+
+     label(494,112,'carbon dioxide',12.5,'#3d5d69','start')+
+     label(494,157,'water',12.5,'#3d5d69','start')+
+     label(494,202,'heat',12.5,'#8a5a2c','start')+
+     atp(300,262)+arrow('M300 226V244','#4e7a5f')+
+     label(300,296,'energy transferred to ATP',13,'#2f5c34')+
+     pill(18,326,564,44,'Breathing brings oxygen into your body. Cellular respiration happens inside your cells.','#e4eef5','#1f4653',14.5)+
+     label(300,392,'glucose + O\u2082 \u2192 CO\u2082 + H\u2082O, with energy transferred to ATP and heat',12.5,'#78867d'),
+     'A cell taking in glucose and oxygen and giving out carbon dioxide, water, heat and ATP.',408);
+    caption.textContent='Fuel and oxygen go in; carbon dioxide, water, heat and ATP come out. The energy was already in the glucose - respiration transfers it into a form the cell can spend. And note where this happens: breathing is your lungs, respiration is your cells.';
+    return;
+   }
+
+   if(mode==='inside'){
+    drawing.innerHTML=svg(DEFS+
+     /* one cell, two places, in order */
+     cell(300,170,268,128,'#eef4ef')+
+     label(300,64,'one cell',13,'#54685c')+
+     label(150,118,'CYTOPLASM',11.5,'#54685c')+
+     label(150,140,'glycolysis begins here',13.5,'#183d36')+
+     glucose(150,186)+
+     arrow('M150 214V236','#b98253')+
+     label(150,252,'a little ATP,',12.5,'#2f5c34')+
+     label(150,268,'and molecules that carry on',12.5,'#54685c')+
+     arrow('M214 180H286','#6b8a4e')+
+     label(250,166,'then',12,'#54685c')+
+     mito(400,170)+
+     label(400,120,'MITOCHONDRION',11.5,'#54685c')+
+     label(400,222,'later aerobic stages happen here',13,'#183d36')+
+     label(400,244,'most of the ATP is made available here',12.5,'#2f5c34')+
+     arrow('M452 150L492 132','#5f7f8c')+
+     label(496,116,'CO₂ + H₂O',12.5,'#3d5d69')+
+     pill(18,318,272,42,'Oxygen is needed for the later stages','#e4eef5','#1f4653',13.5)+
+     pill(306,318,276,42,'Plant cells have mitochondria and respire too','#e6efe1','#3c6340',13.5),
+     'One cell: glycolysis begins in the cytoplasm, and the later aerobic stages happen in a mitochondrion.',378);
+    caption.textContent='Glycolysis starts in the cytoplasm and does not need oxygen. What it produces carries on into the mitochondrion, where the later aerobic stages need oxygen and make most of the ATP available. This is about where and in what order - the chemistry inside each stage is a later course.';
+    return;
+   }
+
+   if(mode==='work'){
+    drawing.innerHTML=svg(DEFS+
+     glucose(72,110)+label(72,146,'chemical energy',12,'#6b5520')+label(72,163,'in food',12,'#6b5520')+
+     arrow('M100 114L156 124','#b98253')+
+     cell(232,140,72,50)+label(232,136,'cellular',12.5,'#183d36')+label(232,152,'respiration',12.5,'#183d36')+
+     arrow('M306 140H352','#4e7a5f')+
+     atp(392,140,1.15)+
+     arrow('M432 140H486','#4e7a5f')+
+     /* what the cell spends it on */
+     pill(492,92,96,36,'muscles contract','#f3e6da','#7a4e28',12)+
+     pill(492,136,96,36,'active transport','#e4eef5','#1f4653',12)+
+     pill(492,180,96,36,'building materials','#e6efe1','#3c6340',12)+
+     arrow('M432 132L488 110','#4e7a5f')+
+     arrow('M432 150L488 196','#4e7a5f')+
+     /* the part that is not work */
+     arrow('M392 166V204','#c08552',true)+heat(376,238)+
+     label(392,262,'some energy leaves as heat',12.5,'#8a5a2c')+
+     label(300,312,'Cellular respiration transfers energy from glucose \u2014 it does not create it.',15,'#183d36')+
+     pill(18,330,564,44,'ATP is the form the cell can spend: it powers the work, then is remade.','#e6efe1','#2f5c34',14.5),
+     'Chemical energy in food passes through cellular respiration into ATP, which powers muscle contraction, active transport and building materials, with some energy leaving as heat.',394);
+    caption.textContent='This is why a cell bothers. The energy in glucose is not in a form the cell can spend; ATP is. Respiration transfers it - nothing creates it, and some of it leaves as heat at every step, which is why you warm up when you work.';
+    return;
+   }
+
+   /* low oxygen */
+   const bar=(x,y,w,fill)=>`<rect x="${x}" y="${y}" width="${w}" height="26" rx="8" fill="${fill}" stroke="#96a89b"/>`;
+   drawing.innerHTML=svg(DEFS+
+    label(300,42,'The same glucose, two situations',16,'#183d36')+
+    /* --- enough oxygen ------------------------------------------------- */
+    pill(18,62,268,34,'ENOUGH OXYGEN','#e4eef5','#1f4653',13)+
+    glucose(52,140)+o2(108,140)+
+    arrow('M132 140H168','#5f7f8c')+
+    label(228,134,'aerobic',12.5,'#183d36')+
+    label(228,152,'respiration',12.5,'#183d36')+
+    label(18,192,'much more ATP',13,'#2f5c34','start')+
+    bar(18,202,268,'#a8cf9f')+
+    label(18,248,'from each glucose molecule',12,'#54685c','start')+
+    /* --- limited oxygen ------------------------------------------------ */
+    pill(314,62,268,34,'LIMITED OXYGEN','#f3e6da','#7a4e28',13)+
+    glucose(348,140)+
+    arrow('M372 140H404','#b98253')+
+    label(416,134,'glycolysis keeps going,',12.5,'#183d36','start')+
+    label(416,152,'helped by fermentation',12.5,'#183d36','start')+
+    label(314,192,'much less ATP',13,'#7a4e28','start')+
+    bar(314,202,64,'#e8c98a')+
+    label(314,248,'from each glucose molecule',12,'#54685c','start')+
+    /* --- what it means -------------------------------------------------- */
+    label(300,296,'When oxygen is limited, fermentation allows glycolysis to keep going.',14.5,'#183d36')+
+    label(300,318,'The cell still gets some ATP \u2014 far less than aerobic respiration gets from the same glucose.',13,'#54685c')+
+    pill(18,338,564,40,'Sprinting hard, muscles work this way for a while \u2014 which is why you breathe hard afterwards.','#f3e6da','#7a4e28',13),
+    'Two situations for the same glucose: with enough oxygen, aerobic respiration makes much more ATP available; with limited oxygen, fermentation lets glycolysis continue for much less.',396);
+   caption.textContent='Fermentation is not respiration without oxygen - it is what lets glycolysis carry on when the aerobic stages cannot. The cell keeps getting a trickle of ATP rather than stopping, and pays for it: the same glucose yields far less than it would aerobically. The bars show that difference, not measured numbers.';
   });
  }
 
