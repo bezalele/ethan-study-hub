@@ -3,7 +3,7 @@ const svg=(body,label,h=280)=>`<svg viewBox="0 0 600 ${h}" role="img" aria-label
 const textSVG=(x,y,t,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#183d36">${esc(t)}</text>`;
 const box=(x,y,w,h,t,fill='#e4eee5')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${fill}" stroke="#789787"/>${textSVG(x+w/2,y+h/2+6,t)}`;
 const line=(x,y,a,b)=>`<path d="M${x} ${y}L${a} ${b}" fill="none" stroke="#446d61" stroke-width="2" marker-end="url(#arrow)"/>`;
-const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',photosynthesis:'Follow carbon into a plant',respiration:'Follow energy from glucose to ATP',biodiversity:'How does an ecosystem respond to change?',impact:'What happens to the stream?'};
+const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',photosynthesis:'Follow carbon into a plant',respiration:'Follow energy from glucose to ATP',trophic:'Where does the energy go?',biodiversity:'How does an ecosystem respond to change?',impact:'What happens to the stream?'};
 const REAL_LIFE={
  cells:{
   title:"Cells: The Building Blocks of Life",
@@ -608,28 +608,34 @@ function mountVisual(type,lessonId){
   return buttons([['fuel','Fuel + oxygen'],['inside','Inside the cell'],['work','ATP at work'],['low','Low oxygen']],mode=>{
 
    if(mode==='fuel'){
+    /* The cell is drawn large enough to hold the ATP, because where the ATP
+       ends up is half the point: carbon dioxide, water and heat leave; the
+       ATP does not. Nothing on the right-hand side of this picture is ATP. */
     drawing.innerHTML=svg(DEFS+
-     cell(300,150,120,76)+
-     label(300,120,'a cell',13,'#54685c')+
-     label(300,156,'cellular respiration',16,'#183d36')+
-     label(300,178,'transfers energy from glucose',12.5,'#54685c')+
-     glucose(70,120)+o2(70,196)+
-     arrow('M96 124L176 136','#b98253')+
-     arrow('M96 194L176 170','#5f7f8c')+
-     label(70,150,'food',12,'#6b5520')+
-     label(70,224,'oxygen',12,'#3d5d69')+
-     arrow('M424 128L488 108','#5f7f8c')+
-     arrow('M424 152H488','#5f7f8c')+
-     arrow('M424 176L488 198','#c08552')+
-     label(494,112,'carbon dioxide',12.5,'#3d5d69','start')+
-     label(494,157,'water',12.5,'#3d5d69','start')+
-     label(494,202,'heat',12.5,'#8a5a2c','start')+
-     atp(300,262)+arrow('M300 226V244','#4e7a5f')+
-     label(300,296,'energy transferred to ATP',13,'#2f5c34')+
-     pill(18,326,564,44,'Breathing brings oxygen into your body. Cellular respiration happens inside your cells.','#e4eef5','#1f4653',14.5)+
-     label(300,392,'glucose + O\u2082 \u2192 CO\u2082 + H\u2082O, with energy transferred to ATP and heat',12.5,'#78867d'),
-     'A cell taking in glucose and oxygen and giving out carbon dioxide, water, heat and ATP.',408);
-    caption.textContent='Fuel and oxygen go in; carbon dioxide, water, heat and ATP come out. The energy was already in the glucose - respiration transfers it into a form the cell can spend. And note where this happens: breathing is your lungs, respiration is your cells.';
+     cell(300,168,138,96)+
+     label(300,104,'inside a cell',12,'#54685c')+
+     label(300,140,'cellular respiration',16,'#183d36')+
+     label(300,160,'transfers energy from glucose',12.5,'#54685c')+
+     arrow('M300 172V194','#4e7a5f')+
+     atp(300,212)+
+     label(300,244,'ATP stays inside the cell',12,'#2f5c34')+
+     /* used */
+     glucose(62,128)+o2(62,208)+
+     arrow('M90 128H170','#b98253')+
+     arrow('M90 208H170','#5f7f8c')+
+     label(62,160,'glucose from food',12,'#6b5520')+
+     label(62,240,'oxygen',12,'#3d5d69')+
+     /* produced, and dispersed - no ATP among them */
+     arrow('M424 124L482 106','#5f7f8c')+
+     arrow('M442 168H482','#5f7f8c')+
+     arrow('M424 212L482 230','#c08552')+
+     label(488,110,'carbon dioxide',12.5,'#3d5d69','start')+
+     label(488,173,'water',12.5,'#3d5d69','start')+
+     label(488,234,'heat',12.5,'#8a5a2c','start')+
+     pill(18,290,564,44,'Breathing brings oxygen into your body. Cellular respiration happens inside your cells.','#e4eef5','#1f4653',14.5)+
+     label(300,356,'glucose + O\u2082 \u2192 CO\u2082 + H\u2082O, with energy transferred to ATP and heat',12.5,'#78867d'),
+     'A cell using glucose and oxygen. Carbon dioxide, water and heat leave the cell; the ATP stays inside it.',376);
+    caption.textContent='Glucose and oxygen are used in cellular respiration. Carbon dioxide and water are produced, some energy is released as heat, and energy from glucose is transferred to ATP inside the cell. The ATP is not something the cell sends out - it is the form the cell can spend, right where it was made. And note where all this happens: breathing is your lungs, respiration is your cells.';
     return;
    }
 
@@ -708,10 +714,211 @@ function mountVisual(type,lessonId){
     /* --- what it means -------------------------------------------------- */
     label(300,296,'When oxygen is limited, fermentation allows glycolysis to keep going.',14.5,'#183d36')+
     label(300,318,'The cell still gets some ATP \u2014 far less than aerobic respiration gets from the same glucose.',13,'#54685c')+
-    pill(18,338,564,40,'Sprinting hard, muscles work this way for a while \u2014 which is why you breathe hard afterwards.','#f3e6da','#7a4e28',13),
+    pill(18,338,564,40,'During a hard sprint, muscles may rely more on glycolysis for a short time.','#f3e6da','#7a4e28',13.5),
     'Two situations for the same glucose: with enough oxygen, aerobic respiration makes much more ATP available; with limited oxygen, fermentation lets glycolysis continue for much less.',396);
    caption.textContent='Fermentation is not respiration without oxygen - it is what lets glycolysis carry on when the aerobic stages cannot. The cell keeps getting a trickle of ATP rather than stopping, and pays for it: the same glucose yields far less than it would aerobically. The bars show that difference, not measured numbers.';
   });
+ }
+
+ /* Unit 2 - Food webs and energy pyramids: where the energy goes.
+
+    The lesson's title promises two things and the shared food-web diagram
+    only delivered one of them. This visual follows a single chain - grass,
+    grasshopper, frog, hawk - through four states, and every one of them is
+    making the same point: energy arrives, most of it is spent staying alive
+    or disperses as heat, and only what ends up built into an organism's own
+    body is there for the next one to eat.
+
+    Four organisms, not a web. A web shows who eats whom; this lesson is
+    about how much is left, and a crowded web hides that.
+
+    The 10% figure appears twice and is called an estimate both times. The
+    bar in "Energy at one level" carries no numbers at all: its proportions
+    are illustrative, and it says so on the picture. */
+ if(type==='trophic'){
+  const DEFS='<defs><marker id="tr" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">'+
+   '<path d="M0 1L10 5.5L0 10Z" fill="currentColor"/></marker></defs>';
+  const arrow=(d,color,dash)=>`<path d="${d}" stroke="${color}" fill="none" stroke-width="2.6" color="${color}"`+
+   (dash?' stroke-dasharray="7 6"':'')+' marker-end="url(#tr)"/>';
+  const label=(x,y,text,size=13,ink='#183d36',anchor='middle')=>
+   `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="${size}" fill="${ink}">${esc(text)}</text>`;
+  const pill=(x,y,w,h,text,fill,ink,size)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.min(14,h/2)}" fill="${fill}" stroke="#b3c3bb"/>`+
+   label(x+w/2,y+h/2+(size||13)/3+1,text,size||13,ink||'#183d36');
+  const card=(x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="16" fill="#f4f7f2" stroke="#b3c3bb"/>`;
+  const fmt=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const units=n=>fmt(n)+(n===1?' unit':' units');
+
+  /* The four organisms. Drawn rather than named twice, because a fourteen
+     year old reads a picture before he reads a caption. */
+  const grass=(x,y)=>`<path d="M${x-15} ${y}q7-21 3-27M${x-7} ${y}q4-24 1-30M${x} ${y}q1-26 -2-32M${x+8} ${y}q-4-24 -1-30M${x+16} ${y}q-7-21 -3-27" stroke="#6b9a4e" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  const hopper=(x,y,k=1)=>`<g transform="translate(${x} ${y}) scale(${k})">`+
+   '<path d="M4 3l9-14l11 19" stroke="#5c7f3b" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'+
+   '<path d="M-9 7l-4 9M-1 8l-2 9" stroke="#5c7f3b" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+   '<ellipse cx="0" cy="0" rx="19" ry="8" fill="#7fae52" stroke="#5c7f3b"/>'+
+   '<path d="M-10 -3q12-5 24 2" stroke="#5c7f3b" stroke-width="1.4" fill="none"/>'+
+   '<circle cx="-20" cy="-4" r="6.5" fill="#7fae52" stroke="#5c7f3b"/>'+
+   '<circle cx="-22" cy="-5" r="1.6" fill="#2f3f22"/>'+
+   '<path d="M-24 -9l-8-7M-21 -10l-5-10" stroke="#5c7f3b" stroke-width="1.6" fill="none" stroke-linecap="round"/>'+
+   '</g>';
+  const frog=(x,y,k=1)=>`<g transform="translate(${x} ${y}) scale(${k})">`+
+   '<path d="M-24 -8q-9 5 -4 12q5 5 11 0Z" fill="#5d8c48" stroke="#446b34"/>'+
+   '<path d="M24 -8q9 5 4 12q-5 5 -11 0Z" fill="#5d8c48" stroke="#446b34"/>'+
+   '<ellipse cx="0" cy="-12" rx="21" ry="13" fill="#6fa257" stroke="#4d7a3c"/>'+
+   '<circle cx="-9" cy="-25" r="6.5" fill="#6fa257" stroke="#4d7a3c"/>'+
+   '<circle cx="9" cy="-25" r="6.5" fill="#6fa257" stroke="#4d7a3c"/>'+
+   '<circle cx="-9" cy="-26" r="2.4" fill="#22301c"/><circle cx="9" cy="-26" r="2.4" fill="#22301c"/>'+
+   '<path d="M-11 -9q11 6 22 0" stroke="#3f6630" stroke-width="1.6" fill="none" stroke-linecap="round"/>'+
+   '<path d="M-17 1q-3 5 2 6M17 1q3 5 -2 6" stroke="#4d7a3c" stroke-width="2.2" fill="none" stroke-linecap="round"/>'+
+   '</g>';
+  const hawk=(x,y,k=1)=>`<g transform="translate(${x} ${y}) scale(${k})">`+
+   '<path d="M-6 -6q-28-12 -44 2q16 3 23 11q10 5 21-3Z" fill="#a9784f" stroke="#6d4a2d"/>'+
+   '<path d="M6 -6q28-12 44 2q-16 3 -23 11q-10 5 -21-3Z" fill="#a9784f" stroke="#6d4a2d"/>'+
+   '<path d="M-7 14l7 18l7-18Z" fill="#8e6340" stroke="#6d4a2d"/>'+
+   '<ellipse cx="0" cy="0" rx="9" ry="20" fill="#9a6b45" stroke="#6d4a2d"/>'+
+   '<circle cx="0" cy="-24" r="7.5" fill="#c6a882" stroke="#6d4a2d"/>'+
+   '<path d="M6 -27q8 2 7 6q-4 2 -8 0Z" fill="#d8a13c" stroke="#a9762a" stroke-width="0.8"/>'+
+   '<circle cx="2" cy="-26" r="1.7" fill="#2b2118"/>'+
+   '</g>';
+  const sun=(x,y)=>`<circle cx="${x}" cy="${y}" r="11" fill="#f2d07a" stroke="#d3ac4a"/>`+
+   [0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;
+    return `<path d="M${(x+Math.cos(r)*14).toFixed(1)} ${(y+Math.sin(r)*14).toFixed(1)}L${(x+Math.cos(r)*19).toFixed(1)} ${(y+Math.sin(r)*19).toFixed(1)}" stroke="#d3ac4a" stroke-width="2" stroke-linecap="round"/>`;}).join('');
+
+  const TIER=['#b9d6a8','#d8dba6','#ecd2a0','#e6b697'];
+  const LEVELS=[['PRODUCERS','Grass'],['PRIMARY CONSUMERS','Grasshopper'],['SECONDARY CONSUMERS','Frog'],['TERTIARY CONSUMERS','Hawk']];
+
+  let mode='arrows',start=10000;
+  const STATES=[['arrows','Follow the arrows'],['pyramid','Build the pyramid'],['one','Energy at one level'],['ten','Try the 10% estimate']];
+  const STARTS=[1000,5000,10000,20000];
+
+  const drawControls=()=>{
+   controls.innerHTML=STATES.map(([v,l])=>
+    `<button class="soft" data-value="${v}" aria-pressed="${mode===v}">${l}</button>`).join('')+
+    (mode==='ten'
+     ? '<div class="controls" data-start><span class="small muted">Producers start with</span>'+
+       STARTS.map(v=>`<button class="soft" data-start-value="${v}" aria-pressed="${start===v}">${fmt(v)}</button>`).join('')+
+       '</div>'
+     : '');
+   controls.querySelectorAll('[data-value]').forEach(b=>b.onclick=()=>{mode=b.dataset.value;draw();});
+   controls.querySelectorAll('[data-start-value]').forEach(b=>b.onclick=()=>{start=+b.dataset.startValue;draw();});
+  };
+
+  const draw=()=>{
+   drawControls();
+
+   /* 1. Follow the arrows. Students read food-chain arrows backwards more
+         often than any other diagram in the course, so the direction is
+         said on the picture, not left to the caption. */
+   if(mode==='arrows'){
+    const cx=[69,223,377,531];
+    const names=['Grass','Grasshopper','Frog','Hawk'];
+    const roles=['PRODUCER','PRIMARY CONSUMER','SECONDARY CONSUMER','TERTIARY CONSUMER'];
+    drawing.innerHTML=svg(DEFS+
+     label(300,36,'One food chain, four feeding levels',15.5,'#183d36')+
+     cx.map(x=>card(x-56,76,112,100)).join('')+
+     grass(69,150)+hopper(223,126)+frog(377,154)+hawk(531,126,.78)+
+     /* after the cards, or the card fill swallows the sunbeam */
+     sun(44,30)+label(44,58,'sunlight',11,'#8a6a2c')+
+     arrow('M46 66L64 112','#d9a441',true)+
+     [0,1,2].map(i=>arrow(`M${cx[i]+60} 126H${cx[i+1]-60}`,'#6b8a4e')).join('')+
+     [0,1,2].map(i=>label((cx[i]+cx[i+1])/2,112,'eaten by',10.5,'#54685c')).join('')+
+     cx.map((x,i)=>label(x,198,names[i],13.5,'#183d36')).join('')+
+     cx.map((x,i)=>label(x,216,roles[i],10.5,'#54685c')).join('')+
+     pill(18,236,564,42,'Arrows show energy moving from food → consumer.','#e6efe1','#2f5c34',15)+
+     label(300,300,'Grass captures energy from sunlight and stores it in its own biomass.',12.5,'#54685c'),
+     'A food chain: grass, then grasshopper, then frog, then hawk, with each arrow pointing from the food to the organism that eats it.',324);
+    caption.textContent='Read the arrows the way they are drawn: each one points from the food to the organism eating it, because that is the direction the energy moves. Grass is the producer and everything after it is a consumer. Every arrow is a transfer of energy that is already here, not a fresh supply.';
+    return;
+   }
+
+   /* 2. The same chain, stacked by how much energy is available. */
+   if(mode==='pyramid'){
+    const tier=(d,fill)=>`<path d="${d}" fill="${fill}" stroke="#93a89b" stroke-width="1.5"/>`;
+    drawing.innerHTML=svg(DEFS+
+     label(300,34,'The same chain, drawn as an energy pyramid',15.5,'#183d36')+
+     tier('M60 254H540L500 208H100Z',TIER[0])+
+     tier('M100 208H500L458 162H142Z',TIER[1])+
+     tier('M142 162H458L416 116H184Z',TIER[2])+
+     tier('M184 116H416L374 70H226Z',TIER[3])+
+     /* Role above, organism beside its number. One long line does not
+        fit in the top tier, and the top tier is the whole point. */
+     label(300,224,'PRODUCERS',10.5,'#3c6340')+
+     label(300,244,'Grass · 10,000 energy units',14,'#183d36')+
+     label(300,178,'PRIMARY CONSUMERS',10.5,'#5c6b33')+
+     label(300,198,'Grasshopper · 1,000',14,'#183d36')+
+     label(300,132,'SECONDARY CONSUMERS',10.5,'#7a5a28')+
+     label(300,152,'Frog · 100',14,'#183d36')+
+     label(300,86,'TERTIARY CONSUMERS',10.5,'#8a5a2c')+
+     label(300,106,'Hawk · 10',14,'#183d36')+
+     label(36,204,'× 0.10',11.5,'#7a4e28')+
+     label(36,158,'× 0.10',11.5,'#7a4e28')+
+     label(36,112,'× 0.10',11.5,'#7a4e28')+
+     label(300,284,'Example using the 10% classroom estimate',13,'#54685c')+
+     label(300,304,'Real transfer efficiencies vary.',12.5,'#78867d')+
+     pill(18,322,564,42,'The pyramid narrows because less energy is available at each higher level.','#e6efe1','#2f5c34',14.5),
+     'An energy pyramid of four levels: grass with 10,000 energy units, grasshopper with 1,000, frog with 100 and hawk with 10, each level narrower than the one below.',380);
+    caption.textContent='The same four organisms, stacked by how much energy is available at each level. These numbers use the 10% classroom estimate, which is a figure for practice rather than a measurement - real transfer efficiencies vary a good deal. What is reliable is the shape: each level up has less to work with than the one below it.';
+    return;
+   }
+
+   /* 3. Where the energy actually goes at one level. No percentages: the
+         bar is illustrative and says so, because the honest answer is
+         "most of it, and it varies". */
+   if(mode==='one'){
+    const seg=(x,w,fill)=>`<rect x="${x}" y="68" width="${w}" height="38" fill="${fill}" stroke="#96a89b"/>`;
+    const tick=x=>`<path d="M${x} 108V118" stroke="#b3c3bb" stroke-width="1.6"/>`;
+    drawing.innerHTML=svg(DEFS+
+     label(300,30,'What one frog does with the energy it obtains',15.5,'#183d36')+
+     frog(58,60,.55)+
+     label(86,58,'energy obtained from food',12,'#54685c','start')+
+     seg(40,268,'#cfe0c8')+seg(308,172,'#f0d9bf')+seg(480,80,'#a8cf9f')+
+     tick(174)+tick(394)+tick(520)+
+     label(174,134,'used for life processes',12.5,'#2f5c34')+
+     label(174,152,'moving, growing, hunting',11.5,'#54685c')+
+     label(390,134,'dispersed as heat',12.5,'#8a5a2c')+
+     label(390,152,'spreads into the surroundings',11.5,'#54685c')+
+     label(522,134,'new biomass',12.5,'#2f5c34')+
+     label(522,152,'stored in its body',11.5,'#54685c')+
+     arrow('M520 166V190','#6b8a4e')+
+     hawk(520,216,.62)+
+     label(520,252,'on to the hawk',12,'#2f5c34')+
+     `<rect x="18" y="190" width="440" height="96" rx="14" fill="#eef4ef" stroke="#b3c3bb"/>`+
+     label(238,216,'Only energy stored in new biomass can move to the',13.5,'#183d36')+
+     label(238,236,'next trophic level when that organism is eaten.',13.5,'#183d36')+
+     label(238,262,'Energy is transferred and dispersed, mostly as heat — none of it disappears.',12,'#54685c')+
+     label(300,308,'Proportions in the bar are illustrative, not measured.',11,'#93a099')+
+     `<rect x="18" y="322" width="564" height="54" rx="14" fill="#efe7da" stroke="#c9b79a"/>`+
+     label(300,344,'Decomposers obtain energy from dead organic material',13,'#6b5520')+
+     label(300,363,'and return matter — nutrients — to soil, water and air.',12.5,'#6b5520'),
+     'A bar showing the energy one frog obtains, divided into a large part used for life processes, a part dispersed as heat, and a small part stored as new biomass, which is the only part a hawk can obtain.',394);
+    caption.textContent='Most of what the frog eats is spent staying alive - moving, growing, keeping its body working - and a good deal of that energy leaves as heat. Only what ends up built into the frog itself is there for a hawk to eat, which is why each level of the pyramid has less than the one below. Decomposers take their energy from dead material and return matter to the soil, water and air; they do not send energy back.';
+    return;
+   }
+
+   /* 4. The arithmetic, with the starting number in his hands. Changing it
+         changes every row and changes nothing about the shape of the
+         answer - which is the point worth arriving at by himself. */
+   const vals=[start,start/10,start/100,start/1000];
+   drawing.innerHTML=svg(DEFS+
+    label(300,34,'Start with the producers, then take 10% at each step',15,'#183d36')+
+    LEVELS.map(([role,who],i)=>{
+     const y=60+i*68;
+     return `<rect x="40" y="${y}" width="320" height="40" rx="12" fill="${TIER[i]}" stroke="#93a89b"/>`+
+      label(54,y+17,role,10.5,'#3f5a44','start')+
+      label(54,y+33,who,13,'#183d36','start')+
+      label(346,y+27,units(vals[i]),15,'#183d36','end');
+    }).join('')+
+    grass(505,96)+hopper(505,148,.92)+frog(505,230,.78)+hawk(505,284,.6)+
+    [0,1,2].map(i=>{
+     const gy=100+i*68;
+     return arrow(`M190 ${gy+4}V${gy+24}`,'#7a4e28')+
+      label(222,gy+18,fmt(vals[i])+' × 0.10 = '+fmt(vals[i+1]),12.5,'#7a4e28','start');
+    }).join('')+
+    pill(18,320,564,42,'10% is a practice estimate. Real ecosystems vary.','#f3e6da','#7a4e28',14.5)+
+    label(300,384,'These are practice numbers, not measured wildlife data.',11,'#93a099'),
+    `An energy calculation. Producers begin with ${fmt(vals[0])} units and each level above receives one tenth of the level below it, giving ${fmt(vals[1])}, then ${fmt(vals[2])}, then ${fmt(vals[3])}.`,400);
+   caption.textContent=`Producers start with ${fmt(vals[0])} units. A tenth of that reaches the grasshoppers, a tenth of theirs reaches the frogs, and so on: ${fmt(vals[0])} → ${fmt(vals[1])} → ${fmt(vals[2])} → ${fmt(vals[3])}. Change the starting number and the shape of the answer does not change - four steps in, almost none of the original energy is still available for biological work. Ten per cent is a classroom estimate for practice; real ecosystems vary.`;
+  };
+  draw();return;
  }
 
  if(type==='web')return buttons([['normal','Show food web'],['loss','What if rabbits decline?']],mode=>{drawing.innerHTML=svg(`${line(140,190,250,65)}${line(150,195,265,190)}${line(350,65,460,65)}${line(350,190,460,85)}${line(340,215,460,245)}${box(30,165,130,65,'Grass')}${box(230,30,135,65,'Rabbits',mode==='loss'?'#efcfbf':'#e4eee5')}${box(230,170,135,65,'Mice')}${box(440,30,130,65,'Foxes')}${box(430,220,150,55,'Owls')}`,'A food web: grass feeds rabbits and mice; rabbits and mice feed foxes; mice feed owls.',310);caption.textContent=mode==='loss'?'Rabbit decline can reduce one food source for foxes. Mice are an alternative, so the final outcome depends on their availability and other interactions. These are possible effects, not an exact prediction.':'Arrows point from food to consumer. This is a simplified example; decomposers and many other connections are omitted. Click the scenario to reason about a change.';});
