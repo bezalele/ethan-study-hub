@@ -3,7 +3,7 @@ const svg=(body,label,h=280)=>`<svg viewBox="0 0 600 ${h}" role="img" aria-label
 const textSVG=(x,y,t,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#183d36">${esc(t)}</text>`;
 const box=(x,y,w,h,t,fill='#e4eee5')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${fill}" stroke="#789787"/>${textSVG(x+w/2,y+h/2+6,t)}`;
 const line=(x,y,a,b)=>`<path d="M${x} ${y}L${a} ${b}" fill="none" stroke="#446d61" stroke-width="2" marker-end="url(#arrow)"/>`;
-const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life'};
+const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',biodiversity:'Disturb it, then watch it come back',impact:'From the field to the stream'};
 const REAL_LIFE={
  cells:{
   title:"Cells: The Building Blocks of Life",
@@ -136,6 +136,84 @@ function mountVisual(type,lessonId){
  controls.innerHTML='<label>Resource-supported capacity <input id="capacity" type="range" min="30" max="180" value="100" step="10"><output id="capacity-label"></output></label>';
  const draw=()=>{const k=+document.getElementById('capacity').value;document.getElementById('capacity-label').textContent=k;let n=10;const points=[];for(let t=0;t<=30;t++){points.push([50+t*16,235-n]);n+=.3*n*(1-n/k);}drawing.innerHTML=svg(`<path d="M50 30V235H550" stroke="#6c8278" fill="none"/><path d="M50 ${235-k}H550" stroke="#b48052" stroke-dasharray="5 5"/><polyline points="${points.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#3d7761" stroke-width="4"/>${textSVG(300,276,'Time steps')}${textSVG(90,22,'Individuals',15)}${textSVG(40,240,'0',14)}${textSVG(35,137,'100',14)}${textSVG(495,225-k,`Capacity ${k}`,15)}${textSVG(530,254,'30',14)}`,'Logistic population model with population on the vertical axis and time on the horizontal axis.',290);caption.textContent=`Illustrative logistic model: starts at 10 individuals; per-step growth is 0.3 × population × (1 − population/${k}). Change the capacity to compare trajectories. This is not measured wildlife data; real populations also fluctuate and move.`;};document.getElementById('capacity').oninput=draw;draw();return;
  }
+
+ /* Unit 1 - Biodiversity and ecosystem change.
+    Six kinds of living thing, drawn as columns of symbols. A disturbance
+    empties or thins some of them; "years later" shows a community that has
+    come back WITHOUT coming back the same, which is the point of the lesson
+    and the thing resilience is usually mistaken for. */
+ if(type==='biodiversity'){
+  const KINDS=[['Oak trees','#6f8f5a','tree'],['Shrubs','#89a86b','bush'],['Grasses','#a8c07a','grass'],['Beetles','#8a6a4a','bug'],['Birds','#7f93b5','bird'],['Foxes','#c08552','fox']];
+  const STATES={
+   healthy:{n:[3,3,4,4,3,2],title:'A diverse patch of woodland',
+    note:'Six kinds of living thing, each with several individuals. That variety - within a species, between species, and across habitats - is what biodiversity means. Symbol counts stand for relative abundance, not real census numbers.'},
+   fire:{n:[1,0,1,1,1,1],title:'Weeks after a fire',
+    note:'Fire removed most of the standing plants and the animals that depended on them. Some individuals survived or moved away and returned. What happens next depends on what is left - seeds, roots and soil - not on the fire alone.'},
+   disease:{n:[0,3,4,4,3,2],title:'After a disease of the oaks',
+    note:'A disease can hit one species hard and leave others largely untouched. Consumers that can use more than one food source are less exposed to any single loss. This is the sense in which variety can support resilience.'},
+   habitat:{n:[1,1,2,2,1,0],title:'After half the habitat is built on',
+    note:'Less habitat usually means smaller populations, and the species that need the most space are often the first to go. Losing area is not the same kind of disturbance as fire: here the conditions themselves have changed.'},
+   later:{n:[1,4,4,4,3,1],title:'Years later',
+    note:'Much has come back, but not in the same proportions: the fast growers are commoner and the oaks are still few. Ecological succession is change over time, not a return to an identical community. Resilience is the capacity to keep functioning through disturbance - never a guarantee of going back to exactly what was there.'}
+  };
+  const SYMBOL={
+   tree:(x,y,c)=>`<path d="M${x} ${y}v-8" stroke="#6b5334" stroke-width="3"/><circle cx="${x}" cy="${y-16}" r="9" fill="${c}"/>`,
+   bush:(x,y,c)=>`<path d="M${x} ${y}v-6" stroke="#6b5334" stroke-width="3"/><ellipse cx="${x}" cy="${y-13}" rx="11" ry="7" fill="${c}"/>`,
+   grass:(x,y,c)=>`<path d="M${x-6} ${y}q6-16 2-20M${x} ${y}q2-18 0-22M${x+6} ${y}q-6-16-2-20" stroke="${c}" stroke-width="3" fill="none"/>`,
+   bug:(x,y,c)=>`<ellipse cx="${x}" cy="${y-8}" rx="6" ry="9" fill="${c}"/><path d="M${x-8} ${y-13}h16M${x-8} ${y-4}h16" stroke="${c}" stroke-width="2"/>`,
+   bird:(x,y,c)=>`<path d="M${x-10} ${y-8}q10-10 10 0q0-10 10 0" stroke="${c}" stroke-width="3" fill="none"/>`,
+   fox:(x,y,c)=>`<ellipse cx="${x}" cy="${y-9}" rx="11" ry="7" fill="${c}"/><circle cx="${x+10}" cy="${y-14}" r="5" fill="${c}"/><path d="M${x-11} ${y-12}l-7-6" stroke="${c}" stroke-width="3"/>`
+  };
+  return buttons([['healthy','Healthy ecosystem'],['fire','Fire'],['disease','Disease'],['habitat','Habitat loss'],['later','Years later']],mode=>{
+   const st=STATES[mode],kinds=KINDS.map(([label,color,shape],i)=>({label,color,shape,n:st.n[i]}));
+   const present=kinds.filter(k=>k.n>0).length;
+   const columns=kinds.map((k,i)=>{
+    const x=60+i*92,gone=k.n===0;
+    const symbols=Array.from({length:k.n},(_,j)=>SYMBOL[k.shape](x,216-j*34,k.color)).join('');
+    return `<rect x="${x-38}" y="90" width="76" height="140" rx="12" fill="${gone?'#eceae4':'#f3f7ef'}" stroke="${gone?'#cfcdc6':'#c3d4bd'}"/>${symbols}${gone?textSVG(x,168,'gone',14):''}<text x="${x}" y="252" text-anchor="middle" font-size="13" fill="${gone?'#8b8b83':'#183d36'}">${esc(k.label)}</text>`;
+   }).join('');
+   drawing.innerHTML=svg(`<rect x="14" y="70" width="572" height="180" rx="18" fill="#f7faf4"/>${columns}${textSVG(300,42,st.title,19)}${textSVG(300,64,present+' of 6 kinds still here',15)}`,`${st.title}. ${present} of six kinds of living thing are present.`,275);
+   caption.textContent=st.note;
+  });
+ }
+
+ /* Unit 1 - Human impacts and conservation.
+    One chain, two versions of it. The stages are the lesson's own runoff
+    example, and the oxygen bar at the end is driven by the chain rather than
+    decorating it. Deliberately NOT "the algae used up the oxygen": the stage
+    that lowers oxygen is decomposition, which is the mistake the lesson
+    already warns about. */
+ if(type==='impact'){
+  const RUNS={
+   impact:{title:'Fertiliser runs off the field',oxygen:3,
+    stages:[['Fertiliser on the field','#efe0c6'],['Rain carries it to the stream','#dfe8ee'],['Extra nitrogen and phosphorus','#dfe8ee'],['More algae grow','#cfe3cb'],['Algae die; decomposers break them down','#e6d6c6'],['Microbes use oxygen as they do it','#e6d6c6']],
+    note:'Trace the chain rather than calling the fertiliser harmful and stopping there. Note the step that actually lowers the oxygen: it is the decomposition of all that extra material, and the respiration of the microbes doing it - not the algae simply using it up. How far this goes depends on how much nutrient arrives, the temperature, the flow, and what was limiting growth in the first place.'},
+   buffer:{title:'A planted buffer strip along the bank',oxygen:8,
+    stages:[['Fertiliser on the field','#efe0c6'],['Strip of grass and trees at the edge','#cfe3cb'],['Less runoff reaches the water','#dfe8ee'],['Smaller nutrient increase','#dfe8ee'],['Less extra algal growth','#cfe3cb'],['Less material to decompose','#e6d6c6']],
+    note:'A buffer intercepts some of what the rain carries. Less arrives, so less grows, so there is less to decompose later - the whole chain is damped rather than any one step being switched off. Whether it works here is a question for measurement: nutrient and oxygen readings before and after, a comparison site, and enough time to see past a dry month. Cost, land and upkeep are part of the judgement too.'}
+  };
+  return buttons([['impact','Human impact'],['buffer','Conservation response']],mode=>{
+   const run=RUNS[mode],STEP=38,TOP=64,H=28;
+   const rows=run.stages.map((stage,i)=>{
+    const y=TOP+i*STEP;
+    return `<rect x="30" y="${y}" width="392" height="${H}" rx="9" fill="${stage[1]}" stroke="#a9bdb2"/>`+
+     `<text x="44" y="${y+19}" font-size="14" fill="#183d36">${esc(stage[0])}</text>`+
+     /* The arrow lives in the gap between two boxes, not on top of one. */
+     (i<run.stages.length-1?`<path d="M226 ${y+H+1}v${STEP-H-2}" stroke="#446d61" stroke-width="2" marker-end="url(#arrow)"/>`:'');
+   }).join('');
+   const o2=run.oxygen,colY=TOP,colH=run.stages.length*STEP-10,barH=Math.round(o2/10*colH),ok=o2>=6;
+   drawing.innerHTML=svg(`${textSVG(226,40,run.title,17)}${rows}`+
+    `${textSVG(513,40,'Dissolved oxygen',15)}`+
+    `<rect x="470" y="${colY}" width="86" height="${colH}" rx="10" fill="#eef3f5" stroke="#a9bdb2"/>`+
+    `<rect x="470" y="${colY+colH-barH}" width="86" height="${barH}" rx="10" fill="${ok?'#7fb2a2':'#c58f6d'}"/>`+
+    `<text x="513" y="${colY+colH-barH+22}" text-anchor="middle" font-size="15" fill="#ffffff">${o2} of 10</text>`+
+    `${textSVG(513,colY+colH+26,ok?'enough for fish':'fish under stress',15)}`,
+    `${run.title}: ${run.stages.length} stages from the field to the stream, with dissolved oxygen at ${o2} out of 10.`,
+    TOP+run.stages.length*STEP+40);
+   caption.textContent=run.note;
+  });
+ }
+
  if(type==='web')return buttons([['normal','Show food web'],['loss','What if rabbits decline?']],mode=>{drawing.innerHTML=svg(`${line(140,190,250,65)}${line(150,195,265,190)}${line(350,65,460,65)}${line(350,190,460,85)}${line(340,215,460,245)}${box(30,165,130,65,'Grass')}${box(230,30,135,65,'Rabbits',mode==='loss'?'#efcfbf':'#e4eee5')}${box(230,170,135,65,'Mice')}${box(440,30,130,65,'Foxes')}${box(430,220,150,55,'Owls')}`,'A food web: grass feeds rabbits and mice; rabbits and mice feed foxes; mice feed owls.',310);caption.textContent=mode==='loss'?'Rabbit decline can reduce one food source for foxes. Mice are an alternative, so the final outcome depends on their availability and other interactions. These are possible effects, not an exact prediction.':'Arrows point from food to consumer. This is a simplified example; decomposers and many other connections are omitted. Click the scenario to reason about a change.';});
  if(type==='energy')return buttons([['photo','Photosynthesis'],['resp','Respiration'],['cycle','Carbon connection']],mode=>{const photo=mode==='photo';drawing.innerHTML=mode==='cycle'?svg(`${box(205,20,190,55,'Atmospheric CO₂','#d4e8ed')}${box(30,180,160,65,'Plant biomass')}${box(405,180,160,65,'Consumer biomass','#eadcc6')}${line(220,75,130,177)}${line(190,210,405,210)}${line(480,180,375,75)}${line(105,180,255,75)}${textSVG(105,116,'Photosynthesis',14)}${textSVG(490,120,'Respiration',14)}${textSVG(298,200,'Feeding',14)}`,'Simplified carbon pathways between atmospheric carbon dioxide and plant and consumer biomass.'):svg(`${box(35,95,160,70,photo?'CO₂ + water':'Glucose + O₂','#d8e8e5')}${line(197,130,395,130)}${box(400,95,170,70,photo?'Sugar + O₂':'CO₂ + water','#efe3c8')}${textSVG(300,65,photo?'Light energy enters':'Energy transferred')}${textSVG(300,212,photo?'Chloroplast · photosynthesis':'ATP + heat · respiration')}`,'Summary of '+(photo?'photosynthesis':'aerobic respiration')+' inputs and outputs.');caption.textContent=mode==='cycle'?'Carbon atoms move among reservoirs. This diagram omits soil, oceans, combustion, and other stores. Plants as well as consumers respire.':photo?'Summary: 6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂. Light supplies energy; atoms are rearranged. The detailed pathway is more complex.':'Summary: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O. Energy is transferred to ATP and dispersed as heat. Glycolysis is in the cytoplasm; later aerobic stages involve mitochondria in eukaryotes.';});
  if(type==='division')return buttons([['mitosis','Mitosis'],['meiosis','Meiosis']],mode=>{const mei=mode==='meiosis',cells=(cx,cy,n,color)=>`<circle cx="${cx}" cy="${cy}" r="35" fill="${color}" stroke="#658575"/>${Array.from({length:n},(_,i)=>`<path d="M${cx-15+i*10} ${cy-13}v26" stroke="${i%2?'#9d719e':'#426e65'}" stroke-width="5"/>`).join('')}`;drawing.innerHTML=svg(`${cells(300,50,4,'#e6eee1')}${line(280,86,170,140)}${line(320,86,430,140)}${cells(155,180,mei?2:4,'#e8dff0')}${cells(445,180,mei?2:4,'#e8dff0')}${mei?`${line(140,215,95,266)}${line(170,215,215,266)}${line(430,215,385,266)}${line(460,215,505,266)}${[85,225,375,515].map(x=>cells(x,310,2,'#e2ecde')).join('')}`:''}${textSVG(300,mei?374:255,mei?'Four haploid products · 2 chromosomes each':'Two daughter cells · 4 chromosomes each',17)}`,mei?'Overview of a diploid model cell with 4 chromosomes producing four haploid products with 2 each.':'Overview of a cell with 4 chromosomes producing two daughters with 4 each.',mei?405:290);caption.textContent=mei?'Meiosis: DNA is copied once before two divisions. Homologous chromosomes separate first, then sister chromatids. This overview shows chromosome-set counts, not detailed chromatid stages; crossing over is not drawn.':'Mitosis: DNA is copied before division, and duplicated chromosomes are separated so both daughter cells retain the chromosome number. Bars represent chromosome counts in this overview, not all stages of replication.';});

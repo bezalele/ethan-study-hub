@@ -76,11 +76,12 @@ const SCIENCE_LINKS={
   {icon:'◎',label:'Populations in the wild',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=animal%20population%20herd%20migration&sort=best&suppressfamilycorrection=true'}
  ],
  biodiversity:[
-  {icon:'◎',label:'Biodiversity you can see',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=biodiversity%20coral%20reef%20rainforest&sort=best&suppressfamilycorrection=true'}
+  {icon:'◎',label:'Many species in one ecosystem',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=many%20animal%20species%20ecosystem%20wildlife&sort=best&suppressfamilycorrection=true'},
+  {icon:'◎',label:'Variety of wildlife and plants',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=variety%20wildlife%20plants%20ecosystem&sort=best&suppressfamilycorrection=true'}
  ],
  'human-impacts':[
-  {icon:'◎',label:'Human impact — before & after',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=coral%20bleaching%20deforestation%20pollution%20wildlife&sort=best&suppressfamilycorrection=true'},
-  {icon:'◎',label:'Conservation in action',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=wildlife%20conservation%20restoration&sort=best&suppressfamilycorrection=true'}
+  {icon:'◎',label:'Damage to ecosystems',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=deforestation%20pollution%20habitat%20destruction&sort=best&suppressfamilycorrection=true'},
+  {icon:'◎',label:'Conservation in action',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=wildlife%20conservation%20habitat%20restoration%20reforestation&sort=best&suppressfamilycorrection=true'}
  ],
  photosynthesis:[
   {icon:'☀',label:'Chloroplasts & photosynthesis',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=chloroplast%20photosynthesis%20microscopic&sort=best&suppressfamilycorrection=true'},
