@@ -115,7 +115,7 @@ B('ecosystems','human-impacts','Human impacts and conservation','Evaluate a solu
  ['Why can habitat corridors help some species?','They can enable movement between habitat patches','They guarantee no predators','They remove all genetic variation','Connectivity can support movement and gene flow, depending on the species.'],
  ['Which conclusion is best supported by monitoring?','A measured trend with relevant limitations','A claim that one observation proves permanent success','A claim with no baseline','Repeated data and a clear comparison support a more defensible conclusion.']
 ]);
-B('energy','photosynthesis','Photosynthesis: build with light','Trace the source of plant matter and chemical energy.','energy',[
+B('energy','photosynthesis','Photosynthesis: build with light','Trace the source of plant matter and chemical energy.','photosynthesis',[
  ['Capture and transform energy','Photosynthesis uses light energy to support the formation of sugars from carbon dioxide and water. Chloroplasts carry out photosynthesis in plants and algae. Energy is transformed, not created.'],
  ['Track atoms separately from energy','A useful summary is 6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂. The atoms are rearranged; light is energy, not matter. Much of a growing plant’s dry mass comes from carbon dioxide, with water and mineral nutrients also essential.'],
  ['Conditions limit the rate','Light intensity, carbon dioxide availability, temperature, and water can affect photosynthesis. Increasing one factor may stop increasing the rate when another factor becomes limiting.']

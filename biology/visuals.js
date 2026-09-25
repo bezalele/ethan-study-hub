@@ -3,7 +3,7 @@ const svg=(body,label,h=280)=>`<svg viewBox="0 0 600 ${h}" role="img" aria-label
 const textSVG=(x,y,t,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#183d36">${esc(t)}</text>`;
 const box=(x,y,w,h,t,fill='#e4eee5')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${fill}" stroke="#789787"/>${textSVG(x+w/2,y+h/2+6,t)}`;
 const line=(x,y,a,b)=>`<path d="M${x} ${y}L${a} ${b}" fill="none" stroke="#446d61" stroke-width="2" marker-end="url(#arrow)"/>`;
-const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',biodiversity:'How does an ecosystem respond to change?',impact:'What happens to the stream?'};
+const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',photosynthesis:'Follow carbon into a plant',biodiversity:'How does an ecosystem respond to change?',impact:'What happens to the stream?'};
 const REAL_LIFE={
  cells:{
   title:"Cells: The Building Blocks of Life",
@@ -435,6 +435,132 @@ function mountVisual(type,lessonId){
   });
  }
 
+
+ /* Unit 2 - Photosynthesis: build with light.
+
+    The point a fourteen-year-old should leave with is that the plant is
+    largely built out of the air, which is counter-intuitive enough that the
+    picture has to carry it: carbon atoms are drawn as discs, they arrive in
+    CO2, and the same discs turn up in the sugar and then in the plant. The
+    equation is present but small - support, not the lesson.
+
+    And it says in the same breath that water and minerals are needed too,
+    because "plants are made of air" is the overcorrection waiting on the
+    far side of the misconception this lesson exists to fix. */
+ if(type==='photosynthesis'){
+  /* An arrowhead that stays the size it was drawn: the shared one scales
+     with stroke-width, which turned a 3px line into a road sign. */
+  const DEFS='<defs><marker id="pa" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">'+
+   '<path d="M0 1L10 5.5L0 10Z" fill="currentColor"/></marker></defs>';
+  const arrow=(d,color,dash)=>`<path d="${d}" stroke="${color}" fill="none" stroke-width="2.6" color="${color}"`+
+   (dash?' stroke-dasharray="7 6"':'')+' marker-end="url(#pa)"/>';
+  const sun=(x,y,r=25)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#f0cf7a"/>`+
+   [0,45,90,135,180,225,270,315].map(a=>{
+    const t=a*Math.PI/180;
+    return `<path d="M${(x+Math.cos(t)*(r+6)).toFixed(1)} ${(y+Math.sin(t)*(r+6)).toFixed(1)}L${(x+Math.cos(t)*(r+14)).toFixed(1)} ${(y+Math.sin(t)*(r+14)).toFixed(1)}" stroke="#e3b95a" stroke-width="3" stroke-linecap="round"/>`;
+   }).join('');
+  const carbon=(x,y,r=8)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#5d6b60"/>`+
+   `<text x="${x}" y="${y+4}" text-anchor="middle" font-size="${r+3}" fill="#fff">C</text>`;
+  const co2=(x,y)=>`<circle cx="${x-14}" cy="${y}" r="6.5" fill="#9db9c9"/>`+carbon(x,y)+
+   `<circle cx="${x+14}" cy="${y}" r="6.5" fill="#9db9c9"/>`;
+  const label=(x,y,text,size=13,ink='#183d36',anchor='middle')=>
+   `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="${size}" fill="${ink}">${esc(text)}</text>`;
+  const chip=(x,y,w,head,body,fill)=>`<rect x="${x}" y="${y}" width="${w}" height="46" rx="11" fill="${fill}" stroke="#b9c9b4"/>`+
+   `<text x="${x+15}" y="${y+19}" font-size="11" letter-spacing="1" fill="#54685c">${esc(head)}</text>`+
+   `<text x="${x+15}" y="${y+37}" font-size="14.5" fill="#183d36">${esc(body)}</text>`;
+  /* The same plant in both scenes, drawn around a given base point. */
+  const plant=(cx,base,k=1)=>{
+   const h=110*k;
+   return `<path d="M${cx-52*k} ${base}h${104*k}l-${13*k} ${38*k}h-${78*k}Z" fill="#c08f6a"/>`+
+    `<rect x="${cx-58*k}" y="${base-12*k}" width="${116*k}" height="${13*k}" rx="5" fill="#a97853"/>`+
+    `<path d="M${cx} ${base-10*k}V${base-h}" stroke="#6b8a4e" stroke-width="${8*k}" stroke-linecap="round"/>`+
+    `<path d="M${cx} ${base-h+30*k}q-${62*k} ${8*k} -${78*k} -${30*k}q${54*k} -${20*k} ${78*k} ${30*k}Z" fill="#5f8a4e"/>`+
+    `<path d="M${cx} ${base-h}q${54*k} -${22*k} ${84*k} ${16*k}q-${46*k} ${35*k} -${84*k} -${16*k}Z" fill="#6f9a57"/>`+
+    `<path d="M${cx} ${base-h+22*k}q-${36*k} -${2*k} -${54*k} -${16*k}M${cx} ${base-h+2*k}q${30*k} -${6*k} ${54*k} ${11*k}" stroke="#3f6236" stroke-width="1.7" fill="none"/>`;
+  };
+
+  return buttons([['in','Matter in'],['sugar','Build sugar'],['limits','Limiting factors']],mode=>{
+
+   if(mode==='in'){
+    drawing.innerHTML=svg(DEFS+
+     sun(86,78)+
+     plant(300,268)+
+     arrow('M118 112L246 180','#d8a944',true)+
+     label(150,110,'sunlight \u00b7 energy',13,'#8a6a2a','start')+
+     co2(492,150)+co2(536,112)+
+     arrow('M466 152L372 166','#5f7f8c')+
+     label(492,186,'carbon dioxide from the air',13,'#3d5d69')+
+     arrow('M300 330V300','#6b9fc0')+
+     arrow('M300 254V196','#6b9fc0',true)+
+     label(300,348,'water from the roots',13,'#33627d')+
+     chip(18,364,266,'MATTER \u00b7 what it is built from','carbon dioxide + water','#e4eef5')+
+     chip(300,364,266,'ENERGY \u00b7 what does the building','sunlight','#f6ecd6'),
+     'A plant taking in carbon dioxide from the air and water through its roots, with sunlight arriving as energy.',424);
+    caption.textContent='Carbon dioxide and water provide matter. Sunlight provides energy. Matter is what the plant is built from; energy is what does the building.';
+    return;
+   }
+
+   if(mode==='sugar'){
+    drawing.innerHTML=svg(DEFS+
+     sun(62,62,20)+
+     arrow('M86 88L188 152','#d8a944',true)+
+     /* the leaf, opened up */
+     `<path d="M170 196q56-92 196-54q-38 98-196 54Z" fill="#5f8a4e"/>`+
+     `<ellipse cx="264" cy="156" rx="58" ry="30" fill="#7ba762" stroke="#3f6236"/>`+
+     label(264,161,'chloroplast',13,'#1d3419')+
+     label(264,232,'photosynthesis happens in here',12,'#3f6236')+
+     /* in */
+     co2(64,150)+co2(64,196)+co2(64,242)+
+     arrow('M92 152L176 170','#5f7f8c')+
+     arrow('M92 196H176','#5f7f8c')+
+     arrow('M92 240L176 200','#5f7f8c')+
+     label(64,272,'carbon dioxide',12.5,'#3d5d69')+
+     /* out: the same carbon, now in sugar */
+     arrow('M372 150L424 132','#4e7a5f')+
+     `<path d="M432 92h52a32 32 0 0 1 0 64h-52a32 32 0 0 1 0-64Z" fill="#efe0b8" stroke="#c9ad6c"/>`+
+     carbon(448,124)+carbon(474,124)+carbon(500,124)+
+     label(474,80,'sugar (glucose)',13,'#6b5520')+
+     /* out: oxygen */
+     arrow('M366 182L430 206','#5f7f8c')+
+     `<circle cx="452" cy="212" r="11" fill="#cfe2ea" stroke="#8fb3c4"/>`+
+     `<circle cx="476" cy="226" r="8.5" fill="#cfe2ea" stroke="#8fb3c4"/>`+
+     label(500,218,'oxygen out',12.5,'#3d5d69','start')+
+     /* and where the sugar ends up */
+     plant(210,320,.5)+
+     arrow('M444 160L268 300','#9a7f45',true)+
+     label(210,356,'becomes plant material',12.5,'#6b5520')+
+     label(300,374,'The carbon atoms in sugar came from carbon dioxide in the air.',15.5,'#183d36')+
+     label(300,396,'Water and minerals are needed too \u2014 a plant is not built from air alone.',13,'#4a6b53')+
+     label(300,422,'6CO\u2082 + 6H\u2082O + light \u2192 C\u2086H\u2081\u2082O\u2086 + 6O\u2082',13,'#78867d'),
+     'Carbon dioxide entering a leaf, the same carbon atoms appearing in a sugar molecule, oxygen leaving, and the sugar becoming plant material.',440);
+    caption.textContent='Follow the carbon: it arrives as carbon dioxide, it is built into sugar, and the sugar becomes the plant. Light is the energy that drives the building, not an ingredient - and water and mineral nutrients are needed as well.';
+    return;
+   }
+
+   /* limiting factors */
+   const curve=(k,color,dash)=>{
+    const pts=[];
+    for(let x=0;x<=100;x+=4){const r=k*(1-Math.exp(-x/22));pts.push([70+x*4.4,252-r*1.6]);}
+    return `<polyline points="${pts.map(p=>p.map(n=>n.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="${color}" stroke-width="4"${dash?' stroke-dasharray="8 6"':''}/>`;
+   };
+   drawing.innerHTML=svg(DEFS+
+    `<path d="M70 44V252H542" stroke="#6c8278" fill="none" stroke-width="2"/>`+
+    label(306,284,'more light \u2192',13,'#54685c')+
+    `<text x="34" y="150" font-size="13" fill="#54685c" transform="rotate(-90 34 150)" text-anchor="middle">faster \u2192</text>`+
+    curve(112,'#4e8a5f',false)+
+    curve(74,'#8fae76',true)+
+    label(468,70,'with more CO\u2082',13,'#2f6a44','start')+
+    label(468,164,'with less CO\u2082',13,'#5f7d55','start')+
+    label(306,62,'More light makes it faster \u2014 up to a point.',15,'#183d36')+
+    label(306,308,'Then something else is holding it back, and more light does not help.',14,'#183d36')+
+    chip(18,326,130,'CAN LIMIT IT','light','#f6ecd6')+
+    chip(158,326,130,'CAN LIMIT IT','carbon dioxide','#e4eef5')+
+    chip(298,326,130,'CAN LIMIT IT','water','#e4eef5')+
+    chip(438,326,130,'CAN LIMIT IT','temperature','#f1e6ef'),
+    'Two light-response curves: the rate rises with light and then levels off, and it levels off lower when less carbon dioxide is available.',390);
+   caption.textContent='Raising one factor speeds photosynthesis only while that factor is the one holding it back. When the curve flattens, something else has become limiting - here, the carbon dioxide. Light, carbon dioxide, water and temperature can each take that role. These curves are illustrative shapes, not measured data.';
+  });
+ }
 
  if(type==='web')return buttons([['normal','Show food web'],['loss','What if rabbits decline?']],mode=>{drawing.innerHTML=svg(`${line(140,190,250,65)}${line(150,195,265,190)}${line(350,65,460,65)}${line(350,190,460,85)}${line(340,215,460,245)}${box(30,165,130,65,'Grass')}${box(230,30,135,65,'Rabbits',mode==='loss'?'#efcfbf':'#e4eee5')}${box(230,170,135,65,'Mice')}${box(440,30,130,65,'Foxes')}${box(430,220,150,55,'Owls')}`,'A food web: grass feeds rabbits and mice; rabbits and mice feed foxes; mice feed owls.',310);caption.textContent=mode==='loss'?'Rabbit decline can reduce one food source for foxes. Mice are an alternative, so the final outcome depends on their availability and other interactions. These are possible effects, not an exact prediction.':'Arrows point from food to consumer. This is a simplified example; decomposers and many other connections are omitted. Click the scenario to reason about a change.';});
  if(type==='energy')return buttons([['photo','Photosynthesis'],['resp','Respiration'],['cycle','Carbon connection']],mode=>{const photo=mode==='photo';drawing.innerHTML=mode==='cycle'?svg(`${box(205,20,190,55,'Atmospheric CO₂','#d4e8ed')}${box(30,180,160,65,'Plant biomass')}${box(405,180,160,65,'Consumer biomass','#eadcc6')}${line(220,75,130,177)}${line(190,210,405,210)}${line(480,180,375,75)}${line(105,180,255,75)}${textSVG(105,116,'Photosynthesis',14)}${textSVG(490,120,'Respiration',14)}${textSVG(298,200,'Feeding',14)}`,'Simplified carbon pathways between atmospheric carbon dioxide and plant and consumer biomass.'):svg(`${box(35,95,160,70,photo?'CO₂ + water':'Glucose + O₂','#d8e8e5')}${line(197,130,395,130)}${box(400,95,170,70,photo?'Sugar + O₂':'CO₂ + water','#efe3c8')}${textSVG(300,65,photo?'Light energy enters':'Energy transferred')}${textSVG(300,212,photo?'Chloroplast · photosynthesis':'ATP + heat · respiration')}`,'Summary of '+(photo?'photosynthesis':'aerobic respiration')+' inputs and outputs.');caption.textContent=mode==='cycle'?'Carbon atoms move among reservoirs. This diagram omits soil, oceans, combustion, and other stores. Plants as well as consumers respire.':photo?'Summary: 6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂. Light supplies energy; atoms are rearranged. The detailed pathway is more complex.':'Summary: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O. Energy is transferred to ATP and dispersed as heat. Glycolysis is in the cytoplasm; later aerobic stages involve mitochondria in eukaryotes.';});
