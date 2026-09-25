@@ -214,7 +214,7 @@ function mountVisual(type,lessonId){
     scene:'algae everywhere',
     steps:['Fertilizer on field','Rain washes it in','Nutrients feed algae','Extra algae die','Decomposers use oxygen','Oxygen in water drops','Fish can struggle'],
     spoken:'Fertilizer on the field, rain washes nutrients into the stream, too many nutrients feed algae, the extra algae die and decompose, decomposers use oxygen, oxygen in the water drops, and fish can struggle.',
-    note:'The chain is the point: no single step is "the pollution". Notice which step takes the oxygen out - it is the decomposers breaking down all that extra dead algae, not the algae themselves using it up. How far it goes depends on how much nutrient arrives, the temperature, the flow, and what was limiting growth before.'},
+    note:'Fertilizer adds extra nutrients to the stream. This can cause too much algae to grow. When the extra algae die, decomposers use oxygen to break them down. Less oxygen in the water can make it harder for fish to survive.'},
    buffer:{
     title:'How a buffer strip can protect the stream',
     water:'#9dc6dc',lit:true,
@@ -222,7 +222,7 @@ function mountVisual(type,lessonId){
     scene:'clearer water',
     steps:['Grass and trees','Catch some runoff','Fewer nutrients','Less extra algae','Less to decompose','More oxygen stays','Healthier for fish'],
     spoken:'Grass and trees along the stream catch some of the runoff, fewer nutrients reach the water, there is less extra algae, less material decomposes, more oxygen stays in the water, and conditions are healthier for fish.',
-    note:'A buffer does not switch a step off; it damps the whole chain, because less arriving means less growing and then less to decompose. Whether it worked here is a question for measurement - nutrient and oxygen readings before and after, a comparison site, and long enough to see past a dry month. Cost, land and upkeep count too.'}
+    note:'Grass and trees along the stream can catch some runoff before it reaches the water. Fewer nutrients means less extra algae and less decomposition. That helps keep more oxygen in the water and creates healthier conditions for fish.'}
   };
 
   return buttons([['impact','Human impact'],['buffer','Conservation response']],mode=>{
