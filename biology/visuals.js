@@ -229,7 +229,7 @@ function mountVisual(type,lessonId){
    const run=RUNS[mode],lit=run.lit;
 
    /* --- the scene -------------------------------------------------------- */
-   const fieldW=lit?150:196;
+   const fieldW=lit?150:168;
    const field=`<rect x="18" y="58" width="${fieldW}" height="96" rx="10" fill="#e3dcc3" stroke="#c3b894"/>`+
     `${[0,1,2,3,4].map(i=>`<circle cx="${40+i*((fieldW-44)/4)}" cy="${80+(i%2)*14}" r="3.5" fill="#c08a4a"/>`).join('')}`+
     `<text x="${18+fieldW/2}" y="146" text-anchor="middle" font-size="12.5" fill="#5d5330">fertilizer on the field</text>`;
@@ -244,7 +244,7 @@ function mountVisual(type,lessonId){
       no room for them between the buffer and the water. */
    const runoff=lit
     ? flow(240,266,106,7,'#cbb894')
-    : flow(216,268,106,22,'#c08a4a')+`<text x="242" y="94" text-anchor="middle" font-size="12" fill="#7d6a45">runoff</text>`;
+    : flow(196,268,106,22,'#c08a4a')+`<text x="230" y="92" text-anchor="middle" font-size="12" fill="#7d6a45">runoff</text>`;
    const streamX=268;
    const stream=`<rect x="${streamX}" y="58" width="${582-streamX}" height="96" rx="10" fill="${run.water}" stroke="#7d9aa8"/>`+
     (lit?algae(300,78,2,'#86ab6f'):algae(296,76,6,'#5a7a3a'))+
