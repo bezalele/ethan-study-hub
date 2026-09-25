@@ -132,6 +132,7 @@ If a change does not show up in the browser, this is the first thing to check.
 | `node tests/layout-check.cjs` | renders every route and looks for tiny text, overflow, missing images | **36/72 — 36 known failures** (§8) |
 | `node tests/publish-safety.cjs` | a deploy cannot lose a note: every merge rule is additive, and no journal payload is committed to this public repo | passes |
 | `node tools/backup.cjs` | not a test - takes the copy you want to have before publishing | writes two files |
+| `node tools/restore.cjs --list` | not a test - shows what you can roll back to | lists snapshots |
 
 `smoke.cjs` must be green before any merge. It is the file that stops the three
 subjects quietly drifting apart.
@@ -165,6 +166,36 @@ covered nineteen hours once the family started using it properly, so a busy
 week would have pushed last Tuesday off the end. `GET /journal/history` lists
 them, `POST /journal/restore {id}` puts one back, and the state being replaced
 is itself snapshotted first.
+
+### If the worst happens: putting it back
+
+```
+node tools/restore.cjs --list                       # what you can go back to
+node tools/restore.cjs --to 2026-09-24T02:00        # look at what that would do
+node tools/restore.cjs --to 2026-09-24T02:00 --yes  # do it
+```
+
+Nothing writes without `--yes`, and every run prints what would change note by
+note, with `<< WOULD BE LOST` against anything that would go. The state being
+replaced is saved twice before it goes: the Worker snapshots it, and the tool
+writes a `*-before-restore-*.json` on this laptop. A restore is itself
+reversible.
+
+**Two ways back, for two different accidents.**
+
+| What happened | What to use |
+| --- | --- |
+| Something is MISSING | `--to <time>` (a server snapshot), or `--from <backup file>` which merges: it adds and never removes |
+| Something WRONG is there and has to go | `--from <file> --replace`, which clears the server first |
+
+`--what progress` does the same for his attempts, explanations and quiz scores.
+
+**Rehearsed, not assumed.** `rollback.cjs` in the scratchpad plays the whole
+thing out against a local worker: a real journal, wiped; restored from the
+server's history; then overwritten with nonsense, merged back (and the nonsense
+correctly still there), then `--replace`d (and the nonsense correctly gone);
+then his progress the same way. Run it before trusting any change to this
+path.
 
 ### Publishing cannot reach the notes
 
