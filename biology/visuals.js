@@ -826,14 +826,16 @@ function mountVisual(type,lessonId){
      /* after the cards, or the card fill swallows the sunbeam */
      sun(44,30)+label(44,58,'sunlight',11.5,'#8a6a2c')+
      arrow('M46 66L64 112','#d9a441',true)+
+     /* named, so the dashed beam is never read as another meal */
+     label(134,64,'Light energy enters the producer.',12,'#8a6a2c','start')+
      [0,1,2].map(i=>arrow(`M${cx[i]+52} 126H${cx[i+1]-52}`,'#6b8a4e')).join('')+
      [0,1,2].map(i=>label((cx[i]+cx[i+1])/2,110,'eaten by',11.5,'#54685c')).join('')+
      cx.map((x,i)=>label(x,198,names[i],13.5,'#183d36')).join('')+
      cx.map((x,i)=>label(x,216,roles[i],11.5,'#54685c')).join('')+
-     pill(18,236,564,42,'Arrows show energy moving from food → consumer.','#e6efe1','#2f5c34',15)+
+     pill(18,236,564,42,'Food-chain arrows point from food → consumer.','#e6efe1','#2f5c34',15)+
      label(300,300,'Grass captures energy from sunlight and stores it in its own biomass.',12.5,'#54685c'),
      'A food chain: grass, then grasshopper, then frog, then hawk, with each arrow pointing from the food to the organism that eats it.',324);
-    caption.textContent='Read the arrows the way they are drawn: each one points from the food to the organism eating it, because that is the direction the energy moves. Grass is the producer and everything after it is a consumer. Every arrow is a transfer of energy that is already here, not a fresh supply.';
+    caption.textContent='Read the arrows the way they are drawn: each one points from the food to the organism eating it, because that is the direction the energy moves. Grass is the producer and everything after it is a consumer. Every food-chain arrow is a transfer of energy that is already in the ecosystem; the sunlight is the one arrow bringing new energy in.';
     return;
    }
 
@@ -870,34 +872,43 @@ function mountVisual(type,lessonId){
    /* 3. Where the energy actually goes at one level. No percentages: the
          bar is illustrative and says so, because the honest answer is
          "most of it, and it varies". */
+   /* Two destinations, not three. Heat is not a third place the energy
+      goes - it is what the energy spent on living eventually becomes, so
+      it hangs off the life-processes column rather than standing beside
+      it. And growing belongs with biomass, not with life processes: it is
+      the growing that the next trophic level gets to eat. */
    if(mode==='one'){
     const seg=(x,w,fill)=>`<rect x="${x}" y="68" width="${w}" height="38" fill="${fill}" stroke="#96a89b"/>`;
     const tick=x=>`<path d="M${x} 108V118" stroke="#b3c3bb" stroke-width="1.6"/>`;
+    const heat=(x,y)=>[0,1,2].map(i=>`<path d="M${x+i*13} ${y}q4-8 0-13q-4-6 0-11" stroke="#c08552" stroke-width="2" fill="none" stroke-linecap="round"/>`).join('');
     drawing.innerHTML=svg(DEFS+
      label(300,30,'What one frog does with the energy it obtains',15.5,'#183d36')+
      frog(58,60,.55)+
      label(86,58,'energy obtained from food',12,'#54685c','start')+
-     seg(40,268,'#cfe0c8')+seg(308,172,'#f0d9bf')+seg(480,80,'#a8cf9f')+
-     tick(174)+tick(394)+tick(520)+
-     label(174,134,'used for life processes',12.5,'#2f5c34')+
-     label(174,152,'moving, growing, hunting',11.5,'#54685c')+
-     label(390,134,'dispersed as heat',12.5,'#8a5a2c')+
-     label(390,152,'spreads into the surroundings',11.5,'#54685c')+
-     label(522,134,'new biomass',12.5,'#2f5c34')+
-     label(522,152,'stored in its body',11.5,'#54685c')+
-     arrow('M520 166V190','#6b8a4e')+
-     hawk(520,216,.62)+
-     label(520,252,'on to the hawk',12,'#2f5c34')+
-     `<rect x="18" y="190" width="440" height="96" rx="14" fill="#eef4ef" stroke="#b3c3bb"/>`+
-     label(238,216,'Only energy stored in new biomass can move to the',13.5,'#183d36')+
-     label(238,236,'next trophic level when that organism is eaten.',13.5,'#183d36')+
-     label(238,262,'Energy is transferred and dispersed, mostly as heat — none of it disappears.',12,'#54685c')+
-     label(300,308,'Proportions in the bar are illustrative, not measured.',12,'#93a099')+
-     `<rect x="18" y="322" width="564" height="54" rx="14" fill="#efe7da" stroke="#c9b79a"/>`+
-     label(300,344,'Decomposers obtain energy from dead organic material',13,'#6b5520')+
-     label(300,363,'and return matter — nutrients — to soil, water and air.',12.5,'#6b5520'),
-     'A bar showing the energy one frog obtains, divided into a large part used for life processes, a part dispersed as heat, and a small part stored as new biomass, which is the only part a hawk can obtain.',394);
-    caption.textContent='Most of what the frog eats is spent staying alive - moving, growing, keeping its body working - and a good deal of that energy leaves as heat. Only what ends up built into the frog itself is there for a hawk to eat, which is why each level of the pyramid has less than the one below. Decomposers take their energy from dead material and return matter to the soil, water and air; they do not send energy back.';
+     seg(40,400,'#cfe0c8')+seg(440,120,'#a8cf9f')+
+     tick(240)+tick(500)+
+     /* --- used for living, and what becomes of it --------------------- */
+     label(240,134,'used for life processes',13,'#2f5c34')+
+     label(240,152,'movement \u00b7 metabolism \u00b7 maintaining the body',12,'#54685c')+
+     arrow('M240 166V188','#c08552')+
+     heat(226,216)+
+     label(240,240,'Much of this energy eventually disperses as heat.',12.5,'#8a5a2c')+
+     /* --- stored, and therefore edible -------------------------------- */
+     label(500,134,'stored as new biomass',12.5,'#2f5c34')+
+     label(500,152,'the frog\u2019s own body',12,'#54685c')+
+     arrow('M500 166V190','#6b8a4e')+
+     hawk(500,216,.62)+
+     label(500,252,'on to the hawk',12,'#2f5c34')+
+     /* --- the sentence the unit turns on ------------------------------ */
+     label(300,288,'Energy stored in biomass can move to the next trophic level',14,'#183d36')+
+     label(300,308,'if the organism is eaten.',14,'#183d36')+
+     label(300,330,'Energy is transferred and dispersed \u2014 none of it disappears.',12.5,'#54685c')+
+     label(300,348,'Proportions in the bar are illustrative, not measured.',12,'#93a099')+
+     `<rect x="18" y="362" width="564" height="54" rx="14" fill="#efe7da" stroke="#c9b79a"/>`+
+     label(300,384,'Decomposers obtain energy from dead organic material',13,'#6b5520')+
+     label(300,403,'and return matter \u2014 nutrients \u2014 to soil, water and air.',12.5,'#6b5520'),
+     'A bar showing the energy one frog obtains, divided into a large part used for life processes - movement, metabolism and maintaining the body, much of which eventually disperses as heat - and a smaller part stored as new biomass, which is the part a hawk can obtain.',434);
+    caption.textContent='Most of what the frog eats is spent on living: moving about, keeping its chemistry going, holding its body in working order. Much of that energy eventually disperses as heat - heat is where the spent energy ends up, not a third place it goes. What is left over is built into the frog itself, and that is the part a hawk can obtain. Decomposers take their energy from dead material and return matter to the soil, water and air; they do not send the energy back.';
     return;
    }
 
@@ -923,7 +934,7 @@ function mountVisual(type,lessonId){
     pill(18,320,564,42,'10% is a practice estimate. Real ecosystems vary.','#f3e6da','#7a4e28',14.5)+
     label(300,384,'These are practice numbers, not measured wildlife data.',12,'#93a099'),
     `An energy calculation. Producers begin with ${fmt(vals[0])} units and each level above receives one tenth of the level below it, giving ${fmt(vals[1])}, then ${fmt(vals[2])}, then ${fmt(vals[3])}.`,400);
-   caption.textContent=`Producers start with ${fmt(vals[0])} units. A tenth of that reaches the grasshoppers, a tenth of theirs reaches the frogs, and so on: ${fmt(vals[0])} → ${fmt(vals[1])} → ${fmt(vals[2])} → ${fmt(vals[3])}. Change the starting number and the shape of the answer does not change - four steps in, almost none of the original energy is still available for biological work. Ten per cent is a classroom estimate for practice; real ecosystems vary.`;
+   caption.textContent=`Producers start with ${fmt(vals[0])} units. A tenth of that reaches the grasshoppers, a tenth of theirs reaches the frogs, and so on: ${fmt(vals[0])} → ${fmt(vals[1])} → ${fmt(vals[2])} → ${fmt(vals[3])}. Change the starting number and the shape of the answer does not change. After three transfers, only a small fraction of the starting energy remains available at the top level. Ten per cent is a classroom estimate for practice; real ecosystems vary.`;
   };
   draw();return;
  }
