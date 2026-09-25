@@ -64,14 +64,23 @@
     return Object.keys(byKey).map(function (k) { return byKey[k]; });
   }
 
+  /* Links are not comments. A comment is written once and deleting it is
+     final - there is no way to type the same comment again, so a delete can
+     safely beat anything. A lesson link is a switch: the same lesson can be
+     taken off a day and put back on it, and that happens. So here the CLOCK
+     decides, with a delete winning a tie.
+
+     It used to be delete-wins-always, and the consequence was quiet and
+     maddening: once a lesson had been taken off a day, attaching it again
+     worked on screen and was undone by the next sync, for ever. */
   function mergeLinks(a, b) {
     var byId = {};
     [].concat(a || [], b || []).forEach(function (l) {
       if (!l || !l.id) return;
       var prev = byId[l.id];
-      if (!prev || (l.del && !prev.del) || (!(prev.del && !l.del) && num(l.ts) > num(prev.ts))) {
-        byId[l.id] = l;
-      }
+      if (!prev) { byId[l.id] = l; return; }
+      var mine = num(l.ts), theirs = num(prev.ts);
+      if (mine > theirs || (mine === theirs && l.del && !prev.del)) byId[l.id] = l;
     });
     return Object.keys(byId).map(function (k) { return byId[k]; })
       .sort(function (p, q) { return num(p.ts) - num(q.ts); });

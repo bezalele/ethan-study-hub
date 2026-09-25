@@ -117,6 +117,8 @@
   }
 
   /* Raw rows, tombstones and all. Only merging and writing want these. */
+  function num(x) { return Number(x) || 0; }
+
   function rawComments(e) { return Array.isArray(e.comments) ? e.comments : []; }
   function rawReactions(e) { return Array.isArray(e.reactions) ? e.reactions : []; }
   function rawLinks(e) { return Array.isArray(e.links) ? e.links : []; }
@@ -236,8 +238,12 @@
     var already = rows.filter(function (l) { return l.href === link.href; })[0];
     if (already && !already.del) return true;
     if (already) {
+      /* Putting back one he took off. The row keeps its id so the other
+         laptops recognise it, and takes a fresh timestamp so the merge can
+         see that this decision is the later one. */
       already.del = false;
-      already.ts = Date.now();
+      already.title = String(link.title || already.title || link.href);
+      already.ts = Math.max(Date.now(), num(already.ts) + 1);
     } else {
       rows.push({
         id: 'l' + Date.now() + Math.random().toString(36).slice(2, 6),
