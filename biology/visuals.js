@@ -459,14 +459,14 @@ function mountVisual(type,lessonId){
     const t=a*Math.PI/180;
     return `<path d="M${(x+Math.cos(t)*(r+6)).toFixed(1)} ${(y+Math.sin(t)*(r+6)).toFixed(1)}L${(x+Math.cos(t)*(r+14)).toFixed(1)} ${(y+Math.sin(t)*(r+14)).toFixed(1)}" stroke="#e3b95a" stroke-width="3" stroke-linecap="round"/>`;
    }).join('');
-  const carbon=(x,y,r=8)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#5d6b60"/>`+
-   `<text x="${x}" y="${y+4}" text-anchor="middle" font-size="${r+3}" fill="#fff">C</text>`;
+  const carbon=(x,y,r=9)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#5d6b60"/>`+
+   `<text x="${x}" y="${y+4.5}" text-anchor="middle" font-size="${Math.max(12,r+3)}" fill="#fff">C</text>`;
   const co2=(x,y)=>`<circle cx="${x-14}" cy="${y}" r="6.5" fill="#9db9c9"/>`+carbon(x,y)+
    `<circle cx="${x+14}" cy="${y}" r="6.5" fill="#9db9c9"/>`;
   const label=(x,y,text,size=13,ink='#183d36',anchor='middle')=>
    `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="${size}" fill="${ink}">${esc(text)}</text>`;
   const chip=(x,y,w,head,body,fill)=>`<rect x="${x}" y="${y}" width="${w}" height="46" rx="11" fill="${fill}" stroke="#b9c9b4"/>`+
-   `<text x="${x+15}" y="${y+19}" font-size="11" letter-spacing="1" fill="#54685c">${esc(head)}</text>`+
+   `<text x="${x+15}" y="${y+19}" font-size="12" letter-spacing="0.8" fill="#54685c">${esc(head)}</text>`+
    `<text x="${x+15}" y="${y+37}" font-size="14.5" fill="#183d36">${esc(body)}</text>`;
   /* The same plant in both scenes, drawn around a given base point. */
   const plant=(cx,base,k=1)=>{
@@ -594,10 +594,17 @@ function mountVisual(type,lessonId){
    `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="${size}" fill="${ink}">${esc(text)}</text>`;
   const pill=(x,y,w,h,text,fill,ink,size)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.min(14,h/2)}" fill="${fill}" stroke="#b3c3bb"/>`+
    label(x+w/2,y+h/2+(size||13)/3+1,text,size||13,ink||'#183d36');
-  const glucose=(x,y)=>`<path d="M${x} ${y-13}l12 7v14l-12 7l-12-7v-14Z" fill="#e8c98a" stroke="#c09b52"/>`+
-   label(x,y+5,'glucose',10.5,'#6b5520');
-  const o2=(x,y)=>`<circle cx="${x-7}" cy="${y}" r="8" fill="#cfe2ea" stroke="#8fb3c4"/>`+
-   `<circle cx="${x+7}" cy="${y}" r="8" fill="#cfe2ea" stroke="#8fb3c4"/>`+label(x,y+3,'O\u2082',10,'#3d5d69');
+  /* The label sits under the shape, not squeezed inside it. A word small
+     enough to fit in a 24px hexagon is a word nobody reads. Pass '' where
+     the layout names the molecule some other way. */
+  const glucose=(x,y,cap='glucose')=>`<path d="M${x} ${y-16}l14 8v17l-14 8l-14-8v-17Z" fill="#e8c98a" stroke="#c09b52"/>`+
+   (cap?label(x,y+36,cap,12.5,'#6b5520'):'');
+  const o2=(x,y,cap='oxygen')=>`<circle cx="${x-9}" cy="${y}" r="11" fill="#cfe2ea" stroke="#8fb3c4"/>`+
+   `<circle cx="${x+9}" cy="${y}" r="11" fill="#cfe2ea" stroke="#8fb3c4"/>`+
+   /* the two outlines meet right where the letters go, so fill the seam first */
+   `<ellipse cx="${x}" cy="${y}" rx="12" ry="6" fill="#cfe2ea"/>`+
+   label(x,y+4.5,'O\u2082',13,'#3d5d69')+
+   (cap?label(x,y+36,cap,12.5,'#3d5d69'):'');
   const atp=(x,y,k=1)=>`<rect x="${x-26*k}" y="${y-15*k}" width="${52*k}" height="${30*k}" rx="${9*k}" fill="#d9e9d6" stroke="#6f9a6a"/>`+
    label(x,y+5*k,'ATP',15*k,'#2f5c34');
   const cell=(cx,cy,rx,ry,fill='#eef4ef')=>`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" stroke="#93a89b" stroke-width="2"/>`;
@@ -620,11 +627,9 @@ function mountVisual(type,lessonId){
      atp(300,212)+
      label(300,244,'ATP stays inside the cell',12,'#2f5c34')+
      /* used */
-     glucose(62,128)+o2(62,208)+
-     arrow('M90 128H170','#b98253')+
-     arrow('M90 208H170','#5f7f8c')+
-     label(62,160,'glucose from food',12,'#6b5520')+
-     label(62,240,'oxygen',12,'#3d5d69')+
+     glucose(66,124,'glucose from food')+o2(66,206)+
+     arrow('M94 124H170','#b98253')+
+     arrow('M94 206H170','#5f7f8c')+
      /* produced, and dispersed - no ATP among them */
      arrow('M424 124L482 106','#5f7f8c')+
      arrow('M442 168H482','#5f7f8c')+
@@ -641,12 +646,14 @@ function mountVisual(type,lessonId){
 
    if(mode==='inside'){
     drawing.innerHTML=svg(DEFS+
-     /* one cell, two places, in order */
-     cell(300,170,268,128,'#eef4ef')+
-     label(300,64,'one cell',13,'#54685c')+
+     /* One cell, two places, in order. Rounded rather than elliptical: the
+        cytoplasm column runs to the bottom-left, which is precisely the
+        corner an ellipse does not have. */
+     `<rect x="24" y="48" width="552" height="256" rx="56" fill="#eef4ef" stroke="#93a89b" stroke-width="2"/>`+
+     label(300,80,'one cell',13,'#54685c')+
      label(150,118,'CYTOPLASM',11.5,'#54685c')+
      label(150,140,'glycolysis begins here',13.5,'#183d36')+
-     glucose(150,186)+
+     glucose(120,184,'')+label(146,189,'glucose',12.5,'#6b5520','start')+
      arrow('M150 214V236','#b98253')+
      label(150,252,'a little ATP,',12.5,'#2f5c34')+
      label(150,268,'and molecules that carry on',12.5,'#54685c')+
@@ -667,18 +674,18 @@ function mountVisual(type,lessonId){
 
    if(mode==='work'){
     drawing.innerHTML=svg(DEFS+
-     glucose(72,110)+label(72,146,'chemical energy',12,'#6b5520')+label(72,163,'in food',12,'#6b5520')+
+     glucose(72,110,'')+label(72,146,'chemical energy',12.5,'#6b5520')+label(72,164,'in food',12.5,'#6b5520')+
      arrow('M100 114L156 124','#b98253')+
      cell(232,140,72,50)+label(232,136,'cellular',12.5,'#183d36')+label(232,152,'respiration',12.5,'#183d36')+
      arrow('M306 140H352','#4e7a5f')+
      atp(392,140,1.15)+
-     arrow('M432 140H486','#4e7a5f')+
+     arrow('M432 140H452','#4e7a5f')+
      /* what the cell spends it on */
-     pill(492,92,96,36,'muscles contract','#f3e6da','#7a4e28',12)+
-     pill(492,136,96,36,'active transport','#e4eef5','#1f4653',12)+
-     pill(492,180,96,36,'building materials','#e6efe1','#3c6340',12)+
-     arrow('M432 132L488 110','#4e7a5f')+
-     arrow('M432 150L488 196','#4e7a5f')+
+     pill(456,92,132,36,'muscles contract','#f3e6da','#7a4e28',12.5)+
+     pill(456,136,132,36,'active transport','#e4eef5','#1f4653',12.5)+
+     pill(456,180,132,36,'building materials','#e6efe1','#3c6340',12.5)+
+     arrow('M432 132L452 112','#4e7a5f')+
+     arrow('M432 150L452 194','#4e7a5f')+
      /* the part that is not work */
      arrow('M392 166V204','#c08552',true)+heat(376,238)+
      label(392,262,'some energy leaves as heat',12.5,'#8a5a2c')+
@@ -695,22 +702,22 @@ function mountVisual(type,lessonId){
     label(300,42,'The same glucose, two situations',16,'#183d36')+
     /* --- enough oxygen ------------------------------------------------- */
     pill(18,62,268,34,'ENOUGH OXYGEN','#e4eef5','#1f4653',13)+
-    glucose(52,140)+o2(108,140)+
-    arrow('M132 140H168','#5f7f8c')+
+    glucose(52,136)+o2(112,136)+
+    arrow('M138 136H172','#5f7f8c')+
     label(228,134,'aerobic',12.5,'#183d36')+
     label(228,152,'respiration',12.5,'#183d36')+
-    label(18,192,'much more ATP',13,'#2f5c34','start')+
-    bar(18,202,268,'#a8cf9f')+
-    label(18,248,'from each glucose molecule',12,'#54685c','start')+
+    label(18,204,'much more ATP',13,'#2f5c34','start')+
+    bar(18,214,268,'#a8cf9f')+
+    label(18,258,'from each glucose molecule',12,'#54685c','start')+
     /* --- limited oxygen ------------------------------------------------ */
     pill(314,62,268,34,'LIMITED OXYGEN','#f3e6da','#7a4e28',13)+
-    glucose(348,140)+
-    arrow('M372 140H404','#b98253')+
+    glucose(348,136,'glucose')+
+    arrow('M376 136H408','#b98253')+
     label(416,134,'glycolysis keeps going,',12.5,'#183d36','start')+
     label(416,152,'helped by fermentation',12.5,'#183d36','start')+
-    label(314,192,'much less ATP',13,'#7a4e28','start')+
-    bar(314,202,64,'#e8c98a')+
-    label(314,248,'from each glucose molecule',12,'#54685c','start')+
+    label(314,204,'much less ATP',13,'#7a4e28','start')+
+    bar(314,214,64,'#e8c98a')+
+    label(314,258,'from each glucose molecule',12,'#54685c','start')+
     /* --- what it means -------------------------------------------------- */
     label(300,296,'When oxygen is limited, fermentation allows glycolysis to keep going.',14.5,'#183d36')+
     label(300,318,'The cell still gets some ATP \u2014 far less than aerobic respiration gets from the same glucose.',13,'#54685c')+
@@ -814,15 +821,15 @@ function mountVisual(type,lessonId){
     const roles=['PRODUCER','PRIMARY CONSUMER','SECONDARY CONSUMER','TERTIARY CONSUMER'];
     drawing.innerHTML=svg(DEFS+
      label(300,36,'One food chain, four feeding levels',15.5,'#183d36')+
-     cx.map(x=>card(x-56,76,112,100)).join('')+
+     cx.map(x=>card(x-48,76,96,100)).join('')+
      grass(69,150)+hopper(223,126)+frog(377,154)+hawk(531,126,.78)+
      /* after the cards, or the card fill swallows the sunbeam */
-     sun(44,30)+label(44,58,'sunlight',11,'#8a6a2c')+
+     sun(44,30)+label(44,58,'sunlight',11.5,'#8a6a2c')+
      arrow('M46 66L64 112','#d9a441',true)+
-     [0,1,2].map(i=>arrow(`M${cx[i]+60} 126H${cx[i+1]-60}`,'#6b8a4e')).join('')+
-     [0,1,2].map(i=>label((cx[i]+cx[i+1])/2,112,'eaten by',10.5,'#54685c')).join('')+
+     [0,1,2].map(i=>arrow(`M${cx[i]+52} 126H${cx[i+1]-52}`,'#6b8a4e')).join('')+
+     [0,1,2].map(i=>label((cx[i]+cx[i+1])/2,110,'eaten by',11.5,'#54685c')).join('')+
      cx.map((x,i)=>label(x,198,names[i],13.5,'#183d36')).join('')+
-     cx.map((x,i)=>label(x,216,roles[i],10.5,'#54685c')).join('')+
+     cx.map((x,i)=>label(x,216,roles[i],11.5,'#54685c')).join('')+
      pill(18,236,564,42,'Arrows show energy moving from food → consumer.','#e6efe1','#2f5c34',15)+
      label(300,300,'Grass captures energy from sunlight and stores it in its own biomass.',12.5,'#54685c'),
      'A food chain: grass, then grasshopper, then frog, then hawk, with each arrow pointing from the food to the organism that eats it.',324);
@@ -841,13 +848,13 @@ function mountVisual(type,lessonId){
      tier('M184 116H416L374 70H226Z',TIER[3])+
      /* Role above, organism beside its number. One long line does not
         fit in the top tier, and the top tier is the whole point. */
-     label(300,224,'PRODUCERS',10.5,'#3c6340')+
+     label(300,224,'PRODUCERS',11.5,'#3c6340')+
      label(300,244,'Grass · 10,000 energy units',14,'#183d36')+
-     label(300,178,'PRIMARY CONSUMERS',10.5,'#5c6b33')+
+     label(300,178,'PRIMARY CONSUMERS',11.5,'#5c6b33')+
      label(300,198,'Grasshopper · 1,000',14,'#183d36')+
-     label(300,132,'SECONDARY CONSUMERS',10.5,'#7a5a28')+
+     label(300,132,'SECONDARY CONSUMERS',11.5,'#7a5a28')+
      label(300,152,'Frog · 100',14,'#183d36')+
-     label(300,86,'TERTIARY CONSUMERS',10.5,'#8a5a2c')+
+     label(300,86,'TERTIARY CONSUMERS',11.5,'#8a5a2c')+
      label(300,106,'Hawk · 10',14,'#183d36')+
      label(36,204,'× 0.10',11.5,'#7a4e28')+
      label(36,158,'× 0.10',11.5,'#7a4e28')+
@@ -885,7 +892,7 @@ function mountVisual(type,lessonId){
      label(238,216,'Only energy stored in new biomass can move to the',13.5,'#183d36')+
      label(238,236,'next trophic level when that organism is eaten.',13.5,'#183d36')+
      label(238,262,'Energy is transferred and dispersed, mostly as heat — none of it disappears.',12,'#54685c')+
-     label(300,308,'Proportions in the bar are illustrative, not measured.',11,'#93a099')+
+     label(300,308,'Proportions in the bar are illustrative, not measured.',12,'#93a099')+
      `<rect x="18" y="322" width="564" height="54" rx="14" fill="#efe7da" stroke="#c9b79a"/>`+
      label(300,344,'Decomposers obtain energy from dead organic material',13,'#6b5520')+
      label(300,363,'and return matter — nutrients — to soil, water and air.',12.5,'#6b5520'),
@@ -903,7 +910,7 @@ function mountVisual(type,lessonId){
     LEVELS.map(([role,who],i)=>{
      const y=60+i*68;
      return `<rect x="40" y="${y}" width="320" height="40" rx="12" fill="${TIER[i]}" stroke="#93a89b"/>`+
-      label(54,y+17,role,10.5,'#3f5a44','start')+
+      label(54,y+17,role,11.5,'#3f5a44','start')+
       label(54,y+33,who,13,'#183d36','start')+
       label(346,y+27,units(vals[i]),15,'#183d36','end');
     }).join('')+
@@ -914,7 +921,7 @@ function mountVisual(type,lessonId){
       label(222,gy+18,fmt(vals[i])+' × 0.10 = '+fmt(vals[i+1]),12.5,'#7a4e28','start');
     }).join('')+
     pill(18,320,564,42,'10% is a practice estimate. Real ecosystems vary.','#f3e6da','#7a4e28',14.5)+
-    label(300,384,'These are practice numbers, not measured wildlife data.',11,'#93a099'),
+    label(300,384,'These are practice numbers, not measured wildlife data.',12,'#93a099'),
     `An energy calculation. Producers begin with ${fmt(vals[0])} units and each level above receives one tenth of the level below it, giving ${fmt(vals[1])}, then ${fmt(vals[2])}, then ${fmt(vals[3])}.`,400);
    caption.textContent=`Producers start with ${fmt(vals[0])} units. A tenth of that reaches the grasshoppers, a tenth of theirs reaches the frogs, and so on: ${fmt(vals[0])} → ${fmt(vals[1])} → ${fmt(vals[2])} → ${fmt(vals[3])}. Change the starting number and the shape of the answer does not change - four steps in, almost none of the original energy is still available for biological work. Ten per cent is a classroom estimate for practice; real ecosystems vary.`;
   };
