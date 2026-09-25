@@ -9,8 +9,8 @@
    carries the full standard chapter template.
    --------------------------------------------------------------------------- */
 
-import { CHAPTERS } from '../content/chapters.js?v=18';
-import { el, html, esc } from '../layout/dom.js?v=18';
+import { CHAPTERS } from '../content/chapters.js?v=19';
+import { el, html, esc } from '../layout/dom.js?v=19';
 
 /* --- Reference shelf ------------------------------------------------------ */
 

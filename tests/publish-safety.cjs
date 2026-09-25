@@ -132,6 +132,7 @@ console.log('the same promise for his exercises and quiz scores');
         lessonStarted: true, lessonComplete: true, version: 2,
       },
       ethanQuizScoresV1: { congress: { best: 8, total: 10, attempts: 3, last: 8 } },
+      ethan_apgov_v1: { units: { 2: { best: 3, last: 3, total: 4, attempts: 2, at: 30 } } },
     },
   };
   const blank = { stores: {} };
@@ -143,12 +144,18 @@ console.log('the same promise for his exercises and quiz scores');
       `${side}: his lesson note is kept`);
     ok(out.ethan_math_quest_v2.lessonComplete === true, `${side}: you cannot un-finish a lesson`);
     ok(out.ethanQuizScoresV1.congress.best === 8, `${side}: his best score cannot go down`);
+    ok(out.ethan_apgov_v1.units[2].best === 3, `${side}: his unit quick check is kept`);
   }
   /* A worse run later must not lower the best. */
-  const worse = { stores: { ethanQuizScoresV1: { congress: { best: 3, total: 10, attempts: 4, last: 3 } } } };
+  const worse = { stores: {
+    ethanQuizScoresV1: { congress: { best: 3, total: 10, attempts: 4, last: 3 } },
+    ethan_apgov_v1: { units: { 2: { best: 1, last: 1, total: 4, attempts: 3, at: 99 } } },
+  } };
   const out = ProgressMerge.mergeAll(work, worse).stores;
   ok(out.ethanQuizScoresV1.congress.best === 8, 'a worse attempt does not lower his best');
   ok(out.ethanQuizScoresV1.congress.attempts === 4, 'but the attempt is still counted');
+  ok(out.ethan_apgov_v1.units[2].best === 3 && out.ethan_apgov_v1.units[2].attempts === 3,
+    'and the same holds for a unit quick check');
 }
 
 console.log('');
@@ -157,8 +164,12 @@ console.log('every rule is additive, by inspection of the source');
   const prog = fs.readFileSync(path.join(ROOT, 'shared/progress-merge.js'), 'utf8');
   const jour = fs.readFileSync(path.join(ROOT, 'shared/journal-merge.js'), 'utf8');
   const worker = fs.readFileSync(path.join(ROOT, 'worker/journal.js'), 'utf8');
-  ok(Object.keys(ProgressMerge.RULES).length === 3,
-    `three stores have rules of their own (${Object.keys(ProgressMerge.RULES).join(', ')})`);
+  /* One rule per store, and every store he writes to has one: a store with
+     no rule is kept whole from one side, which silently drops the other. */
+  const STORES = ['ethan_biology_v1', 'ethan_math_quest_v2', 'ethanQuizScoresV1', 'ethan_apgov_v1'];
+  const ruled = Object.keys(ProgressMerge.RULES);
+  ok(STORES.every((k) => ruled.includes(k)) && ruled.length === STORES.length,
+    `every store he writes to has a rule of its own (${ruled.join(', ')})`);
   ok(!/\.splice\(|\.shift\(|delete\s+out\[/.test(prog), 'nothing in the progress rules removes an item');
   ok(!/\.splice\(|\.shift\(/.test(jour), 'nothing in the journal rules removes an item');
   ok(worker.includes("import '../shared/journal-merge.js'") &&

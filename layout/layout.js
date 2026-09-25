@@ -14,9 +14,9 @@
     Subject navigation only. Study Hub and the notes are not here: they live
     in the shared cluster on the right, in the same place and the same order
     as on Biology and Math Quest. */
-import { CHAPTERS } from '../content/chapters.js?v=18';
-import { AREAS, topicSlug } from '../content/course.js?v=18';
-import { unitIdeas } from '../content/courseDetails.js?v=18';
+import { CHAPTERS } from '../content/chapters.js?v=19';
+import { AREAS, topicSlug } from '../content/course.js?v=19';
+import { unitIdeas } from '../content/courseDetails.js?v=19';
 
 export const NAV = [
   { id: 'home',   label: 'Home',       href: '#/' },
@@ -59,7 +59,7 @@ export function renderLayout() {
 
   footer.innerHTML = `
     <span>Ethan Study Hub &middot; AP U.S. Government &amp; Politics</span>
-    <span>Progress is saved on this device.</span>`;
+    <span>Saved and shared with your family.</span>`;
 
   mountCluster();
 }

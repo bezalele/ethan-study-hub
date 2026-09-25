@@ -85,7 +85,7 @@ B('ecosystems','populations','Population growth and limits','Explain why populat
  ['Can carrying capacity change after habitat loss?','Yes, resource availability can change','No, it is genetically fixed','Only if every individual dies','The environment’s support capacity depends on available habitat and resources.'],
  ['What should a logistic model’s curve be treated as?','A simplified prediction under assumptions','An exact rule for every population','Proof of a particular limiting resource','Models help reasoning but do not capture every real-world influence.']
 ]);
-B('ecosystems','biodiversity','Biodiversity and ecosystem change','Explain resilience without assuming ecosystems stay unchanged.','web',[
+B('ecosystems','biodiversity','Biodiversity and ecosystem change','Explain resilience without assuming ecosystems stay unchanged.','biodiversity',[
  ['Diversity has several levels','Biodiversity includes variation within species, the variety of species, and the variety of ecosystems. Genetic diversity can help a population respond to changing conditions.'],
  ['Disturbance changes relationships','A storm, fire, disease, or habitat change can alter populations and resources. Ecological succession describes changes in community composition over time. Recovery pathways depend on what survives and on later conditions.'],
  ['Resilience is a capacity, not a guarantee','Resilience is the ability to absorb disturbance and recover or reorganize while maintaining important functions. Multiple species with overlapping roles may support stability, but severe or repeated disturbance can cause major shifts.']
@@ -100,7 +100,7 @@ B('ecosystems','biodiversity','Biodiversity and ecosystem change','Explain resil
  ['Which statement about biodiversity is sound?','It can support resilience but does not guarantee immunity to disturbance','It makes every ecosystem permanent','It is only the number of large animals','Benefits depend on roles, conditions, and disturbance severity.'],
  ['After disturbance, why examine whether soil remains?','It affects the starting conditions for recovery','It determines the future with absolute certainty','Soil has no role in communities','Soil can retain nutrients, seeds, and organisms that affect recovery.']
 ]);
-B('ecosystems','human-impacts','Human impacts and conservation','Evaluate a solution using evidence and trade-offs.','web',[
+B('ecosystems','human-impacts','Human impacts and conservation','Evaluate a solution using evidence and trade-offs.','impact',[
  ['Follow a chain of effects','Land conversion, pollution, overharvesting, introduced species, and climate change can alter ecosystems. Trace how the action changes resources or interactions rather than merely labeling it harmful.'],
  ['A local example: nutrient runoff','Extra nitrogen or phosphorus can support algal growth. When organic material is decomposed, microbes use oxygen; low dissolved oxygen can harm aquatic organisms. The exact response depends on conditions and nutrient limits.'],
  ['Evaluate proposed solutions','Define a goal, measurable criteria, and constraints such as cost or land availability. Compare likely benefits and unintended effects. Monitor results and revise the plan rather than assuming installation guarantees success.']

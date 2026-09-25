@@ -560,6 +560,7 @@ function journal() {
   if (window.LearningLog) {
     LearningLog.mountHistory(main.querySelector("[data-learning-history]"), {
       subject: "math", label: "Algebra 1", learner: "Ethan", lessons: lessonChoices(), recent: recentLessons(),
+      status: journalStatus,
     });
   }
 }
@@ -591,6 +592,33 @@ function lessonChoices() {
     else out.push({ id: "unit-" + u.id, title: name, href: "#unit/" + u.id });
   });
   return out;
+}
+/* How Algebra is going, for the panel under the journal's calendar. Same
+   shape as Biology's, in this subject's terms: practice attempts rather than
+   lessons explored, because that is what this course is made of. */
+function journalStatus() {
+  const done = [];
+  const a = progress.attempts || [];
+  const solo = a.filter((x) => x.correct && !x.assisted).length;
+  const skills = new Set(a.map((x) => x.skill || x.topic).filter(Boolean));
+  const days = new Set(a.map((x) => String(x.date || "").slice(0, 10)).filter(Boolean));
+  if (a.length) done.push(`${a.length} practice question${a.length === 1 ? "" : "s"} answered` +
+    (a.length >= 5 ? ` \u00b7 ${Math.round(solo / a.length * 100)}% first try on your own` : ""));
+  if (skills.size) done.push(`${skills.size} skill${skills.size === 1 ? "" : "s"} practised`);
+  if (days.size > 1) done.push(`${days.size} days of practice`);
+
+  let nudge = null;
+  if (!a.length) {
+    nudge = { text: "No practice yet \u2014 ten questions is about five minutes.",
+      href: "#practice", label: "Try some" };
+  } else if (typeof U2_TOPICS !== "undefined") {
+    const untouched = U2_TOPICS.filter((t) => !skills.has(t.id))[0];
+    if (untouched) {
+      nudge = { text: `${untouched.title} is waiting whenever you want it.`,
+        href: `#u2lesson/${untouched.id}`, label: "Open it" };
+    }
+  }
+  return { done, nudge };
 }
 /* The ones he has actually been in, newest first: whatever he last opened,
    then the skills his recent practice attempts belong to. */

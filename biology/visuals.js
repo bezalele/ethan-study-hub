@@ -3,7 +3,7 @@ const svg=(body,label,h=280)=>`<svg viewBox="0 0 600 ${h}" role="img" aria-label
 const textSVG=(x,y,t,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#183d36">${esc(t)}</text>`;
 const box=(x,y,w,h,t,fill='#e4eee5')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${fill}" stroke="#789787"/>${textSVG(x+w/2,y+h/2+6,t)}`;
 const line=(x,y,a,b)=>`<path d="M${x} ${y}L${a} ${b}" fill="none" stroke="#446d61" stroke-width="2" marker-end="url(#arrow)"/>`;
-const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life'};
+const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',biodiversity:'How does an ecosystem respond to change?',impact:'What happens to the stream?'};
 const REAL_LIFE={
  cells:{
   title:"Cells: The Building Blocks of Life",
@@ -136,6 +136,306 @@ function mountVisual(type,lessonId){
  controls.innerHTML='<label>Resource-supported capacity <input id="capacity" type="range" min="30" max="180" value="100" step="10"><output id="capacity-label"></output></label>';
  const draw=()=>{const k=+document.getElementById('capacity').value;document.getElementById('capacity-label').textContent=k;let n=10;const points=[];for(let t=0;t<=30;t++){points.push([50+t*16,235-n]);n+=.3*n*(1-n/k);}drawing.innerHTML=svg(`<path d="M50 30V235H550" stroke="#6c8278" fill="none"/><path d="M50 ${235-k}H550" stroke="#b48052" stroke-dasharray="5 5"/><polyline points="${points.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#3d7761" stroke-width="4"/>${textSVG(300,276,'Time steps')}${textSVG(90,22,'Individuals',15)}${textSVG(40,240,'0',14)}${textSVG(35,137,'100',14)}${textSVG(495,225-k,`Capacity ${k}`,15)}${textSVG(530,254,'30',14)}`,'Logistic population model with population on the vertical axis and time on the horizontal axis.',290);caption.textContent=`Illustrative logistic model: starts at 10 individuals; per-step growth is 0.3 × population × (1 − population/${k}). Change the capacity to compare trajectories. This is not measured wildlife data; real populations also fluctuate and move.`;};document.getElementById('capacity').oninput=draw;draw();return;
  }
+
+ /* Unit 1 - Biodiversity and ecosystem change.
+
+    One woodland, five moments in its life. The organisms share a scene
+    rather than sitting in separate boxes, because "variety in one place" is
+    the idea and six labelled tanks is not it.
+
+    Species richness is on screen with its definition, so the number means
+    something; resilience is introduced on the last state, where the student
+    has just watched it happen, rather than announced at the start. Nothing
+    here is a simulation: the counts are illustrative and say so. */
+ if(type==='biodiversity'){
+  const GROUND=214;
+  const oak=(x,scale,mode)=>{
+   const h=62*scale,r=30*scale;
+   if(mode==='stump')return `<path d="M${x-7} ${GROUND}h14v-16h-14Z" fill="#6b5334"/><path d="M${x-7} ${GROUND-16}q7 -6 14 0" fill="#3f3228"/>`;
+   const trunk=`<path d="M${x} ${GROUND}v${-h}" stroke="#6b5334" stroke-width="${7*scale}" stroke-linecap="round"/>`;
+   if(mode==='bare')return trunk+
+    `<path d="M${x} ${GROUND-h}l${-15*scale} ${-14*scale}M${x} ${GROUND-h+6*scale}l${16*scale} ${-16*scale}M${x} ${GROUND-h}v${-14*scale}" stroke="#7d6a52" stroke-width="${3*scale}" fill="none" stroke-linecap="round"/>`;
+   const leaf=mode==='scorched'?'#93a07a':'#5f8a4e';
+   return trunk+`<circle cx="${x}" cy="${GROUND-h-r*0.55}" r="${r}" fill="${leaf}"/>`+
+    `<circle cx="${x-r*0.7}" cy="${GROUND-h-r*0.15}" r="${r*0.62}" fill="${leaf}" opacity=".92"/>`+
+    `<circle cx="${x+r*0.72}" cy="${GROUND-h-r*0.2}" r="${r*0.58}" fill="${leaf}" opacity=".92"/>`;
+  };
+  const shrub=(x,c='#7ea867')=>`<ellipse cx="${x}" cy="${GROUND-11}" rx="19" ry="13" fill="${c}"/>`+
+   `<ellipse cx="${x-11}" cy="${GROUND-6}" rx="12" ry="9" fill="${c}" opacity=".9"/>`+
+   `<ellipse cx="${x+12}" cy="${GROUND-7}" rx="11" ry="8" fill="${c}" opacity=".9"/>`;
+  const grass=(x,c='#8fb367')=>`<path d="M${x-6} ${GROUND}q6-15 2-19M${x} ${GROUND}q2-17 0-21M${x+6} ${GROUND}q-6-15-2-19" stroke="${c}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+  const beetle=(x,y)=>`<ellipse cx="${x}" cy="${y}" rx="5.5" ry="8" fill="#6d4f35"/><circle cx="${x}" cy="${y-9}" r="3.4" fill="#6d4f35"/>`+
+   `<path d="M${x-8} ${y-3}h16M${x-8} ${y+4}h16" stroke="#6d4f35" stroke-width="1.8"/>`;
+  const bird=(x,y)=>`<path d="M${x-11} ${y}q11-11 11 0q0-11 11 0" stroke="#5d6f8f" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  /* A fox, and not a cat: the tail is the give-away, so it is thick, low and
+     tipped white, and the muzzle comes to a point. */
+  const fox=(x)=>`<path d="M${x-15} ${GROUND-14}q-16 2-19-12q7 10 19 4Z" fill="#b87a46"/>`+
+   `<path d="M${x-30} ${GROUND-24}q-5-4-4-8q5 5 7 5Z" fill="#f0e6d8"/>`+
+   `<ellipse cx="${x}" cy="${GROUND-14}" rx="17" ry="9" fill="#c08552"/>`+
+   `<path d="M${x+9} ${GROUND-18}q12-3 15 3q-3 7-15 5Z" fill="#c08552"/>`+
+   `<path d="M${x+24} ${GROUND-15}l7 1l-7 3Z" fill="#8d5a2f"/>`+
+   `<path d="M${x+8} ${GROUND-22}l1-8 6 6ZM${x+17} ${GROUND-22}l2-7 5 6Z" fill="#a9662f"/>`+
+   `<circle cx="${x+18}" cy="${GROUND-15}" r="1.6" fill="#3a2a1c"/>`+
+   `<path d="M${x-9} ${GROUND-6}v6M${x+1} ${GROUND-6}v6M${x+10} ${GROUND-6}v6" stroke="#8d5a2f" stroke-width="3.5" stroke-linecap="round"/>`;
+
+  const STATES={
+   healthy:{richness:6,status:'Diverse ecosystem',ground:'#cbd8a8',sky:'#eef4ef',
+    line:'Species richness means the number of different species in an area.',
+    trees:[[80,1,'full'],[152,.88,'full'],[236,.95,'full']],
+    shrubs:[300,344,392],grass:[52,112,186,262,332,404,452,506,548],
+    beetles:[[124,236],[306,240],[428,234]],birds:[[168,92],[228,74],[436,86]],fox:492,built:false},
+
+   fire:{richness:4,status:'After a fire',ground:'#b6a98c',sky:'#f1ece4',
+    line:'Some species decline or leave after the disturbance.',
+    trees:[[80,1,'bare'],[152,.88,'stump'],[236,.95,'scorched']],
+    shrubs:[344],grass:[262,452,548],
+    beetles:[[428,234]],birds:[[436,86]],fox:null,built:false,burn:true},
+
+   disease:{richness:5,status:'After a disease of the oaks',ground:'#cbd8a8',sky:'#eef4ef',
+    line:'Disturbances do not affect every species in the same way.',
+    trees:[[80,1,'bare'],[152,.88,'bare'],[236,.95,'bare']],
+    shrubs:[300,344,392],grass:[52,112,186,262,332,404,452,506,548],
+    beetles:[[124,236],[306,240],[428,234]],birds:[[168,92],[228,74],[436,86]],fox:492,built:false},
+
+   habitat:{richness:4,status:'Habitat reduced',ground:'#cbd8a8',sky:'#eef4ef',
+    line:'Habitat loss can reduce the number of species an area can support.',
+    trees:[[80,1,'full'],[152,.88,'full']],
+    shrubs:[300],grass:[52,112,186,262],
+    beetles:[[124,236]],birds:[[168,92]],fox:null,built:true},
+
+   /* --- and what "years later" means, which depends on what happened --- */
+
+   'fire-later':{richness:6,status:'Years after the fire',ground:'#c6d7a2',sky:'#eef4ef',
+    line:'After fire, an ecosystem may recover if soil, seeds, roots, and nearby organisms remain.',
+    second:'Recovery can happen through ecological succession.',
+    trees:[[84,.42,'full'],[160,.36,'full'],[240,.3,'full']],
+    shrubs:[286,330,374,418],grass:[46,96,146,196,246,296,346,396,446,496,542],
+    beetles:[[124,236],[264,240],[392,234],[470,238]],birds:[[168,92],[228,74],[436,86]],fox:508,built:false},
+
+   'disease-later':{richness:6,status:'Years after the disease',ground:'#c6d7a2',sky:'#eef4ef',
+    line:'After disease, some populations may recover, while the community may also change.',
+    second:'Here a few resistant oaks remain and shrubs have taken much of the space.',
+    trees:[[80,.9,'full'],[152,.5,'full'],[236,.95,'stump']],
+    shrubs:[286,330,374,418],grass:[52,112,186,262,332,404,452,506,548],
+    beetles:[[124,236],[306,240],[428,234]],birds:[[168,92],[228,74],[436,86]],fox:492,built:false},
+
+   'habitat-later':{richness:4,status:'Years later \u00b7 without restoration',ground:'#cbd8a8',sky:'#eef4ef',
+    line:'Habitat loss does not automatically reverse over time. If the land stays developed, the original habitat cannot simply grow back.',
+    trees:[[80,1,'full'],[152,.88,'full']],
+    shrubs:[300],grass:[52,112,186,262,332],
+    beetles:[[124,236]],birds:[[168,92]],fox:null,built:true},
+
+   'habitat-restored':{richness:5,status:'Years later \u00b7 with restoration',ground:'#c6d7a2',sky:'#eef4ef',
+    line:'Recovery is possible if habitat is restored, but it takes time and may not recreate the original ecosystem exactly.',
+    trees:[[80,1,'full'],[152,.88,'full'],[420,.4,'full'],[500,.34,'full']],
+    shrubs:[300,344,470],grass:[52,112,186,262,332,404,452,506,548],
+    beetles:[[124,236],[306,240],[428,234]],birds:[[168,92],[436,86]],fox:null,built:'restored'}
+  };
+
+  /* The five controls, plus - only where it means something - a choice
+     between leaving the land developed and putting habitat back. */
+  let picked='healthy',after=null,restored=false;
+
+  const drawControls=()=>{
+   const main=[['healthy','Healthy ecosystem'],['fire','Fire'],['disease','Disease'],['habitat','Habitat loss'],['later','Years later']];
+   const armed=!!after;
+   controls.innerHTML=main.map(([value,label])=>{
+    const on=value==='later'?picked==='later':picked===value;
+    const off=value==='later'&&!armed;
+    return `<button class="soft" data-value="${value}" aria-pressed="${on}"${off?' disabled title="Choose a disturbance first"':''}>${label}</button>`;
+   }).join('')+
+   (armed?'':'<span class="small muted">Choose a disturbance, then see what happens years later.</span>')+
+   (picked==='later'&&after==='habitat'
+    ? '<div class="controls" data-restore>'+
+      [['no','Without restoration'],['yes','With restoration']].map(([v,l])=>
+       `<button class="soft" data-restore-value="${v}" aria-pressed="${(v==='yes')===restored}">${l}</button>`).join('')+
+      '</div>'
+    : '');
+   controls.querySelectorAll('[data-value]').forEach(b=>b.onclick=()=>{
+    const v=b.dataset.value;
+    if(v==='later'){ if(!after) return; picked='later'; }
+    else { picked=v; if(v==='fire'||v==='disease'||v==='habitat'){ after=v; restored=false; } }
+    draw();
+   });
+   controls.querySelectorAll('[data-restore-value]').forEach(b=>b.onclick=()=>{
+    restored=b.dataset.restoreValue==='yes';
+    draw();
+   });
+  };
+
+  const draw=()=>{
+   drawControls();
+   const key=picked==='later'
+    ? (after==='habitat'?(restored?'habitat-restored':'habitat-later'):after+'-later')
+    : picked;
+   const st=STATES[key];
+
+   const built=st.built
+    ? (st.built==='restored'
+      ? `<rect x="404" y="120" width="178" height="${GROUND-120}" fill="#e6ecdc"/>`+
+        `<rect x="430" y="150" width="46" height="64" fill="#c9bfb0" stroke="#a89c8a"/>`+
+        `<path d="M424 150l29-20 29 20Z" fill="#9e8f7d"/>`+
+        `<path d="M404 120v${GROUND-120}" stroke="#9a9384" stroke-width="2" stroke-dasharray="7 6"/>`+
+        `<text x="500" y="112" text-anchor="middle" font-size="12" fill="#4a6b45">replanted</text>`
+      : `<rect x="404" y="120" width="178" height="${GROUND-120}" fill="#ded8cd"/>`+
+        `<rect x="430" y="140" width="56" height="74" fill="#c9bfb0" stroke="#a89c8a"/>`+
+        `<path d="M424 140l34-24 34 24Z" fill="#9e8f7d"/>`+
+        `<rect x="446" y="176" width="16" height="38" fill="#8d8271"/>`+
+        `<rect x="506" y="158" width="52" height="56" fill="#c9bfb0" stroke="#a89c8a"/>`+
+        `<path d="M500 158l32-20 32 20Z" fill="#9e8f7d"/>`+
+        `<path d="M404 120v${GROUND-120}" stroke="#9a9384" stroke-width="2" stroke-dasharray="7 6"/>`+
+        /* The moment it happens, and the years after it, are different
+           sentences: one is the clearing, the other is its persistence. */
+        `<text x="493" y="112" text-anchor="middle" font-size="12" fill="#6f675a">${key==='habitat'?'woodland cleared':'still developed'}</text>`)
+    : '';
+   const burn=st.burn
+    ? [[118,10],[196,7],[330,9],[470,6]].map(([x,r])=>
+       `<ellipse cx="${x}" cy="${GROUND+9}" rx="${r*2.2}" ry="${r*0.7}" fill="#8d7d63" opacity=".55"/>`).join('')
+    : '';
+
+   const scene=`<rect x="18" y="48" width="564" height="${GROUND+36-48}" rx="14" fill="${st.sky}" stroke="#cbd6c8"/>`+
+    `<rect x="18" y="${GROUND}" width="564" height="36" rx="0" fill="${st.ground}"/>`+
+    `<path d="M18 ${GROUND}h564" stroke="#a9b98d" stroke-width="2"/>`+
+    built+
+    st.trees.map(([x,scale,m])=>oak(x,scale,m)).join('')+
+    st.shrubs.map(x=>shrub(x)).join('')+
+    st.grass.map(x=>grass(x)).join('')+
+    burn+
+    st.beetles.map(([x,y])=>beetle(x,y)).join('')+
+    st.birds.map(([x,y])=>bird(x,y)).join('')+
+    (st.fox?fox(st.fox):'');
+
+   const chip=(x,y,w,text,fill,ink)=>`<rect x="${x}" y="${y}" width="${w}" height="30" rx="10" fill="${fill}" stroke="#b9c9b4"/>`+
+    `<text x="${x+w/2}" y="${y+20}" text-anchor="middle" font-size="14" fill="${ink}">${esc(text)}</text>`;
+   const good=key==='healthy'||key==='fire-later'||key==='disease-later'||key==='habitat-restored';
+   const panel=chip(18,264,250,st.status,good?'#dcecdc':'#f0e6d8','#183d36')+
+    chip(278,264,212,`Species richness: ${st.richness} kinds`,'#e8eef5','#1f4653')+
+    `<text x="502" y="284" font-size="12" fill="#6a7b72">illustrative</text>`;
+
+   /* The long lines wrap by hand: SVG text does not. */
+   const wrap=(text,width)=>{
+    const words=String(text).split(' '),lines=[];let line='';
+    words.forEach(w=>{
+     if((line+' '+w).trim().length*7.1>width){lines.push(line.trim());line=w;}
+     else line=(line+' '+w).trim();
+    });
+    if(line)lines.push(line);
+    return lines;
+   };
+   const lines=wrap(st.line,556).map((t,i)=>`<text x="18" y="${318+i*21}" font-size="14.5" fill="#183d36">${esc(t)}</text>`).join('');
+   const secondY=318+wrap(st.line,556).length*21+3;
+   const second=st.second?`<text x="18" y="${secondY}" font-size="14.5" fill="#33705a">${esc(st.second)}</text>`:'';
+
+   drawing.innerHTML=svg(`${scene}${panel}${lines}${second}`,
+    `A woodland: ${st.status.toLowerCase()}. Species richness ${st.richness} kinds. ${st.line}`,
+    (st.second?secondY:318+wrap(st.line,556).length*21)+14);
+   caption.textContent='Biodiversity means the variety of living things in an ecosystem. Disturbances such as fire, disease, and habitat loss can affect ecosystems in different ways. Some ecosystems can recover naturally, while others need restoration. Recovery does not always mean returning exactly to the original state.';
+  };
+
+  draw();
+  return;
+ }
+
+ /* Unit 1 - Human impacts and conservation.
+
+    The test this has to pass: a fourteen-year-old looks at it for five
+    seconds and can say what happened, without reading the paragraph below.
+    So the scene carries the consequence - the water, the algae, the fish -
+    and seven numbered steps say it in plain English underneath.
+
+    Two things are deliberate. The step that lowers the oxygen is the
+    decomposers, not the algae "using it up", which is the mistake this
+    lesson already warns about. And the oxygen is described in words, never
+    a number, because an invented "3 out of 10" reads like a measurement
+    somebody took. */
+ if(type==='impact'){
+  const fish=(x,y,c,sad)=>`<ellipse cx="${x}" cy="${y}" rx="15" ry="9" fill="${c}"/>`+
+   `<path d="M${x+13} ${y}l13 -8v16Z" fill="${c}"/>`+
+   `<circle cx="${x-7}" cy="${y-3}" r="1.9" fill="#f4f7f5"/>`+
+   (sad?`<path d="M${x-13} ${y+4}q4 -4 8 -1" stroke="#f4f7f5" stroke-width="1.6" fill="none"/>`+
+        `<circle cx="${x-17}" cy="${y-10}" r="3" fill="none" stroke="#e8efe9" stroke-width="1.5"/>`+
+        `<circle cx="${x-23}" cy="${y-19}" r="2" fill="none" stroke="#e8efe9" stroke-width="1.5"/>`
+       :`<path d="M${x-13} ${y+2}q4 4 8 1" stroke="#f4f7f5" stroke-width="1.6" fill="none"/>`);
+  const algae=(x,y,n,c)=>Array.from({length:n},(_,i)=>
+   `<ellipse cx="${x+i*30}" cy="${y+(i%2?7:0)}" rx="14" ry="7" fill="${c}"/>`+
+   `<ellipse cx="${x+8+i*30}" cy="${y+10+(i%2?7:0)}" rx="9" ry="5" fill="${c}" opacity=".75"/>`).join('');
+  const tuft=(x,y,c)=>`<path d="M${x-5} ${y}q5-13 1-17M${x} ${y}q2-15 0-18M${x+5} ${y}q-5-13-1-17" stroke="${c}" stroke-width="2.5" fill="none"/>`;
+  const tree=(x,y,c)=>`<path d="M${x} ${y}v-9" stroke="#6b5334" stroke-width="3"/><circle cx="${x}" cy="${y-17}" r="9" fill="${c}"/>`;
+  /* Drawn by hand rather than with the shared marker, whose head scales with
+     the stroke width. */
+  const flow=(x1,x2,y,h,c)=>`<path d="M${x1} ${y-h/2}H${x2-14}v${-h/2}l16 ${h}l-16 ${h}v${-h/2}H${x1}Z" fill="${c}"/>`;
+
+  const RUNS={
+   impact:{
+    title:'How fertilizer runoff can hurt a stream',
+    water:'#8fa860',lit:false,
+    oxygen:'Low dissolved oxygen',fishLine:'Fish can struggle',
+    scene:'algae everywhere',
+    steps:['Fertilizer on field','Rain washes it in','Nutrients feed algae','Extra algae die','Decomposers use oxygen','Oxygen in water drops','Fish can struggle'],
+    spoken:'Fertilizer on the field, rain washes nutrients into the stream, too many nutrients feed algae, the extra algae die and decompose, decomposers use oxygen, oxygen in the water drops, and fish can struggle.',
+    note:'Fertilizer adds extra nutrients to the stream. This can cause too much algae to grow. When the extra algae die, decomposers use oxygen to break them down. Less oxygen in the water can make it harder for fish to survive.'},
+   buffer:{
+    title:'How a buffer strip can protect the stream',
+    water:'#9dc6dc',lit:true,
+    oxygen:'Higher dissolved oxygen',fishLine:'Healthier conditions for fish',
+    scene:'clearer water',
+    steps:['Grass and trees','Catch some runoff','Fewer nutrients','Less extra algae','Less to decompose','More oxygen stays','Healthier for fish'],
+    spoken:'Grass and trees along the stream catch some of the runoff, fewer nutrients reach the water, there is less extra algae, less material decomposes, more oxygen stays in the water, and conditions are healthier for fish.',
+    note:'Grass and trees along the stream can catch some runoff before it reaches the water. Fewer nutrients means less extra algae and less decomposition. That helps keep more oxygen in the water and creates healthier conditions for fish.'}
+  };
+
+  return buttons([['impact','Human impact'],['buffer','Conservation response']],mode=>{
+   const run=RUNS[mode],lit=run.lit;
+
+   /* --- the scene -------------------------------------------------------- */
+   const fieldW=lit?150:168;
+   const field=`<rect x="18" y="58" width="${fieldW}" height="96" rx="10" fill="#e3dcc3" stroke="#c3b894"/>`+
+    `${[0,1,2,3,4].map(i=>`<circle cx="${40+i*((fieldW-44)/4)}" cy="${80+(i%2)*14}" r="3.5" fill="#c08a4a"/>`).join('')}`+
+    `<text x="${18+fieldW/2}" y="146" text-anchor="middle" font-size="12.5" fill="#5d5330">fertilizer on the field</text>`;
+   const buffer=lit
+    ? `<rect x="176" y="58" width="60" height="96" rx="10" fill="#cfe0bd" stroke="#8fae76"/>`+
+      /* Two trees and a tuft between them: enough to read as planting, and it
+         leaves the strip's label somewhere to sit. */
+      `${tree(192,118,'#6f8f5a')}${tree(220,122,'#89a86b')}${tuft(206,128,'#7f9d5c')}`+
+      `<text x="206" y="146" text-anchor="middle" font-size="12" fill="#43613c">buffer</text>`
+    : '';
+   /* The thin band says "a little" better than the words would, and there is
+      no room for them between the buffer and the water. */
+   const runoff=lit
+    ? flow(240,266,106,7,'#cbb894')
+    : flow(196,268,106,22,'#c08a4a')+`<text x="230" y="92" text-anchor="middle" font-size="12" fill="#7d6a45">runoff</text>`;
+   const streamX=268;
+   const stream=`<rect x="${streamX}" y="58" width="${582-streamX}" height="96" rx="10" fill="${run.water}" stroke="#7d9aa8"/>`+
+    (lit?algae(300,78,2,'#86ab6f'):algae(296,76,6,'#5a7a3a'))+
+    (lit?`${fish(400,116,'#3f6c85',false)}${fish(470,100,'#3f6c85',false)}${fish(520,128,'#3f6c85',false)}`
+        :`${fish(400,118,'#4d5a52',true)}${fish(496,122,'#4d5a52',true)}`)+
+    `<text x="${(streamX+582)/2}" y="146" text-anchor="middle" font-size="12.5" fill="${lit?'#1f4653':'#2c3a22'}">${esc(run.scene)}</text>`;
+
+   /* --- seven steps, numbered, so the order needs no connector ----------- */
+   const chip=(x,y,w,n,text,fill)=>`<rect x="${x}" y="${y}" width="${w}" height="36" rx="10" fill="${fill}" stroke="#a9bdb2"/>`+
+    `<circle cx="${x+18}" cy="${y+18}" r="11" fill="#ffffff" stroke="#a9bdb2"/>`+
+    `<text x="${x+18}" y="${y+23}" text-anchor="middle" font-size="12" font-weight="700" fill="#446d61">${n}</text>`+
+    `<text x="${x+34}" y="${y+23}" font-size="12" fill="#183d36">${esc(text)}</text>`;
+   const tints=lit
+    ? ['#cfe3cb','#cfe3cb','#dfe8ee','#dfe8ee','#e6d6c6','#dfe8ee','#d7eede']
+    : ['#efe0c6','#dfe8ee','#cfe3cb','#cfe3cb','#e6d6c6','#dfe8ee','#f2ddd0'];
+   const W=182,GAP=9;
+   const chain=run.steps.map((text,i)=>{
+    const col=i%3,rowN=Math.floor(i/3);
+    const x=18+col*(W+GAP),y=182+rowN*46;
+    return chip(x,y,W,i+1,text,tints[i]);
+   }).join('');
+
+   const verdict=`<rect x="18" y="320" width="564" height="42" rx="11" fill="${lit?'#dff0e6':'#f6e3d7'}" stroke="${lit?'#8fb9a2':'#d3ab90'}"/>`+
+    `<text x="300" y="346" text-anchor="middle" font-size="16" fill="#183d36">${esc(run.oxygen)}  \u00b7  ${esc(run.fishLine)}</text>`;
+
+   drawing.innerHTML=svg(`${textSVG(300,34,run.title,18)}${field}${buffer}${runoff}${stream}${chain}${verdict}`,
+    `${run.title}. ${run.spoken} ${run.oxygen}.`,376);
+   caption.textContent=run.note;
+  });
+ }
+
+
  if(type==='web')return buttons([['normal','Show food web'],['loss','What if rabbits decline?']],mode=>{drawing.innerHTML=svg(`${line(140,190,250,65)}${line(150,195,265,190)}${line(350,65,460,65)}${line(350,190,460,85)}${line(340,215,460,245)}${box(30,165,130,65,'Grass')}${box(230,30,135,65,'Rabbits',mode==='loss'?'#efcfbf':'#e4eee5')}${box(230,170,135,65,'Mice')}${box(440,30,130,65,'Foxes')}${box(430,220,150,55,'Owls')}`,'A food web: grass feeds rabbits and mice; rabbits and mice feed foxes; mice feed owls.',310);caption.textContent=mode==='loss'?'Rabbit decline can reduce one food source for foxes. Mice are an alternative, so the final outcome depends on their availability and other interactions. These are possible effects, not an exact prediction.':'Arrows point from food to consumer. This is a simplified example; decomposers and many other connections are omitted. Click the scenario to reason about a change.';});
  if(type==='energy')return buttons([['photo','Photosynthesis'],['resp','Respiration'],['cycle','Carbon connection']],mode=>{const photo=mode==='photo';drawing.innerHTML=mode==='cycle'?svg(`${box(205,20,190,55,'Atmospheric CO₂','#d4e8ed')}${box(30,180,160,65,'Plant biomass')}${box(405,180,160,65,'Consumer biomass','#eadcc6')}${line(220,75,130,177)}${line(190,210,405,210)}${line(480,180,375,75)}${line(105,180,255,75)}${textSVG(105,116,'Photosynthesis',14)}${textSVG(490,120,'Respiration',14)}${textSVG(298,200,'Feeding',14)}`,'Simplified carbon pathways between atmospheric carbon dioxide and plant and consumer biomass.'):svg(`${box(35,95,160,70,photo?'CO₂ + water':'Glucose + O₂','#d8e8e5')}${line(197,130,395,130)}${box(400,95,170,70,photo?'Sugar + O₂':'CO₂ + water','#efe3c8')}${textSVG(300,65,photo?'Light energy enters':'Energy transferred')}${textSVG(300,212,photo?'Chloroplast · photosynthesis':'ATP + heat · respiration')}`,'Summary of '+(photo?'photosynthesis':'aerobic respiration')+' inputs and outputs.');caption.textContent=mode==='cycle'?'Carbon atoms move among reservoirs. This diagram omits soil, oceans, combustion, and other stores. Plants as well as consumers respire.':photo?'Summary: 6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂. Light supplies energy; atoms are rearranged. The detailed pathway is more complex.':'Summary: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O. Energy is transferred to ATP and dispersed as heat. Glycolysis is in the cytoplasm; later aerobic stages involve mitochondria in eukaryotes.';});
  if(type==='division')return buttons([['mitosis','Mitosis'],['meiosis','Meiosis']],mode=>{const mei=mode==='meiosis',cells=(cx,cy,n,color)=>`<circle cx="${cx}" cy="${cy}" r="35" fill="${color}" stroke="#658575"/>${Array.from({length:n},(_,i)=>`<path d="M${cx-15+i*10} ${cy-13}v26" stroke="${i%2?'#9d719e':'#426e65'}" stroke-width="5"/>`).join('')}`;drawing.innerHTML=svg(`${cells(300,50,4,'#e6eee1')}${line(280,86,170,140)}${line(320,86,430,140)}${cells(155,180,mei?2:4,'#e8dff0')}${cells(445,180,mei?2:4,'#e8dff0')}${mei?`${line(140,215,95,266)}${line(170,215,215,266)}${line(430,215,385,266)}${line(460,215,505,266)}${[85,225,375,515].map(x=>cells(x,310,2,'#e2ecde')).join('')}`:''}${textSVG(300,mei?374:255,mei?'Four haploid products · 2 chromosomes each':'Two daughter cells · 4 chromosomes each',17)}`,mei?'Overview of a diploid model cell with 4 chromosomes producing four haploid products with 2 each.':'Overview of a cell with 4 chromosomes producing two daughters with 4 each.',mei?405:290);caption.textContent=mei?'Meiosis: DNA is copied once before two divisions. Homologous chromosomes separate first, then sister chromatids. This overview shows chromosome-set counts, not detailed chromatid stages; crossing over is not drawn.':'Mitosis: DNA is copied before division, and duplicated chromosomes are separated so both daughter cells retain the chromosome number. Bars represent chromosome counts in this overview, not all stages of replication.';});

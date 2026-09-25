@@ -117,6 +117,8 @@
   }
 
   /* Raw rows, tombstones and all. Only merging and writing want these. */
+  function num(x) { return Number(x) || 0; }
+
   function rawComments(e) { return Array.isArray(e.comments) ? e.comments : []; }
   function rawReactions(e) { return Array.isArray(e.reactions) ? e.reactions : []; }
   function rawLinks(e) { return Array.isArray(e.links) ? e.links : []; }
@@ -236,8 +238,12 @@
     var already = rows.filter(function (l) { return l.href === link.href; })[0];
     if (already && !already.del) return true;
     if (already) {
+      /* Putting back one he took off. The row keeps its id so the other
+         laptops recognise it, and takes a fresh timestamp so the merge can
+         see that this decision is the later one. */
       already.del = false;
-      already.ts = Date.now();
+      already.title = String(link.title || already.title || link.href);
+      already.ts = Math.max(Date.now(), num(already.ts) + 1);
     } else {
       rows.push({
         id: 'l' + Date.now() + Math.random().toString(36).slice(2, 6),
@@ -866,6 +872,38 @@
      picked: there is nothing to remember yet.
      --------------------------------------------------------------------------- */
 
+  /* --- How it is going -------------------------------------------------------
+     A line about what he has done, and at most one about what is waiting.
+     Written to be read by a fourteen-year-old at the end of a school day:
+     what he HAS done comes first and is stated plainly, and the nudge is an
+     invitation with a link on the end of it, never a count of failures. A
+     subject hands this in ready-made - it knows its own lessons; this file
+     does not.
+
+       { done: [ '3 of 24 lessons explored', '42 questions practised' ],
+         nudge: { text: 'You explored Food webs but have not practised it yet.',
+                  href: '#practice/food-energy', label: 'Practise it' } }
+     --------------------------------------------------------------------------- */
+  function statusPanel(st) {
+    if (!st || (!(st.done || []).length && !st.nudge)) return '';
+    var done = (st.done || []).filter(Boolean);
+    return '<section class="ll-how" aria-label="How it is going">' +
+      (done.length
+        ? '<ul class="ll-how__done">' + done.map(function (line) {
+            return '<li>' + esc(line) + '</li>';
+          }).join('') + '</ul>'
+        : '') +
+      (st.nudge && st.nudge.text
+        ? '<p class="ll-how__next">' + esc(st.nudge.text) +
+            (st.nudge.href
+              ? ' <a class="ll-how__go" href="' + esc(st.nudge.href) + '">' +
+                  esc(st.nudge.label || 'Open it') + ' \u2192</a>'
+              : '') +
+          '</p>'
+        : '') +
+      '</section>';
+  }
+
   function mountHistory(root, opts) {
     if (!root) return;
     var subject = opts.subject;
@@ -1121,6 +1159,20 @@
       var under = Math.max(0, end - box.bottom);
       var h = Math.max(260, window.innerHeight - box.top - under - 4);
       list.style.maxHeight = h + 'px';
+      /* The calendar column stands beside the list and can be the taller of
+         the two - the month, the key, the tally and "how it is going" add up
+         on a laptop screen. It gets the same budget, and scrolls inside
+         itself if it needs to, so the page behind still does not. */
+      var cal = root.querySelector('.ll-cal');
+      if (cal) {
+        /* Measured from its OWN top, which is higher up the page than the
+           list's: it starts level with the week's heading rather than under
+           it, and that difference is the whole month grid's breathing room. */
+        var cbox = cal.getBoundingClientRect();
+        var ch = Math.max(260, window.innerHeight - cbox.top - under - 4);
+        cal.style.maxHeight = ch + 'px';
+        cal.style.overflowY = cal.scrollHeight > ch + 1 ? 'auto' : '';
+      }
       /* One corrective pass: the subjects pad themselves differently below
          the footer, and measuring what is left over beats guessing at it. */
       var over = document.documentElement.scrollHeight - window.innerHeight;
@@ -1188,6 +1240,7 @@
             '</div>' +
           '</div>' +
           '<p class="ll-week__n">' + weekLine(wt) + '</p>' +
+          statusPanel(typeof opts.status === 'function' ? opts.status() : opts.status) +
           '<ol class="ll-history__list" data-list>' +
             (shown.length
               ? shown.map(function (d) {
