@@ -3,7 +3,7 @@ const svg=(body,label,h=280)=>`<svg viewBox="0 0 600 ${h}" role="img" aria-label
 const textSVG=(x,y,t,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#183d36">${esc(t)}</text>`;
 const box=(x,y,w,h,t,fill='#e4eee5')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${fill}" stroke="#789787"/>${textSVG(x+w/2,y+h/2+6,t)}`;
 const line=(x,y,a,b)=>`<path d="M${x} ${y}L${a} ${b}" fill="none" stroke="#446d61" stroke-width="2" marker-end="url(#arrow)"/>`;
-const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',biodiversity:'Disturb it, then watch it come back',impact:'What happens to the stream?'};
+const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',biodiversity:'How does an ecosystem respond to change?',impact:'What happens to the stream?'};
 const REAL_LIFE={
  cells:{
   title:"Cells: The Building Blocks of Life",
@@ -138,42 +138,120 @@ function mountVisual(type,lessonId){
  }
 
  /* Unit 1 - Biodiversity and ecosystem change.
-    Six kinds of living thing, drawn as columns of symbols. A disturbance
-    empties or thins some of them; "years later" shows a community that has
-    come back WITHOUT coming back the same, which is the point of the lesson
-    and the thing resilience is usually mistaken for. */
+
+    One woodland, five moments in its life. The organisms share a scene
+    rather than sitting in separate boxes, because "variety in one place" is
+    the idea and six labelled tanks is not it.
+
+    Species richness is on screen with its definition, so the number means
+    something; resilience is introduced on the last state, where the student
+    has just watched it happen, rather than announced at the start. Nothing
+    here is a simulation: the counts are illustrative and say so. */
  if(type==='biodiversity'){
-  const KINDS=[['Oak trees','#6f8f5a','tree'],['Shrubs','#89a86b','bush'],['Grasses','#a8c07a','grass'],['Beetles','#8a6a4a','bug'],['Birds','#7f93b5','bird'],['Foxes','#c08552','fox']];
+  const GROUND=214;
+  const oak=(x,scale,mode)=>{
+   const h=62*scale,r=30*scale;
+   if(mode==='stump')return `<path d="M${x-7} ${GROUND}h14v-16h-14Z" fill="#6b5334"/><path d="M${x-7} ${GROUND-16}q7 -6 14 0" fill="#3f3228"/>`;
+   const trunk=`<path d="M${x} ${GROUND}v${-h}" stroke="#6b5334" stroke-width="${7*scale}" stroke-linecap="round"/>`;
+   if(mode==='bare')return trunk+
+    `<path d="M${x} ${GROUND-h}l${-15*scale} ${-14*scale}M${x} ${GROUND-h+6*scale}l${16*scale} ${-16*scale}M${x} ${GROUND-h}v${-14*scale}" stroke="#7d6a52" stroke-width="${3*scale}" fill="none" stroke-linecap="round"/>`;
+   const leaf=mode==='scorched'?'#93a07a':'#5f8a4e';
+   return trunk+`<circle cx="${x}" cy="${GROUND-h-r*0.55}" r="${r}" fill="${leaf}"/>`+
+    `<circle cx="${x-r*0.7}" cy="${GROUND-h-r*0.15}" r="${r*0.62}" fill="${leaf}" opacity=".92"/>`+
+    `<circle cx="${x+r*0.72}" cy="${GROUND-h-r*0.2}" r="${r*0.58}" fill="${leaf}" opacity=".92"/>`;
+  };
+  const shrub=(x,c='#7ea867')=>`<ellipse cx="${x}" cy="${GROUND-11}" rx="19" ry="13" fill="${c}"/>`+
+   `<ellipse cx="${x-11}" cy="${GROUND-6}" rx="12" ry="9" fill="${c}" opacity=".9"/>`+
+   `<ellipse cx="${x+12}" cy="${GROUND-7}" rx="11" ry="8" fill="${c}" opacity=".9"/>`;
+  const grass=(x,c='#8fb367')=>`<path d="M${x-6} ${GROUND}q6-15 2-19M${x} ${GROUND}q2-17 0-21M${x+6} ${GROUND}q-6-15-2-19" stroke="${c}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+  const beetle=(x,y)=>`<ellipse cx="${x}" cy="${y}" rx="5.5" ry="8" fill="#6d4f35"/><circle cx="${x}" cy="${y-9}" r="3.4" fill="#6d4f35"/>`+
+   `<path d="M${x-8} ${y-3}h16M${x-8} ${y+4}h16" stroke="#6d4f35" stroke-width="1.8"/>`;
+  const bird=(x,y)=>`<path d="M${x-11} ${y}q11-11 11 0q0-11 11 0" stroke="#5d6f8f" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  /* A fox, and not a cat: the tail is the give-away, so it is thick, low and
+     tipped white, and the muzzle comes to a point. */
+  const fox=(x)=>`<path d="M${x-15} ${GROUND-14}q-16 2-19-12q7 10 19 4Z" fill="#b87a46"/>`+
+   `<path d="M${x-30} ${GROUND-24}q-5-4-4-8q5 5 7 5Z" fill="#f0e6d8"/>`+
+   `<ellipse cx="${x}" cy="${GROUND-14}" rx="17" ry="9" fill="#c08552"/>`+
+   `<path d="M${x+9} ${GROUND-18}q12-3 15 3q-3 7-15 5Z" fill="#c08552"/>`+
+   `<path d="M${x+24} ${GROUND-15}l7 1l-7 3Z" fill="#8d5a2f"/>`+
+   `<path d="M${x+8} ${GROUND-22}l1-8 6 6ZM${x+17} ${GROUND-22}l2-7 5 6Z" fill="#a9662f"/>`+
+   `<circle cx="${x+18}" cy="${GROUND-15}" r="1.6" fill="#3a2a1c"/>`+
+   `<path d="M${x-9} ${GROUND-6}v6M${x+1} ${GROUND-6}v6M${x+10} ${GROUND-6}v6" stroke="#8d5a2f" stroke-width="3.5" stroke-linecap="round"/>`;
+
   const STATES={
-   healthy:{n:[3,3,4,4,3,2],title:'A diverse patch of woodland',
-    note:'Six kinds of living thing, each with several individuals. That variety - within a species, between species, and across habitats - is what biodiversity means. Symbol counts stand for relative abundance, not real census numbers.'},
-   fire:{n:[1,0,1,1,1,1],title:'Weeks after a fire',
-    note:'Fire removed most of the standing plants and the animals that depended on them. Some individuals survived or moved away and returned. What happens next depends on what is left - seeds, roots and soil - not on the fire alone.'},
-   disease:{n:[0,3,4,4,3,2],title:'After a disease of the oaks',
-    note:'A disease can hit one species hard and leave others largely untouched. Consumers that can use more than one food source are less exposed to any single loss. This is the sense in which variety can support resilience.'},
-   habitat:{n:[1,1,2,2,1,0],title:'After half the habitat is built on',
-    note:'Less habitat usually means smaller populations, and the species that need the most space are often the first to go. Losing area is not the same kind of disturbance as fire: here the conditions themselves have changed.'},
-   later:{n:[1,4,4,4,3,1],title:'Years later',
-    note:'Much has come back, but not in the same proportions: the fast growers are commoner and the oaks are still few. Ecological succession is change over time, not a return to an identical community. Resilience is the capacity to keep functioning through disturbance - never a guarantee of going back to exactly what was there.'}
+   healthy:{richness:6,status:'Diverse ecosystem',ground:'#cbd8a8',sky:'#eef4ef',
+    line:'Species richness means the number of different species in an area.',
+    trees:[[80,1,'full'],[152,.88,'full'],[236,.95,'full']],
+    shrubs:[300,344,392],grass:[52,112,186,262,332,404,452,506,548],
+    beetles:[[124,236],[306,240],[428,234]],birds:[[168,92],[228,74],[436,86]],fox:492,built:false},
+   fire:{richness:4,status:'After a fire',ground:'#b6a98c',sky:'#f1ece4',
+    line:'Some species decline or leave after the disturbance.',
+    trees:[[80,1,'bare'],[152,.88,'stump'],[236,.95,'scorched']],
+    shrubs:[344],grass:[262,452,548],
+    beetles:[[428,234]],birds:[[436,86]],fox:null,built:false,burn:true},
+   disease:{richness:5,status:'After a disease of the oaks',ground:'#cbd8a8',sky:'#eef4ef',
+    line:'Disturbances do not affect every species in the same way.',
+    trees:[[80,1,'bare'],[152,.88,'bare'],[236,.95,'bare']],
+    shrubs:[300,344,392],grass:[52,112,186,262,332,404,452,506,548],
+    beetles:[[124,236],[306,240],[428,234]],birds:[[168,92],[228,74],[436,86]],fox:492,built:false},
+   habitat:{richness:4,status:'Habitat reduced',ground:'#cbd8a8',sky:'#eef4ef',
+    line:'Habitat loss can reduce the number of species an area can support.',
+    trees:[[80,1,'full'],[152,.88,'full']],
+    shrubs:[300],grass:[52,112,186,262],
+    beetles:[[124,236]],birds:[[168,92]],fox:null,built:true},
+   later:{richness:6,status:'Recovering',ground:'#c6d7a2',sky:'#eef4ef',
+    line:'The ecosystem can recover, but it may not return exactly to its original state.',
+    resilience:'Resilience is an ecosystem\u2019s ability to recover after a disturbance.',
+    trees:[[84,.42,'full'],[160,.36,'full'],[240,.3,'full']],
+    shrubs:[286,330,374,418],grass:[46,96,146,196,246,296,346,396,446,496,542],
+    beetles:[[124,236],[264,240],[392,234],[470,238]],birds:[[168,92],[228,74],[436,86]],fox:508,built:false}
   };
-  const SYMBOL={
-   tree:(x,y,c)=>`<path d="M${x} ${y}v-8" stroke="#6b5334" stroke-width="3"/><circle cx="${x}" cy="${y-16}" r="9" fill="${c}"/>`,
-   bush:(x,y,c)=>`<path d="M${x} ${y}v-6" stroke="#6b5334" stroke-width="3"/><ellipse cx="${x}" cy="${y-13}" rx="11" ry="7" fill="${c}"/>`,
-   grass:(x,y,c)=>`<path d="M${x-6} ${y}q6-16 2-20M${x} ${y}q2-18 0-22M${x+6} ${y}q-6-16-2-20" stroke="${c}" stroke-width="3" fill="none"/>`,
-   bug:(x,y,c)=>`<ellipse cx="${x}" cy="${y-8}" rx="6" ry="9" fill="${c}"/><path d="M${x-8} ${y-13}h16M${x-8} ${y-4}h16" stroke="${c}" stroke-width="2"/>`,
-   bird:(x,y,c)=>`<path d="M${x-10} ${y-8}q10-10 10 0q0-10 10 0" stroke="${c}" stroke-width="3" fill="none"/>`,
-   fox:(x,y,c)=>`<ellipse cx="${x}" cy="${y-9}" rx="11" ry="7" fill="${c}"/><circle cx="${x+10}" cy="${y-14}" r="5" fill="${c}"/><path d="M${x-11} ${y-12}l-7-6" stroke="${c}" stroke-width="3"/>`
-  };
+
   return buttons([['healthy','Healthy ecosystem'],['fire','Fire'],['disease','Disease'],['habitat','Habitat loss'],['later','Years later']],mode=>{
-   const st=STATES[mode],kinds=KINDS.map(([label,color,shape],i)=>({label,color,shape,n:st.n[i]}));
-   const present=kinds.filter(k=>k.n>0).length;
-   const columns=kinds.map((k,i)=>{
-    const x=60+i*92,gone=k.n===0;
-    const symbols=Array.from({length:k.n},(_,j)=>SYMBOL[k.shape](x,216-j*34,k.color)).join('');
-    return `<rect x="${x-38}" y="90" width="76" height="140" rx="12" fill="${gone?'#eceae4':'#f3f7ef'}" stroke="${gone?'#cfcdc6':'#c3d4bd'}"/>${symbols}${gone?textSVG(x,168,'gone',14):''}<text x="${x}" y="252" text-anchor="middle" font-size="13" fill="${gone?'#8b8b83':'#183d36'}">${esc(k.label)}</text>`;
-   }).join('');
-   drawing.innerHTML=svg(`<rect x="14" y="70" width="572" height="180" rx="18" fill="#f7faf4"/>${columns}${textSVG(300,42,st.title,19)}${textSVG(300,64,present+' of 6 kinds still here',15)}`,`${st.title}. ${present} of six kinds of living thing are present.`,275);
-   caption.textContent=st.note;
+   const st=STATES[mode];
+
+   const built=st.built
+    ? `<rect x="404" y="120" width="178" height="${GROUND-120}" fill="#ded8cd"/>`+
+      `<rect x="430" y="140" width="56" height="74" fill="#c9bfb0" stroke="#a89c8a"/>`+
+      `<path d="M424 140l34-24 34 24Z" fill="#9e8f7d"/>`+
+      `<rect x="446" y="176" width="16" height="38" fill="#8d8271"/>`+
+      `<rect x="506" y="158" width="52" height="56" fill="#c9bfb0" stroke="#a89c8a"/>`+
+      `<path d="M500 158l32-20 32 20Z" fill="#9e8f7d"/>`+
+      `<path d="M404 120v${GROUND-120}" stroke="#9a9384" stroke-width="2" stroke-dasharray="7 6"/>`+
+      `<text x="493" y="112" text-anchor="middle" font-size="12" fill="#6f675a">woodland cleared</text>`
+    : '';
+   /* Scorch on the ground rather than marks floating above it. */
+   const burn=st.burn
+    ? [[118,10],[196,7],[330,9],[470,6]].map(([x,r])=>
+       `<ellipse cx="${x}" cy="${GROUND+9}" rx="${r*2.2}" ry="${r*0.7}" fill="#8d7d63" opacity=".55"/>`).join('')
+    : '';
+
+   const scene=`<rect x="18" y="48" width="564" height="${GROUND+36-48}" rx="14" fill="${st.sky}" stroke="#cbd6c8"/>`+
+    `<rect x="18" y="${GROUND}" width="564" height="36" rx="0" fill="${st.ground}"/>`+
+    `<path d="M18 ${GROUND}h564" stroke="#a9b98d" stroke-width="2"/>`+
+    built+
+    st.trees.map(([x,scale,m])=>oak(x,scale,m)).join('')+
+    st.shrubs.map(x=>shrub(x)).join('')+
+    st.grass.map(x=>grass(x)).join('')+
+    burn+
+    st.beetles.map(([x,y])=>beetle(x,y)).join('')+
+    st.birds.map(([x,y])=>bird(x,y)).join('')+
+    (st.fox?fox(st.fox):'');
+
+   /* Under the scene: what is there, what it is called, and one line. */
+   const chip=(x,y,w,text,fill,ink)=>`<rect x="${x}" y="${y}" width="${w}" height="30" rx="10" fill="${fill}" stroke="#b9c9b4"/>`+
+    `<text x="${x+w/2}" y="${y+20}" text-anchor="middle" font-size="14" fill="${ink}">${esc(text)}</text>`;
+   const panel=chip(18,264,196,st.status,mode==='healthy'||mode==='later'?'#dcecdc':'#f0e6d8','#183d36')+
+    chip(224,264,224,`Species richness: ${st.richness} kinds`,'#e8eef5','#1f4653')+
+    `<text x="462" y="284" font-size="12.5" fill="#6a7b72">illustrative, not a survey</text>`;
+
+   const lines=`<text x="18" y="322" font-size="14.5" fill="#183d36">${esc(st.line)}</text>`+
+    (st.resilience?`<text x="18" y="346" font-size="14.5" fill="#33705a">${esc(st.resilience)}</text>`:'');
+
+   drawing.innerHTML=svg(`${scene}${panel}${lines}`,
+    `A woodland: ${st.status.toLowerCase()}. Species richness ${st.richness} kinds. ${st.line}`,
+    st.resilience?360:336);
+   caption.textContent='Biodiversity means the variety of living things in an ecosystem. Disturbances such as fire, disease, or habitat loss can change which species live there. A resilient ecosystem can recover over time, although it may not return exactly to the way it was before.';
   });
  }
 
