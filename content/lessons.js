@@ -38,8 +38,10 @@ export const LESSON_INDEX = {
       title: 'Why Democracy?',
       blurb: 'Why govern by consent at all.',
       ap: 'AP 1.1',
-      image: 'assets/chapters/colonies/house-of-burgesses.jpg',
-      alt: 'The House of Burgesses in session in colonial Virginia',
+      image: 'assets/chapters/colonies/slides/self-government.jpg',
+      alt: 'Colonists crowded into a meeting hall, one of them speaking',
+      learn: ['Natural rights', 'Social contract', 'Government by consent'],
+
       ready: false,
     },
     {
@@ -48,8 +50,10 @@ export const LESSON_INDEX = {
       title: 'Who Should Have Power?',
       blurb: 'Rights, consent, and the right to start over.',
       ap: 'AP 1.2–1.3',
-      image: 'assets/chapters/declaration/presentation-to-congress.jpg',
-      alt: 'The drafting committee presenting the Declaration of Independence to Congress',
+      image: 'assets/chapters/declaration/hero-presenting-declaration.jpg',
+      alt: 'Jefferson presenting the draft Declaration to the Congress',
+      learn: ['Popular sovereignty', 'The Declaration’s argument', 'Kinds of democracy'],
+
       ready: false,
     },
     {
@@ -58,8 +62,10 @@ export const LESSON_INDEX = {
       title: 'Building a New Government',
       blurb: 'The first try, and why it failed.',
       ap: 'AP 1.4–1.5',
-      image: 'assets/chapters/articles/hero-confederation-congress.jpg',
-      alt: 'The Confederation Congress meeting in session',
+      image: 'assets/chapters/articles/slides/money-debt-and-trade-problems.jpg',
+      alt: 'Men counting worthless paper money at a table, a crowd waiting outside',
+      learn: ['The Articles of Confederation', 'Why they failed', 'Shays’ Rebellion'],
+
       ready: false,
     },
     {
@@ -68,8 +74,10 @@ export const LESSON_INDEX = {
       title: 'How the Constitution Divides Power',
       blurb: 'Three branches that can stop each other.',
       ap: 'AP 1.6',
-      image: 'assets/chapters/convention/signing-constitution.jpg',
-      alt: 'The signing of the Constitution at the Philadelphia convention',
+      image: 'assets/chapters/convention/slides/the-great-compromise.jpg',
+      alt: 'Delegates arguing across a table spread with plans for a new government',
+      learn: ['Three branches', 'Separation of powers', 'Checks and balances'],
+
       ready: false,
     },
     {
@@ -80,6 +88,8 @@ export const LESSON_INDEX = {
       ap: 'AP 1.7–1.9',
       image: 'assets/course-map/federalism/capitol.jpg',
       alt: 'The United States Capitol seen from the West Front',
+      learn: ['Enumerated and reserved powers', 'The Tenth Amendment', 'Federal, state, or both'],
+
       ready: true,
     },
   ],

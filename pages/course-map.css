@@ -1609,13 +1609,10 @@
   gap: var(--s-4);
 }
 
-.page--course-map .cm-panel--landing .cm-sec--glance { padding-top: var(--s-6); }
-.page--course-map .cm-panel--landing .cm-sec--lessons { padding-top: var(--s-7); }
-.page--course-map .cm-panel--landing .cm-sec--sixty {
-  padding-block: var(--s-7) var(--s-6);
-  margin-top: var(--s-7);
-}
-
+.page--course-map .cm-panel--landing .cm-sec--about { padding-top: var(--s-6); }
+.page--course-map .cm-panel--landing .cm-sec--matters { padding-top: var(--s-6); }
+.page--course-map .cm-panel--landing .cm-sec--glance { padding-top: var(--s-7); }
+.page--course-map .cm-panel--landing .cm-sec--lessons { padding-block: var(--s-7) var(--s-7); }
 /* --- Hero ----------------------------------------------------------------- */
 
 .page--course-map .cm-hero {
@@ -1832,52 +1829,21 @@
   color: var(--c-forest-soft);
 }
 
-/* Not written yet: still a card worth looking at, plainly not a door. */
+/* Not written yet. The card still shows its picture properly - draining the
+   colour out of four of the five made the gallery look broken, and the
+   words already say which one you can open. */
 .page--course-map .cm-lesson--soon { background: var(--c-parchment); box-shadow: none; }
-.page--course-map .cm-lesson--soon .cm-lesson__art img { filter: saturate(0.4); opacity: 0.68; }
-.page--course-map .cm-lesson--soon .cm-lesson__go { color: var(--c-ink-faint); font-weight: 600; }
+.page--course-map .cm-lesson--soon .cm-lesson__go {
+  color: var(--c-ink-faint);
+  font-weight: 600;
+}
 
 /* --- Unit in 60 seconds --------------------------------------------------- */
-
-.page--course-map .cm-sec--sixty { background: var(--c-parchment-dim); }
-
-.page--course-map .cm-sixty {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--s-5);
-}
-
-.page--course-map .cm-sixty li {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--s-3);
-  align-items: start;
-}
-
-.page--course-map .cm-sixty__n {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--c-brick);
-}
-
-.page--course-map .cm-sixty p {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 18px;
-  line-height: 1.4;
-  color: var(--c-ink);
-}
 
 /* --- Narrower windows ----------------------------------------------------- */
 
 @media (max-width: 1180px) {
   .page--course-map .cm-lessons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .page--course-map .cm-sixty { grid-template-columns: 1fr; gap: var(--s-4); }
   .page--course-map .cm-glance { flex-wrap: wrap; }
   .page--course-map .cm-glance__item { flex-basis: calc(50% - var(--s-4)); }
   .page--course-map .cm-glance__arrow { display: none; }
@@ -1887,4 +1853,149 @@
   .page--course-map .cm-lessons { grid-template-columns: 1fr; }
   .page--course-map .cm-panel--landing .cm-sec { padding-inline: var(--s-4); }
   .page--course-map .cm-hero__inner { padding: var(--s-4); }
+}
+
+/* --- What this unit is about ---------------------------------------------- */
+
+/* Four blocks, not four paragraphs. The heading of each is written to be
+   read on its own, so the four headings in a row are already the unit. */
+.page--course-map .cm-about {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-4);
+}
+
+.page--course-map .cm-about__block {
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+  padding: var(--s-5) var(--s-4) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  border-top: 3px solid var(--c-brick);
+}
+
+.page--course-map .cm-about__n {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--c-brick);
+}
+
+.page--course-map .cm-about__title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: var(--lh-snug);
+  color: var(--c-ink);
+}
+
+.page--course-map .cm-about__body {
+  font-size: var(--t-small);
+  line-height: 1.55;
+  color: var(--c-ink-soft);
+}
+
+/* --- Why it matters -------------------------------------------------------- */
+
+.page--course-map .cm-matters {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-5) var(--s-6);
+  border-radius: var(--r-md);
+  background: var(--c-sage);
+  border-left: 4px solid var(--c-forest-soft);
+}
+
+.page--course-map .cm-matters__lead {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 25px);
+  line-height: var(--lh-snug);
+  color: var(--c-ink);
+}
+
+.page--course-map .cm-matters__body {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  color: var(--c-ink-soft);
+  max-width: var(--measure-text);
+}
+
+/* What the unit unlocks, as chips: scannable, and short enough to read
+   without meaning to. */
+.page--course-map .cm-unlocks {
+  list-style: none;
+  margin: var(--s-1) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.page--course-map .cm-unlocks li {
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-pill);
+  background: var(--c-paper);
+  border: 1px solid var(--c-line);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+/* --- The lesson cards learn to teach -------------------------------------- */
+
+.page--course-map .cm-lesson__learn {
+  display: grid;
+  gap: var(--s-2);
+  margin-top: var(--s-2);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--c-line-soft);
+}
+
+.page--course-map .cm-lesson__learnhead {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-ink-faint);
+}
+
+.page--course-map .cm-lesson__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.page--course-map .cm-lesson__chips span {
+  padding: 4px var(--s-2);
+  border-radius: var(--r-sm);
+  background: var(--c-sage);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--c-forest);
+}
+
+.page--course-map .cm-lesson--soon .cm-lesson__chips span {
+  background: var(--c-parchment-dim);
+  color: var(--c-ink-soft);
+}
+
+/* --- Narrower windows ----------------------------------------------------- */
+
+@media (max-width: 1180px) {
+  .page--course-map .cm-about { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .page--course-map .cm-about { grid-template-columns: 1fr; }
+  .page--course-map .cm-matters { padding: var(--s-4); }
 }

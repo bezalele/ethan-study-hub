@@ -88,20 +88,41 @@ export const COURSE_DETAILS = {
 
     /* One sentence for the hero. `summary` is three and reads as a
        paragraph, which is the thing the landing page is getting away from. */
-    deck: 'How thirteen states built a national government \u2014 and then rebuilt it.',
+    deck: 'How thirteen states built a national government — and then rebuilt it.',
 
     hero: {
-      image: 'assets/chapters/convention/hero-convention-debate.jpg',
-      alt: 'Delegates in debate around the table at the Constitutional Convention',
-      credit: 'The Constitutional Convention, Philadelphia, 1787',
+      image: 'assets/chapters/constitution-rights/hero-constitution-legacy.jpg',
+      alt: 'People of different ages looking out over the Capitol at sunset, the Constitution and the flag beside them',
+      credit: 'The Constitution and the people it speaks for',
     },
 
-    /* The unit, in three sentences a fourteen-year-old would actually say. */
-    sixty: [
-      'People give government authority.',
-      'The first national government was too weak.',
-      'The Constitution created stronger government while dividing its power.',
+    /* The unit in four blocks. This is the page's actual teaching: a
+       student who reads only these four headings has the shape of Unit 1. */
+    about: [
+      {
+        title: 'America needed a government',
+        body: 'Thirteen colonies had just declared independence. Somebody still had to pay the army, settle disputes and deal with other countries.',
+      },
+      {
+        title: 'The first plan was too weak',
+        body: 'Under the Articles of Confederation the national government could not tax, could not regulate trade, and could not make the states do anything.',
+      },
+      {
+        title: 'The Constitution created a stronger system',
+        body: 'In 1787 the states scrapped that design and wrote one that could actually govern — with a Congress, a president and courts.',
+      },
+      {
+        title: 'Power was divided to protect freedom',
+        body: 'Stronger, but deliberately split: between three branches, and between the national government and the states.',
+      },
     ],
+
+    /* Why a fourteen-year-old should care before he opens a lesson. */
+    matters: {
+      lead: 'Everything else this year sits on top of Unit 1.',
+      body: 'Congress, the presidency, the courts, your rights, how a bill becomes law — all of it runs on rules written in these four documents. Learn the shape here and the rest of the course stops feeling like a list of facts.',
+      unlocks: ['The three branches', 'Your rights', 'How laws get made', 'Federal vs. state'],
+    },
 
     model: {
       type: 'documents',

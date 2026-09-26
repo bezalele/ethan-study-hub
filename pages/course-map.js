@@ -216,6 +216,13 @@ function sectionLessons(area) {
         <span class="cm-lesson__ap">${esc(l.ap)}</span>
         <strong class="cm-lesson__title">${esc(l.title)}</strong>
         <span class="cm-lesson__blurb">${esc(l.blurb)}</span>
+        ${(l.learn || []).length ? `
+          <span class="cm-lesson__learn">
+            <span class="cm-lesson__learnhead">You will learn</span>
+            <span class="cm-lesson__chips">
+              ${l.learn.map((x) => `<span>${esc(x)}</span>`).join('')}
+            </span>
+          </span>` : ''}
         <span class="cm-lesson__go">${l.ready ? 'Open lesson →' : 'Coming soon'}</span>
       </span>`;
 
@@ -288,18 +295,41 @@ function glance(d) {
     </section>`;
 }
 
-/* Three sentences, set as three sentences rather than as a paragraph in a
-   box. This is the last thing on the page and the shortest. */
-function sixty(d) {
-  const list = d.sixty || [];
+/* The unit itself, in four blocks. This is the page's teaching, and it sits
+   directly under the hero because that is where it will actually be read. A
+   student who reads only these four headings has the shape of Unit 1. */
+function about(d) {
+  const list = d.about || [];
   if (!list.length) return '';
   return `
-    <section class="cm-sec cm-sec--sixty" aria-labelledby="cm-60">
-      <h3 class="cm-sec__label" id="cm-60">Unit in 60 seconds</h3>
-      <ol class="cm-sixty">
-        ${list.map((t, i) => `
-          <li><span class="cm-sixty__n">${i + 1}</span><p>${esc(t)}</p></li>`).join('')}
+    <section class="cm-sec cm-sec--about" aria-labelledby="cm-ab">
+      <h3 class="cm-sec__label" id="cm-ab">What this unit is about</h3>
+      <ol class="cm-about">
+        ${list.map((b, i) => `
+          <li class="cm-about__block">
+            <span class="cm-about__n">${i + 1}</span>
+            <strong class="cm-about__title">${esc(b.title)}</strong>
+            <span class="cm-about__body">${esc(b.body)}</span>
+          </li>`).join('')}
       </ol>
+    </section>`;
+}
+
+/* Why a fourteen-year-old should care before opening anything. */
+function matters(d) {
+  const m = d.matters;
+  if (!m) return '';
+  return `
+    <section class="cm-sec cm-sec--matters" aria-labelledby="cm-wm">
+      <h3 class="cm-sec__label" id="cm-wm">Why it matters</h3>
+      <div class="cm-matters">
+        <p class="cm-matters__lead">${esc(m.lead)}</p>
+        <p class="cm-matters__body">${esc(m.body)}</p>
+        ${(m.unlocks || []).length ? `
+          <ul class="cm-unlocks">
+            ${m.unlocks.map((u) => `<li>${esc(u)}</li>`).join('')}
+          </ul>` : ''}
+      </div>
     </section>`;
 }
 
@@ -308,9 +338,10 @@ function landing(area, d) {
     <article class="cm-panel cm-panel--landing">
       <div class="cm-panel__scroll" data-panel tabindex="-1">
         ${unitHero(area, d)}
+        ${about(d)}
+        ${matters(d)}
         ${glance(d)}
         ${sectionLessons(area)}
-        ${sixty(d)}
       </div>
     </article>`;
 }
