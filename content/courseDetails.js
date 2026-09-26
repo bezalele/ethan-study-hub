@@ -82,6 +82,27 @@ export const COURSE_DETAILS = {
       'The United States did not begin with the Constitution. Americans declared independence, tried a weak national government under the Articles of Confederation, then redesigned the system around divided and limited power.',
     bigQuestion: 'Why was American government designed this way?',
 
+    /* The gallery landing page. A unit without this flag keeps the older
+       study-guide layout, so rolling the design out is one line per unit. */
+    landing: true,
+
+    /* One sentence for the hero. `summary` is three and reads as a
+       paragraph, which is the thing the landing page is getting away from. */
+    deck: 'How thirteen states built a national government \u2014 and then rebuilt it.',
+
+    hero: {
+      image: 'assets/chapters/convention/hero-convention-debate.jpg',
+      alt: 'Delegates in debate around the table at the Constitutional Convention',
+      credit: 'The Constitutional Convention, Philadelphia, 1787',
+    },
+
+    /* The unit, in three sentences a fourteen-year-old would actually say. */
+    sixty: [
+      'People give government authority.',
+      'The first national government was too weak.',
+      'The Constitution created stronger government while dividing its power.',
+    ],
+
     model: {
       type: 'documents',
       intro: 'Four documents, in order. Click one to see what it did — and why the next one followed.',
@@ -90,6 +111,7 @@ export const COURSE_DETAILS = {
           id: 'declaration',
           step: '1776',
           label: 'Declaration',
+          short: 'Why we left',
           thumb: 'assets/chapters/declaration/declaration-document.jpg',
           image: 'assets/chapters/declaration/closer/the-engrossed-copy.jpg',
           alt: 'The engrossed Declaration of Independence on a desk with a quill and seal',
@@ -103,6 +125,7 @@ export const COURSE_DETAILS = {
           id: 'articles',
           step: '1781',
           label: 'Articles',
+          short: 'First government',
           thumb: 'assets/chapters/articles/articles-document.jpg',
           image: 'assets/chapters/articles/closer/what-it-could-not-do.jpg',
           alt: 'The Articles of Confederation beside notes on unpaid debts and missing national powers',
@@ -116,6 +139,7 @@ export const COURSE_DETAILS = {
           id: 'constitution',
           step: '1787',
           label: 'Constitution',
+          short: 'Stronger system',
           thumb: 'assets/chapters/constitution-rights/constitution.jpg',
           image: 'assets/chapters/convention/closer/we-the-people.jpg',
           alt: 'The opening of the Constitution — “We the People” and Article I — beside the flag',
@@ -129,6 +153,7 @@ export const COURSE_DETAILS = {
           id: 'bill-of-rights',
           step: '1791',
           label: 'Bill of Rights',
+          short: 'Protect liberties',
           thumb: 'assets/chapters/constitution-rights/closer/bill-of-rights.jpg',
           image: 'assets/chapters/constitution-rights/closer/bill-of-rights.jpg',
           alt: 'The Bill of Rights, the first ten amendments, laid out with all ten legible',

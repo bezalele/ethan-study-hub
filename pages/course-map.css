@@ -1110,94 +1110,8 @@
 /* Five across, then three, then two. Never four: with five lessons that
    leaves the last one stranded on a row of its own, and the last one is the
    only one he can open. */
-.page--course-map .cm-lessons {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: var(--s-3);
-}
-
-.page--course-map .cm-lesson {
-  height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  border: 1px solid var(--c-line);
-  border-radius: var(--r-md);
-  background: var(--c-paper);
-  overflow: hidden;
-  text-decoration: none;
-  color: inherit;
-  transition: border-color var(--dur) var(--ease),
-              box-shadow var(--dur) var(--ease),
-              transform var(--dur) var(--ease);
-}
-
 .page--course-map a.cm-lesson:hover,
-.page--course-map a.cm-lesson:focus-visible {
-  border-color: var(--c-forest-soft);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.page--course-map .cm-lesson__art {
-  position: relative;
-  display: block;
-  background: var(--c-parchment-dim);
-}
-
-.page--course-map .cm-lesson__art img {
-  display: block;
-  width: 100%;
-  height: 104px;
-  object-fit: cover;
-}
-
-.page--course-map .cm-lesson__soon {
-  position: absolute;
-  top: var(--s-2);
-  left: var(--s-2);
-  padding: 2px var(--s-2);
-  border-radius: var(--r-pill);
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--c-ink-soft);
-  background: rgba(255, 250, 242, 0.92);
-}
-
-.page--course-map .cm-lesson__text {
-  display: grid;
-  gap: var(--s-1);
-  align-content: start;
-  padding: var(--s-3) var(--s-3) var(--s-2);
-}
-
-.page--course-map .cm-lesson__title {
-  font-family: var(--font-display);
-  font-size: 17px;
-  line-height: var(--lh-snug);
-  color: var(--c-ink);
-}
-
-.page--course-map .cm-lesson__blurb {
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--c-ink-soft);
-}
-
 /* Metadata, set as metadata: it is for the parent checking coverage. */
-.page--course-map .cm-lesson__ap {
-  padding: 0 var(--s-3) var(--s-3);
-  font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--c-ink-faint);
-}
-
-.page--course-map .cm-lesson--soon { background: var(--c-parchment); }
-.page--course-map .cm-lesson--soon .cm-lesson__art img { filter: saturate(0.45); opacity: 0.7; }
-
 /* --- The lesson itself ---------------------------------------------------- */
 
 .page--course-map .les {
@@ -1664,13 +1578,313 @@
 /* These thresholds are about the panel's width, not the phone's: the panel
    is already the narrow column on a laptop. */
 @media (max-width: 1180px) {
-  .page--course-map .cm-lessons { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .page--course-map .les-cols { grid-template-columns: 1fr; }
   .page--course-map .les-real { grid-template-columns: 1fr; }
   .page--course-map .les-real__art img { height: 170px; }
 }
 
 @media (max-width: 720px) {
-  .page--course-map .cm-lessons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .page--course-map .les-hi { grid-template-columns: 1fr; gap: var(--s-2); }
+}
+
+/* ===========================================================================
+   UNIT LANDING
+   The Home page's manner, inside the Course panel: one image that fills its
+   band, a short line over it, a strip you read at a glance, and a gallery of
+   lessons. No boxes repeating down the page, and nothing to answer.
+
+   Only units carrying `landing: true` render this. The study-guide rules
+   above are still in use by the others.
+   =========================================================================== */
+
+/* The landing runs edge to edge inside the panel, so the hero can bleed to
+   the panel's own corners the way the Home hero bleeds to the window's. */
+.page--course-map .cm-panel--landing .cm-panel__scroll {
+  padding: 0;
+  gap: 0;
+}
+
+.page--course-map .cm-panel--landing .cm-sec {
+  padding-inline: var(--s-6);
+  gap: var(--s-4);
+}
+
+.page--course-map .cm-panel--landing .cm-sec--glance { padding-top: var(--s-6); }
+.page--course-map .cm-panel--landing .cm-sec--lessons { padding-top: var(--s-7); }
+.page--course-map .cm-panel--landing .cm-sec--sixty {
+  padding-block: var(--s-7) var(--s-6);
+  margin-top: var(--s-7);
+}
+
+/* --- Hero ----------------------------------------------------------------- */
+
+.page--course-map .cm-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-items: end;
+  min-height: clamp(260px, 38vh, 380px);
+  overflow: hidden;
+}
+
+.page--course-map .cm-hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+  z-index: -2;
+}
+
+/* Dark at the bottom-left, where the words are; the painting keeps the rest. */
+.page--course-map .cm-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(to top, rgba(10, 34, 28, 0.92) 0%, rgba(10, 34, 28, 0.55) 42%, rgba(10, 34, 28, 0.08) 72%),
+    linear-gradient(to right, rgba(10, 34, 28, 0.62), rgba(10, 34, 28, 0) 62%);
+}
+
+.page--course-map .cm-hero__inner {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-6);
+  color: var(--c-on-dark);
+}
+
+.page--course-map .cm-hero__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3.4vw, 46px);
+  line-height: 1.08;
+  color: var(--c-on-dark);
+  max-width: 18ch;
+}
+
+.page--course-map .cm-hero__hook {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.35;
+  color: var(--c-gold);
+  max-width: 44ch;
+}
+
+.page--course-map .cm-hero__deck {
+  margin: 0;
+  font-size: 16px;
+  line-height: var(--lh-body);
+  color: var(--c-on-dark-soft);
+  max-width: 52ch;
+}
+
+.page--course-map .cm-hero__credit {
+  position: absolute;
+  right: var(--s-5);
+  bottom: var(--s-4);
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* --- The story at a glance ------------------------------------------------ */
+
+/* Four tiles and three arrows, read left to right. Nothing here changes when
+   you click it, because there is nothing here worth hiding. */
+.page--course-map .cm-glance {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  gap: var(--s-2);
+}
+
+.page--course-map .cm-glance__item {
+  flex: 1 1 0;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr;
+  gap: 2px;
+  padding-bottom: var(--s-3);
+  text-align: center;
+}
+
+.page--course-map .cm-glance__art {
+  width: 100%;
+  height: 92px;
+  object-fit: cover;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--c-line);
+  margin-bottom: var(--s-2);
+}
+
+.page--course-map .cm-glance__year {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--c-brick);
+}
+
+.page--course-map .cm-glance__name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--c-ink);
+}
+
+.page--course-map .cm-glance__short {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--c-ink-soft);
+}
+
+.page--course-map .cm-glance__arrow {
+  align-self: center;
+  padding-bottom: var(--s-5);
+  font-size: 18px;
+  color: var(--c-ink-faint);
+}
+
+/* --- What this unit covers ------------------------------------------------ */
+
+/* The main section, and the only one with things to click. Three across, the
+   picture taking most of each card. */
+.page--course-map .cm-lessons {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-4);
+}
+
+.page--course-map .cm-lesson {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  background: var(--c-paper);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease),
+              transform var(--dur) var(--ease);
+}
+
+.page--course-map a.cm-lesson:hover,
+.page--course-map a.cm-lesson:focus-visible {
+  border-color: var(--c-forest-soft);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.page--course-map .cm-lesson__art { display: block; background: var(--c-parchment-dim); }
+
+.page--course-map .cm-lesson__art img {
+  display: block;
+  width: 100%;
+  height: 152px;
+  object-fit: cover;
+}
+
+.page--course-map .cm-lesson__body {
+  display: grid;
+  gap: var(--s-1);
+  align-content: start;
+  padding: var(--s-4);
+}
+
+.page--course-map .cm-lesson__ap {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-brick);
+}
+
+.page--course-map .cm-lesson__title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: var(--lh-snug);
+  color: var(--c-ink);
+}
+
+.page--course-map .cm-lesson__blurb {
+  font-size: var(--t-small);
+  line-height: 1.5;
+  color: var(--c-ink-soft);
+}
+
+.page--course-map .cm-lesson__go {
+  margin-top: var(--s-2);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c-forest-soft);
+}
+
+/* Not written yet: still a card worth looking at, plainly not a door. */
+.page--course-map .cm-lesson--soon { background: var(--c-parchment); box-shadow: none; }
+.page--course-map .cm-lesson--soon .cm-lesson__art img { filter: saturate(0.4); opacity: 0.68; }
+.page--course-map .cm-lesson--soon .cm-lesson__go { color: var(--c-ink-faint); font-weight: 600; }
+
+/* --- Unit in 60 seconds --------------------------------------------------- */
+
+.page--course-map .cm-sec--sixty { background: var(--c-parchment-dim); }
+
+.page--course-map .cm-sixty {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-5);
+}
+
+.page--course-map .cm-sixty li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: start;
+}
+
+.page--course-map .cm-sixty__n {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--c-brick);
+}
+
+.page--course-map .cm-sixty p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.4;
+  color: var(--c-ink);
+}
+
+/* --- Narrower windows ----------------------------------------------------- */
+
+@media (max-width: 1180px) {
+  .page--course-map .cm-lessons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .page--course-map .cm-sixty { grid-template-columns: 1fr; gap: var(--s-4); }
+  .page--course-map .cm-glance { flex-wrap: wrap; }
+  .page--course-map .cm-glance__item { flex-basis: calc(50% - var(--s-4)); }
+  .page--course-map .cm-glance__arrow { display: none; }
+}
+
+@media (max-width: 720px) {
+  .page--course-map .cm-lessons { grid-template-columns: 1fr; }
+  .page--course-map .cm-panel--landing .cm-sec { padding-inline: var(--s-4); }
+  .page--course-map .cm-hero__inner { padding: var(--s-4); }
 }

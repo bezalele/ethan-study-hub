@@ -204,17 +204,20 @@ function sectionLessons(area) {
   const lessons = lessonsFor(area.n);
   if (!lessons.length) return '';
 
+  /* Gallery cards, in the Home page's manner: the picture is most of the
+     card, the words underneath are a title and one line, and the only other
+     thing on it says whether you can open it yet. */
   const cards = lessons.map((l) => {
     const inner = `
       <span class="cm-lesson__art">
         <img src="${esc(l.image)}" alt="${esc(l.alt)}" loading="lazy">
-        ${l.ready ? '' : '<span class="cm-lesson__soon">Soon</span>'}
       </span>
-      <span class="cm-lesson__text">
+      <span class="cm-lesson__body">
+        <span class="cm-lesson__ap">${esc(l.ap)}</span>
         <strong class="cm-lesson__title">${esc(l.title)}</strong>
         <span class="cm-lesson__blurb">${esc(l.blurb)}</span>
-      </span>
-      <span class="cm-lesson__ap">${esc(l.ap)}</span>`;
+        <span class="cm-lesson__go">${l.ready ? 'Open lesson →' : 'Coming soon'}</span>
+      </span>`;
 
     return l.ready
       ? `<li><a class="cm-lesson" href="#/course/${area.n}/${esc(l.slug)}">${inner}</a></li>`
@@ -229,7 +232,8 @@ function sectionLessons(area) {
 }
 
 /* Reserved slot for the future Unit Detail route. Never a dead link: without
-   a route it renders as plain text, per spec section 5H. */
+   a route it renders as plain text, per spec section 5H. Not used by the
+   landing layout, which has no footer of its own. */
 function sectionFullGuide(area, d) {
   return `
     <footer class="cm-go">
@@ -238,6 +242,77 @@ function sectionFullGuide(area, d) {
         ? `<a class="btn btn--primary" href="${esc(d.fullGuideRoute)}">Open the full Unit ${area.n} guide →</a>`
         : `<p class="cm-go__soon">Full Unit ${area.n} guide — next phase</p>`}
     </footer>`;
+}
+
+/* --- The unit landing page ------------------------------------------------
+   Built the way the Home page is built: an image that fills its band, a
+   short line over it, then a small number of things worth clicking. A
+   student should get the unit from the pictures and the headings in about
+   twenty seconds, without reading a paragraph or answering anything.
+   --------------------------------------------------------------------------- */
+
+function unitHero(area, d) {
+  const h = d.hero || {};
+  return `
+    <section class="cm-hero">
+      ${h.image ? `<img class="cm-hero__bg" src="${esc(h.image)}" alt="${esc(h.alt || '')}" fetchpriority="high">` : ''}
+      <div class="cm-hero__scrim"></div>
+      <div class="cm-hero__inner">
+        <p class="eyebrow eyebrow--on-dark">Unit 0${area.n} · ${esc(area.weight)} of the exam</p>
+        <h2 class="cm-hero__title">${esc(area.title)}</h2>
+        ${d.hook ? `<p class="cm-hero__hook">${esc(d.hook)}</p>` : ''}
+        ${d.deck ? `<p class="cm-hero__deck">${esc(d.deck)}</p>` : ''}
+      </div>
+      ${h.credit ? `<p class="cm-hero__credit">${esc(h.credit)}</p>` : ''}
+    </section>`;
+}
+
+/* Four documents as a strip you read left to right. No stage, no clicking:
+   the year and three words are the whole point, and the full account of each
+   document lives in the chapter it belongs to. */
+function glance(d) {
+  const nodes = (d.model && d.model.nodes) || [];
+  if (!nodes.length) return '';
+  const items = nodes.map((n) => `
+    <li class="cm-glance__item">
+      <img class="cm-glance__art" src="${esc(n.image || n.thumb)}" alt="" loading="lazy">
+      <span class="cm-glance__year">${esc(n.step)}</span>
+      <strong class="cm-glance__name">${esc(n.label)}</strong>
+      <span class="cm-glance__short">${esc(n.short || '')}</span>
+    </li>`).join('<li class="cm-glance__arrow" aria-hidden="true">→</li>');
+
+  return `
+    <section class="cm-sec cm-sec--glance" aria-labelledby="cm-gl">
+      <h3 class="cm-sec__label" id="cm-gl">The story at a glance</h3>
+      <ol class="cm-glance">${items}</ol>
+    </section>`;
+}
+
+/* Three sentences, set as three sentences rather than as a paragraph in a
+   box. This is the last thing on the page and the shortest. */
+function sixty(d) {
+  const list = d.sixty || [];
+  if (!list.length) return '';
+  return `
+    <section class="cm-sec cm-sec--sixty" aria-labelledby="cm-60">
+      <h3 class="cm-sec__label" id="cm-60">Unit in 60 seconds</h3>
+      <ol class="cm-sixty">
+        ${list.map((t, i) => `
+          <li><span class="cm-sixty__n">${i + 1}</span><p>${esc(t)}</p></li>`).join('')}
+      </ol>
+    </section>`;
+}
+
+function landing(area, d) {
+  return `
+    <article class="cm-panel cm-panel--landing">
+      <div class="cm-panel__scroll" data-panel tabindex="-1">
+        ${unitHero(area, d)}
+        ${glance(d)}
+        ${sectionLessons(area)}
+        ${sixty(d)}
+      </div>
+    </article>`;
 }
 
 function panel(area) {
@@ -324,7 +399,9 @@ export default {
         ${header()}
         <div class="cm-explorer shell">
           ${rail(area.n)}
-          ${lesson ? lessonPanel(area, lesson) : panel(area)}
+          ${lesson ? lessonPanel(area, lesson)
+            : d0.landing ? landing(area, d0)
+            : panel(area)}
         </div>
       </div>`));
 
@@ -334,10 +411,12 @@ export default {
       return page;
     }
 
-    wireWalk(page);
-    if (d0.model && d0.model.type === 'triangle') wireTriangle(page, d0.model, esc);
-    wireQuiz(page);
-    if (params.topic) focusTopic(page, params.topic);
+    if (!d0.landing) {
+      wireWalk(page);
+      if (d0.model && d0.model.type === 'triangle') wireTriangle(page, d0.model, esc);
+      wireQuiz(page);
+      if (params.topic) focusTopic(page, params.topic);
+    }
     return page;
   },
 };
