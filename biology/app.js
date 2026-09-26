@@ -85,17 +85,22 @@ const SCIENCE_LINKS={
  ],
  photosynthesis:[
   {icon:'☀',label:'Chloroplasts & photosynthesis',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=chloroplast%20photosynthesis%20microscopic&sort=best&suppressfamilycorrection=true'},
-  {icon:'☀',label:'Leaf stomata under a microscope',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=leaf%20stomata%20microscopic&sort=best&suppressfamilycorrection=true'}
+  {icon:'☀',label:'Leaf stomata under a microscope',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=leaf%20stomata%20microscopic&sort=best&suppressfamilycorrection=true'},
+  {icon:'☀',label:'Leaves using sunlight',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=green%20leaves%20sunlight%20photosynthesis&sort=best&suppressfamilycorrection=true'}
  ],
  respiration:[
   {icon:'◉',label:'Mitochondria — the real structures',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=mitochondria%20microscopic&sort=best&suppressfamilycorrection=true'},
-  {icon:'◉',label:'Cells using oxygen & energy',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=cellular%20respiration%20ATP%20mitochondria&sort=best&suppressfamilycorrection=true'}
+  {icon:'◉',label:'Cells using oxygen & energy',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=cellular%20respiration%20ATP%20mitochondria&sort=best&suppressfamilycorrection=true'},
+  {icon:'◉',label:'Muscles using oxygen during exercise',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=athlete%20muscle%20oxygen%20exercise%20physiology&sort=best&suppressfamilycorrection=true'}
  ],
  'food-energy':[
-  {icon:'↗',label:'Food webs happening in nature',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=predator%20prey%20food%20web%20ecosystem&sort=best&suppressfamilycorrection=true'}
+  {icon:'↗',label:'Food webs happening in nature',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=predator%20prey%20food%20web%20ecosystem&sort=best&suppressfamilycorrection=true'},
+  {icon:'↗',label:'From plants to herbivores to predators',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=herbivore%20predator%20food%20chain%20wildlife&sort=best&suppressfamilycorrection=true'}
  ],
  'carbon-cycle':[
-  {icon:'↻',label:'Carbon moving through Earth',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=carbon%20cycle%20forest%20ocean%20plankton&sort=best&suppressfamilycorrection=true'}
+  {icon:'↻',label:'Carbon moving through Earth',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=carbon%20cycle%20forest%20ocean%20plankton&sort=best&suppressfamilycorrection=true'},
+  {icon:'↻',label:'Carbon stored in forests',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=forest%20trees%20carbon%20storage&sort=best&suppressfamilycorrection=true'},
+  {icon:'↻',label:'Carbon in the ocean — plankton',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=ocean%20phytoplankton%20microscope&sort=best&suppressfamilycorrection=true'}
  ],
  cells:[
   {icon:'◉',label:'Animal cells — images & clips',url:'https://www.gettyimages.com/search/2/image-film?family=creative&phrase=animal%20cell%20microscopic&sort=best&suppressfamilycorrection=true'},
