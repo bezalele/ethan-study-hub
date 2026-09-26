@@ -3,7 +3,7 @@ const svg=(body,label,h=280)=>`<svg viewBox="0 0 600 ${h}" role="img" aria-label
 const textSVG=(x,y,t,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#183d36">${esc(t)}</text>`;
 const box=(x,y,w,h,t,fill='#e4eee5')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${fill}" stroke="#789787"/>${textSVG(x+w/2,y+h/2+6,t)}`;
 const line=(x,y,a,b)=>`<path d="M${x} ${y}L${a} ${b}" fill="none" stroke="#446d61" stroke-width="2" marker-end="url(#arrow)"/>`;
-const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',photosynthesis:'Follow carbon into a plant',respiration:'Follow energy from glucose to ATP',trophic:'Where does the energy go?',biodiversity:'How does an ecosystem respond to change?',impact:'What happens to the stream?'};
+const VISUAL_NAMES={experiment:'Read an experiment',enzyme:'Enzyme activity explorer',web:'Explore a food web',population:'Population growth model',energy:'Follow matter and energy',cell:'Explore a living cell',membrane:'Which way will water move?',systems:'A sprint is a team effort',feedback:'Trace a feedback loop',dna:'DNA base-pair builder',division:'Compare cell divisions',punnett:'Build a Punnett square',selection:'Selection over generations',tree:'Read a family tree of life',photosynthesis:'Follow carbon into a plant',respiration:'Follow energy from glucose to ATP',trophic:'Where does the energy go?',carboncycle:'Follow carbon through Earth',biodiversity:'How does an ecosystem respond to change?',impact:'What happens to the stream?'};
 const REAL_LIFE={
  cells:{
   title:"Cells: The Building Blocks of Life",
@@ -937,6 +937,200 @@ function mountVisual(type,lessonId){
    caption.textContent=`Producers start with ${fmt(vals[0])} units. A tenth of that reaches the grasshoppers, a tenth of theirs reaches the frogs, and so on: ${fmt(vals[0])} → ${fmt(vals[1])} → ${fmt(vals[2])} → ${fmt(vals[3])}. Change the starting number and the shape of the answer does not change. After three transfers, only a small fraction of the starting energy remains available at the top level. Ten per cent is a classroom estimate for practice; real ecosystems vary.`;
   };
   draw();return;
+ }
+
+ /* Unit 2 - Carbon and matter cycling: where carbon is, and how it moves.
+
+    One Earth-system model, drawn identically in all four states. The buttons
+    do not redraw the world; they light up different paths across the same
+    six reservoirs, so the thing being learned is that these are the same
+    places every time and only the route changes.
+
+    The two ideas the states are built around, in order of how badly they
+    are usually got wrong:
+
+      Combustion does not make carbon. It was already underground. Every
+      word on that state is chosen so the arrow reads as a move, not a
+      source - hence "the carbon was already stored underground".
+
+      Conservation of matter does not mean every reservoir stays the same
+      size. That is why the last state carries an arithmetic panel: 12 in,
+      8 out, +4, with no atoms created anywhere.
+
+    Deliberately absent: global carbon budgets, real flux figures, anything
+    resembling a climate model. The numbers on the balance panel say in
+    writing that they are illustrative. */
+ if(type==='carboncycle'){
+  const DEFS='<defs>'+
+   '<marker id="ca" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">'+
+   '<path d="M0 1L10 5.5L0 10Z" fill="currentColor"/></marker>'+
+   '<marker id="cb" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto-start-reverse">'+
+   '<path d="M0 1L10 5.5L0 10Z" fill="currentColor"/></marker></defs>';
+  const arrow=(d,color,dash,wide)=>`<path d="${d}" stroke="${color}" fill="none" stroke-width="${wide||2.6}" color="${color}"`+
+   (dash?' stroke-dasharray="7 6"':'')+' marker-end="url(#ca)"/>';
+  const both=(d,color)=>`<path d="${d}" stroke="${color}" fill="none" stroke-width="2.6" color="${color}" marker-start="url(#cb)" marker-end="url(#ca)"/>`;
+  const plain=(d,color)=>`<path d="${d}" stroke="${color}" fill="none" stroke-width="2.2"/>`;
+  const label=(x,y,text,size=13,ink='#183d36',anchor='middle')=>
+   `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="${size}" fill="${ink}">${esc(text)}</text>`;
+  const pill=(x,y,w,h,text,fill,ink,size)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.min(14,h/2)}" fill="${fill}" stroke="#b3c3bb"/>`+
+   label(x+w/2,y+h/2+(size||13)/3+1,text,size||13,ink||'#183d36');
+
+  /* The six reservoirs, fixed. Every state draws all of them in the same
+     place; a state may only fade the ones its path does not touch. */
+  const R={
+   atm:   {x:24, y:42,  w:552, h:54,  fill:'#dfeaf2', line:'#a9c0cc'},
+   plant: {x:32, y:152, w:140, h:80,  fill:'#dcebd6', line:'#93b489'},
+   animal:{x:206,y:152, w:140, h:80,  fill:'#f3e6da', line:'#c9a986'},
+   ocean: {x:386,y:152, w:190, h:154, fill:'#cfe2ea', line:'#8fb3c4'},
+   soil:  {x:32, y:250, w:314, h:56,  fill:'#e7dcc6', line:'#c2ae8b'},
+   deep:  {x:24, y:326, w:552, h:54,  fill:'#d4cec5', line:'#9a9086'}
+  };
+  const res=(k,inner,dim)=>{const b=R[k];
+   return `<g${dim?' opacity="0.38"':''}><rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="12" fill="${b.fill}" stroke="${b.line}" stroke-width="1.5"/>${inner}</g>`;};
+
+  const co2=(x,y)=>`<circle cx="${x-12}" cy="${y}" r="6" fill="#9db9c9"/>`+
+   `<circle cx="${x}" cy="${y}" r="7.5" fill="#5d6b60"/>`+
+   `<circle cx="${x+12}" cy="${y}" r="6" fill="#9db9c9"/>`;
+  const tree=(x,y)=>`<path d="M${x} ${y}v-20" stroke="#7a5c38" stroke-width="5" stroke-linecap="round"/>`+
+   `<circle cx="${x}" cy="${y-28}" r="13" fill="#6f9a5c"/>`+
+   `<circle cx="${x-11}" cy="${y-20}" r="9" fill="#6f9a5c"/>`+
+   `<circle cx="${x+11}" cy="${y-21}" r="9" fill="#6f9a5c"/>`;
+  const beast=(x,y)=>`<ellipse cx="${x}" cy="${y-16}" rx="22" ry="12" fill="#b58a5e" stroke="#8d6842"/>`+
+   `<path d="M${x-20} ${y-6}v6M${x-9} ${y-5}v7M${x+9} ${y-5}v7M${x+19} ${y-6}v6" stroke="#8d6842" stroke-width="3.4" stroke-linecap="round"/>`+
+   `<path d="M${x+16} ${y-24}l7-8" stroke="#8d6842" stroke-width="5" stroke-linecap="round"/>`+
+   `<circle cx="${x+25}" cy="${y-29}" r="8" fill="#b58a5e" stroke="#8d6842"/>`+
+   `<path d="M${x+21} ${y-36}l-3-8M${x+29} ${y-36}l3-8" stroke="#8d6842" stroke-width="2.4" stroke-linecap="round"/>`+
+   `<circle cx="${x+28}" cy="${y-30}" r="1.6" fill="#3a2a1c"/>`;
+  const crumbs=(x,y)=>`<path d="M${x-26} ${y}q8-7 16 0q8 7 16 0M${x-26} ${y+9}q8-7 16 0q8 7 16 0" stroke="#9a7f45" stroke-width="2.2" fill="none"/>`+
+   [[-18,-10],[2,-12],[18,-9]].map(([a,b])=>`<circle cx="${x+a}" cy="${y+b}" r="3" fill="#6b5520"/>`).join('');
+  const waves=(x,y)=>[0,1,2].map(i=>`<path d="M${x-58} ${y+i*11}q14-8 29 0q15 8 29 0" stroke="#7aa6ba" stroke-width="2.2" fill="none"/>`).join('');
+  const fish=(x,y)=>`<ellipse cx="${x}" cy="${y}" rx="14" ry="7" fill="#79a7bb" stroke="#4d7e93"/>`+
+   `<path d="M${x+13} ${y}l10-6v12Z" fill="#79a7bb" stroke="#4d7e93"/>`+
+   `<circle cx="${x-7}" cy="${y-2}" r="1.6" fill="#173741"/>`;
+  const strata=(x,y,w)=>[0,1,2].map(i=>`<path d="M${x} ${y+i*9}h${w}" stroke="#a89e92" stroke-width="1.6"/>`).join('')+
+   `<ellipse cx="${x+w/2}" cy="${y+13}" rx="${w*0.34}" ry="6" fill="#5f5648" opacity=".6"/>`;
+
+  /* The world. `fade` names the reservoirs a state is not using. */
+  const scene=(fade)=>{
+   fade=fade||{};
+   return res('atm',
+     co2(76,68)+co2(524,68)+
+     label(300,64,'ATMOSPHERE',11.5,'#2d4d5c')+
+     label(300,86,'carbon dioxide (CO₂) in the air',12.5,'#1f4653'),fade.atm)+
+    res('plant',
+     tree(102,198)+
+     label(102,212,'PLANTS',11.5,'#3c6340')+
+     label(102,228,'living biomass',12,'#2f5c34'),fade.plant)+
+    res('animal',
+     beast(268,198)+
+     label(276,212,'ANIMALS',11.5,'#7a5a28')+
+     label(276,228,'living biomass',12,'#7a4e28'),fade.animal)+
+    res('ocean',
+     waves(481,172)+fish(470,284)+
+     label(481,218,'OCEAN',11.5,'#2d4d5c')+
+     label(481,238,'dissolved carbon',12,'#1f4653')+
+     label(481,256,'and living things',12,'#1f4653'),fade.ocean)+
+    res('soil',
+     crumbs(82,284)+
+     label(212,272,'SOIL',11.5,'#6b5520')+
+     label(212,292,'dead matter and decomposers',12,'#6b5520'),fade.soil)+
+    res('deep',
+     strata(44,340,72)+strata(484,340,72)+
+     label(300,348,'LONG-TERM STORAGE',11.5,'#4a4038')+
+     label(300,368,'rocks and fossil fuels',12.5,'#4a4038'),fade.deep);
+  };
+
+  return buttons([['stores','Carbon reservoirs'],['atom','Follow a carbon atom'],['natural','Natural transfers'],['burn','Add combustion']],mode=>{
+
+   /* 1. Where carbon is. No arrows at all - the point of this state is that
+         the air is one store among six, not the whole story. */
+   if(mode==='stores'){
+    drawing.innerHTML=svg(DEFS+scene()+
+     label(300,406,'A reservoir is a place where carbon is stored.',14.5,'#183d36')+
+     `<rect x="18" y="420" width="564" height="60" rx="14" fill="#e6efe1" stroke="#b3c3bb"/>`+
+     label(300,444,'Carbon is not only in the air — it is also in living things,',13,'#2f5c34')+
+     label(300,464,'in soil, in the ocean, and locked in rock for very long times.',13,'#2f5c34'),
+     'Six carbon reservoirs: the atmosphere, plants, animals, the ocean, soil, and long-term storage in rocks and fossil fuels.',494);
+    caption.textContent='Six places carbon can be sitting right now. Most people picture carbon as something in the air, and it is - but far more of it is in the ocean, in soil and in rock, and a good deal of it is in you. A reservoir is simply a store; the rest of this visual is about how carbon gets from one store to another.';
+    return;
+   }
+
+   /* 2. One atom, one route - and an alternative, so the route never reads
+         as the route. The dimmed reservoirs are the ones this path skips. */
+   if(mode==='atom'){
+    drawing.innerHTML=svg(DEFS+scene({ocean:1,deep:1})+
+     arrow('M64 100V148','#4e7a5f')+
+     label(74,124,'1  PHOTOSYNTHESIS',11.5,'#2f5c34','start')+
+     arrow('M176 192H202','#7a4e28')+
+     label(189,176,'2  FEEDING',11.5,'#7a4e28')+
+     arrow('M250 148V100','#5f7f8c')+
+     label(260,114,'3  CELLULAR',11.5,'#2d4d5c','start')+
+     label(260,132,'RESPIRATION',11.5,'#2d4d5c','start')+
+     /* or the long way round */
+     arrow('M102 236V246','#9a7f45',true)+
+     arrow('M268 236V246','#9a7f45',true)+
+     label(189,246,'DEATH',11.5,'#6b5520')+
+     arrow('M340 248L366 214V100','#9a7f45',true)+
+     label(376,124,'DECOMPOSITION',11.5,'#6b5520','start')+
+     label(300,406,'The same carbon atom moves through different parts of the system.',14,'#183d36')+
+     label(300,426,'This is one possible pathway — carbon can take many other routes.',12.5,'#54685c')+
+     pill(18,440,564,42,'Carbon atoms are transferred and rearranged. They do not disappear.','#e6efe1','#2f5c34',13.5),
+     'One carbon atom traced from the air into a plant by photosynthesis, into an animal by feeding, and back to the air by respiration, with a dashed alternative through death and decomposition in the soil.',496);
+    caption.textContent='Follow one atom. Photosynthesis lifts it out of the air and into a plant; feeding carries it into an animal; respiration puts it back. The dashed route is just as real: the plant or the animal dies, decomposers in the soil break the material down, and the carbon returns from there instead. Same atom, different road - and there are many more roads than these two.';
+    return;
+   }
+
+   /* 3. The whole network. Respiration from plants and from animals merges
+         above the boxes into one labelled arrow, which is both true and the
+         only way four process names fit on one line without colliding. */
+   if(mode==='natural'){
+    drawing.innerHTML=svg(DEFS+scene()+
+     arrow('M64 100V148','#4e7a5f')+
+     label(74,118,'PHOTOSYNTHESIS',11.5,'#2f5c34','start')+
+     plain('M120 150L195 128','#5f7f8c')+plain('M250 150L195 128','#5f7f8c')+
+     arrow('M195 130V100','#5f7f8c')+
+     label(205,118,'RESPIRATION',11.5,'#2d4d5c','start')+
+     arrow('M176 192H202','#7a4e28')+
+     label(189,176,'FEEDING',11.5,'#7a4e28')+
+     arrow('M102 236V246','#9a7f45')+arrow('M268 236V246','#9a7f45')+
+     label(189,246,'DEATH',11.5,'#6b5520')+
+     arrow('M340 248L366 214V100','#9a7f45')+
+     label(356,142,'DECOMPOSITION',11.5,'#6b5520','end')+
+     both('M450 148V100','#4d7e93')+
+     label(460,118,'OCEAN EXCHANGE',11.5,'#2d4d5c','start')+
+     arrow('M120 310V322','#8a8073',true)+arrow('M480 310V322','#8a8073',true)+
+     label(300,320,'slowly, over very long times',11.5,'#6f675d')+
+     label(300,406,'The carbon cycle is a network of transfers, not one single loop.',14,'#183d36')+
+     pill(18,420,564,44,'A flux is the rate carbon moves from one reservoir to another.','#e4eef5','#1f4653',14),
+     'The natural carbon network: photosynthesis into plants, feeding into animals, respiration back to the air, death into the soil, decomposition back to the air, exchange both ways with the ocean, and a slow dashed path into long-term storage.',480);
+    caption.textContent='Now all of it at once. Notice there is no single circle to trace: carbon leaves the air by photosynthesis or by dissolving into the ocean, and it comes back by respiration, by decomposition, or out of the sea again. Each arrow is a flux - a rate, not an amount - and the arrows run at very different speeds. Burial into rock is the slowest of them by a long way, which is why it is drawn dashed.';
+    return;
+   }
+
+   /* 4. The human arrow, and the arithmetic that settles the conservation
+         question. The numbers are labelled illustrative on the picture. */
+   drawing.innerHTML=svg(DEFS+scene()+
+    arrow('M64 100V148','#4e7a5f')+
+    label(74,118,'PHOTOSYNTHESIS',11.5,'#2f5c34','start')+
+    arrow('M450 100V148','#4d7e93')+
+    label(460,118,'OCEAN UPTAKE',11.5,'#2d4d5c','start')+
+    arrow('M366 324V100','#c0562f',0,4)+
+    label(356,118,'COMBUSTION',11.5,'#a8451f','end')+
+    label(356,318,'burning fossil fuels',11.5,'#a8451f','end')+
+    label(300,404,'The carbon was already stored underground — combustion moves it into the air.',12,'#183d36')+
+    `<rect x="18" y="416" width="564" height="66" rx="14" fill="#f3e6da" stroke="#c9b79a"/>`+
+    label(140,440,'INTO the atmosphere',11.5,'#7a4e28')+
+    label(140,466,'12 units',16,'#7a4e28')+
+    label(300,440,'OUT of the atmosphere',11.5,'#7a4e28')+
+    label(300,466,'8 units',16,'#7a4e28')+
+    label(460,440,'NET CHANGE',11.5,'#7a4e28')+
+    label(460,466,'+4 units',16,'#2f5c34')+
+    label(300,504,'12 − 8 = +4. The atmosphere grows because more carbon enters than leaves.',12.5,'#183d36')+
+    label(300,522,'Carbon is still conserved — those atoms came from the store underground.',12.5,'#54685c')+
+    label(300,540,'Illustrative example — not measured Earth data.',11.5,'#93a099'),
+    'Combustion drawn as a thick arrow carrying carbon from long-term storage up into the atmosphere, with photosynthesis and ocean uptake removing some again, and a balance panel showing 12 units in, 8 units out, a net change of plus 4.',556);
+   caption.textContent='Burning fossil fuels does not make carbon. The atoms were already there, held underground for a very long time; combustion moves them into the air in a moment. Photosynthesis and the ocean take some of it back out, but if 12 units arrive and 8 leave, the atmosphere holds 4 more than it did. No atom was created to do that - the long-term store simply has 4 fewer. Carbon is conserved across the whole system; that has never meant each reservoir stays the same size. The figures here are for practice, not measurements of Earth.';
+  });
  }
 
  if(type==='web')return buttons([['normal','Show food web'],['loss','What if rabbits decline?']],mode=>{drawing.innerHTML=svg(`${line(140,190,250,65)}${line(150,195,265,190)}${line(350,65,460,65)}${line(350,190,460,85)}${line(340,215,460,245)}${box(30,165,130,65,'Grass')}${box(230,30,135,65,'Rabbits',mode==='loss'?'#efcfbf':'#e4eee5')}${box(230,170,135,65,'Mice')}${box(440,30,130,65,'Foxes')}${box(430,220,150,55,'Owls')}`,'A food web: grass feeds rabbits and mice; rabbits and mice feed foxes; mice feed owls.',310);caption.textContent=mode==='loss'?'Rabbit decline can reduce one food source for foxes. Mice are an alternative, so the final outcome depends on their availability and other interactions. These are possible effects, not an exact prediction.':'Arrows point from food to consumer. This is a simplified example; decomposers and many other connections are omitted. Click the scenario to reason about a change.';});
