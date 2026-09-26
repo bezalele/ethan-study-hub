@@ -17,12 +17,12 @@
    the content lands.
    --------------------------------------------------------------------------- */
 
-import { AREAS, getArea, topicSlug } from '../content/course.js?v=20';
-import { getDetail, unitIdeas } from '../content/courseDetails.js?v=20';
-import { renderTriangle, wireTriangle } from '../components/power-triangle.js?v=20';
-import { renderLesson, wireLesson } from '../components/lesson.js?v=20';
-import { lessonsFor, getLesson } from '../content/lessons.js?v=20';
-import { el, html, esc } from '../layout/dom.js?v=20';
+import { AREAS, getArea, topicSlug } from '../content/course.js?v=21';
+import { getDetail, unitIdeas } from '../content/courseDetails.js?v=21';
+import { renderTriangle, wireTriangle } from '../components/power-triangle.js?v=21';
+import { renderLesson, wireLesson, quiz, wireQuiz } from '../components/lesson.js?v=21';
+import { lessonsFor, getLesson } from '../content/lessons.js?v=21';
+import { el, html, esc } from '../layout/dom.js?v=21';
 
 /* --- Shared pieces -------------------------------------------------------- */
 
@@ -182,86 +182,24 @@ function sectionCoreIdeas(area, d) {
    them. */
 function sectionRecap(d) {
   const r = d.remember || [];
+  const qs = Array.isArray(d.quickCheck) ? d.quickCheck : (d.quickCheck ? [d.quickCheck] : []);
   return `
-    <div class="cm-recap">
+    ${r.length ? `
       <section class="cm-sec cm-sec--remember" aria-labelledby="cm-rm">
         <h3 class="cm-sec__label" id="cm-rm">If you remember only this…</h3>
-        ${r.length
-          ? `<ol class="cm-remember">${r.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>`
-          : placeholder('One-minute summary', 'Three statements that tie the unit together.')}
-      </section>
-      ${sectionQuickCheck(d)}
-    </div>`;
-}
-
-/* A short paged quiz: one question on screen, answered before you can move
-   on, scored out of the total. Older content gave a single object rather
-   than a list, so both shapes are accepted. */
-function sectionQuickCheck(d) {
-  const qs = Array.isArray(d.quickCheck) ? d.quickCheck : (d.quickCheck ? [d.quickCheck] : []);
-  if (!qs.length) {
-    return `
-      <section class="cm-sec cm-sec--check" aria-labelledby="cm-qc">
-        <h3 class="cm-sec__label" id="cm-qc">Quick check</h3>
-        ${placeholder('Quick check', 'Three or more questions drawn from this summary.')}
-      </section>`;
-  }
-
-  const cards = qs.map((q, n) => {
-    const options = q.options.map((o, i) => `
-      <li>
-        <label class="cm-opt">
-          <input type="radio" name="cm-q${n}" value="${i}">
-          <span class="cm-opt__marker" aria-hidden="true"></span>
-          <span>${esc(o)}</span>
-        </label>
-      </li>`).join('');
-    // Every card is laid into the same grid cell, so the panel is as tall as
-    // its tallest question from the first paint and never resizes as you page.
-    return `
-      <div class="cm-check__card${n ? '' : ' is-on'}" data-q="${n}" data-answer="${q.answer}">
-        <p class="cm-check__q">${esc(q.question)}</p>
-        <ol class="cm-opts">${options}</ol>
-      </div>`;
-  }).join('');
-
-  /* The verdicts sit below the buttons, where you are already looking once
-     you have clicked, and are stacked the same way. Their space is held
-     from the start so revealing one does not move anything. */
-  const verdicts = qs.map((q, n) => `
-    <div class="cm-check__verdict${n ? '' : ' is-on'}" data-v="${n}" aria-hidden="true">
-      <p class="cm-check__result" data-result></p>
-      ${q.why ? `<p class="cm-check__why">${esc(q.why)}</p>` : ''}
-    </div>`).join('');
-
-  return `
-    <section class="cm-sec cm-sec--check" aria-labelledby="cm-qc" data-quiz>
-      <div class="cm-check__head">
-        <h3 class="cm-sec__label" id="cm-qc">Quick check</h3>
-        <p class="cm-check__count" data-count>1 of ${qs.length}</p>
-      </div>
-      <div class="cm-check__cards">${cards}</div>
-      <div class="cm-check__nav">
-        <button class="cm-check__step" type="button" data-prev disabled>← Back</button>
-        <button class="btn btn--primary" type="button" data-check>Check answer</button>
-        <button class="cm-check__step" type="button" data-next>Next →</button>
-      </div>
-      <div class="cm-check__verdicts">
-        <p class="cm-check__hint" data-hint>Pick an option, then check it.</p>
-        ${verdicts}
-      </div>
-      <p class="cm-check__score" data-score>Answer all ${qs.length} to see your score.</p>
-    </section>`;
+        <ol class="cm-remember">${r.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>
+      </section>` : ''}
+    ${qs.length ? quiz(qs, { name: 'cm', label: 'Quick check', unit: d.unitN }) : ''}`;
 }
 
 /* --- What this unit covers ------------------------------------------------ */
 
-/* The lessons, as cards: a picture, a sentence, and a way in. The AP topic
-   numbers ride along quietly - they are how the College Board files this
-   material, not how anyone learns it.
+/* A card is a door, not a summary: a picture, a title, one line. The AP
+   number is a small tag for the parent checking coverage and is not part of
+   what the student reads.
 
-   A lesson that is not written yet says so on its own card. It is never a
-   dead link, which is the same rule the full-guide slot below follows. */
+   A lesson that is not written yet is marked on the picture and is not a
+   link, which is the rule the full-guide slot below it already followed. */
 function sectionLessons(area) {
   const lessons = lessonsFor(area.n);
   if (!lessons.length) return '';
@@ -270,16 +208,13 @@ function sectionLessons(area) {
     const inner = `
       <span class="cm-lesson__art">
         <img src="${esc(l.image)}" alt="${esc(l.alt)}" loading="lazy">
+        ${l.ready ? '' : '<span class="cm-lesson__soon">Soon</span>'}
       </span>
       <span class="cm-lesson__text">
-        <span class="cm-lesson__meta">
-          <span class="cm-lesson__n">Lesson ${l.n}</span>
-          <span class="cm-lesson__ap">${esc(l.ap)}</span>
-        </span>
         <strong class="cm-lesson__title">${esc(l.title)}</strong>
         <span class="cm-lesson__blurb">${esc(l.blurb)}</span>
-        <span class="cm-lesson__go">${l.ready ? 'Open lesson \u2192' : 'Being written'}</span>
-      </span>`;
+      </span>
+      <span class="cm-lesson__ap">${esc(l.ap)}</span>`;
 
     return l.ready
       ? `<li><a class="cm-lesson" href="#/course/${area.n}/${esc(l.slug)}">${inner}</a></li>`
@@ -289,7 +224,6 @@ function sectionLessons(area) {
   return `
     <section class="cm-sec cm-sec--lessons" aria-labelledby="cm-ls">
       <h3 class="cm-sec__label" id="cm-ls">What Unit ${area.n} covers</h3>
-      <p class="cm-lessons__lead">Five lessons. Open one, or read the summary above first.</p>
       <ol class="cm-lessons">${cards}</ol>
     </section>`;
 }
@@ -307,7 +241,7 @@ function sectionFullGuide(area, d) {
 }
 
 function panel(area) {
-  const d = getDetail(area.n);
+  const d = { ...getDetail(area.n), unitN: area.n };
   return `
     <article class="cm-panel">
       <div class="cm-panel__scroll" data-panel tabindex="-1">
@@ -354,80 +288,6 @@ function wireWalk(root) {
   });
 }
 
-function wireQuickCheck(root, unit) {
-  const box = root.querySelector('[data-quiz]');
-  if (!box) return;
-
-  const cards = [...box.querySelectorAll('[data-q]')];
-  const verdicts = [...box.querySelectorAll('[data-v]')];
-  const count = box.querySelector('[data-count]');
-  const score = box.querySelector('[data-score]');
-  const prev = box.querySelector('[data-prev]');
-  const next = box.querySelector('[data-next]');
-  const check = box.querySelector('[data-check]');
-  const hint = box.querySelector('[data-hint]');
-  // One entry per question: true, false, or undefined while unanswered. A
-  // question is scored on its first answer, so a second guess cannot lift
-  // the total.
-  const marks = new Array(cards.length);
-  let at = 0;
-
-  function show(i) {
-    at = Math.max(0, Math.min(cards.length - 1, i));
-    cards.forEach((c, n) => c.classList.toggle('is-on', n === at));
-    verdicts.forEach((v, n) => v.classList.toggle('is-on', n === at));
-    hint.classList.toggle('is-off', verdicts[at].classList.contains('is-shown'));
-    count.textContent = `${at + 1} of ${cards.length}`;
-    prev.disabled = at === 0;
-    next.disabled = at === cards.length - 1;
-    check.disabled = marks[at] !== undefined;
-    check.textContent = marks[at] === undefined ? 'Check answer' : 'Answered';
-  }
-
-  function report() {
-    const done = marks.filter((m) => m !== undefined).length;
-    if (done < cards.length) return;
-    const right = marks.filter(Boolean).length;
-    score.classList.add('is-done');
-    score.textContent = `You scored ${right} out of ${cards.length}.`;
-    /* Kept, rather than shown and forgotten. It syncs like everything else,
-       so the run he did on his laptop is the run his parents see. */
-    if (window.ApGovProgress) window.ApGovProgress.recordUnitCheck(unit, right, cards.length);
-  }
-
-  function reveal() {
-    verdicts[at].classList.add('is-shown');
-    verdicts[at].setAttribute('aria-hidden', 'false');
-    hint.classList.add('is-off');
-  }
-
-  check.addEventListener('click', () => {
-    const card = cards[at];
-    const result = verdicts[at].querySelector('[data-result]');
-    const picked = card.querySelector('input:checked');
-    if (!picked) {
-      result.className = 'cm-check__result';
-      result.textContent = 'Choose an answer first.';
-      reveal();
-      return;
-    }
-    const right = Number(picked.value) === Number(card.dataset.answer);
-    marks[at] = right;
-    result.className = `cm-check__result ${right ? 'is-right' : 'is-wrong'}`;
-    result.textContent = right ? 'Correct.' : 'Not quite.';
-    picked.closest('.cm-opt').classList.add(right ? 'is-right' : 'is-wrong');
-    card.querySelectorAll('input').forEach((i) => { i.disabled = true; });
-    reveal();
-    check.disabled = true;
-    check.textContent = 'Answered';
-    report();
-  });
-
-  prev.addEventListener('click', () => show(at - 1));
-  next.addEventListener('click', () => show(at + 1));
-  show(0);
-}
-
 /* Arriving from a daily note: mark the idea it named and bring it into view.
    The page is not in the document yet when render returns, so this waits for
    the frame after it is - and the panel is the scrolling region, not the
@@ -470,13 +330,13 @@ export default {
 
     if (lesson) {
       wireLesson(page, lesson);
-      wireQuickCheck(page, area.n);
+      wireQuiz(page);
       return page;
     }
 
     wireWalk(page);
     if (d0.model && d0.model.type === 'triangle') wireTriangle(page, d0.model, esc);
-    wireQuickCheck(page, area.n);
+    wireQuiz(page);
     if (params.topic) focusTopic(page, params.topic);
     return page;
   },

@@ -876,7 +876,6 @@
     translate: -50% -25%;
   }
   .page--course-map .cm-ideas { grid-template-columns: 1fr; }
-  .page--course-map .cm-recap { grid-template-columns: 1fr; }
 }
 
 /* Two across before one: the notes and the ideas read fine at half width,
@@ -884,22 +883,7 @@
 @media (max-width: 1100px) and (min-width: 821px) {
   .page--course-map .cm-notes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .page--course-map .cm-ideas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .page--course-map .cm-recap { grid-template-columns: 1fr; }
   .page--course-map .cm-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-/* --- Recap band ------------------------------------------------------------
-   The one-minute summary and the quiz sit side by side so the three
-   statements are still on screen while the questions are answered.
-   --------------------------------------------------------------------------- */
-
-.page--course-map .cm-recap {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--s-5);
-  /* Equal height, so the band reads as one thing rather than two cards of
-     different lengths. */
-  align-items: stretch;
 }
 
 .page--course-map .cm-sec--remember,
@@ -912,65 +896,8 @@
   border: 1px solid var(--c-line);
   border-radius: var(--r-md);
 }
-
-.page--course-map .cm-check__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--s-3);
-}
-
-.page--course-map .cm-check__count {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--c-ink-faint);
-}
-
-.page--course-map .cm-check__nav {
-  display: flex;
-  align-items: center;
-  gap: var(--s-2);
-  margin-top: var(--s-4);
-}
-.page--course-map .cm-check__nav .btn { flex: 1 0 auto; }
-
-.page--course-map .cm-check__step {
-  padding: 10px var(--s-3);
-  background: transparent;
-  border: 1px solid var(--c-line);
-  border-radius: var(--r-sm);
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--c-ink-soft);
-  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
-}
-.page--course-map .cm-check__step:hover:not(:disabled) {
-  border-color: var(--c-forest);
-  color: var(--c-forest);
-}
-.page--course-map .cm-check__step:disabled { opacity: 0.4; }
-
 /* Says what it is waiting for rather than appearing out of nowhere and
    pushing the panel down. */
-.page--course-map .cm-check__score {
-  margin-top: var(--s-3);
-  padding-top: var(--s-3);
-  border-top: 1px solid var(--c-line);
-  font-family: var(--font-ui);
-  font-size: 14px;
-  /* Fixed, so growing the type on completion does not move the panel. */
-  line-height: 22px;
-  font-weight: 700;
-  color: var(--c-ink-faint);
-}
-.page--course-map .cm-check__score.is-done {
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--c-forest);
-}
-
 /* --- Core ideas ----------------------------------------------------------- */
 
 /* Six ideas, fixed at three across so they land as two even rows rather
@@ -981,7 +908,6 @@
   gap: var(--s-3);
   list-style: none;
 }
-
 .page--course-map .cm-idea {
   display: grid;
   grid-template-columns: 26px minmax(0, 1fr);
@@ -999,7 +925,6 @@
   border-color: var(--c-brick);
   box-shadow: 0 0 0 3px rgba(150, 60, 35, .12);
 }
-
 .page--course-map .cm-idea__n {
   font-family: var(--font-display);
   font-size: 14px;
@@ -1019,7 +944,6 @@
   line-height: 1.45;
   color: var(--c-ink-soft);
 }
-
 /* --- One-minute summary ---------------------------------------------------- */
 
 /* The panel around it is the card now, so the list itself is plain. */
@@ -1037,110 +961,18 @@
   color: var(--c-brick);
   font-weight: 700;
 }
-
 /* --- Quick check ----------------------------------------------------------- */
 
 /* All the question cards share one grid cell, so the panel is as tall as
    its tallest question from the first paint and never resizes. */
-.page--course-map .cm-check__cards { display: grid; }
-
-.page--course-map .cm-check__card {
-  grid-area: 1 / 1;
-  display: grid;
-  align-content: start;
-  gap: var(--s-4);
-  visibility: hidden;
-}
-.page--course-map .cm-check__card.is-on { visibility: visible; }
-
-.page--course-map .cm-check__q {
-  font-family: var(--font-display);
-  font-size: 16px;
-  line-height: 1.45;
-}
-
 /* Stacked the same way as the questions, and their space is held from the
    start, so answering does not move the buttons or the score. Opacity
    rather than visibility, because a hidden verdict's descendants must stay
    hidden and visibility: visible on a child would override that. */
-.page--course-map .cm-check__verdicts { display: grid; }
-
-.page--course-map .cm-check__verdict {
-  grid-area: 1 / 1;
-  display: grid;
-  align-content: start;
-  gap: 4px;
-  visibility: hidden;
-}
-.page--course-map .cm-check__verdict.is-on { visibility: visible; }
-.page--course-map .cm-check__verdict:not(.is-shown) { opacity: 0; }
-
 /* Shares the cell, and is shorter than any verdict, so it fills the head of
    the reserved space without setting its height. */
-.page--course-map .cm-check__hint {
-  grid-area: 1 / 1;
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--c-ink-faint);
-}
-.page--course-map .cm-check__hint.is-off { visibility: hidden; }
-.page--course-map .cm-opts { display: grid; gap: 6px; list-style: none; }
-.page--course-map .cm-opt {
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr);
-  gap: var(--s-3);
-  align-items: start;
-  padding: 10px var(--s-3);
-  background: var(--c-parchment);
-  border: 1px solid var(--c-line);
-  border-radius: var(--r-sm);
-  font-size: 14px;
-  line-height: 1.45;
-  cursor: pointer;
-}
-.page--course-map .cm-opt:hover { border-color: var(--c-forest); }
-.page--course-map .cm-opt input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-.page--course-map .cm-opt__marker {
-  width: 16px;
-  height: 16px;
-  margin-top: 2px;
-  border: 1px solid var(--c-ink-faint);
-  border-radius: 50%;
-}
-.page--course-map .cm-opt input:checked + .cm-opt__marker {
-  border-color: var(--c-forest);
-  border-width: 5px;
-}
-.page--course-map .cm-opt.is-right {
-  background: var(--c-sage);
-  border-color: var(--c-forest);
-}
-.page--course-map .cm-opt.is-wrong {
-  background: #f7ece8;
-  border-color: var(--c-brick);
-}
-
 /* One line is reserved whether or not there is a verdict yet, so revealing
    it does not lengthen the card. */
-.page--course-map .cm-check__result {
-  min-height: 20px;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 700;
-  color: var(--c-ink-faint);
-}
-.page--course-map .cm-check__result.is-right { color: var(--c-forest); }
-.page--course-map .cm-check__result.is-wrong { color: var(--c-brick); }
-.page--course-map .cm-check__why {
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--c-ink-soft);
-}
-
 /* --- Full unit guide slot --------------------------------------------------- */
 
 .page--course-map .cm-go {
@@ -1259,36 +1091,38 @@
    LESSONS
    The cards under a unit, and the lesson they open.
 
-   Every selector here begins with .page--course-map, because the lesson is
-   drawn inside the Course page's scrolling panel rather than on a page of
-   its own. That is also why nothing below sets a height on the page or
-   touches overflow: the panel is still the only thing that scrolls.
+   Every selector begins with .page--course-map: the lesson is drawn inside
+   the Course page's scrolling panel, not on a page of its own. Nothing here
+   sets a height on the page or touches overflow, so the panel stays the only
+   scrolling region.
+
+   Built for scanning. Generous space between sections, headings that carry
+   the argument on their own, and nothing folded away behind a click. The
+   only clickable things in a lesson are the answers to its questions.
 
    Nothing is smaller than 13px, which is this file's standing rule.
    =========================================================================== */
 
 /* --- What this unit covers ------------------------------------------------ */
 
-.page--course-map .cm-lessons__lead {
-  font-size: var(--t-small);
-  color: var(--c-ink-soft);
-  margin: calc(var(--s-1) * -1) 0 var(--s-2);
-}
-
+/* Five small cards in a row on a wide panel, wrapping to three and then two.
+   A card is a door: picture, title, one line. */
+/* Five across, then three, then two. Never four: with five lessons that
+   leaves the last one stranded on a row of its own, and the last one is the
+   only one he can open. */
 .page--course-map .cm-lessons {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: var(--s-3);
 }
 
 .page--course-map .cm-lesson {
+  height: 100%;
   display: grid;
-  grid-template-columns: 184px minmax(0, 1fr);
-  gap: var(--s-4);
-  align-items: stretch;
-  padding: 0;
+  grid-template-rows: auto 1fr auto;
   border: 1px solid var(--c-line);
   border-radius: var(--r-md);
   background: var(--c-paper);
@@ -1308,6 +1142,7 @@
 }
 
 .page--course-map .cm-lesson__art {
+  position: relative;
   display: block;
   background: var(--c-parchment-dim);
 }
@@ -1315,69 +1150,53 @@
 .page--course-map .cm-lesson__art img {
   display: block;
   width: 100%;
-  height: 100%;
-  min-height: 124px;
+  height: 104px;
   object-fit: cover;
+}
+
+.page--course-map .cm-lesson__soon {
+  position: absolute;
+  top: var(--s-2);
+  left: var(--s-2);
+  padding: 2px var(--s-2);
+  border-radius: var(--r-pill);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c-ink-soft);
+  background: rgba(255, 250, 242, 0.92);
 }
 
 .page--course-map .cm-lesson__text {
   display: grid;
   gap: var(--s-1);
-  align-content: center;
-  padding: var(--s-4) var(--s-4) var(--s-4) 0;
-}
-
-.page--course-map .cm-lesson__meta {
-  display: flex;
-  align-items: baseline;
-  gap: var(--s-2);
-}
-
-.page--course-map .cm-lesson__n {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--c-brick);
-}
-
-/* The AP number is metadata, not a heading. It is here for the parent
-   checking coverage, and it stays out of the student's way. */
-.page--course-map .cm-lesson__ap {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--c-ink-faint);
+  align-content: start;
+  padding: var(--s-3) var(--s-3) var(--s-2);
 }
 
 .page--course-map .cm-lesson__title {
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: 17px;
   line-height: var(--lh-snug);
   color: var(--c-ink);
 }
 
 .page--course-map .cm-lesson__blurb {
-  font-size: var(--t-small);
-  line-height: var(--lh-body);
+  font-size: 13px;
+  line-height: 1.45;
   color: var(--c-ink-soft);
 }
 
-.page--course-map .cm-lesson__go {
+/* Metadata, set as metadata: it is for the parent checking coverage. */
+.page--course-map .cm-lesson__ap {
+  padding: 0 var(--s-3) var(--s-3);
   font-family: var(--font-ui);
   font-size: 13px;
-  font-weight: 700;
-  color: var(--c-forest-soft);
-  margin-top: var(--s-1);
+  color: var(--c-ink-faint);
 }
 
-/* Not written yet. It should read as "coming", not as broken. */
-.page--course-map .cm-lesson--soon {
-  background: var(--c-parchment);
-}
-
-.page--course-map .cm-lesson--soon .cm-lesson__art img { filter: saturate(0.5); opacity: 0.75; }
-.page--course-map .cm-lesson--soon .cm-lesson__go { color: var(--c-ink-faint); font-weight: 600; }
+.page--course-map .cm-lesson--soon { background: var(--c-parchment); }
+.page--course-map .cm-lesson--soon .cm-lesson__art img { filter: saturate(0.45); opacity: 0.7; }
 
 /* --- The lesson itself ---------------------------------------------------- */
 
@@ -1389,8 +1208,6 @@
 
 .page--course-map .les-sec { display: grid; gap: var(--s-4); }
 
-.page--course-map .les-sec__head { display: grid; gap: var(--s-2); }
-
 .page--course-map .les-sec__label {
   font-family: var(--font-ui);
   font-size: 13px;
@@ -1401,15 +1218,7 @@
   margin: 0;
 }
 
-.page--course-map .les-sec__lead {
-  font-size: var(--t-body);
-  line-height: var(--lh-body);
-  color: var(--c-ink-soft);
-  max-width: var(--measure-text);
-  margin: 0;
-}
-
-/* --- Opening -------------------------------------------------------------- */
+/* --- Title, question, intro ----------------------------------------------- */
 
 .page--course-map .les-head { display: grid; gap: var(--s-3); }
 
@@ -1428,11 +1237,12 @@
   display: flex;
   align-items: baseline;
   gap: var(--s-3);
+  flex-wrap: wrap;
   margin: 0;
   font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--c-brick);
 }
@@ -1444,30 +1254,26 @@
   color: var(--c-ink-faint);
 }
 
-/* The question is the largest thing on the page, because it is the point. */
+/* The question is the biggest thing on the page, because it is the point. */
 .page--course-map .les-head__q {
+  margin: 0;
   font-family: var(--font-display);
   font-size: clamp(28px, 3vw, 38px);
   line-height: var(--lh-snug);
   color: var(--c-ink);
-  margin: 0;
-  max-width: 22ch;
+  max-width: 24ch;
 }
 
-.page--course-map .les-head__lede {
-  display: grid;
-  gap: var(--s-2);
-  max-width: var(--measure-text);
-}
+.page--course-map .les-head__intro { display: grid; gap: var(--s-2); max-width: var(--measure-text); }
 
-.page--course-map .les-head__lede p {
+.page--course-map .les-head__intro p {
   margin: 0;
   font-size: 17px;
   line-height: var(--lh-body);
   color: var(--c-ink);
 }
 
-/* --- Federal / state / both ---------------------------------------------- */
+/* --- The chart ------------------------------------------------------------ */
 
 .page--course-map .les-cols {
   display: grid;
@@ -1477,19 +1283,24 @@
 
 .page--course-map .les-col {
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto auto 1fr;
   border: 1px solid var(--c-line);
+  border-top: 4px solid var(--c-line);
   border-radius: var(--r-md);
   background: var(--c-paper);
   overflow: hidden;
 }
+
+.page--course-map .les-col--federal { border-top-color: var(--c-forest-soft); }
+.page--course-map .les-col--state { border-top-color: var(--c-brick); }
+.page--course-map .les-col--both { border-top-color: #b08d2e; }
 
 .page--course-map .les-col__art { margin: 0; position: relative; }
 
 .page--course-map .les-col__art img {
   display: block;
   width: 100%;
-  height: 172px;
+  height: 132px;
   object-fit: cover;
 }
 
@@ -1497,7 +1308,7 @@
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  padding: var(--s-4) var(--s-3) var(--s-2);
+  padding: var(--s-4) var(--s-3) var(--s-1);
   font-family: var(--font-ui);
   font-size: 13px;
   line-height: 1.3;
@@ -1505,287 +1316,88 @@
   background: linear-gradient(transparent, rgba(13, 46, 39, 0.9));
 }
 
-.page--course-map .les-col__head {
-  display: grid;
-  gap: var(--s-1);
-  padding: var(--s-4) var(--s-4) var(--s-3);
-  border-bottom: 1px solid var(--c-line-soft);
-}
-
 .page--course-map .les-col__label {
-  font-family: var(--font-display);
-  font-size: 22px;
   margin: 0;
+  padding: var(--s-4) var(--s-4) 0;
+  font-family: var(--font-display);
+  font-size: 24px;
   color: var(--c-ink);
 }
 
 .page--course-map .les-col__kind {
   margin: 0;
+  padding: 2px var(--s-4) var(--s-3);
   font-family: var(--font-ui);
   font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.page--course-map .les-col--federal .les-col__kind { color: var(--c-forest-soft); }
-.page--course-map .les-col--state   .les-col__kind { color: var(--c-brick); }
-.page--course-map .les-col--both    .les-col__kind { color: #6a5a1f; }
-
-.page--course-map .les-col__gloss {
-  margin: 0;
-  font-size: var(--t-small);
-  line-height: var(--lh-body);
+  font-weight: 700;
   color: var(--c-ink-soft);
 }
 
 .page--course-map .les-col__items {
   list-style: none;
   margin: 0;
-  padding: var(--s-3) var(--s-3) var(--s-4);
+  padding: 0 var(--s-4) var(--s-4);
   display: grid;
   gap: var(--s-2);
   align-content: start;
 }
 
-.page--course-map .les-item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s-2);
+/* Everything the lesson teaches is on the chart, visible, from the first
+   look. The gloss under each example is the sentence that used to be hidden
+   behind a click. */
+.page--course-map .les-col__items li {
+  display: grid;
+  gap: 1px;
   padding: var(--s-3);
-  font-family: var(--font-ui);
-  font-size: var(--t-small);
-  line-height: var(--lh-snug);
-  text-align: left;
-  color: var(--c-ink);
-  background: var(--c-parchment);
-  border: 1px solid var(--c-line);
   border-radius: var(--r-sm);
-  cursor: pointer;
-  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
-}
-
-.page--course-map .les-item:hover { background: var(--c-sage); }
-
-.page--course-map .les-item__more {
-  font-weight: 700;
-  color: var(--c-ink-faint);
-}
-
-.page--course-map .les-item[aria-pressed='true'] {
-  background: var(--c-forest);
-  border-color: var(--c-forest);
-  color: var(--c-on-dark);
-}
-
-.page--course-map .les-item[aria-pressed='true'] .les-item__more { color: var(--c-on-dark-soft); }
-
-/* One strip, below all three columns. Choosing a second example changes the
-   words here and nothing else, so the columns never jump. */
-.page--course-map .les-reveal {
-  min-height: 88px;
-  display: grid;
-  align-content: center;
-  padding: var(--s-4) var(--s-5);
-  border: 1px solid var(--c-line);
-  border-left: 4px solid var(--c-forest-soft);
-  border-radius: var(--r-md);
-  background: var(--c-sage);
-}
-
-.page--course-map .les-reveal__prompt {
-  margin: 0;
-  font-size: var(--t-body);
-  color: var(--c-ink-soft);
-}
-
-.page--course-map .les-reveal__body { display: grid; gap: var(--s-1); }
-
-.page--course-map .les-reveal__tag {
-  margin: 0;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--c-brick);
-}
-
-.page--course-map .les-reveal__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 21px;
-  color: var(--c-ink);
-}
-
-.page--course-map .les-reveal__text {
-  margin: 0;
-  font-size: var(--t-body);
-  line-height: var(--lh-body);
-  color: var(--c-ink);
-  max-width: var(--measure-text);
-}
-
-/* --- Who has the power? --------------------------------------------------- */
-
-.page--course-map .les-sec--challenge {
-  padding: var(--s-5);
-  border: 1px solid var(--c-line);
-  border-radius: var(--r-lg);
   background: var(--c-parchment);
 }
 
-.page--course-map .les-ch__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--s-4);
+.page--course-map .les-col__items strong {
+  font-family: var(--font-ui);
+  font-size: var(--t-small);
+  font-weight: 700;
+  color: var(--c-ink);
 }
 
-.page--course-map .les-ch__count {
-  margin: 0;
-  font-family: var(--font-ui);
+.page--course-map .les-col__items span {
   font-size: 13px;
-  font-weight: 700;
-  color: var(--c-ink-faint);
-  white-space: nowrap;
-}
-
-/* Every scenario occupies the same grid cell, so the block is as tall as its
-   tallest question from the first paint and nothing moves as you page. */
-.page--course-map .les-ch__cards { display: grid; }
-
-.page--course-map .les-ch__card {
-  grid-area: 1 / 1;
-  display: grid;
-  gap: var(--s-3);
-  align-content: start;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.page--course-map .les-ch__card.is-on { visibility: visible; pointer-events: auto; }
-
-.page--course-map .les-ch__prompt {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 21px;
-  line-height: var(--lh-snug);
-  color: var(--c-ink);
-}
-
-.page--course-map .les-ch__picks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-3);
-}
-
-.page--course-map .les-pick {
-  flex: 1 1 140px;
-  padding: var(--s-3) var(--s-4);
-  font-family: var(--font-ui);
-  font-size: var(--t-body);
-  font-weight: 700;
-  color: var(--c-ink);
-  background: var(--c-paper);
-  border: 1px solid var(--c-line);
-  border-radius: var(--r-sm);
-  cursor: pointer;
-  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
-}
-
-.page--course-map .les-pick:hover:enabled { background: var(--c-sage); border-color: var(--c-forest-soft); }
-.page--course-map .les-pick:disabled { cursor: default; }
-
-.page--course-map .les-pick.is-right {
-  background: #dfeedd;
-  border-color: #4c8248;
-  color: #25502a;
-}
-
-.page--course-map .les-pick.is-wrong {
-  background: #f6e2dc;
-  border-color: var(--c-brick);
-  color: var(--c-brick-deep);
-}
-
-.page--course-map .les-ch__verdict {
-  margin: 0;
-  font-family: var(--font-ui);
-  font-size: var(--t-body);
-  font-weight: 700;
-}
-
-.page--course-map .les-ch__verdict.is-right { color: #2f6a35; }
-.page--course-map .les-ch__verdict.is-wrong { color: var(--c-brick-deep); }
-
-.page--course-map .les-ch__why {
-  margin: 0;
-  font-size: var(--t-small);
-  line-height: var(--lh-body);
+  line-height: 1.4;
   color: var(--c-ink-soft);
-  max-width: var(--measure-text);
 }
 
-.page--course-map .les-ch__nav {
-  display: flex;
-  gap: var(--s-3);
-  align-items: center;
-}
-
-.page--course-map .les-ch__step {
-  padding: var(--s-2) var(--s-4);
-  font-family: var(--font-ui);
-  font-size: var(--t-small);
-  font-weight: 700;
-  color: var(--c-ink);
-  background: transparent;
-  border: 1px solid var(--c-line);
-  border-radius: var(--r-pill);
-  cursor: pointer;
-}
-
-.page--course-map .les-ch__step:disabled { color: var(--c-ink-faint); cursor: default; }
-
-.page--course-map .les-ch__score {
+.page--course-map .les-cols__caption {
   margin: 0;
-  font-family: var(--font-ui);
   font-size: var(--t-small);
-  color: var(--c-ink-faint);
+  color: var(--c-ink-soft);
 }
 
-.page--course-map .les-ch__score.is-done { color: var(--c-forest-soft); font-weight: 700; }
+/* --- What to know --------------------------------------------------------- */
 
-/* --- A numbered flow ------------------------------------------------------ */
-
-.page--course-map .les-flow {
+.page--course-map .les-his {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  align-items: stretch;
-  gap: var(--s-2);
+  display: grid;
+  gap: var(--s-3);
 }
 
-.page--course-map .les-flow__item {
-  flex: 1 1 0;
+.page--course-map .les-hi {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--s-3);
-  align-content: start;
+  gap: var(--s-4);
+  align-items: start;
   padding: var(--s-4);
   border: 1px solid var(--c-line);
   border-radius: var(--r-md);
   background: var(--c-paper);
 }
 
-.page--course-map .les-flow__n {
+.page--course-map .les-hi__n {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: var(--r-pill);
   font-family: var(--font-ui);
   font-size: 13px;
@@ -1794,53 +1406,108 @@
   background: var(--c-forest-soft);
 }
 
-.page--course-map .les-flow__body { display: grid; gap: var(--s-1); }
+.page--course-map .les-hi__text { display: grid; gap: var(--s-1); }
 
-.page--course-map .les-flow__body strong {
+.page--course-map .les-hi__text strong {
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 19px;
   line-height: var(--lh-snug);
   color: var(--c-ink);
 }
 
-.page--course-map .les-flow__body span {
-  font-size: var(--t-small);
+.page--course-map .les-hi__text p {
+  margin: 0;
+  font-size: var(--t-body);
   line-height: var(--lh-body);
   color: var(--c-ink-soft);
+  max-width: var(--measure-text);
 }
 
-.page--course-map .les-flow__arrow {
-  align-self: center;
-  font-size: 20px;
+/* Three steps, in a line. For the idea that is easier seen than read. */
+.page--course-map .les-steps {
+  list-style: none;
+  margin: var(--s-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  align-items: center;
+}
+
+.page--course-map .les-steps li {
+  padding: var(--s-2) var(--s-3);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-ink);
+  background: var(--c-sage);
+  border-radius: var(--r-pill);
+}
+
+.page--course-map .les-steps li + li::before {
+  content: '→';
+  margin-right: var(--s-2);
   color: var(--c-ink-faint);
 }
 
-/* The last step of the Tenth Amendment flow is the answer, so it is the one
-   that carries colour. */
-.page--course-map .les-flow--reserved .les-flow__item:last-child {
-  background: var(--c-sage);
-  border-color: var(--c-forest-soft);
+.page--course-map .les-steps li:last-child {
+  background: var(--c-forest);
+  color: var(--c-on-dark);
 }
 
-.page--course-map .les-flow--real .les-flow__item:last-child {
-  background: var(--c-sage);
-  border-color: var(--c-forest-soft);
+.page--course-map .les-steps li:last-child::before { color: var(--c-ink-faint); }
+
+/* --- In real life --------------------------------------------------------- */
+
+.page--course-map .les-real {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: var(--s-5);
+  align-items: center;
+  padding: var(--s-4);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  background: var(--c-paper);
 }
 
-/* --- Reserved powers ------------------------------------------------------ */
+.page--course-map .les-real__art { margin: 0; position: relative; border-radius: var(--r-sm); overflow: hidden; }
 
-.page--course-map .les-reserved__source {
-  margin: calc(var(--s-2) * -1) 0 0;
+.page--course-map .les-real__art img {
+  display: block;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.page--course-map .les-real__art figcaption {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: var(--s-4) var(--s-2) var(--s-1);
   font-family: var(--font-ui);
   font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--c-brick);
+  color: var(--c-on-dark);
+  background: linear-gradient(transparent, rgba(13, 46, 39, 0.9));
 }
 
-/* Restrained on purpose: a fact earns this box only when it makes the idea
-   easier to hold on to. Twenty-eight words is a number you can picture. */
+.page--course-map .les-real__text { display: grid; gap: var(--s-2); }
+
+.page--course-map .les-real__text strong {
+  font-family: var(--font-display);
+  font-size: 21px;
+  color: var(--c-ink);
+}
+
+.page--course-map .les-real__text p {
+  margin: 0;
+  font-size: 17px;
+  line-height: var(--lh-body);
+  color: var(--c-ink);
+  max-width: var(--measure-text);
+}
+
+/* --- One fact ------------------------------------------------------------- */
+
 .page--course-map .les-fact {
   display: grid;
   gap: var(--s-1);
@@ -1848,7 +1515,6 @@
   border: 1px dashed var(--c-gold);
   border-radius: var(--r-md);
   background: #fdf6e8;
-  justify-self: start;
 }
 
 .page--course-map .les-fact__tag {
@@ -1862,139 +1528,31 @@
 
 .page--course-map .les-fact p {
   margin: 0;
-  font-size: var(--t-body);
-  color: var(--c-ink);
-}
-
-/* --- Where the power comes from ------------------------------------------- */
-
-.page--course-map .les-anchors {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--s-3);
-}
-
-.page--course-map .les-anchor {
-  display: grid;
-  gap: var(--s-1);
-  padding: var(--s-4);
-  text-align: left;
-  background: var(--c-paper);
-  border: 1px solid var(--c-line);
-  border-radius: var(--r-md);
-  cursor: pointer;
-  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
-}
-
-.page--course-map .les-anchor:hover { background: var(--c-sage); }
-
-.page--course-map .les-anchor[aria-pressed='true'] {
-  background: var(--c-forest);
-  border-color: var(--c-forest);
-}
-
-.page--course-map .les-anchor__title {
-  font-family: var(--font-display);
   font-size: 17px;
-  line-height: var(--lh-snug);
-  color: var(--c-ink);
-}
-
-.page--course-map .les-anchor__tag {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--c-ink-soft);
-}
-
-.page--course-map .les-anchor[aria-pressed='true'] .les-anchor__title { color: var(--c-on-dark); }
-.page--course-map .les-anchor[aria-pressed='true'] .les-anchor__tag { color: var(--c-on-dark-soft); }
-
-.page--course-map .les-anchor__bodies {
-  min-height: 92px;
-  display: grid;
-  align-content: center;
-  padding: var(--s-4) var(--s-5);
-  border: 1px solid var(--c-line);
-  border-left: 4px solid var(--c-forest-soft);
-  border-radius: var(--r-md);
-  background: var(--c-sage);
-}
-
-.page--course-map .les-anchor__body p {
-  margin: 0;
-  font-size: var(--t-body);
   line-height: var(--lh-body);
   color: var(--c-ink);
-  max-width: var(--measure-text);
 }
 
-/* --- The two cases -------------------------------------------------------- */
+/* --- The questions -------------------------------------------------------- */
 
-.page--course-map .les-cases__art {
-  margin: 0;
-  position: relative;
-  border-radius: var(--r-md);
-  overflow: hidden;
-}
-
-/* Held high enough to keep the pediment in frame: the inscription is the
-   reason this photograph is here rather than any other. */
-.page--course-map .les-cases__art img {
-  display: block;
-  width: 100%;
-  height: 210px;
-  object-fit: cover;
-  object-position: center 18%;
-}
-
-.page--course-map .les-cases__art figcaption {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  padding: var(--s-2) var(--s-4);
-  font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--c-on-dark-soft);
-  background: linear-gradient(transparent, rgba(13, 46, 39, 0.82));
-}
-
-.page--course-map .les-cases {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--s-4);
-}
-
-/* The two cards are identical in shape so the only thing that differs is
-   what the Court said - and which way the arrow points. */
-.page--course-map .les-case {
-  display: grid;
-  gap: var(--s-2);
-  align-content: start;
+/* One click per question. Everything is on screen at once: no paging, no
+   Check button, no going back. */
+.page--course-map .les-sec--ex {
   padding: var(--s-5);
   border: 1px solid var(--c-line);
-  border-top: 4px solid var(--c-line);
-  border-radius: var(--r-md);
-  background: var(--c-paper);
+  border-radius: var(--r-lg);
+  background: var(--c-parchment);
 }
 
-.page--course-map .les-case--up { border-top-color: var(--c-forest-soft); }
-.page--course-map .les-case--down { border-top-color: var(--c-brick); }
-
-.page--course-map .les-case__top {
+.page--course-map .les-ex__head {
   display: flex;
   align-items: baseline;
-  gap: var(--s-3);
+  justify-content: space-between;
+  gap: var(--s-4);
   flex-wrap: wrap;
 }
 
-.page--course-map .les-case__name {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 21px;
-  color: var(--c-ink);
-}
-
-.page--course-map .les-case__year {
+.page--course-map .les-ex__score {
   margin: 0;
   font-family: var(--font-ui);
   font-size: 13px;
@@ -2002,64 +1560,96 @@
   color: var(--c-ink-faint);
 }
 
-.page--course-map .les-case__q {
+.page--course-map .les-ex__score.is-done { color: var(--c-forest-soft); }
+
+.page--course-map .les-exs {
+  list-style: none;
   margin: 0;
-  font-size: var(--t-body);
-  line-height: var(--lh-body);
-  color: var(--c-ink-soft);
-  font-style: italic;
+  padding: 0;
+  display: grid;
+  gap: var(--s-4);
 }
 
-.page--course-map .les-case__held {
+.page--course-map .les-ex {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border: 1px solid var(--c-line);
+  border-left: 4px solid var(--c-line);
+  border-radius: var(--r-md);
+  background: var(--c-paper);
+}
+
+.page--course-map .les-ex.is-right { border-left-color: #4c8248; }
+.page--course-map .les-ex.is-wrong { border-left-color: var(--c-brick); }
+
+.page--course-map .les-ex__q {
+  display: flex;
+  gap: var(--s-3);
+  align-items: baseline;
   margin: 0;
-  font-size: var(--t-body);
-  line-height: var(--lh-body);
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: var(--lh-snug);
   color: var(--c-ink);
 }
 
-.page--course-map .les-case__model {
+.page--course-map .les-ex__n {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--c-brick);
+}
+
+.page--course-map .les-ex__opts {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: var(--s-2);
-  margin: var(--s-1) 0 0;
+}
+
+.page--course-map .les-ex__opt {
+  flex: 1 1 150px;
+  padding: var(--s-3) var(--s-4);
   font-family: var(--font-ui);
   font-size: var(--t-small);
+  font-weight: 600;
+  line-height: var(--lh-snug);
+  text-align: left;
+  color: var(--c-ink);
+  background: var(--c-parchment);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.page--course-map .les-ex__opt:hover:enabled {
+  background: var(--c-sage);
+  border-color: var(--c-forest-soft);
+}
+
+.page--course-map .les-ex__opt:disabled { cursor: default; }
+
+.page--course-map .les-ex__opt.is-right {
+  background: #dfeedd;
+  border-color: #4c8248;
+  color: #25502a;
   font-weight: 700;
 }
 
-.page--course-map .les-case--up .les-case__model { color: #2f6a35; }
-.page--course-map .les-case--down .les-case__model { color: var(--c-brick-deep); }
+.page--course-map .les-ex__opt.is-wrong {
+  background: #f6e2dc;
+  border-color: var(--c-brick);
+  color: var(--c-brick-deep);
+}
 
-.page--course-map .les-case__arrow { font-size: 13px; }
-
-/* --- Real life ------------------------------------------------------------ */
-
-.page--course-map .les-real__note {
+.page--course-map .les-ex__why {
   margin: 0;
   font-size: var(--t-small);
   line-height: var(--lh-body);
   color: var(--c-ink-soft);
   max-width: var(--measure-text);
 }
-
-/* --- The three sentences -------------------------------------------------- */
-
-.page--course-map .les-remember {
-  margin: 0;
-  padding: 0 0 0 var(--s-5);
-  display: grid;
-  gap: var(--s-3);
-}
-
-.page--course-map .les-remember li {
-  font-family: var(--font-display);
-  font-size: 18px;
-  line-height: var(--lh-body);
-  color: var(--c-ink);
-  max-width: var(--measure-text);
-}
-
-.page--course-map .les-remember li::marker { color: var(--c-brick); font-weight: 700; }
 
 /* --- Foot ----------------------------------------------------------------- */
 
@@ -2071,19 +1661,16 @@
 
 /* --- Narrower windows ----------------------------------------------------- */
 
-/* The panel is already the narrow column on a laptop, so these thresholds
-   are about the panel's width, not the phone's. */
+/* These thresholds are about the panel's width, not the phone's: the panel
+   is already the narrow column on a laptop. */
 @media (max-width: 1180px) {
+  .page--course-map .cm-lessons { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .page--course-map .les-cols { grid-template-columns: 1fr; }
-  .page--course-map .les-anchors { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .page--course-map .les-cases { grid-template-columns: 1fr; }
-  .page--course-map .les-flow { flex-wrap: wrap; }
-  .page--course-map .les-flow__item { flex-basis: 100%; }
-  .page--course-map .les-flow__arrow { display: none; }
+  .page--course-map .les-real { grid-template-columns: 1fr; }
+  .page--course-map .les-real__art img { height: 170px; }
 }
 
 @media (max-width: 720px) {
-  .page--course-map .cm-lesson { grid-template-columns: 116px minmax(0, 1fr); }
-  .page--course-map .les-anchors { grid-template-columns: 1fr; }
-  .page--course-map .les-col__art img { height: 128px; }
+  .page--course-map .cm-lessons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .page--course-map .les-hi { grid-template-columns: 1fr; gap: var(--s-2); }
 }

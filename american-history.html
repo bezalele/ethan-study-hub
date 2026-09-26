@@ -9,22 +9,22 @@
   <title>Ethan Study Hub · AP U.S. Government</title>
 
   <!-- Order matters: tokens define the variables everything else consumes. -->
-  <link rel="stylesheet" href="styles/tokens.css?v=20">
-  <link rel="stylesheet" href="styles/base.css?v=20">
-  <link rel="stylesheet" href="layout/layout.css?v=20">
+  <link rel="stylesheet" href="styles/tokens.css?v=21">
+  <link rel="stylesheet" href="styles/base.css?v=21">
+  <link rel="stylesheet" href="layout/layout.css?v=21">
 
   <!-- Shared components. Each owns a .c-NAME class namespace. -->
-  <link rel="stylesheet" href="components/timeline.css?v=20">
+  <link rel="stylesheet" href="components/timeline.css?v=21">
 
   <!-- Page stylesheets. Each is scoped to its own .page--NAME root. -->
-  <link rel="stylesheet" href="pages/home.css?v=20">
-  <link rel="stylesheet" href="pages/course-map.css?v=20">
-  <link rel="stylesheet" href="pages/study.css?v=20">
-  <link rel="stylesheet" href="pages/chapter.css?v=20">
-  <link rel="stylesheet" href="pages/practice.css?v=20">
-  <link rel="stylesheet" href="pages/journal.css?v=20">
-  <link rel="stylesheet" href="shared/learning-log.css?v=20">
-  <link rel="stylesheet" href="shared/subject-header.css?v=20">
+  <link rel="stylesheet" href="pages/home.css?v=21">
+  <link rel="stylesheet" href="pages/course-map.css?v=21">
+  <link rel="stylesheet" href="pages/study.css?v=21">
+  <link rel="stylesheet" href="pages/chapter.css?v=21">
+  <link rel="stylesheet" href="pages/practice.css?v=21">
+  <link rel="stylesheet" href="pages/journal.css?v=21">
+  <link rel="stylesheet" href="shared/learning-log.css?v=21">
+  <link rel="stylesheet" href="shared/subject-header.css?v=21">
 </head>
 <body>
   <a class="visually-hidden" href="#app-main">Skip to content</a>
@@ -34,20 +34,20 @@
   <footer id="app-footer"></footer>
 
   <!-- Classic script: runs before deferred modules, so the global is ready. -->
-  <script src="content/contentData.js?v=20"></script>
+  <script src="content/contentData.js?v=21"></script>
 
   <!-- Shared across all three subjects. Classic script, so it is on window
        before the deferred modules run. -->
-  <script src="shared/family-key.js?v=20"></script><script src="shared/learning-log.js?v=20"></script>
-  <script src="shared/journal-merge.js?v=20"></script><script src="shared/journal-sync.js?v=20"></script><script src="shared/apgov-progress.js?v=20"></script><script src="shared/progress-merge.js?v=20"></script><script src="shared/progress-sync.js?v=20"></script><script src="shared/school-calendar.js?v=20"></script>
-  <script src="shared/subject-header.js?v=20"></script>
+  <script src="shared/family-key.js?v=21"></script><script src="shared/learning-log.js?v=21"></script>
+  <script src="shared/journal-merge.js?v=21"></script><script src="shared/journal-sync.js?v=21"></script><script src="shared/apgov-progress.js?v=21"></script><script src="shared/progress-merge.js?v=21"></script><script src="shared/progress-sync.js?v=21"></script><script src="shared/school-calendar.js?v=21"></script>
+  <script src="shared/subject-header.js?v=21"></script>
 
   <!-- Every module URL carries the same ?v= as the stylesheets. They must match
        across the whole graph: a differing query string would load a second,
        separate instance of that module. tests/smoke.cjs enforces it. -->
   <script type="module">
-    import { renderLayout } from './layout/layout.js?v=20';
-    import { startRouter } from './layout/router.js?v=20';
+    import { renderLayout } from './layout/layout.js?v=21';
+    import { startRouter } from './layout/router.js?v=21';
 
     renderLayout();   // once, and only once
     startRouter();

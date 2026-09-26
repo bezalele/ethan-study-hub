@@ -14,9 +14,9 @@
     Subject navigation only. Study Hub and the notes are not here: they live
     in the shared cluster on the right, in the same place and the same order
     as on Biology and Math Quest. */
-import { CHAPTERS } from '../content/chapters.js?v=20';
-import { AREAS, topicSlug } from '../content/course.js?v=20';
-import { unitIdeas } from '../content/courseDetails.js?v=20';
+import { CHAPTERS } from '../content/chapters.js?v=21';
+import { AREAS, topicSlug } from '../content/course.js?v=21';
+import { unitIdeas } from '../content/courseDetails.js?v=21';
 
 export const NAV = [
   { id: 'home',   label: 'Home',       href: '#/' },
