@@ -1126,10 +1126,10 @@ function mountVisual(type,lessonId){
     label(460,440,'NET CHANGE',11.5,'#7a4e28')+
     label(460,466,'+4 units',16,'#2f5c34')+
     label(300,504,'12 − 8 = +4. The atmosphere grows because more carbon enters than leaves.',12.5,'#183d36')+
-    label(300,522,'Carbon is still conserved — those atoms came from the store underground.',12.5,'#54685c')+
+    label(300,522,'Carbon is still conserved — 12 units left the store underground.',12.5,'#54685c')+
     label(300,540,'Illustrative example — not measured Earth data.',11.5,'#93a099'),
     'Combustion drawn as a thick arrow carrying carbon from long-term storage up into the atmosphere, with photosynthesis and ocean uptake removing some again, and a balance panel showing 12 units in, 8 units out, a net change of plus 4.',556);
-   caption.textContent='Burning fossil fuels does not make carbon. The atoms were already there, held underground for a very long time; combustion moves them into the air in a moment. Photosynthesis and the ocean take some of it back out, but if 12 units arrive and 8 leave, the atmosphere holds 4 more than it did. No atom was created to do that - the long-term store simply has 4 fewer. Carbon is conserved across the whole system; that has never meant each reservoir stays the same size. The figures here are for practice, not measurements of Earth.';
+   caption.textContent='Burning fossil fuels does not make carbon. The atoms were already there, held underground for a very long time; combustion moves them into the air in a moment. Photosynthesis and the ocean take some of it back out, but if 12 units arrive and 8 leave, the atmosphere holds 4 more than it did. Carbon is still conserved. Combustion moved carbon out of long-term storage; in this example 12 units entered the atmosphere and 8 units moved from the atmosphere into other reservoirs such as plants and the ocean, leaving the atmosphere with a net gain of 4. Three stores changed and no atom was made: conservation has never meant each reservoir stays the same size. The figures here are for practice, not measurements of Earth.';
   });
  }
 
