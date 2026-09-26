@@ -17,10 +17,12 @@
    the content lands.
    --------------------------------------------------------------------------- */
 
-import { AREAS, getArea, topicSlug } from '../content/course.js?v=19';
-import { getDetail, unitIdeas } from '../content/courseDetails.js?v=19';
-import { renderTriangle, wireTriangle } from '../components/power-triangle.js?v=19';
-import { el, html, esc } from '../layout/dom.js?v=19';
+import { AREAS, getArea, topicSlug } from '../content/course.js?v=20';
+import { getDetail, unitIdeas } from '../content/courseDetails.js?v=20';
+import { renderTriangle, wireTriangle } from '../components/power-triangle.js?v=20';
+import { renderLesson, wireLesson } from '../components/lesson.js?v=20';
+import { lessonsFor, getLesson } from '../content/lessons.js?v=20';
+import { el, html, esc } from '../layout/dom.js?v=20';
 
 /* --- Shared pieces -------------------------------------------------------- */
 
@@ -252,6 +254,46 @@ function sectionQuickCheck(d) {
     </section>`;
 }
 
+/* --- What this unit covers ------------------------------------------------ */
+
+/* The lessons, as cards: a picture, a sentence, and a way in. The AP topic
+   numbers ride along quietly - they are how the College Board files this
+   material, not how anyone learns it.
+
+   A lesson that is not written yet says so on its own card. It is never a
+   dead link, which is the same rule the full-guide slot below follows. */
+function sectionLessons(area) {
+  const lessons = lessonsFor(area.n);
+  if (!lessons.length) return '';
+
+  const cards = lessons.map((l) => {
+    const inner = `
+      <span class="cm-lesson__art">
+        <img src="${esc(l.image)}" alt="${esc(l.alt)}" loading="lazy">
+      </span>
+      <span class="cm-lesson__text">
+        <span class="cm-lesson__meta">
+          <span class="cm-lesson__n">Lesson ${l.n}</span>
+          <span class="cm-lesson__ap">${esc(l.ap)}</span>
+        </span>
+        <strong class="cm-lesson__title">${esc(l.title)}</strong>
+        <span class="cm-lesson__blurb">${esc(l.blurb)}</span>
+        <span class="cm-lesson__go">${l.ready ? 'Open lesson \u2192' : 'Being written'}</span>
+      </span>`;
+
+    return l.ready
+      ? `<li><a class="cm-lesson" href="#/course/${area.n}/${esc(l.slug)}">${inner}</a></li>`
+      : `<li><div class="cm-lesson cm-lesson--soon" aria-disabled="true">${inner}</div></li>`;
+  }).join('');
+
+  return `
+    <section class="cm-sec cm-sec--lessons" aria-labelledby="cm-ls">
+      <h3 class="cm-sec__label" id="cm-ls">What Unit ${area.n} covers</h3>
+      <p class="cm-lessons__lead">Five lessons. Open one, or read the summary above first.</p>
+      <ol class="cm-lessons">${cards}</ol>
+    </section>`;
+}
+
 /* Reserved slot for the future Unit Detail route. Never a dead link: without
    a route it renders as plain text, per spec section 5H. */
 function sectionFullGuide(area, d) {
@@ -273,8 +315,22 @@ function panel(area) {
         ${sectionBigQuestion(d)}
         ${sectionModel(d)}
         ${sectionCoreIdeas(area, d)}
+        ${sectionLessons(area)}
         ${sectionRecap(d)}
         ${sectionFullGuide(area, d)}
+      </div>
+    </article>`;
+}
+
+/* The same panel shell, holding a lesson. Keeping the shell means the rail,
+   the header and the single scrolling region all behave exactly as they do
+   on the unit view - a lesson is a different thing to read, not a different
+   page to learn. */
+function lessonPanel(area, lesson) {
+  return `
+    <article class="cm-panel cm-panel--lesson">
+      <div class="cm-panel__scroll" data-panel tabindex="-1">
+        ${renderLesson(lesson, area)}
       </div>
     </article>`;
 }
@@ -397,6 +453,10 @@ export default {
   render(params) {
     // Unknown or missing unit falls back to the first unit rather than blank.
     const area = getArea(params.unit) || AREAS[0];
+    /* A topic segment is either the name of a lesson or, as it has always
+       been, the name of a core idea to scroll to. Lessons are checked first;
+       anything else falls through to the behaviour daily-note links rely on. */
+    const lesson = params.topic ? getLesson(area.n, params.topic) : null;
     const d0 = getDetail(area.n);
     const page = el('div', 'page page--course-map');
     page.append(html(`
@@ -404,9 +464,16 @@ export default {
         ${header()}
         <div class="cm-explorer shell">
           ${rail(area.n)}
-          ${panel(area)}
+          ${lesson ? lessonPanel(area, lesson) : panel(area)}
         </div>
       </div>`));
+
+    if (lesson) {
+      wireLesson(page, lesson);
+      wireQuickCheck(page, area.n);
+      return page;
+    }
+
     wireWalk(page);
     if (d0.model && d0.model.type === 'triangle') wireTriangle(page, d0.model, esc);
     wireQuickCheck(page, area.n);

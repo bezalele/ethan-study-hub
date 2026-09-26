@@ -83,3 +83,26 @@ These files are downloaded into the repository. The live study pages reference o
 - `assets/chapters/articles/washington-resigns.webp` — John Trumbull, *General George Washington Resigning His Commission*, U.S. Capitol Rotunda. The event occurred at the Maryland State House in Annapolis: https://www.aoc.gov/explore-capitol-campus/art/general-george-washington-resigning-his-commission
 
 The paintings are historical interpretations, not eyewitness photographs. Captions identify them as paintings where that distinction matters.
+
+## Course page — Unit 1 Federalism imagery
+
+Local assets in `assets/course-map/federalism/`. All are public domain or CC0;
+a short credit travels with each image in the UI, and the full provenance is
+here. Retrieved 2026-09-26 from Wikimedia Commons.
+
+| File | Subject | Licence | Author | Source |
+| --- | --- | --- | --- | --- |
+| `capitol.jpg` | United States Capitol, west front | Public domain | Noclip | https://commons.wikimedia.org/wiki/File:Capitol_Building_Full_View.jpg |
+| `maryland-state-house.jpg` | Maryland State House, Annapolis | CC0 | Bernini123 | https://commons.wikimedia.org/wiki/File:State_House_Annapolis_Maryland.jpg |
+| `supreme-court.jpg` | Supreme Court, west facade after restoration | Public domain | USCapitol | https://commons.wikimedia.org/wiki/File:Supreme_Court_Following_Facade_Restoration_(10542206014).jpg |
+| `both.jpg` | The two buildings above, composed side by side for the concurrent-powers column | Public domain / CC0 | Noclip; Bernini123 | derived from the two files above |
+
+The Maryland State House was chosen over a generic state capitol because it is
+forty minutes from home: "the state" should be somewhere Ethan has been.
+
+## Unit 1 Federalism content checks
+- Tenth Amendment text and word count (28 words) — National Archives, Bill of Rights: https://www.archives.gov/founding-docs/bill-of-rights-transcript
+- Enumerated powers, Article I Section 8 — https://www.archives.gov/founding-docs/constitution-transcript
+- Supremacy Clause, Article VI — same transcript
+- McCulloch v. Maryland, 17 U.S. 316 (1819) — https://www.loc.gov/item/usrep017316/
+- United States v. Lopez, 514 U.S. 549 (1995) — https://www.loc.gov/item/usrep514549/

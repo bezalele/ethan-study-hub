@@ -13,8 +13,8 @@
    deferred module runs.
    --------------------------------------------------------------------------- */
 
-import { el, html } from '../layout/dom.js?v=19';
-import { courseLessons } from '../layout/layout.js?v=19';
+import { el, html } from '../layout/dom.js?v=20';
+import { courseLessons } from '../layout/layout.js?v=20';
 
 /* How AP Gov is going, for the panel under the journal's calendar.
    Two things count on this subject: the chapter quizzes, and the quick check
