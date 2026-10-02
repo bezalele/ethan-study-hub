@@ -28,6 +28,7 @@ try {
 } catch {
   progress = fresh();
 }
+if (!Array.isArray(progress.explored)) progress.explored = [];
 function save() {
   try {
     localStorage.setItem(KEY, JSON.stringify(progress));
@@ -229,8 +230,8 @@ function unitIcon(id) {
   };
   return `<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${drawings[id]}"/></svg>`;
 }
-function unitCards(list = units) {
-  return `<div class="course-grid">${list.map((u) => `<a class="unit ${u.id === "equations" ? "current" : ""}" href="#unit/${u.id}"><span class="round" style="--tint:${u.tint}">${unitIcon(u.id)}</span><div><small>${u.n}</small><h3>${u.title}</h3>${u.id === "equations" ? '<span class="badge">Current unit · Exam prep</span>' : ""}<p>${u.desc}</p></div><span class="chevron">›</span></a>`).join("")}</div>`;
+function unitCards(list = units, withProgress = false) {
+  return `<div class="course-grid">${list.map((u) => `<a class="unit ${u.id === "equations" ? "current" : ""}${withProgress ? " tracked" : ""}" href="#unit/${u.id}"><span class="round" style="--tint:${u.tint}">${unitIcon(u.id)}</span><div class="unit-body"><small>${u.n}</small><h3>${u.title}</h3>${u.id === "equations" ? '<span class="badge">Current unit · Exam prep</span>' : ""}<p>${u.desc}</p>${withProgress ? unitCardTracker(u.id) : ""}</div><span class="chevron">›</span></a>`).join("")}</div>`;
 }
 function home() {
   main.innerHTML = `<section class="hero"><div class="hero-copy"><p class="eyebrow">ONE STEP AT A TIME</p><h1>Make sense of math.</h1><p>Understand the ideas. Practice with purpose. Build confidence.</p><a class="button" href="${esc(progress.lastLessonRoute || "#u2lesson/" + (progress.u2Last || "one-step"))}">${progress.lessonStarted ? "Continue learning" : "Start learning"} <span>→</span></a><a class="text-link" href="#course">Explore the course</a></div></section><div class="resume-row"><section class="card"><p class="eyebrow">${progress.lessonStarted ? "PICK UP WHERE YOU LEFT OFF" : "YOUR FIRST STEP"}</p><div class="resume-body"><span class="round">x =</span><div><h2>Get ready for your Unit 2 exam</h2><p class="muted">Six skills · Worked examples & practice</p><p class="muted">Pick up your latest skill, or start with the basics.</p><a class="button" href="#u2lesson/${progress.u2Last || "one-step"}">${progress.lessonStarted ? "Resume lesson" : "Open lesson"} <span>→</span></a></div></div></section><section class="card practice-card"><span class="round">${icon("practice")}</span><div><h2>A little practice, every day</h2><p>10 questions · About 15 minutes</p><a class="button light" href="#practice">Start practice</a></div></section></div><div class="section-heading"><div><h2>Your Algebra 1 course</h2><p>A clear path from foundations to quadratics.</p></div><a class="text-link" href="#course">View course →</a></div>${unitCards()}`;
@@ -241,7 +242,7 @@ function course(query = "") {
       .toLowerCase()
       .includes(query.toLowerCase()),
   );
-  main.innerHTML = `<h1 class="page-title">${query ? "Find your next step" : "Your Algebra 1 course"}</h1><p class="intro">Explore the whole course. Choose the topic you’re learning at school, or revisit an earlier idea.</p>${query ? `<p>Results for “${esc(query)}”</p>` : ""}${list.length ? unitCards(list) : '<div class="card empty">No matches yet. Try “equations”, “graphs”, or “factoring”.</div>'}<div class="notice">Foundations, Unit 1, and Unit 2 now have worked examples, practice by skill, and self-checks. Units 3–7 and cumulative review are the next course expansion.</div><p class="muted">Course structure follows <a class="text-link" href="https://www.montgomeryschoolsmd.org/curriculum/math/high/algebra1/" target="_blank" rel="noopener">MCPS Algebra 1</a>. Your teacher’s pacing may differ.</p>`;
+  main.innerHTML = `<h1 class="page-title">${query ? "Find your next step" : "Your Algebra 1 course"}</h1><p class="intro">Explore the whole course. Choose the topic you’re learning at school, or revisit an earlier idea.</p>${query ? `<p>Results for “${esc(query)}”</p>` : ""}${query ? "" : courseSummary()}${list.length ? unitCards(list, true) : '<div class="card empty">No matches yet. Try “equations”, “graphs”, or “factoring”.</div>'}<div class="notice">Foundations, Unit 1, and Unit 2 now have worked examples, practice by skill, and self-checks. Units 3–7 and cumulative review are the next course expansion.</div><p class="muted">Course structure follows <a class="text-link" href="https://www.montgomeryschoolsmd.org/curriculum/math/high/algebra1/" target="_blank" rel="noopener">MCPS Algebra 1</a>. Your teacher’s pacing may differ.</p>`;
 }
 function unit(id) {
   if (id === "equations") return u2Overview();
@@ -492,7 +493,7 @@ function review() {
 function stats() {
   const a = progress.attempts,
     ind = a.filter((x) => x.correct && !x.assisted).length;
-  main.innerHTML = `<h1 class="page-title">Your progress</h1><p class="intro">A record of practice, not a prediction of your school grade.</p><div class="stats"><div class="card"><strong>${a.length}</strong>Questions attempted</div><div class="card"><strong>${a.length ? Math.round((ind / a.length) * 100) + "%" : "—"}</strong>First-try accuracy without help</div><div class="card"><strong>${new Set(a.map((x) => x.date.slice(0, 10))).size}</strong>Days practiced (UTC)</div></div><div class="section-heading"><h2>Practice by topic</h2></div>${[{id:"foundations",title:"Foundations"}, ...originalTopics]
+  main.innerHTML = `<h1 class="page-title">Your progress</h1><p class="intro">A record of practice, not a prediction of your school grade.</p><div class="section-heading"><div><h2>Course progress</h2><p>A lesson is done when it is marked studied and every practice question in it has an answer. A unit also needs its self-check finished.</p></div></div>${courseSummary()}${courseProgressRows()}<div class="stats"><div class="card"><strong>${a.length}</strong>Questions attempted</div><div class="card"><strong>${a.length ? Math.round((ind / a.length) * 100) + "%" : "—"}</strong>First-try accuracy without help</div><div class="card"><strong>${new Set(a.map((x) => x.date.slice(0, 10))).size}</strong>Days practiced (UTC)</div></div><div class="section-heading"><h2>Practice by topic</h2></div>${[{id:"foundations",title:"Foundations"}, ...originalTopics]
     .map((t) => {
       const list = a.filter((x) => x.topic === t.id),
         ok = list.filter((x) => x.correct && !x.assisted).length;
@@ -531,6 +532,7 @@ function settings() {
       )
         return;
       progress = p;
+      if (!Array.isArray(progress.explored)) progress.explored = [];
       save();
       document.getElementById("import-status").textContent =
         "Progress imported.";
@@ -644,7 +646,7 @@ function route() {
   document.querySelector("nav").innerHTML = nav
     .map(
       ([id, label]) =>
-        `<a href="#${id}" ${page === id || (id === "course" && ["unit", "lesson", "u2lesson", "u2practice", "u2check", "study", "skillpractice", "unitpractice", "unitcheck"].includes(page)) ? 'class="active" aria-current="page"' : ""}>${icon(id)}${label}</a>`,
+        `<a href="#${id}" ${page === id || (id === "course" && ["unit", "lesson", "u2lesson", "u2practice", "u2check", "study", "skillpractice", "unitpractice", "unitcheck", "work"].includes(page)) ? 'class="active" aria-current="page"' : ""}>${icon(id)}${label}</a>`,
     )
     .join("");
   const crumbs = [["Algebra 1", "#home"]];
@@ -653,6 +655,11 @@ function route() {
   if (["study", "skillpractice", "unitpractice", "unitcheck"].includes(page)) {
     const group = courseTopic?.unit || arg;
     crumbs.push(["Course", "#course"], [courseName(group), "#unit/" + group], [page === "study" ? "Study" : page === "unitcheck" ? "Self-check" : "Practice"]);
+  } else if (page === "work") {
+    const wt = findLesson(arg), wu = wt ? lessonUnit(wt) : arg;
+    crumbs.push(["Course", "#course"], [unitTitle(wu), "#unit/" + wu]);
+    if (wt) crumbs.push([wt.title, (COURSE_BANK[wt.id] ? "#study/" : "#u2lesson/") + wt.id]);
+    crumbs.push(["Work so far"]);
   } else if (unit2Page || page === "unit") {
     crumbs.push(["Course", "#course"]);
     if (unit2Page) {
@@ -676,6 +683,7 @@ function route() {
       home,
       course,
       unit: () => unit(arg),
+      work: () => workView(arg),
       study: () => courseStudy(arg),
       skillpractice: () => coursePractice(arg),
       unitpractice: () => coursePractice(arg),

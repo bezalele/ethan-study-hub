@@ -1138,3 +1138,299 @@ button.ghost {
   .home-page .hero { padding: 12px 20px; }
   .home-page .course-grid { gap: 8px; }
 }
+
+/* Progress on the course pages (see tracker.js). One bar shape everywhere —
+   unit cards, unit summary, lesson cards, the course total — in the site's
+   teal, so it reads as part of the page rather than a widget bolted on.
+   "In progress" borrows the Unit 1 sand tint so it does not look like done. */
+.track {
+  height: 6px;
+  background: #e3e8e4;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.track span {
+  display: block;
+  height: 100%;
+  background: #4a999b;
+  border-radius: 6px;
+}
+.is-done .track span {
+  background: var(--teal);
+}
+.unit.tracked {
+  align-items: flex-start;
+}
+.unit.tracked .round {
+  margin-top: 6px;
+}
+.unit-body {
+  flex: 1;
+  min-width: 0;
+}
+.unit.tracked .track {
+  margin: 10px 0 5px;
+}
+.ut-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font: 12.5px/1.4 Arial, sans-serif;
+}
+.unit .ut-label {
+  color: var(--muted);
+}
+.ut-label strong {
+  color: var(--teal);
+}
+.unit .ut-soon {
+  margin-top: 8px;
+  font-style: italic;
+}
+.course-track {
+  max-width: 620px;
+  margin: -4px 0 20px;
+}
+.course-track p {
+  margin: 7px 0 0;
+  font: 13.5px/1.4 Arial, sans-serif;
+  color: var(--muted);
+}
+.course-track strong {
+  color: var(--teal);
+}
+.unit-track {
+  margin: 16px 0 20px;
+  padding: 18px 22px;
+}
+.unit-track .ut-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.unit-track h2 {
+  font-size: 19px;
+  margin: 0;
+}
+.unit-track .ut-head strong {
+  color: var(--teal);
+  font: 700 16px Arial, sans-serif;
+}
+.unit-track .track {
+  margin: 10px 0;
+}
+.ut-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.ut-next {
+  margin: 0;
+  font-size: 14.5px;
+}
+.ut-next a {
+  font-weight: 700;
+  white-space: nowrap;
+}
+.lesson-track {
+  margin: 4px 0 14px;
+}
+.lesson-track .track {
+  margin: 8px 0 5px;
+}
+.lt-label {
+  margin: 0;
+  font: 12.5px/1.4 Arial, sans-serif;
+  color: var(--muted);
+}
+.lt-label .ok {
+  color: var(--teal);
+  font-weight: 700;
+}
+.lt-tag {
+  display: inline-block;
+  font: 11.5px/1 Arial, sans-serif;
+  padding: 5px 9px;
+  border-radius: 20px;
+}
+.lt-going {
+  background: #f5e8cf;
+  color: #6b5222;
+}
+.lt-done {
+  background: var(--teal);
+  color: #fff;
+  font-weight: 700;
+}
+.skill-card:has(.lesson-track.is-done) {
+  border-color: #9cc5c3;
+}
+.lesson-finish {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+.lesson-finish p {
+  margin: 0;
+  flex: 1 1 320px;
+  color: var(--muted);
+}
+.lesson-finish strong {
+  color: var(--ink);
+}
+.nw {
+  white-space: nowrap;
+}
+
+/* Work so far. Chips: teal for right, sand for help, brick for wrong, grey
+   for skipped, so a parent can read a lesson's answers at a glance. */
+.work-link {
+  font: 700 13px/1.4 Arial, sans-serif;
+  color: var(--teal);
+  white-space: nowrap;
+}
+.ut-facts .work-link {
+  margin-left: auto;
+}
+.lesson-finish .work-link {
+  margin-right: 4px;
+}
+.wk-h {
+  margin: 26px 0 12px;
+}
+.wk-sum {
+  margin: -4px 0 16px;
+}
+.wk-q {
+  margin-bottom: 12px;
+  padding: 16px 22px;
+}
+.wk-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.wk-q h3 {
+  font-size: 17px;
+  margin: 10px 0 6px;
+}
+.wk-ans {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.wk-q details summary {
+  cursor: pointer;
+  color: var(--teal);
+  font: 700 13.5px Arial, sans-serif;
+}
+.wk-date {
+  color: var(--muted);
+  font: 13px Arial, sans-serif;
+  min-width: 92px;
+}
+.wk-chip {
+  display: inline-block;
+  font: 700 11.5px/1 Arial, sans-serif;
+  padding: 5px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.wk-ok {
+  background: #dfeeec;
+  color: #1f5c5f;
+}
+.wk-hint {
+  background: #f5e8cf;
+  color: #6b5222;
+}
+.wk-no {
+  background: #f6e1db;
+  color: #8a3a26;
+}
+.wk-skip {
+  background: #eceeea;
+  color: #5e6b70;
+}
+.wk-chk {
+  background: #fff;
+  color: var(--teal);
+  border: 1px solid #cfdfe1;
+}
+.wk-rows {
+  display: grid;
+  gap: 10px;
+}
+.wk-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 14px 20px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.wk-row > span:first-child {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 260px;
+}
+.wk-row .muted {
+  font-size: 13.5px;
+}
+.wk-tally {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.wk-go {
+  font: 700 13.5px Arial, sans-serif;
+  color: var(--teal);
+}
+a.wk-row:hover {
+  border-color: #4a999b;
+}
+.wk-q details {
+  border: 0;
+  padding: 0;
+  margin: 4px 0 0;
+}
+.wk-where {
+  background: #fff;
+  color: #486471;
+  border: 1px solid var(--line);
+  font-weight: 400;
+}
+.wk-q .wk-tries {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+}
+.wk-q .wk-tries li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 7px 0;
+  border-top: 1px solid var(--line);
+  font-size: 14.5px;
+}
+.wk-date {
+  min-width: 140px;
+}
+.wk-sum .muted {
+  font: 13px Arial, sans-serif;
+  margin-right: 2px;
+  align-self: center;
+}
+.wk-legend {
+  font-size: 13.5px;
+  margin: 0 0 14px;
+}

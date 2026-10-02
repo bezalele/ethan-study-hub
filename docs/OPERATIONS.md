@@ -292,7 +292,7 @@ to the `/progress` document (§7).
 | Key | Holds |
 | --- | --- |
 | `ethan_biology_v1` | `{ explored[], attempts[], notes{}, last }` |
-| `ethan_math_quest_v2` | `{ version, attempts[], lessonStarted, lessonComplete, ... }` |
+| `ethan_math_quest_v2` | `{ version, attempts[], lessonStarted, lessonComplete, explored[], ... }` |
 | `ethanQuizScoresV1` | `{ chapterId: { best, last, total, attempts } }` |
 
 **Every merge rule in `shared/progress-merge.js` is a union, a maximum or an
@@ -304,6 +304,59 @@ deletes his term's work.
 Two consequences worth knowing before changing that file:
 
 - A sync can never remove anything, so clearing is a deliberate `DELETE` (§7).
+- **Biology progress trackers read this store; they never write it.** A
+  lesson is *done* when it is in `explored` **and** each of its 5 questions
+  has an attempt whose `selected` is not `'Skipped'` (right or wrong, from any
+  practice or check). A unit is *done* when all its lessons are done **and**
+  its unit check has been taken once. The logic lives in `biology/app.js`
+  (`lessonProgress`, `unitProgress`, `checksTaken`).
+- **Unit checks tag their attempts** with `check: <unitId>` (from 2026-10-02).
+  The tag rides inside the attempt object, which the merge unions by its whole
+  JSON, so it syncs with no change to the merge or the Worker. Checks taken
+  before the tag are recognised by shape: a check saves all its answers in the
+  same millisecond, exactly two per lesson of one unit; practice never does.
+- **Math Quest progress trackers** (`math-quest/tracker.js`) use the same
+  idea with Math's own banks. A lesson is *done* when its id is in
+  `explored` (the "Mark as studied" button) **and** every question in its
+  practice bank has a non-skipped attempt — 20 per Foundations / Unit 1
+  lesson (`COURSE_BANK[id].slice(4)`), 20–23 per Unit 2 topic (bank minus
+  worked examples). A unit also needs its self-check *finished*: new check
+  attempts carry `check: <unitId>` and `checkRun: <start ISO>`, and a run
+  counts once it has as many attempts as the check has questions (12, 20,
+  or 12 for Unit 2's exam check). Checks taken before 2026-10-02 carry no
+  tag and cannot be told from practice, so they do not count. Moving on
+  without answering now saves `skipped: true`; older skips look like wrong
+  answers and do count as answered. Units 3–7 have no lessons and no
+  tracker.
+- **`explored` on the Math store is merged as a union** in
+  `shared/progress-merge.js` (added 2026-10-02). Before that the Math rule
+  kept unknown fields last-writer-wins. That file is compiled into the
+  Worker, so **publishing this change means deploying the Worker too**
+  (§7) — an old Worker would let one laptop's list overwrite another's.
+- **"Work so far" pages** (`#work/<lessonId>` and `#work/<unitId>`, in
+  Biology and Math Quest) show every saved answer for a lesson with the
+  correct answer beside it, plus Biology's written explanations and each
+  sitting of a unit check. They only read the store. Biology has always
+  saved the chosen answer (`selected`). Math saves only the *first* try at
+  each question in `attempts` (that drives score and progress), plus, from
+  2026-10-02, what he typed (`response`, trimmed to 200 characters).
+- **Math's `answerLog`** (from 2026-10-02) records *every* submitted answer
+  — the study page's "Now try one yourself", every practice try including
+  re-tries after a wrong answer, and self-checks — as
+  `{ id, lesson, where: study|practice|check, response, correct, assisted,
+  date }`. It is separate from `attempts` so a re-try never changes a
+  score. Entries are never edited; the merge unions them by contents, like
+  attempts. The Math work page reads the log, and falls back to `attempts`
+  for anything older (shown as "not saved (before 2 Oct)").
+- **Biology** has nothing to add: practice and unit-check answers carry
+  `selected`, and the lesson page's written explanation is `notes[id]`.
+  Known gap: a Biology unit check saves its answers only when he finishes
+  it, so an abandoned check leaves nothing to review.
+- **A local preview syncs with the live Worker too** — the family key ships
+  with the page. Anything clicked on `127.0.0.1` (Mark as explored, a practice
+  answer) lands in his real record and cannot be removed by a sync. Browser
+  tests with seeded progress must block `*.workers.dev` (DNS map plus a
+  failed request) or point at a local worker.
 - Biology's per-lesson note boxes carry no timestamp, so when two copies
   differ the longer text wins. It is a guess, chosen because it loses the
   least — he adds to those as he thinks, and an empty box never beats a

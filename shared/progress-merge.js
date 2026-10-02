@@ -87,7 +87,8 @@
 
   /* --- Math Quest -----------------------------------------------------------
      { version, attempts: [{id,correct,assisted,date}], lessonStarted,
-       lessonComplete, ...whatever the app has added }
+       lessonComplete, explored: [lessonId], answerLog: [{...}],
+       ...whatever the app has added }
      --------------------------------------------------------------------------- */
   function mergeMath(a, b) {
     a = obj(a); b = obj(b);
@@ -102,6 +103,12 @@
     /* You cannot un-start a lesson. */
     out.lessonStarted = !!(a.lessonStarted || b.lessonStarted);
     out.lessonComplete = !!(a.lessonComplete || b.lessonComplete);
+    /* Lessons he has marked studied. A union, so a device that has not
+       seen a lesson yet cannot un-study it. */
+    out.explored = unionValues(a.explored, b.explored);
+    /* Every answer he submits, kept for reading back. Entries never change
+       once written, so their contents identify them, as attempts do. */
+    out.answerLog = unionBy(a.answerLog, b.answerLog, sig);
     return out;
   }
 

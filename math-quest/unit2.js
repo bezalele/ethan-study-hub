@@ -9,10 +9,10 @@ function u2Header() {
 function u2Tile(t) {
   const a = u2Attempts(t.id),
     n = a.filter((x) => x.correct && !x.assisted).length;
-  return `<article class="card skill-card"><p class="eyebrow">${t.exam ? "EXAM FOCUS" : "MORE UNIT 2"}</p><h3>${esc(t.title)}</h3><p>${esc(t.summary)}</p><p class="muted">4 worked examples · ${U2_BANK[t.id].length - t.examples.length} practice questions</p>${a.length ? `<p class="skill-progress">${n}/${a.length} correct first tries without help</p>` : ""}<div class="controls"><a class="button" href="#u2lesson/${t.id}">Study examples</a><a class="button light" href="#u2practice/${t.id}">Practice</a></div></article>`;
+  return `<article class="card skill-card"><p class="eyebrow">${t.exam ? "EXAM FOCUS" : "MORE UNIT 2"}</p><h3>${esc(t.title)}</h3><p>${esc(t.summary)}</p><p class="muted">4 worked examples · ${U2_BANK[t.id].length - t.examples.length} practice questions</p>${lessonCardTracker(t)}${a.length ? `<p class="skill-progress">${n}/${a.length} correct first tries without help</p>` : ""}<div class="controls"><a class="button" href="#u2lesson/${t.id}">Study examples</a><a class="button light" href="#u2practice/${t.id}">Practice</a></div></article>`;
 }
 function u2Overview() {
-  main.innerHTML = `<a class="text-link" href="#course">← All units</a><section class="u2-heading"><p class="eyebrow">CURRENT UNIT</p><h1 class="page-title">Equations & systems</h1><p class="intro">Your study and practice center for Unit 2.</p><div class="controls"><a class="button" href="#u2lesson/one-step">Start with the basics</a><a class="button light" href="#u2practice/exam">Mixed exam practice</a><a class="button light" href="#u2check/exam">12-question self-check</a></div></section><div class="section-heading"><div><h2>Prepare for your upcoming exam</h2><p>These six topics match your class practice assignment. Work through them in order, or choose one to review.</p></div></div><div class="u2-grid">${U2_TOPICS.filter(
+  main.innerHTML = `<a class="text-link" href="#course">← All units</a><section class="u2-heading"><p class="eyebrow">CURRENT UNIT</p><h1 class="page-title">Equations & systems</h1><p class="intro">Your study and practice center for Unit 2.</p><div class="controls"><a class="button" href="#u2lesson/one-step">Start with the basics</a><a class="button light" href="#u2practice/exam">Mixed exam practice</a><a class="button light" href="#u2check/exam">12-question self-check</a></div></section>${unitSummary("equations")}<div class="section-heading"><div><h2>Prepare for your upcoming exam</h2><p>These six topics match your class practice assignment. Work through them in order, or choose one to review.</p></div></div><div class="u2-grid">${U2_TOPICS.filter(
     (t) => t.exam,
   )
     .map(u2Tile)
@@ -45,7 +45,7 @@ function u2Lesson(id) {
     })
     .join(
       "",
-    )}</div></section><section class="card" id="u2-try"><h2>Now try one yourself</h2><p>Work on paper first. This is supported practice, so it won’t change your independent-practice score.</p><div id="guided-question"></div></section><section class="card study-routine"><h2>Ready for more?</h2><div class="controls"><a class="button" href="#u2practice/${t.id}">Practice ${esc(t.title.toLowerCase())}</a>${next ? `<a class="text-link" href="#u2lesson/${next.id}">Next: ${esc(next.title)} →</a>` : '<a class="text-link" href="#u2practice/exam">Mixed review →</a>'}</div><a class="text-link" href="#unit/equations">Back to all Unit 2 topics</a></section>`;
+    )}</div></section><section class="card" id="u2-try"><h2>Now try one yourself</h2><p>Work on paper first. This is supported practice, so it won’t change your independent-practice score.</p><div id="guided-question"></div></section>${lessonTrackSection(t)}<section class="card study-routine"><h2>Ready for more?</h2><div class="controls"><a class="button" href="#u2practice/${t.id}">Practice ${esc(t.title.toLowerCase())}</a>${next ? `<a class="text-link" href="#u2lesson/${next.id}">Next: ${esc(next.title)} →</a>` : '<a class="text-link" href="#u2practice/exam">Mixed review →</a>'}</div><a class="text-link" href="#unit/equations">Back to all Unit 2 topics</a></section>`;
   document.querySelectorAll("[data-scroll]").forEach(
     (a) =>
       (a.onclick = (e) => {
@@ -64,6 +64,7 @@ function u2Lesson(id) {
   };
   const q = U2_BANK[id][6];
   u2QuestionUI(q, document.getElementById("guided-question"), null);
+  wireLessonTrack(t);
   if (id === "linear") u2WireGraph();
 }
 function u2Graph() {
@@ -118,6 +119,8 @@ function u2Practice(id = "exam", check = false) {
         (_, i) => groups[i % groups.length][Math.floor(i / groups.length)],
       );
     }
+    if (check) beginCheckRun("equations");
+    else endCheckRun();
     u2session = { questions, index: 0, results: [], check };
     document.getElementById("u2-start").disabled = true;
     u2ShowQuestion();
@@ -131,7 +134,9 @@ function u2QuestionUI(q, container, onNext, check = false) {
   container.innerHTML = `<h3>${esc(q.prompt)}</h3>${q.assumption ? `<p class="muted">Assume ${esc(q.assumption)}.</p>` : ""}<form class="u2-answer-form"><label>${q.kind === "pair" ? "Your ordered pair (x, y)" : q.kind === "inequality" ? "Your inequality (for example, x <= 3)" : q.kind === "choice" ? "Choose your answer" : q.unit ? "Your answer" : `Your answer: ${esc(q.target)} =`}${q.kind === "choice" ? `<select class="answer-input" required><option value="">Choose…</option>${q.choices.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}</select>` : '<input class="answer-input" autocomplete="off" spellcheck="false" required>'}</label>${q.kind === "expression" ? '<p class="input-help">Use / for fractions. Write multiplication as 2x or 2*x. Letters are case-sensitive.</p>' : ""}<button class="primary" type="submit">${check ? "Save answer" : "Check answer"}</button></form><div class="feedback" role="status" aria-live="polite"></div><div class="controls">${check ? "" : '<button class="ghost" data-help="hint">Hint</button><button class="ghost" data-help="solution">Show solution</button>'}${onNext ? '<button class="ghost" data-next>Skip for now →</button>' : ""}</div><div class="u2-help"></div>`;
   const input = container.querySelector(".answer-input"),
     feedback = container.querySelector(".feedback");
-  const record = (ok) => {
+  /* `response` is what he typed or chose, kept so his work can be read
+     back later. Before 2026-10-02 it was not saved. */
+  const record = (ok, response) => {
     result = {
       id: q.id,
       topic: q.unit || "equations",
@@ -142,6 +147,8 @@ function u2QuestionUI(q, container, onNext, check = false) {
       assisted,
       date: new Date().toISOString(),
       question: { ...q, solution: q.steps.join(" ") },
+      ...(check && checkRun ? { check: checkRun.unit, checkRun: checkRun.run } : {}),
+      ...(response !== undefined ? { response } : {}),
     };
     if (onNext) {
       progress.attempts.push(result);
@@ -160,7 +167,8 @@ function u2QuestionUI(q, container, onNext, check = false) {
       feedback.textContent = judged.message;
       return;
     }
-    if (first) record(judged.ok);
+    if (first) record(judged.ok, String(input.value).trim().slice(0, 200));
+    logAnswer(q, input.value, judged.ok, assisted, onNext ? (check ? "check" : "practice") : "study");
     feedback.className = "feedback" + (judged.ok || check ? "" : " error");
     feedback.textContent = check
       ? "Answer saved. Continue to the next question."
@@ -187,7 +195,12 @@ function u2QuestionUI(q, container, onNext, check = false) {
   );
   if (onNext)
     container.querySelector("[data-next]").onclick = () => {
-      if (first) record(false);
+      if (first) {
+        record(false);
+        /* Moving on without answering is a skip, not a wrong answer. */
+        result.skipped = true;
+        save();
+      }
       onNext(result);
     };
 }

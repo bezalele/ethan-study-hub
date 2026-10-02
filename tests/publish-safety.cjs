@@ -129,7 +129,7 @@ console.log('the same promise for his exercises and quiz scores');
       },
       ethan_math_quest_v2: {
         attempts: [{ id: 'm1', topic: 'systems', ts: 20 }],
-        lessonStarted: true, lessonComplete: true, version: 2,
+        lessonStarted: true, lessonComplete: true, version: 2, explored: ['one-step'],
       },
       ethanQuizScoresV1: { congress: { best: 8, total: 10, attempts: 3, last: 8 } },
       ethan_apgov_v1: { units: { 2: { best: 3, last: 3, total: 4, attempts: 2, at: 30 } } },
@@ -143,6 +143,7 @@ console.log('the same promise for his exercises and quiz scores');
     ok(out.ethan_biology_v1.notes.cells === 'Mitochondria make energy for the cell.',
       `${side}: his lesson note is kept`);
     ok(out.ethan_math_quest_v2.lessonComplete === true, `${side}: you cannot un-finish a lesson`);
+    ok((out.ethan_math_quest_v2.explored || []).includes('one-step'), `${side}: a math lesson he studied stays studied`);
     ok(out.ethanQuizScoresV1.congress.best === 8, `${side}: his best score cannot go down`);
     ok(out.ethan_apgov_v1.units[2].best === 3, `${side}: his unit quick check is kept`);
   }
@@ -156,6 +157,18 @@ console.log('the same promise for his exercises and quiz scores');
   ok(out.ethanQuizScoresV1.congress.attempts === 4, 'but the attempt is still counted');
   ok(out.ethan_apgov_v1.units[2].best === 3 && out.ethan_apgov_v1.units[2].attempts === 3,
     'and the same holds for a unit quick check');
+  /* Two of his own laptops, each with a lesson the other has not seen. */
+  const other = { stores: { ethan_math_quest_v2: { version: 2, attempts: [], explored: ['fractions'] } } };
+  const both = ProgressMerge.mergeAll(work, other).stores.ethan_math_quest_v2.explored;
+  ok(both.includes('one-step') && both.includes('fractions'),
+    'math lessons studied on two laptops are both kept - a union, not last-writer-wins');
+  /* Every answer he typed, from two laptops, survives a sync. */
+  const logA = { stores: { ethan_math_quest_v2: { version: 2, attempts: [], answerLog: [{ id: 'q1', response: '7/12', correct: false, date: '2026-10-02T10:00:00Z' }] } } };
+  const logB = { stores: { ethan_math_quest_v2: { version: 2, attempts: [], answerLog: [{ id: 'q1', response: '5/6', correct: true, date: '2026-10-02T10:01:00Z' }] } } };
+  const log = ProgressMerge.mergeAll(logA, logB).stores.ethan_math_quest_v2.answerLog;
+  ok(log.length === 2, 'his typed math answers from two laptops are both kept');
+  ok(ProgressMerge.mergeAll(logA, blank).stores.ethan_math_quest_v2.answerLog.length === 1,
+    'and a laptop with no answers cannot clear them');
 }
 
 console.log('');
