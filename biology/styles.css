@@ -163,3 +163,73 @@ main:focus{outline:none}
    window, which is how Math Quest is built. The home page sizes itself to the
    viewport, so its own `main` must not inherit the bottom padding. */
 .home-page main{max-width:1500px;margin:0 auto}
+
+/* Progress on the course pages. A lesson is six steps — explored, then its
+   five questions — so its tracker is six segments, the first set slightly
+   apart because it is a different kind of step. Units and the course roll
+   the same steps up into one bar. Colours are the existing progress-track
+   greens; "in progress" borrows a warm tint so it reads apart from "done". */
+.lp-steps{display:flex;gap:3px;margin:2px 0 6px}
+.lp-seg{flex:1;height:6px;border-radius:3px;background:#e3e9dd}
+.lp-seg.on{background:#65875a}
+.lp-explore{margin-right:5px}
+.lesson-card-copy .lp-label{font-size:12.5px;margin:0 0 12px}
+.lp-label .ok{color:var(--green);font-weight:700}
+.tag.tag-going{background:#fbf1dc;color:#6f5420}
+.tag.tag-done{background:var(--green);color:#fff;font-weight:700}
+.lesson-card.is-done{border-color:#9db194}
+.lesson-card.is-done .lp-seg.on{background:var(--green)}
+.unit-art{position:relative}
+.done-badge{position:absolute;top:10px;right:10px;background:var(--green);color:#fff;font:700 12px/1 Arial,sans-serif;padding:6px 10px;border-radius:999px;box-shadow:0 2px 8px rgba(35,63,53,.25)}
+.unit-copy .up{margin-top:12px}
+.unit-copy .up .progress-track{margin:0 0 6px}
+.unit-copy .up-label{display:flex;justify-content:space-between;gap:10px;font-size:13px;margin:0}
+.up-pct{font-weight:700;color:var(--green)}
+.unit-card.is-done{border-color:#9db194}
+.unit-card.is-done .progress-track span,.unit-progress.is-done .progress-track span{background:var(--green)}
+.unit-progress{margin:18px 0 22px;padding:18px 22px}
+.unit-progress .up-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.unit-progress h2{font-size:18px;margin:0}
+.unit-progress .progress-track{margin:10px 0}
+.up-facts{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:14px;color:var(--muted);margin:0 0 6px}
+.up-next{font-size:14.5px;margin:0}
+.up-next a{font-weight:700;white-space:nowrap}
+.course-progress{max-width:620px;margin:-6px 0 22px}
+.course-progress .progress-track{margin:0}
+.course-progress p{font-size:14px;color:var(--muted);margin:7px 0 0}
+.course-progress strong{color:var(--green)}
+.lesson-status strong{color:var(--ink)}
+
+/* Work so far. Chips use the page's greens for right, the warm "in
+   progress" tint for a hint, brick for wrong, grey for skipped - so a
+   parent can read a lesson's answers at a glance without reading every row. */
+.lesson-links{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:auto}
+.lesson-card-copy .lesson-links .lesson-open{margin-top:0}
+.work-link{font-size:13.5px;font-weight:700;white-space:nowrap}
+.up-facts .work-link{margin-left:auto}
+.wk-h{margin:26px 0 12px}
+.wk-note{margin:6px 0 4px}
+.wk-note h2{font-size:18px;margin:0 0 6px}
+.wk-ask{color:var(--muted);font-size:14.5px;margin:0 0 10px}
+.wk-note blockquote{margin:0;padding:12px 16px;background:#f4f7ef;border-left:3px solid #9db194;border-radius:6px;white-space:normal}
+.wk-q{margin-bottom:12px;padding:18px 22px}
+.wk-q h3{font-size:17px;margin:4px 0 10px;line-height:1.4}
+.wk-q .eyebrow{margin:0}
+.wk-tries{list-style:none;margin:0 0 8px;padding:0}
+.wk-tries li{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:7px 0;border-top:1px solid var(--line);font-size:14.5px}
+.wk-date{color:var(--muted);font-size:13px;min-width:96px}
+.wk-ans strong{color:var(--ink)}
+.wk-q details summary{cursor:pointer;color:var(--green);font-weight:700;font-size:14px}
+.wk-chip{display:inline-block;font:700 12px/1 Arial,sans-serif;padding:5px 9px;border-radius:999px;white-space:nowrap}
+.wk-ok{background:#e3eedd;color:#2f5a3f}
+.wk-hint{background:#fbf1dc;color:#6f5420}
+.wk-no{background:#f6e1db;color:#8a3a26}
+.wk-skip{background:#eceee9;color:#5e6b63}
+.wk-chk{background:#fff;color:var(--green);border:1px solid var(--edge)}
+.wk-rows{display:grid;gap:10px}
+.wk-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:14px 20px;text-decoration:none;color:var(--ink)}
+.wk-row>span:first-child{display:flex;flex-direction:column;flex:1 1 260px}
+.wk-row .muted{font-size:13.5px}
+.wk-tally{display:flex;flex-wrap:wrap;gap:6px}
+.wk-go{font-weight:700;color:var(--green);font-size:14px}
+a.wk-row:hover{text-decoration:none;border-color:#9db194;box-shadow:var(--lift-hi)}
